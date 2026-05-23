@@ -1,7 +1,24 @@
+/**
+ * FILE: src/engine/formattingEngine.ts
+ *
+ * PURPOSE:
+ * Turn numbers into human-readable strings (5' 3 1/4", 45°, 2.5 in).
+ *
+ * INPUTS:  Canonical inches, degrees, plain numbers.
+ * OUTPUTS: Strings safe to show in ResultCard / labels.
+ *
+ * WHY SEPARATE FROM roundingEngine?
+ * Rounding decides the numeric value; formatting decides how it LOOKS.
+ *
+ * DEPENDENCIES: unitEngine.ts, roundingEngine.ts, types.ts
+ */
+
+// IMPORTS
 import { denormalizeLength } from './unitEngine';
 import { fractionDenominator } from './roundingEngine';
 import type { FormatLengthOptions, FractionPrecision, LengthUnit } from './types';
 
+// CONSTANTS
 const UNIT_LABELS: Record<LengthUnit, string> = {
   in: 'in',
   ft: 'ft',
@@ -10,6 +27,9 @@ const UNIT_LABELS: Record<LengthUnit, string> = {
   m: 'm',
 };
 
+// LOGIC — helpers
+
+/** Greatest common divisor — simplifies fractions like 8/16 → 1/2. */
 function gcd(a: number, b: number): number {
   let x = Math.abs(Math.trunc(a));
   let y = Math.abs(Math.trunc(b));
@@ -28,6 +48,7 @@ function formatFractionPart(
 ): string {
   const denom = fractionDenominator(precision);
   const numerator = Math.round(fractionalInches * denom);
+
   if (numerator === 0) {
     return whole === 0 ? '0' : `${whole}`;
   }
@@ -46,7 +67,9 @@ function formatFractionPart(
   return `${whole} ${fraction}`;
 }
 
-/** Format inches as feet-inches with optional fraction (e.g. 5' 3 1/4"). */
+// EXPORTS — public formatters
+
+/** Imperial-friendly: feet + inches + fraction (e.g. 5' 3 1/4"). */
 export function formatFeetInches(
   inches: number,
   precision: FractionPrecision = '1/16',
@@ -62,7 +85,6 @@ export function formatFeetInches(
   const remaining = absInches - feet * 12;
   const wholeInches = Math.floor(remaining);
   const fractionPart = remaining - wholeInches;
-
   const inchStr = formatFractionPart(wholeInches, fractionPart, precision);
 
   if (feet === 0) {
@@ -74,7 +96,7 @@ export function formatFeetInches(
   return `${sign}${feet}${footMark} ${inchStr}${inchMark}`;
 }
 
-/** Format a canonical inch value for display. */
+/** Primary length formatter — pass inches from calculator, options for display unit. */
 export function formatLength(inches: number, options: FormatLengthOptions = {}): string {
   const {
     unit = 'in',

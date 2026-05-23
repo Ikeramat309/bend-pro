@@ -1,5 +1,14 @@
+/**
+ * FILE: src/screens/SettingsScreen.tsx
+ *
+ * PURPOSE: Placeholder settings screen (units, defaults) — polish later.
+ * ARCHITECTURE: Screen → ScreenScaffold (not CalculatorLayout — not a calculator).
+ */
+
+// IMPORTS
 import { ScreenScaffold } from '@/components/screen-scaffold';
 
+// UI
 export function SettingsScreen() {
   return (
     <ScreenScaffold
@@ -14,3 +23,5 @@ export function SettingsScreen() {
     />
   );
 }
+
+// EXPORTS — SettingsScreen

@@ -1,3 +1,14 @@
+/**
+ * FILE: src/components/RoundingSelector.tsx
+ *
+ * PURPOSE: Choose how results are rounded (1/16", 1 mm, Exact, etc.).
+ * INPUTS:  value, onChange, unitSystem (imperial vs metric options differ).
+ * OUTPUTS: Selected rounding id — engines read this when calling roundLength().
+ *
+ * DEPENDENCIES: UnitSystem from @/engine/types
+ */
+
+// IMPORTS
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { UnitSystem } from '@/engine/types';
@@ -9,6 +20,7 @@ import {
   useCalculatorTheme,
 } from '@/theme';
 
+// TYPES & CONSTANTS
 export const IMPERIAL_ROUNDING_OPTIONS = [
   { id: 'exact', label: 'Exact' },
   { id: '1/16', label: '1/16"' },
@@ -35,6 +47,7 @@ export type RoundingSelectorProps = {
   label?: string;
 };
 
+// UI
 export function RoundingSelector({
   value,
   onChange,
@@ -43,15 +56,10 @@ export function RoundingSelector({
   label = 'Rounding',
 }: RoundingSelectorProps) {
   const colors = useCalculatorTheme();
-  const options =
-    unitSystem === 'metric' ? METRIC_ROUNDING_OPTIONS : IMPERIAL_ROUNDING_OPTIONS;
+  const options = unitSystem === 'metric' ? METRIC_ROUNDING_OPTIONS : IMPERIAL_ROUNDING_OPTIONS;
 
   return (
-    <View
-      style={[
-        styles.card,
-        { backgroundColor: colors.card, borderColor: colors.cardBorder },
-      ]}>
+    <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
       <Text style={[styles.label, { color: colors.textSecondary }]}>{label}</Text>
       <View style={styles.row}>
         {options.map((option) => {
@@ -82,6 +90,7 @@ export function RoundingSelector({
   );
 }
 
+// STYLES
 const styles = StyleSheet.create({
   card: {
     borderRadius: CalculatorRadii.lg,
@@ -89,14 +98,8 @@ const styles = StyleSheet.create({
     padding: CalculatorSpacing.lg,
     gap: CalculatorSpacing.md,
   },
-  label: {
-    ...CalculatorTypography.label,
-  },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: CalculatorSpacing.sm,
-  },
+  label: { ...CalculatorTypography.label },
+  row: { flexDirection: 'row', flexWrap: 'wrap', gap: CalculatorSpacing.sm },
   chip: {
     minHeight: TOUCH_TARGET_MIN,
     borderRadius: CalculatorRadii.md,
@@ -106,7 +109,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: CalculatorSpacing.md,
     paddingVertical: CalculatorSpacing.sm,
   },
-  chipLabel: {
-    ...CalculatorTypography.chip,
-  },
+  chipLabel: { ...CalculatorTypography.chip },
 });
+
+// EXPORTS — above

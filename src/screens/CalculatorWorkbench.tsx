@@ -1,3 +1,28 @@
+/**
+ * FILE: src/screens/CalculatorWorkbench.tsx
+ *
+ * PURPOSE:
+ * Developer "testing bench" — try calculator engines before building polished UIs.
+ * NOT the final Offset Bend screen customers will see.
+ *
+ * INPUTS:  User taps, text fields, presets (all stored in React state below).
+ * OUTPUTS: Raw JSON, formatted ResultCards, warning text (from runWorkbench).
+ *
+ * DATA FLOW (memorize this):
+ *   1. STATE holds strings from InputCard (offsetHeight, firstMark, …)
+ *   2. useMemo calls runWorkbench(type, inputs) whenever state changes
+ *   3. runWorkbench → tempOffsetEngine + @/engine format/validate
+ *   4. UI reads result.raw / result.formatted / result.warnings
+ *
+ * DEPENDENCIES:
+ *   @/components/calculator-ui  (presentation)
+ *   @/calculators/workbench     (logic — NO math in this file)
+ *
+ * BEGINNER NOTE — useMemo:
+ * Re-runs runWorkbench only when calculatorType or inputs change (performance).
+ */
+
+// IMPORTS
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -23,6 +48,7 @@ import {
 } from '@/calculators/workbench';
 import { CalculatorRadii, CalculatorSpacing, CalculatorTypography, useCalculatorTheme } from '@/theme';
 
+// CONSTANTS — calculator picker labels + default form values
 const CALCULATOR_OPTIONS: { id: CalculatorType; label: string }[] = [
   { id: 'offset-bend', label: 'Offset Bend' },
   { id: 'stub-90', label: 'Stub 90' },
@@ -40,6 +66,8 @@ const DEFAULT_INPUTS: WorkbenchInputs = {
   unit: 'imperial',
   rounding: '1/16',
 };
+
+// UI — small helper components (only used on this screen)
 
 function WorkbenchSection({
   title,
@@ -72,14 +100,19 @@ function CodeBlock({ text }: { text: string }) {
   );
 }
 
+// STATE + LOGIC + UI — main screen component
+
 export function CalculatorWorkbench() {
   const router = useRouter();
   const colors = useCalculatorTheme();
 
+  // STATE — React remembers these between renders
   const [calculatorType, setCalculatorType] = useState<CalculatorType>('offset-bend');
   const [inputs, setInputs] = useState<WorkbenchInputs>(DEFAULT_INPUTS);
 
+  // LOGIC — derive result from state (no formulas here!)
   const result = useMemo(() => runWorkbench(calculatorType, inputs), [calculatorType, inputs]);
+
   const lengthUnit = inputs.unit === 'imperial' ? 'in' : 'mm';
 
   const patchInputs = (patch: Partial<WorkbenchInputs>) => {
@@ -115,6 +148,7 @@ export function CalculatorWorkbench() {
   const warningText =
     result.warnings.length > 0 ? result.warnings.join('\n') : 'No warnings';
 
+  // UI — render sections
   return (
     <CalculatorLayout
       title="Calculator Workbench"
@@ -244,23 +278,14 @@ export function CalculatorWorkbench() {
   );
 }
 
+// EXPORTS — default for Expo route + named for tests
 export default CalculatorWorkbench;
 
+// STYLES
 const styles = StyleSheet.create({
-  backRow: {
-    alignSelf: 'flex-start',
-    minHeight: 44,
-    justifyContent: 'center',
-  },
-  backText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  chipRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: CalculatorSpacing.sm,
-  },
+  backRow: { alignSelf: 'flex-start', minHeight: 44, justifyContent: 'center' },
+  backText: { fontSize: 16, fontWeight: '600' },
+  chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: CalculatorSpacing.sm },
   calcChip: {
     borderRadius: CalculatorRadii.md,
     borderWidth: 1,
@@ -269,10 +294,7 @@ const styles = StyleSheet.create({
     minHeight: 40,
     justifyContent: 'center',
   },
-  calcChipText: {
-    ...CalculatorTypography.chip,
-    fontSize: 13,
-  },
+  calcChipText: { ...CalculatorTypography.chip, fontSize: 13 },
   presetBtn: {
     borderRadius: CalculatorRadii.md,
     borderWidth: 1,
@@ -281,42 +303,17 @@ const styles = StyleSheet.create({
     minHeight: 44,
     justifyContent: 'center',
   },
-  presetBtnText: {
-    ...CalculatorTypography.chip,
-  },
-  comingSoon: {
-    fontSize: 15,
-    fontWeight: '600',
-    marginTop: CalculatorSpacing.sm,
-  },
-  warningBox: {
-    borderRadius: CalculatorRadii.md,
-    borderWidth: 1,
-    padding: CalculatorSpacing.lg,
-  },
-  warningText: {
-    fontSize: 14,
-    lineHeight: 22,
-    fontFamily: 'monospace',
-  },
+  presetBtnText: { ...CalculatorTypography.chip },
+  comingSoon: { fontSize: 15, fontWeight: '600', marginTop: CalculatorSpacing.sm },
+  warningBox: { borderRadius: CalculatorRadii.md, borderWidth: 1, padding: CalculatorSpacing.lg },
+  warningText: { fontSize: 14, lineHeight: 22, fontFamily: 'monospace' },
 });
 
 const sectionStyles = StyleSheet.create({
-  wrap: {
-    gap: CalculatorSpacing.md,
-  },
-  header: {
-    borderTopWidth: 1,
-    paddingTop: CalculatorSpacing.md,
-  },
-  headerText: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1.2,
-  },
-  body: {
-    gap: CalculatorSpacing.lg,
-  },
+  wrap: { gap: CalculatorSpacing.md },
+  header: { borderTopWidth: 1, paddingTop: CalculatorSpacing.md },
+  headerText: { fontSize: 11, fontWeight: '700', letterSpacing: 1.2 },
+  body: { gap: CalculatorSpacing.lg },
 });
 
 const codeStyles = StyleSheet.create({
@@ -326,9 +323,5 @@ const codeStyles = StyleSheet.create({
     padding: CalculatorSpacing.lg,
     maxWidth: '100%',
   },
-  text: {
-    fontFamily: 'monospace',
-    fontSize: 12,
-    lineHeight: 18,
-  },
+  text: { fontFamily: 'monospace', fontSize: 12, lineHeight: 18 },
 });

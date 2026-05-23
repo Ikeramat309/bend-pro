@@ -1,3 +1,17 @@
+/**
+ * FILE: src/components/InputCard.tsx
+ *
+ * PURPOSE: Reusable labeled number field for calculator inputs.
+ * INPUTS:  value + onChangeText (controlled by parent screen state).
+ * OUTPUTS: UI only — parent owns the actual string value.
+ *
+ * BEGINNER NOTE — Controlled input:
+ * Parent holds state; child displays value and calls onChangeText when user types.
+ *   const [offset, setOffset] = useState('12');
+ *   <InputCard value={offset} onChangeText={setOffset} />
+ */
+
+// IMPORTS
 import { StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 
 import {
@@ -8,6 +22,7 @@ import {
   useCalculatorTheme,
 } from '@/theme';
 
+// TYPES
 export type InputCardProps = {
   label: string;
   value: string;
@@ -18,6 +33,7 @@ export type InputCardProps = {
   inputProps?: Omit<TextInputProps, 'value' | 'onChangeText' | 'placeholder'>;
 };
 
+// UI
 export function InputCard({
   label,
   value,
@@ -64,6 +80,7 @@ export function InputCard({
   );
 }
 
+// STYLES
 const styles = StyleSheet.create({
   card: {
     borderRadius: CalculatorRadii.lg,
@@ -71,15 +88,8 @@ const styles = StyleSheet.create({
     padding: CalculatorSpacing.lg,
     gap: CalculatorSpacing.sm,
   },
-  label: {
-    ...CalculatorTypography.label,
-    padding: 0,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: CalculatorSpacing.md,
-  },
+  label: { ...CalculatorTypography.label },
+  inputRow: { flexDirection: 'row', alignItems: 'center', gap: CalculatorSpacing.md },
   input: {
     flex: 1,
     ...CalculatorTypography.input,
@@ -97,12 +107,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: CalculatorSpacing.md,
   },
-  unitText: {
-    ...CalculatorTypography.chip,
-    padding: 0,
-  },
-  error: {
-    fontSize: 13,
-    padding: 0,
-  },
+  unitText: { ...CalculatorTypography.chip },
+  error: { fontSize: 13 },
 });
+
+// EXPORTS — InputCard, InputCardProps

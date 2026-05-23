@@ -1,3 +1,14 @@
+/**
+ * FILE: src/components/ResultCard.tsx
+ *
+ * PURPOSE: Display one calculated output (label + big value).
+ * INPUTS:  title, value (already formatted string from engine), optional highlight.
+ * OUTPUTS: Card UI — NO math here; parent passes formatted strings.
+ *
+ * FUTURE REUSE: Offset shrink, stub length, voltage drop %, etc.
+ */
+
+// IMPORTS
 import { StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -8,6 +19,7 @@ import {
   useCalculatorTheme,
 } from '@/theme';
 
+// TYPES
 export type ResultCardProps = {
   title: string;
   value: string;
@@ -15,6 +27,7 @@ export type ResultCardProps = {
   subtitle?: string;
 };
 
+// UI
 export function ResultCard({ title, value, highlight = false, subtitle }: ResultCardProps) {
   const colors = useCalculatorTheme();
 
@@ -37,6 +50,7 @@ export function ResultCard({ title, value, highlight = false, subtitle }: Result
   );
 }
 
+// STYLES
 const styles = StyleSheet.create({
   card: {
     borderRadius: CalculatorRadii.lg,
@@ -49,11 +63,8 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },
-  value: {
-    ...CalculatorTypography.resultValue,
-  },
-  subtitle: {
-    fontSize: 13,
-    lineHeight: 18,
-  },
+  value: { ...CalculatorTypography.resultValue },
+  subtitle: { fontSize: 13, lineHeight: 18 },
 });
+
+// EXPORTS — ResultCard, ResultCardProps

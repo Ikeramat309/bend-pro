@@ -1,7 +1,19 @@
 /**
- * Workbench runner — isolates calculator logic from UI.
+ * FILE: src/calculators/workbench/runWorkbench.ts
+ *
+ * PURPOSE: Orchestrator — connects inputs → TEMP engine → formatters → warnings.
+ *          CalculatorWorkbench screen calls ONLY this function (not temp engine directly).
+ *
+ * INPUTS:  calculatorType + WorkbenchInputs
+ * OUTPUTS: WorkbenchResult { raw, formatted, warnings, available }
+ *
+ * WHY SEPARATE FROM SCREEN?
+ * Keeps CalculatorWorkbench.tsx as UI-only; you can unit-test runWorkbench() later.
+ *
+ * DEPENDENCIES: @/engine/*, ./tempOffsetEngine, ./types
  */
 
+// IMPORTS
 import type { AngleOption } from '@/components/AngleSelector';
 
 import { formatLength, formatNumber } from '@/engine/formattingEngine';
@@ -18,9 +30,12 @@ import type {
   WorkbenchRounding,
 } from './types';
 
+// CONSTANTS
 const UNSUPPORTED_CONDUIT_COMBOS: { type: string; sizeId: string }[] = [
   { type: 'PVC', sizeId: '4' },
 ];
+
+// LOGIC — helpers (not exported)
 
 function roundingToFractionPrecision(rounding: WorkbenchRounding): FractionPrecision | undefined {
   if (rounding === '1/16' || rounding === '1/8' || rounding === '1/4') {
@@ -57,12 +72,9 @@ function formatLengthFromInches(inches: number, inputs: WorkbenchInputs): string
 
 function collectOffsetWarnings(inputs: WorkbenchInputs): string[] {
   const warnings: string[] = [];
-
   const offsetNum = Number(inputs.offsetHeight);
   const firstMarkNum = Number(inputs.firstMark);
-
-  const offsetInches =
-    inputs.unit === 'metric' ? offsetNum / 25.4 : offsetNum;
+  const offsetInches = inputs.unit === 'metric' ? offsetNum / 25.4 : offsetNum;
 
   const offsetValidation = validateAll(
     validateNumber(inputs.offsetHeight, 'offsetHeight', { allowZero: false, allowNegative: false }),
@@ -85,11 +97,9 @@ function collectOffsetWarnings(inputs: WorkbenchInputs): string[] {
   if (offsetNum <= 0 || inputs.offsetHeight === '' || inputs.offsetHeight === '0') {
     warnings.push('Offset height must be greater than 0.');
   }
-
   if (firstMarkNum < 0) {
     warnings.push('First mark cannot be negative.');
   }
-
   if (!inputs.angle) {
     warnings.push('Bend angle not selected.');
   } else {
@@ -98,7 +108,6 @@ function collectOffsetWarnings(inputs: WorkbenchInputs): string[] {
       warnings.push(issue.message);
     }
   }
-
   if (
     UNSUPPORTED_CONDUIT_COMBOS.some(
       (c) => c.type === inputs.conduitType && c.sizeId === inputs.conduitSizeId,
@@ -110,7 +119,10 @@ function collectOffsetWarnings(inputs: WorkbenchInputs): string[] {
   return [...new Set(warnings)];
 }
 
-function formatOffsetResult(raw: NonNullable<ReturnType<typeof tempCalculateOffsetBend>>, inputs: WorkbenchInputs): WorkbenchFormattedResult {
+function formatOffsetResult(
+  raw: NonNullable<ReturnType<typeof tempCalculateOffsetBend>>,
+  inputs: WorkbenchInputs,
+): WorkbenchFormattedResult {
   return {
     spacing: formatLengthFromInches(raw.spacingIn, inputs),
     shrink: formatLengthFromInches(raw.shrinkIn, inputs),
@@ -120,6 +132,8 @@ function formatOffsetResult(raw: NonNullable<ReturnType<typeof tempCalculateOffs
     conduitSize: `${inputs.conduitType} ${inputs.conduitSizeId}${inputs.unit === 'imperial' ? '"' : ' mm'}`,
   };
 }
+
+// EXPORTS — main entry + test presets
 
 export function runWorkbench(calculatorType: CalculatorType, inputs: WorkbenchInputs): WorkbenchResult {
   if (calculatorType !== 'offset-bend') {
@@ -151,6 +165,7 @@ export function runWorkbench(calculatorType: CalculatorType, inputs: WorkbenchIn
   };
 }
 
+/** Quick-fill buttons on workbench — for QA, not shown to end users in production. */
 export const WORKBENCH_PRESETS: Record<
   import('./types').WorkbenchPresetId,
   { label: string; calculatorType: CalculatorType; inputs: Partial<WorkbenchInputs> }

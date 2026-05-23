@@ -1,3 +1,14 @@
+/**
+ * FILE: src/components/AngleSelector.tsx
+ *
+ * PURPOSE: Pick standard bend angles (10°–60°) via chip buttons.
+ * INPUTS:  value (selected angle or null), onChange callback.
+ * OUTPUTS: UI only — parent stores angle in state / passes to engine later.
+ *
+ * FUTURE REUSE: Offset, Rolling Offset, any calculator using standard angles.
+ */
+
+// IMPORTS
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -8,6 +19,7 @@ import {
   useCalculatorTheme,
 } from '@/theme';
 
+// TYPES & CONSTANTS — exported so engines can type angles consistently
 export const ANGLE_OPTIONS = [10, 22.5, 30, 45, 60] as const;
 export type AngleOption = (typeof ANGLE_OPTIONS)[number];
 
@@ -18,6 +30,7 @@ export type AngleSelectorProps = {
   label?: string;
 };
 
+// UI
 export function AngleSelector({
   value,
   onChange,
@@ -27,16 +40,11 @@ export function AngleSelector({
   const colors = useCalculatorTheme();
 
   return (
-    <View
-      style={[
-        styles.card,
-        { backgroundColor: colors.card, borderColor: colors.cardBorder },
-      ]}>
+    <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
       <Text style={[styles.label, { color: colors.textSecondary }]}>{label}</Text>
       <View style={styles.row}>
         {ANGLE_OPTIONS.map((angle) => {
           const active = value === angle;
-          const labelText = `${angle}°`;
           return (
             <Pressable
               key={angle}
@@ -53,7 +61,7 @@ export function AngleSelector({
               accessibilityRole="button"
               accessibilityState={{ selected: active, disabled }}>
               <Text style={[styles.chipLabel, { color: active ? '#FFFFFF' : colors.text }]}>
-                {labelText}
+                {`${angle}°`}
               </Text>
             </Pressable>
           );
@@ -63,6 +71,7 @@ export function AngleSelector({
   );
 }
 
+// STYLES
 const styles = StyleSheet.create({
   card: {
     borderRadius: CalculatorRadii.lg,
@@ -70,14 +79,8 @@ const styles = StyleSheet.create({
     padding: CalculatorSpacing.lg,
     gap: CalculatorSpacing.md,
   },
-  label: {
-    ...CalculatorTypography.label,
-  },
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: CalculatorSpacing.sm,
-  },
+  label: { ...CalculatorTypography.label },
+  row: { flexDirection: 'row', flexWrap: 'wrap', gap: CalculatorSpacing.sm },
   chip: {
     minHeight: TOUCH_TARGET_MIN,
     minWidth: 56,
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: CalculatorSpacing.md,
   },
-  chipLabel: {
-    ...CalculatorTypography.chip,
-  },
+  chipLabel: { ...CalculatorTypography.chip },
 });
+
+// EXPORTS — above

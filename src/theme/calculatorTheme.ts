@@ -1,6 +1,27 @@
+/**
+ * FILE: src/theme/calculatorTheme.ts
+ *
+ * PURPOSE:
+ * Visual design tokens for calculator screens (colors, spacing, fonts).
+ *
+ * WHY NOT USE constants/theme.ts ONLY?
+ * App shell uses Expo template colors; calculators need high-contrast
+ * "job site" styling (large touch targets, dark backgrounds).
+ *
+ * OUTPUTS: CalculatorColors, CalculatorSpacing, CalculatorTypography, etc.
+ *
+ * FUTURE REUSE: Every calculator screen imports from @/theme.
+ */
+
+// IMPORTS
 import { Platform, StyleSheet } from 'react-native';
 
-/** Electrician-focused palette — optimized for dark job-site use. */
+// CONSTANTS — color palettes per scheme
+
+/**
+ * Electrician-focused palette — optimized for dark job-site use.
+ * BEGINNER NOTE: We keep light + dark so the app respects system theme.
+ */
 export const CalculatorColors = {
   dark: {
     background: '#0B0E12',
@@ -78,7 +99,7 @@ export const CalculatorSpacing = {
   xxl: 32,
 } as const;
 
-/** Minimum touch target for gloved / job-site use. */
+/** Minimum touch target for gloved / job-site use (Apple HIG ≈ 44pt). */
 export const TOUCH_TARGET_MIN = 48;
 
 export const CalculatorRadii = {
@@ -88,6 +109,7 @@ export const CalculatorRadii = {
   pill: 999,
 } as const;
 
+// STYLES — shared layout snippets components can spread into StyleSheet
 export const calculatorSharedStyles = StyleSheet.create({
   card: {
     borderRadius: CalculatorRadii.lg,
@@ -115,3 +137,5 @@ export const CalculatorShadow = Platform.select({
   android: { elevation: 4 },
   default: {},
 });
+
+// EXPORTS — inline above

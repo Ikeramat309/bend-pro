@@ -1,15 +1,26 @@
+/**
+ * FILE: src/components/CalculatorLayout.tsx
+ *
+ * PURPOSE: Page wrapper shared by every calculator (title, scroll, safe area).
+ * INPUTS:  Props — title, subtitle, children (nested UI).
+ * OUTPUTS: Rendered screen layout (no calculation).
+ *
+ * BEGINNER NOTE — Props:
+ * Data passed FROM parent TO child. Example: <CalculatorLayout title="Offset" />
+ *
+ * ARCHITECTURE: Screen → CalculatorLayout → InputCard / ResultCard / etc.
+ */
+
+// IMPORTS
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { MaxContentWidth } from '@/constants/theme';
-import {
-  CalculatorSpacing,
-  CalculatorTypography,
-  useCalculatorTheme,
-} from '@/theme';
+import { CalculatorSpacing, CalculatorTypography, useCalculatorTheme } from '@/theme';
 
+// TYPES — describes what the parent must pass in
 export type CalculatorLayoutProps = {
   title: string;
   subtitle?: string;
@@ -20,6 +31,7 @@ export type CalculatorLayoutProps = {
   onBack?: () => void;
 };
 
+// UI — presentational component (no useState, no formulas)
 export function CalculatorLayout({
   title,
   subtitle,
@@ -51,13 +63,10 @@ export function CalculatorLayout({
   );
 }
 
+// STYLES
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-  scroll: {
-    flex: 1,
-  },
+  root: { flex: 1 },
+  scroll: { flex: 1 },
   content: {
     paddingHorizontal: CalculatorSpacing.lg,
     paddingBottom: CalculatorSpacing.xxl,
@@ -66,21 +75,11 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
   },
-  header: {
-    gap: CalculatorSpacing.sm,
-    paddingTop: CalculatorSpacing.md,
-  },
-  title: {
-    ...CalculatorTypography.title,
-  },
-  subtitle: {
-    ...CalculatorTypography.subtitle,
-  },
-  body: {
-    gap: CalculatorSpacing.lg,
-  },
-  footer: {
-    gap: CalculatorSpacing.md,
-    marginTop: CalculatorSpacing.sm,
-  },
+  header: { gap: CalculatorSpacing.sm, paddingTop: CalculatorSpacing.md },
+  title: { ...CalculatorTypography.title },
+  subtitle: { ...CalculatorTypography.subtitle },
+  body: { gap: CalculatorSpacing.lg },
+  footer: { gap: CalculatorSpacing.md, marginTop: CalculatorSpacing.sm },
 });
+
+// EXPORTS — CalculatorLayout, CalculatorLayoutProps

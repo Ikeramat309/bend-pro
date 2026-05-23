@@ -1,6 +1,23 @@
+/**
+ * FILE: src/engine/roundingEngine.ts
+ *
+ * PURPOSE:
+ * Round numbers the way electricians expect (fractions of an inch, decimal places).
+ *
+ * INPUTS:  Raw inch values or values in any length unit.
+ * OUTPUTS: Rounded numbers (still numeric — pass to formattingEngine for strings).
+ *
+ * DATA FLOW:
+ *   formula → roundLength() → formatLength() → ResultCard text
+ *
+ * DEPENDENCIES: unitEngine.ts, types.ts
+ */
+
+// IMPORTS
 import { fromInches, toInches } from './unitEngine';
 import type { FractionPrecision, LengthUnit, RoundLengthOptions, RoundingMode } from './types';
 
+// CONSTANTS
 const FRACTION_DENOMINATORS: Record<FractionPrecision, number> = {
   '1/16': 16,
   '1/8': 8,
@@ -8,10 +25,11 @@ const FRACTION_DENOMINATORS: Record<FractionPrecision, number> = {
   '1/2': 2,
 };
 
+// LOGIC — internal helpers (not exported; calculator UI never calls these directly)
+
 function applyRoundingMode(value: number, mode: RoundingMode): number {
   switch (mode) {
     case 'half-even':
-      // Banker's rounding at the current precision step is handled per-call.
       return value;
     case 'toward-zero':
       return value < 0 ? Math.ceil(value) : Math.floor(value);
@@ -23,14 +41,18 @@ function applyRoundingMode(value: number, mode: RoundingMode): number {
   }
 }
 
+/**
+ * Core rounding: snap value to nearest multiple of `step`.
+ * BEGINNER NOTE: step = 1/16 inch means we round to sixteenths.
+ */
 function roundWithMode(value: number, step: number, mode: RoundingMode): number {
   if (!Number.isFinite(value) || !Number.isFinite(step) || step <= 0) {
     return NaN;
   }
 
   const scaled = value / step;
-
   let rounded: number;
+
   switch (mode) {
     case 'half-even':
       rounded = Math.round(scaled);
@@ -50,11 +72,11 @@ function roundWithMode(value: number, step: number, mode: RoundingMode): number 
       break;
   }
 
-  const result = rounded * step;
-  return applyRoundingMode(result, mode);
+  return applyRoundingMode(rounded * step, mode);
 }
 
-/** Round a plain number to N decimal places. */
+// EXPORTS — public API for calculators
+
 export function roundToDecimal(
   value: number,
   decimalPlaces: number,
@@ -67,7 +89,6 @@ export function roundToDecimal(
   return roundWithMode(value, step, mode);
 }
 
-/** Round to the nearest fraction of an inch (e.g. 1/16"), then return in the requested unit. */
 export function roundToFraction(
   value: number,
   unit: LengthUnit,
@@ -80,7 +101,7 @@ export function roundToFraction(
   return fromInches(roundedInches, unit);
 }
 
-/** Round canonical inches, optionally converting to a display unit first. */
+/** Main helper calculators should use after computing a length in inches. */
 export function roundLength(
   inches: number,
   options: RoundLengthOptions = {},
@@ -97,8 +118,8 @@ export function roundLength(
   }
 
   const inDisplayUnit = fromInches(inches, unit);
-
   let rounded: number;
+
   if (fractionPrecision != null) {
     rounded = roundToFraction(inDisplayUnit, unit, fractionPrecision, mode);
   } else if (decimalPlaces != null) {
@@ -110,7 +131,6 @@ export function roundLength(
   return toInches(rounded, unit);
 }
 
-/** Round bend angles (typically whole degrees or fixed decimals). */
 export function roundAngle(
   degrees: number,
   decimalPlaces = 1,

@@ -1,5 +1,13 @@
+/**
+ * FILE: src/screens/BenderDatabaseScreen.tsx
+ *
+ * PURPOSE: Placeholder bender catalog screen — will read from src/data/ later.
+ */
+
+// IMPORTS
 import { ScreenScaffold } from '@/components/screen-scaffold';
 
+// UI
 export function BenderDatabaseScreen() {
   return (
     <ScreenScaffold
@@ -14,3 +22,5 @@ export function BenderDatabaseScreen() {
     />
   );
 }
+
+// EXPORTS — BenderDatabaseScreen

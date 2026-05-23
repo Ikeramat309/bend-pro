@@ -1,3 +1,10 @@
+/**
+ * FILE: src/components/screen-scaffold.tsx
+ *
+ * PURPOSE: Generic placeholder layout for non-calculator screens (Home, Settings).
+ * Calculator screens should use CalculatorLayout instead.
+ */
+// IMPORTS
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

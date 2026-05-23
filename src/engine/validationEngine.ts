@@ -1,6 +1,24 @@
+/**
+ * FILE: src/engine/validationEngine.ts
+ *
+ * PURPOSE:
+ * Check user inputs BEFORE running formulas. Returns structured errors/warnings.
+ *
+ * INPUTS:  Raw field values (often strings from TextInput).
+ * OUTPUTS: ValidationResult { valid, issues[] } for UI to display.
+ *
+ * WHY NOT VALIDATE INSIDE UI COMPONENTS?
+ * Same rules must apply in Workbench, final calculators, and future tests.
+ * Keeping rules here = one source of truth.
+ *
+ * DEPENDENCIES: unitEngine.ts, types.ts
+ */
+
+// IMPORTS
 import { isLengthUnitForSystem } from './unitEngine';
 import type { LengthUnit, UnitSystem, ValidationIssue, ValidationResult } from './types';
 
+// TYPES — options objects for validators (local to this file)
 export type NumberConstraints = {
   min?: number;
   max?: number;
@@ -13,6 +31,8 @@ export type AngleConstraints = {
   min?: number;
   max?: number;
 };
+
+// LOGIC — internal builders
 
 function issue(
   field: string,
@@ -31,6 +51,8 @@ function mergeResults(...results: ValidationResult[]): ValidationResult {
   };
 }
 
+// EXPORTS — public validators
+
 export function validResult(): ValidationResult {
   return { valid: true, issues: [] };
 }
@@ -42,7 +64,10 @@ export function invalidResult(issues: ValidationIssue[]): ValidationResult {
   };
 }
 
-/** Ensure value is a finite number. */
+/**
+ * Generic number check — used by length and angle validators.
+ * BEGINNER NOTE: `unknown` accepts string OR number from TextInput.
+ */
 export function validateNumber(
   value: unknown,
   field: string,
@@ -73,19 +98,15 @@ export function validateNumber(
   if (!allowNegative && num < 0) {
     issues.push(issue(field, 'negative', `${field} cannot be negative.`));
   }
-
   if (!allowZero && num === 0) {
     issues.push(issue(field, 'zero', `${field} must be greater than zero.`));
   }
-
   if (min != null && num < min) {
     issues.push(issue(field, 'min', `${field} must be at least ${min}.`));
   }
-
   if (max != null && num > max) {
     issues.push(issue(field, 'max', `${field} must be at most ${max}.`));
   }
-
   if (integerOnly && !Number.isInteger(num)) {
     issues.push(issue(field, 'integer', `${field} must be a whole number.`));
   }
@@ -93,7 +114,6 @@ export function validateNumber(
   return issues.length ? invalidResult(issues) : validResult();
 }
 
-/** Length inputs: positive, within practical conduit limits (stored as inches after conversion). */
 export function validateLengthInches(
   inches: number,
   field: string,
@@ -108,7 +128,6 @@ export function validateLengthInches(
   });
 }
 
-/** Bend angles: typically 0°–180° for single bends; use max 360 for full rotation. */
 export function validateAngle(
   degrees: unknown,
   field: string,
@@ -153,12 +172,11 @@ export function validateLengthUnit(unit: LengthUnit, system: UnitSystem, field =
   return validResult();
 }
 
-/** Run multiple field validators; collect all issues. */
+/** Combine multiple validators — Workbench uses this heavily. */
 export function validateAll(...checks: ValidationResult[]): ValidationResult {
   return mergeResults(...checks);
 }
 
-/** First error message for a field, or undefined. */
 export function getFieldError(result: ValidationResult, field: string): string | undefined {
   return result.issues.find((i) => i.field === field && i.severity === 'error')?.message;
 }

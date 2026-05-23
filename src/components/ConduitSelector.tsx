@@ -1,3 +1,14 @@
+/**
+ * FILE: src/components/ConduitSelector.tsx
+ *
+ * PURPOSE: Pick conduit type (EMT/RMC/IMC/PVC) and trade size.
+ * INPUTS:  conduitType, sizeId, unitSystem, change callbacks.
+ * OUTPUTS: UI + modal pickers — NO fill % or bend math.
+ *
+ * BEGINNER NOTE — useState here:
+ * Only tracks whether modals are open (UI state), not calculation results.
+ */
+// IMPORTS
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 

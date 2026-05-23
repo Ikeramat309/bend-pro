@@ -1,3 +1,14 @@
+/**
+ * FILE: src/components/UnitToggle.tsx
+ *
+ * PURPOSE: Imperial / Metric segmented control.
+ * INPUTS:  value (current system), onChange (callback when user taps).
+ * OUTPUTS: UI event only — parent updates unit state and may reset defaults.
+ *
+ * DEPENDENCIES: UnitSystem type from @/engine/types (shared with engines).
+ */
+
+// IMPORTS
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { UnitSystem } from '@/engine/types';
@@ -9,17 +20,20 @@ import {
   useCalculatorTheme,
 } from '@/theme';
 
+// TYPES
 export type UnitToggleProps = {
   value: UnitSystem;
   onChange: (system: UnitSystem) => void;
   disabled?: boolean;
 };
 
+// CONSTANTS
 const OPTIONS: { value: UnitSystem; label: string }[] = [
   { value: 'imperial', label: 'Imperial' },
   { value: 'metric', label: 'Metric' },
 ];
 
+// UI
 export function UnitToggle({ value, onChange, disabled = false }: UnitToggleProps) {
   const colors = useCalculatorTheme();
 
@@ -59,6 +73,7 @@ export function UnitToggle({ value, onChange, disabled = false }: UnitToggleProp
   );
 }
 
+// STYLES
 const styles = StyleSheet.create({
   track: {
     flexDirection: 'row',
@@ -75,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: CalculatorSpacing.lg,
   },
-  segmentLabel: {
-    ...CalculatorTypography.segment,
-  },
+  segmentLabel: { ...CalculatorTypography.segment },
 });
+
+// EXPORTS — UnitToggle, UnitToggleProps

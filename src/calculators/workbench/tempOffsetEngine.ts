@@ -1,13 +1,26 @@
 /**
- * TEMP — replace with real offset module in src/calculators/offset/ later.
- * Simplified offset bend math for workbench debugging only.
+ * FILE: src/calculators/workbench/tempOffsetEngine.ts
+ *
+ * PURPOSE: TEMPORARY offset bend math for workbench testing ONLY.
+ *
+ * ⚠️ REPLACE LATER with src/calculators/offset/ when formulas are finalized.
+ *
+ * INPUTS:  WorkbenchInputs (strings + angle from UI).
+ * OUTPUTS: OffsetBendRawResult (numbers in inches) OR null if invalid.
+ *
+ * DATA FLOW:
+ *   UI strings → parseInches() → multiply by angle multiplier → raw object
+ *
+ * DEPENDENCIES: @/engine/unitEngine, ./types
  */
 
+// IMPORTS
 import type { AngleOption } from '@/components/AngleSelector';
 
 import type { OffsetBendRawResult, WorkbenchInputs } from './types';
 import { normalizeLength } from '@/engine/unitEngine';
 
+// CONSTANTS — standard offset multipliers (simplified for learning/TEMP)
 const MULTIPLIERS: Record<AngleOption, number> = {
   10: 6,
   22.5: 2.6,
@@ -15,6 +28,8 @@ const MULTIPLIERS: Record<AngleOption, number> = {
   45: 1.414,
   60: 1.155,
 };
+
+// LOGIC
 
 function parseInches(value: string, unit: WorkbenchInputs['unit']): number {
   const n = Number(value);
@@ -53,3 +68,5 @@ export function tempCalculateOffsetBend(inputs: WorkbenchInputs): OffsetBendRawR
     rounding: inputs.rounding,
   };
 }
+
+// EXPORTS — tempCalculateOffsetBend

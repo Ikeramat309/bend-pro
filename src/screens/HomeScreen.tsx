@@ -4,7 +4,6 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { ScreenScaffold } from '@/components/screen-scaffold';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Routes } from '@/navigation';
 import { Spacing } from '@/constants/theme';
 
 const NAV_ITEMS = [

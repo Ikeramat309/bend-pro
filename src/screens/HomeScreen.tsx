@@ -5,6 +5,7 @@ import { ScreenScaffold } from '@/components/screen-scaffold';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
+import { Routes } from '@/navigation';
 
 const NAV_ITEMS = [
   { label: 'Calculator Workbench', route: Routes.calculatorWorkbench },

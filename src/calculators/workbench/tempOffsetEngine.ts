@@ -15,10 +15,11 @@
  */
 
 // IMPORTS
+
 import type { AngleOption } from '@/components/AngleSelector';
 
-import type { OffsetBendRawResult, WorkbenchInputs } from './types';
 import { normalizeLength } from '@/engine/unitEngine';
+import type { OffsetBendRawResult, WorkbenchInputs } from './types';
 
 // CONSTANTS — standard offset multipliers (simplified for learning/TEMP)
 const MULTIPLIERS: Record<AngleOption, number> = {
@@ -70,3 +71,6 @@ export function tempCalculateOffsetBend(inputs: WorkbenchInputs): OffsetBendRawR
 }
 
 // EXPORTS — tempCalculateOffsetBend
+
+
+

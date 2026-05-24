@@ -29,6 +29,7 @@ export default function RootLayout() {
         <Stack.Screen name="calculator-workbench" />
         <Stack.Screen name="settings" />
         <Stack.Screen name="bender-database" />
+        <Stack.Screen name="offset" />
       </Stack>
     </ThemeProvider>
   );

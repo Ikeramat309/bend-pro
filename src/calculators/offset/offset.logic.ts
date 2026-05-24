@@ -158,13 +158,63 @@ export function calculateOffset(input: OffsetInput): OffsetResult {
 
   // Convert user input to inches for consistent internal math.
   const offsetHeightInches = toInches(input.offsetHeight || 0, input.unit);
-  const firstMarkInches = toInches(input.firstMark || 0, input.unit);
 
   // Core formulas.
   const spacingInches = offsetHeightInches * angleInfo.multiplier;
   const shrinkInches = offsetHeightInches * angleInfo.shrinkPerInch;
-  const secondMarkInches = firstMarkInches + spacingInches;
+  
+// Optional layout mode.
+// These values only exist if the user entered a first mark.
+const firstMarkInches =
+  input.firstMark !== undefined
+    ? toInches(input.firstMark, input.unit)
+    : undefined;
 
+const secondMarkInches =
+  firstMarkInches !== undefined
+    ? firstMarkInches + spacingInches
+    : undefined;
+
+const adjustedFirstMarkInches =
+  firstMarkInches !== undefined
+    ? firstMarkInches - shrinkInches
+    : undefined;
+
+const firstMarkFormatted =
+  firstMarkInches !== undefined
+    ? formatLength(firstMarkInches, input.unit, input.rounding)
+    : undefined;
+
+const secondMarkFormatted =
+  secondMarkInches !== undefined
+    ? formatLength(secondMarkInches, input.unit, input.rounding)
+    : undefined;
+
+const adjustedFirstMarkFormatted =
+  adjustedFirstMarkInches !== undefined
+    ? formatLength(adjustedFirstMarkInches, input.unit, input.rounding)
+    : undefined;
+
+   
+
+    const visualGeometry = {
+      calculatorType: 'offset' as const,
+      unit: input.unit,
+      conduitType: input.conduitType,
+      conduitSize: input.conduitSize,
+      angleDeg: input.bendAngle,
+      offsetHeightInches,
+      spacingInches,
+      shrinkInches,
+      firstMarkInches,
+      secondMarkInches,
+      adjustedFirstMarkInches,
+      points: [
+        { x: 0, y: 0 },
+        { x: spacingInches / 2, y: offsetHeightInches },
+        { x: spacingInches, y: offsetHeightInches },
+      ],
+    };
   // Return raw inches plus user-friendly formatted strings.
   return {
     offsetHeightInches,
@@ -172,24 +222,34 @@ export function calculateOffset(input: OffsetInput): OffsetResult {
     shrinkInches,
     firstMarkInches,
     secondMarkInches,
-
+    adjustedFirstMarkInches,
+   
 
     spacingFormatted: formatLength(spacingInches, input.unit, input.rounding),
     shrinkFormatted: formatLength(shrinkInches, input.unit, input.rounding),
-    firstMarkFormatted: formatLength(firstMarkInches, input.unit, input.rounding),
-    secondMarkFormatted: formatLength(secondMarkInches, input.unit, input.rounding),
+   firstMarkFormatted,
+    secondMarkFormatted,
+    adjustedFirstMarkFormatted,
 
     multiplier: angleInfo.multiplier,
     shrinkPerInch: angleInfo.shrinkPerInch,
 
     steps: [
       'Convert input to inches internally.',
-      `Spacing = offset height × multiplier = ${offsetHeightInches.toFixed(3)} × ${angleInfo.multiplier}.`,
-      `Shrink = offset height × shrink per inch = ${offsetHeightInches.toFixed(3)} × ${angleInfo.shrinkPerInch}.`,
-      `Second mark = first mark + spacing = ${firstMarkInches.toFixed(3)} + ${spacingInches.toFixed(3)}.`,
+      'Spacing = offset height × multiplier.',
+      `Spacing = ${offsetHeightInches.toFixed(3)} × ${angleInfo.multiplier}.`,
+      'Shrink = offset height × shrink per inch.',
+      `Shrink = ${offsetHeightInches.toFixed(3)} × ${angleInfo.shrinkPerInch}.`,
+      firstMarkInches !== undefined
+        ? 'Second mark = first mark + spacing.'
+        : 'First mark was not entered, so exact mark locations were not calculated.',
+      firstMarkInches !== undefined
+        ? 'Adjusted first mark = first mark - shrink.'
+        : 'Enter a first mark to calculate the second mark and shrink-adjusted first mark.',
     ],
+  
     benderNotes: getBenderNotes(input.conduitType, input.conduitSize, input.bendAngle),
-
+    visualGeometry,
     warnings,
   };
 }

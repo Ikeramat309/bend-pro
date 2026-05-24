@@ -17,6 +17,7 @@ export const Routes = {
   calculatorWorkbench: '/calculator-workbench' as Href,
   settings: '/settings' as Href,
   benderDatabase: '/bender-database' as Href,
+  offset: '/offset' as Href,
 } as const;
 
 // EXPORTS — Routes

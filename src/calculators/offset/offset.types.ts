@@ -25,7 +25,8 @@ export type BendAngle = 10 | 22.5 | 30 | 45 | 60;
  * Imperial uses fractions. Metric uses mm steps.
  */
 export type RoundingOption = 'exact' | '1/16' | '1/8' | '1/4' | '1mm' | '5mm' | '10mm';
-
+// conduit types 
+export type ConduitType = 'EMT' | 'RMC' | 'IMC' | 'PVC';
 /** Warning shown to the user. It does not always stop calculation. */
 export type OffsetWarning = {
   id: string;
@@ -41,14 +42,38 @@ export type OffsetWarning = {
  */
 export type OffsetInput = {
   offsetHeight: number;
-  firstMark: number;
+  firstMark?: number;
   bendAngle: BendAngle;
   unit: Unit;
   rounding: RoundingOption;
   conduitSize: string;
   conduitType: ConduitType;
 };
-export type ConduitType = 'EMT' | 'RMC' | 'IMC' | 'PVC';
+
+
+// Offset Geometry 
+
+export type OffsetVisualGeometry = {
+  calculatorType: 'offset';
+  unit: Unit;
+  conduitType: ConduitType;
+  conduitSize: string;
+  angleDeg: BendAngle;
+
+  offsetHeightInches: number;
+  spacingInches: number;
+  shrinkInches: number;
+
+  firstMarkInches?: number;
+  secondMarkInches?: number;
+  adjustedFirstMarkInches?: number;
+
+  points: {
+    x: number;
+    y: number;
+  }[];
+};
+
 /**
  * Final calculation output.
  *
@@ -57,22 +82,27 @@ export type ConduitType = 'EMT' | 'RMC' | 'IMC' | 'PVC';
  * Formatted values are what the UI displays to the user.
  */
 export type OffsetResult = {
+  offsetHeightInches: number;
 
   spacingInches: number;
   shrinkInches: number;
-  firstMarkInches: number;
-  secondMarkInches: number;
-  offsetHeightInches: number;
+
+  firstMarkInches?: number;
+  secondMarkInches?: number;
+  adjustedFirstMarkInches?: number;
+
   spacingFormatted: string;
   shrinkFormatted: string;
-  firstMarkFormatted: string;
-  secondMarkFormatted: string;
+
+  firstMarkFormatted?: string;
+  secondMarkFormatted?: string;
+  adjustedFirstMarkFormatted?: string;
 
   multiplier: number;
   shrinkPerInch: number;
-
+  visualGeometry: OffsetVisualGeometry;
   steps: string[];
-  benderNotes: string[];
+  benderNotes:string[]
   warnings: OffsetWarning[];
 };
 

@@ -85,9 +85,9 @@ export default function OffsetScreen() {
   const [bendAngle, setBendAngle] = useState<BendAngle>(DEFAULT_ANGLE);
   const [rounding, setRounding] = useState<RoundingOption>('1/16');
 
-  // TextInputs store strings, not numbers. This prevents typing issues while user edits.
+  // TextInputs store strings. First mark starts empty = optional (no layout mark mode).
   const [offsetHeightText, setOffsetHeightText] = useState('');
-  const [firstMarkText, setFirstMarkText] = useState('0');
+  const [firstMark, setFirstMark] = useState('');
 
   const [conduitType, setConduitType] = useState<ConduitType>(DEFAULT_CONDUIT_TYPE);
   const [conduitSize, setConduitSize] = useState('1/2');
@@ -97,7 +97,9 @@ export default function OffsetScreen() {
   // ---------------------------------------------------------------------------
 
   const offsetHeight = Number(offsetHeightText || 0);
-  const firstMark = Number(firstMarkText || 0);
+
+  // BEGINNER NOTE: undefined tells the engine to skip mark-distance outputs.
+  const firstMarkNumber = firstMark.trim() === '' ? undefined : Number(firstMark);
 
   const unitLabel = unit === 'metric' ? 'mm' : 'in';
   const subtitle =
@@ -112,8 +114,6 @@ export default function OffsetScreen() {
   function handleUnitChange(nextUnit: Unit) {
     setUnit(nextUnit);
 
-    // Keep typed numbers untouched.
-    // Only change selector defaults so the visible options stay valid.
     setConduitSize(nextUnit === 'metric' ? '21' : '1/2');
     setRounding(nextUnit === 'metric' ? '1mm' : '1/16');
   }
@@ -125,21 +125,27 @@ export default function OffsetScreen() {
   const result = useMemo(() => {
     return calculateOffset({
       offsetHeight,
-      firstMark,
+      firstMark: firstMarkNumber,
       bendAngle,
       unit,
       rounding,
       conduitSize,
       conduitType,
     });
-  }, [offsetHeight, firstMark, bendAngle, unit, rounding, conduitSize, conduitType]);
+  }, [offsetHeight, firstMarkNumber, bendAngle, unit, rounding, conduitSize, conduitType]);
+
+  const firstMarkInputError =
+    firstMark.trim() !== '' &&
+    (firstMarkNumber === undefined || !Number.isFinite(firstMarkNumber) || firstMarkNumber < 0)
+      ? 'Enter a valid non-negative value, or leave blank.'
+      : undefined;
 
   // ---------------------------------------------------------------------------
   // UI
   // ---------------------------------------------------------------------------
 
   return (
-    <CalculatorLayout title="Offset Bend" subtitle={subtitle}>
+    <CalculatorLayout title="Offset Bend Beta" subtitle={subtitle}>
       <UnitToggle value={unit} onChange={handleUnitChange} />
 
       <ConduitSelector
@@ -173,18 +179,32 @@ export default function OffsetScreen() {
 
       <InputCard
         label="First mark"
-        value={firstMarkText}
-        onChangeText={setFirstMarkText}
-        placeholder={`Optional first mark in ${unitLabel}`}
+        value={firstMark}
+        onChangeText={setFirstMark}
+        placeholder="Optional layout mark"
         unitLabel={unitLabel}
-        error={firstMark < 0 ? 'First mark cannot be negative.' : undefined}
+        error={firstMarkInputError}
       />
 
       <ResultCard title="Spacing between bends" value={result.spacingFormatted} highlight />
       <ResultCard title="Shrink" value={result.shrinkFormatted} />
-      <ResultCard title="First mark" value={result.firstMarkFormatted} />
-      <ResultCard title="Second mark" value={result.secondMarkFormatted} highlight />
       <ResultCard title="Multiplier" value={`${result.multiplier}`} subtitle={`${bendAngle}° offset multiplier`} />
+
+      {result.firstMarkFormatted ? (
+        <ResultCard title="First mark" value={result.firstMarkFormatted} />
+      ) : null}
+
+      {result.secondMarkFormatted ? (
+        <ResultCard title="Second mark" value={result.secondMarkFormatted} highlight />
+      ) : null}
+
+      {result.adjustedFirstMarkFormatted ? (
+        <ResultCard
+          title="Shrink-adjusted first mark"
+          value={result.adjustedFirstMarkFormatted}
+          subtitle="Use when the finished offset must land at a specific point"
+        />
+      ) : null}
 
       <InfoSection title="Warnings">
         {result.warnings.length === 0 ? (
@@ -195,16 +215,33 @@ export default function OffsetScreen() {
       </InfoSection>
 
       <InfoSection title="How to bend">
-        <InfoLine>1. Mark your first bend at {result.firstMarkFormatted}.</InfoLine>
-        <InfoLine>2. Measure {result.spacingFormatted} from the first mark.</InfoLine>
-        <InfoLine>3. Mark your second bend at {result.secondMarkFormatted}.</InfoLine>
-        <InfoLine>4. Bend both marks using {bendAngle}°.</InfoLine>
-        <InfoLine>5. Account for shrink: {result.shrinkFormatted}.</InfoLine>
+        {result.firstMarkFormatted && result.secondMarkFormatted ? (
+          <>
+            <InfoLine>1. Mark your first bend at {result.firstMarkFormatted}.</InfoLine>
+            <InfoLine>2. Measure {result.spacingFormatted} from the first mark.</InfoLine>
+            <InfoLine>3. Mark your second bend at {result.secondMarkFormatted}.</InfoLine>
+            <InfoLine>4. Bend both marks using {bendAngle}°.</InfoLine>
+            <InfoLine>5. Account for shrink: {result.shrinkFormatted}.</InfoLine>
+          </>
+        ) : (
+          <>
+            <InfoLine>1. Space your bends {result.spacingFormatted} apart (center to center).</InfoLine>
+            <InfoLine>2. Bend both marks using {bendAngle}°.</InfoLine>
+            <InfoLine>3. Account for shrink: {result.shrinkFormatted}.</InfoLine>
+            <InfoLine>4. Enter a first mark above to calculate exact mark locations on the conduit.</InfoLine>
+          </>
+        )}
       </InfoSection>
 
       <InfoSection title="Calculation steps">
         {result.steps.map((step) => (
           <InfoLine key={step}>• {step}</InfoLine>
+        ))}
+      </InfoSection>
+
+      <InfoSection title="Bender / field notes">
+        {result.benderNotes.map((note) => (
+          <InfoLine key={note}>• {note}</InfoLine>
         ))}
       </InfoSection>
     </CalculatorLayout>

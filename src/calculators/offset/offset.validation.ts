@@ -37,8 +37,11 @@ export function validateOffsetInput(input: OffsetInput): OffsetWarning[] {
     });
   }
 
-  // First mark can be zero, but it should not be below zero.
-  if (!Number.isFinite(input.firstMark) || input.firstMark < 0) {
+  // First mark is optional; only validate when the user provided one.
+  if (
+    input.firstMark !== undefined &&
+    (!Number.isFinite(input.firstMark) || input.firstMark < 0)
+  ) {
     warnings.push({
       id: 'invalid-first-mark',
       message: 'First mark cannot be negative.',

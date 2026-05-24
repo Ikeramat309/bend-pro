@@ -20,6 +20,7 @@ import { Routes } from '@/navigation';
 
 // CONSTANTS — menu items (add new calculators here later)
 const NAV_ITEMS = [
+  { label: 'Offset Bend Beta', route: Routes.offset },
   { label: 'Calculator Workbench', route: Routes.calculatorWorkbench },
   { label: 'Bender Database', route: Routes.benderDatabase },
   { label: 'Settings', route: Routes.settings },

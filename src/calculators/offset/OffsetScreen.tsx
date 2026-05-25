@@ -17,25 +17,28 @@
  */
 
 // IMPORTS
+import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import {
+  ActionResultCard,
   AngleSelector,
-  CalculatorLayout,
-  ConduitSelector,
-  InputCard,
-  ResultCard,
-  RoundingSelector,
-  UnitToggle,
-  type AngleOption,
-  type ConduitType,
-  type RoundingId,
-} from '@/components/calculator-ui';
-import { CalculatorRadii, CalculatorSpacing, CalculatorTypography, useCalculatorTheme } from '@/theme';
+  AppTopBar,
+  BigMeasurementInput,
+  DrawerRow,
+  EditSetupSheet,
+  MarkingGuide,
+  SetupChip,
+  type BendAngleOption,
+  type OffsetSetupValues,
+  type SetupBender,
+} from '@/components/bend';
+import { colors, layout, spacing } from '@/theme';
+import { Routes } from '@/navigation';
 
 import { calculateOffset } from './offset.logic';
-import type { BendAngle, RoundingOption, Unit } from './offset.types';
+import type { BendAngle, ConduitType, RoundingOption, Unit } from './offset.types';
 
 // =============================================================================
 // DEFAULTS — starting values for this calculator
@@ -44,32 +47,57 @@ import type { BendAngle, RoundingOption, Unit } from './offset.types';
 const DEFAULT_UNIT: Unit = 'imperial';
 const DEFAULT_ANGLE: BendAngle = 30;
 const DEFAULT_CONDUIT_TYPE: ConduitType = 'EMT';
+const DEFAULT_BENDER: SetupBender = 'Generic Hand Bender';
 
 // =============================================================================
-// SMALL DISPLAY SECTIONS — only used by this screen
+// LOCAL MODAL COMPONENTS — placeholder interactions for Phase 3
 // =============================================================================
 
-function InfoSection({
+function OffsetModal({
+  visible,
   title,
   children,
+  onClose,
 }: {
+  visible: boolean;
   title: string;
   children: React.ReactNode;
+  onClose: () => void;
 }) {
-  const colors = useCalculatorTheme();
-
   return (
-    <View style={[styles.infoCard, { backgroundColor: colors.card, borderColor: colors.cardBorder }]}>
-      <Text style={[styles.infoTitle, { color: colors.text }]}>{title}</Text>
-      <View style={styles.infoBody}>{children}</View>
-    </View>
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={styles.modalBackdrop}>
+        <View style={styles.modalCard}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>{title}</Text>
+            <Pressable onPress={onClose} style={styles.modalCloseButton} accessibilityRole="button">
+              <Text style={styles.modalCloseIcon}>×</Text>
+            </Pressable>
+          </View>
+
+          <View style={styles.modalBody}>{children}</View>
+
+          <Pressable onPress={onClose} style={styles.primaryButton} accessibilityRole="button">
+            <Text style={styles.primaryButtonText}>Close</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
   );
 }
 
-function InfoLine({ children }: { children: React.ReactNode }) {
-  const colors = useCalculatorTheme();
-
-  return <Text style={[styles.infoText, { color: colors.textSecondary }]}>{children}</Text>;
+function MenuItem({
+  title,
+  onPress,
+}: {
+  title: string;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable onPress={onPress} style={styles.menuItem} accessibilityRole="button">
+      <Text style={styles.menuItemText}>{title}</Text>
+    </Pressable>
+  );
 }
 
 // =============================================================================
@@ -77,6 +105,8 @@ function InfoLine({ children }: { children: React.ReactNode }) {
 // =============================================================================
 
 export default function OffsetScreen() {
+  const router = useRouter();
+
   // ---------------------------------------------------------------------------
   // STATE — what the user typed or selected
   // ---------------------------------------------------------------------------
@@ -88,9 +118,15 @@ export default function OffsetScreen() {
   // TextInputs store strings. First mark starts empty = optional (no layout mark mode).
   const [offsetHeightText, setOffsetHeightText] = useState('');
   const [firstMark, setFirstMark] = useState('');
+  const [showFirstMark, setShowFirstMark] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [setupVisible, setSetupVisible] = useState(false);
+  const [guidedVisible, setGuidedVisible] = useState(false);
+  const [menuNotice, setMenuNotice] = useState('');
 
   const [conduitType, setConduitType] = useState<ConduitType>(DEFAULT_CONDUIT_TYPE);
   const [conduitSize, setConduitSize] = useState('1/2');
+  const [bender, setBender] = useState<SetupBender>(DEFAULT_BENDER);
 
   // ---------------------------------------------------------------------------
   // DERIVED VALUES — convert UI strings into calculator-friendly numbers
@@ -102,21 +138,8 @@ export default function OffsetScreen() {
   const firstMarkNumber = firstMark.trim() === '' ? undefined : Number(firstMark);
 
   const unitLabel = unit === 'metric' ? 'mm' : 'in';
-  const subtitle =
-    unit === 'metric'
-      ? 'Metric mode: enter and read measurements in millimetres only.'
-      : 'Imperial mode: enter and read measurements in inches only.';
-
-  // ---------------------------------------------------------------------------
-  // UNIT CHANGE — do NOT auto-convert typed input
-  // ---------------------------------------------------------------------------
-
-  function handleUnitChange(nextUnit: Unit) {
-    setUnit(nextUnit);
-
-    setConduitSize(nextUnit === 'metric' ? '21' : '1/2');
-    setRounding(nextUnit === 'metric' ? '1mm' : '1/16');
-  }
+  const setupSummary = `${conduitType} ${conduitSize}" • ${bendAngle}°`;
+  const setupSubText = `${bender} • ${unit === 'metric' ? 'Metric' : 'Imperial'} • ${rounding}`;
 
   // ---------------------------------------------------------------------------
   // CALCULATION — UI sends input into the pure logic file
@@ -140,111 +163,174 @@ export default function OffsetScreen() {
       ? 'Enter a valid non-negative value, or leave blank.'
       : undefined;
 
+  const hasFirstMark = firstMarkNumber !== undefined && Number.isFinite(firstMarkNumber);
+  const mark1Value = hasFirstMark ? result.firstMarkFormatted ?? '—' : 'Start';
+  const mark2Value = hasFirstMark ? result.secondMarkFormatted ?? '—' : `+ ${result.spacingFormatted}`;
+
+  function handleBackPress() {
+    const safeRouter = router as typeof router & { canGoBack?: () => boolean };
+
+    if (typeof safeRouter.canGoBack === 'function' && safeRouter.canGoBack()) {
+      router.back();
+      return;
+    }
+
+    router.replace(Routes.home);
+  }
+
+  function openSetupModal() {
+    setMenuVisible(false);
+    setSetupVisible(true);
+  }
+
+  function openGuidedModal() {
+    setMenuVisible(false);
+    setGuidedVisible(true);
+  }
+
+  function openSwitchBendPlaceholder() {
+    setMenuNotice('Switch Bend picker will live here.');
+  }
+
+  function openSettings() {
+    setMenuVisible(false);
+    router.push(Routes.settings);
+  }
+
+  function applySetup(nextSetup: OffsetSetupValues) {
+    setConduitType(nextSetup.conduitType);
+    setConduitSize(nextSetup.conduitSize);
+    setBender(nextSetup.bender);
+    setUnit(nextSetup.unit);
+    setRounding(nextSetup.rounding);
+    setSetupVisible(false);
+  }
+
   // ---------------------------------------------------------------------------
   // UI
   // ---------------------------------------------------------------------------
 
   return (
-    <CalculatorLayout title="Offset Bend Beta" subtitle={subtitle}>
-      <UnitToggle value={unit} onChange={handleUnitChange} />
-
-      <ConduitSelector
-        conduitType={conduitType}
-        onConduitTypeChange={setConduitType}
-        sizeId={conduitSize}
-        onSizeChange={setConduitSize}
-        unitSystem={unit}
+    <View style={styles.screen}>
+      <AppTopBar
+        showBack
+        title="Offset Bend"
+        subtitle={setupSummary}
+        onBackPress={handleBackPress}
+        rightIcon={<Text style={styles.menuIcon}>☰</Text>}
+        onRightPress={() => {
+          setMenuNotice('');
+          setMenuVisible(true);
+        }}
       />
 
-      <AngleSelector
-        label="Bend angle"
-        value={bendAngle as AngleOption}
-        onChange={(angle) => setBendAngle(angle as BendAngle)}
-      />
-
-      <RoundingSelector
-        value={rounding as RoundingId}
-        onChange={(id) => setRounding(id as RoundingOption)}
-        unitSystem={unit}
-      />
-
-      <InputCard
-        label="Offset height"
-        value={offsetHeightText}
-        onChangeText={setOffsetHeightText}
-        placeholder={`Enter offset height in ${unitLabel}`}
-        unitLabel={unitLabel}
-        error={offsetHeightText !== '' && offsetHeight <= 0 ? 'Enter a value greater than 0.' : undefined}
-      />
-
-      <InputCard
-        label="First mark"
-        value={firstMark}
-        onChangeText={setFirstMark}
-        placeholder="Optional layout mark"
-        unitLabel={unitLabel}
-        error={firstMarkInputError}
-      />
-
-      <ResultCard title="Spacing between bends" value={result.spacingFormatted} highlight />
-      <ResultCard title="Shrink" value={result.shrinkFormatted} />
-      <ResultCard title="Multiplier" value={`${result.multiplier}`} subtitle={`${bendAngle}° offset multiplier`} />
-
-      {result.firstMarkFormatted ? (
-        <ResultCard title="First mark" value={result.firstMarkFormatted} />
-      ) : null}
-
-      {result.secondMarkFormatted ? (
-        <ResultCard title="Second mark" value={result.secondMarkFormatted} highlight />
-      ) : null}
-
-      {result.adjustedFirstMarkFormatted ? (
-        <ResultCard
-          title="Shrink-adjusted first mark"
-          value={result.adjustedFirstMarkFormatted}
-          subtitle="Use when the finished offset must land at a specific point"
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
+        <SetupChip
+          mainText={setupSummary}
+          subText={setupSubText}
+          onEdit={openSetupModal}
         />
-      ) : null}
 
-      <InfoSection title="Warnings">
-        {result.warnings.length === 0 ? (
-          <InfoLine>No warnings.</InfoLine>
-        ) : (
-          result.warnings.map((warning) => <InfoLine key={warning.id}>• {warning.message}</InfoLine>)
-        )}
-      </InfoSection>
+        <BigMeasurementInput
+          label="Offset Height"
+          value={offsetHeightText}
+          onChangeText={setOffsetHeightText}
+          placeholder="0"
+          unit={unitLabel}
+          error={offsetHeightText !== '' && offsetHeight <= 0 ? 'Enter a value greater than 0.' : undefined}
+        />
 
-      <InfoSection title="How to bend">
-        {result.firstMarkFormatted && result.secondMarkFormatted ? (
-          <>
-            <InfoLine>1. Mark your first bend at {result.firstMarkFormatted}.</InfoLine>
-            <InfoLine>2. Measure {result.spacingFormatted} from the first mark.</InfoLine>
-            <InfoLine>3. Mark your second bend at {result.secondMarkFormatted}.</InfoLine>
-            <InfoLine>4. Bend both marks using {bendAngle}°.</InfoLine>
-            <InfoLine>5. Account for shrink: {result.shrinkFormatted}.</InfoLine>
-          </>
-        ) : (
-          <>
-            <InfoLine>1. Space your bends {result.spacingFormatted} apart (center to center).</InfoLine>
-            <InfoLine>2. Bend both marks using {bendAngle}°.</InfoLine>
-            <InfoLine>3. Account for shrink: {result.shrinkFormatted}.</InfoLine>
-            <InfoLine>4. Enter a first mark above to calculate exact mark locations on the conduit.</InfoLine>
-          </>
-        )}
-      </InfoSection>
+        <AngleSelector
+          selectedAngle={bendAngle as BendAngleOption}
+          onSelect={(angle) => setBendAngle(angle as BendAngle)}
+        />
 
-      <InfoSection title="Calculation steps">
-        {result.steps.map((step) => (
-          <InfoLine key={step}>• {step}</InfoLine>
-        ))}
-      </InfoSection>
+        <MarkingGuide
+          mark1Label="Mark 1"
+          mark1Value={mark1Value}
+          mark2Label="Mark 2"
+          mark2Value={mark2Value}
+          distanceValue={result.spacingFormatted}
+          unit=""
+        />
 
-      <InfoSection title="Bender / field notes">
-        {result.benderNotes.map((note) => (
-          <InfoLine key={note}>• {note}</InfoLine>
-        ))}
-      </InfoSection>
-    </CalculatorLayout>
+        <ActionResultCard
+          label="Mark 2 Distance"
+          value={result.spacingFormatted}
+          helperText="Measure from Mark 1"
+          variant="primary"
+        />
+
+        <ActionResultCard
+          label="Shrink"
+          value={result.shrinkFormatted}
+          helperText="Only if landing on target"
+          variant="secondary"
+        />
+
+        <DrawerRow
+          title="Optional First Mark"
+          isExpanded={showFirstMark}
+          onPress={() => setShowFirstMark((current) => !current)}
+          trailingLabel={showFirstMark ? 'Hide' : '+'}
+        />
+
+        {showFirstMark ? (
+          <BigMeasurementInput
+            label="First Mark"
+            value={firstMark}
+            onChangeText={setFirstMark}
+            placeholder="Optional layout mark"
+            unit={unitLabel}
+            error={firstMarkInputError}
+          />
+        ) : null}
+
+        <DrawerRow
+          title="Guided Mode"
+          subtitle="Open step-by-step learning view"
+          variant="primary"
+          onPress={openGuidedModal}
+          trailingLabel="Open"
+        />
+      </ScrollView>
+
+      <OffsetModal visible={menuVisible} title="Offset Menu" onClose={() => setMenuVisible(false)}>
+        <MenuItem title="Switch Bend" onPress={openSwitchBendPlaceholder} />
+        <MenuItem title="Edit Setup" onPress={openSetupModal} />
+        <MenuItem title="Guided Mode" onPress={openGuidedModal} />
+        <MenuItem title="Settings" onPress={openSettings} />
+        <MenuItem title="Close" onPress={() => setMenuVisible(false)} />
+        {menuNotice ? <Text style={styles.placeholderText}>{menuNotice}</Text> : null}
+      </OffsetModal>
+
+      <EditSetupSheet
+        visible={setupVisible}
+        values={{
+          conduitType,
+          conduitSize,
+          bender,
+          unit,
+          rounding,
+          bendAngle,
+        }}
+        onCancel={() => setSetupVisible(false)}
+        onApply={applySetup}
+      />
+
+      <OffsetModal visible={guidedVisible} title="Guided Mode" onClose={() => setGuidedVisible(false)}>
+        <Text style={styles.modalText}>
+          Formulas, bend steps, common mistakes, and learning support will live here.
+        </Text>
+        <View style={styles.formulaCard}>
+          <Text style={styles.formulaText}>Spacing = Offset Height × Multiplier</Text>
+          <Text style={styles.formulaText}>Shrink = Offset Height × Shrink Constant</Text>
+        </View>
+      </OffsetModal>
+    </View>
   );
 }
 
@@ -253,22 +339,128 @@ export default function OffsetScreen() {
 // =============================================================================
 
 const styles = StyleSheet.create({
-  infoCard: {
-    borderRadius: CalculatorRadii.lg,
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    width: '100%',
+    maxWidth: layout.maxContentWidth,
+    alignSelf: 'center',
+    padding: spacing.lg,
+    paddingBottom: spacing.section,
+    gap: spacing.xxl,
+  },
+  menuIcon: {
+    color: colors.text,
+    fontSize: 22,
+    fontWeight: '700',
+  },
+  modalBackdrop: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: spacing.lg,
+    backgroundColor: 'rgba(5, 7, 11, 0.82)',
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: layout.maxContentWidth,
+    alignSelf: 'center',
+    borderRadius: 16,
     borderWidth: 1,
-    padding: CalculatorSpacing.lg,
-    gap: CalculatorSpacing.md,
+    borderColor: colors.border,
+    backgroundColor: colors.screen,
+    padding: spacing.lg,
+    gap: spacing.lg,
   },
-  infoTitle: {
-    ...CalculatorTypography.label,
-    fontSize: 16,
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.md,
   },
-  infoBody: {
-    gap: CalculatorSpacing.sm,
+  modalTitle: {
+    color: colors.text,
+    fontSize: 18,
+    fontWeight: '700',
   },
-  infoText: {
+  modalCloseButton: {
+    minWidth: 44,
+    minHeight: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalCloseIcon: {
+    color: colors.muted,
+    fontSize: 28,
+    lineHeight: 32,
+  },
+  modalBody: {
+    gap: spacing.md,
+  },
+  modalText: {
+    color: colors.muted,
     fontSize: 14,
     lineHeight: 20,
+  },
+  menuItem: {
+    minHeight: 48,
+    justifyContent: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    paddingHorizontal: spacing.lg,
+  },
+  menuItemText: {
+    color: colors.text,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  placeholderText: {
+    color: colors.warning,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  valueList: {
+    gap: spacing.sm,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: spacing.lg,
+  },
+  valueLine: {
+    color: colors.text,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  formulaCard: {
+    gap: spacing.sm,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.primaryBorder,
+    backgroundColor: colors.primaryMuted,
+    padding: spacing.lg,
+  },
+  formulaText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 20,
+  },
+  primaryButton: {
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 12,
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.lg,
+  },
+  primaryButtonText: {
+    color: colors.background,
+    fontSize: 16,
+    fontWeight: '700',
   },
 });
 

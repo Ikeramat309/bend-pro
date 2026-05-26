@@ -16,9 +16,14 @@ export type SetupChipProps = {
 export function SetupChip({ mainText, subText, onEdit }: SetupChipProps) {
   return (
     <View style={styles.card}>
-      <View style={styles.textBlock}>
-        <Text style={styles.mainText}>{mainText}</Text>
-        <Text style={styles.subText}>{subText}</Text>
+      <View style={styles.left}>
+        <View style={styles.iconBadge}>
+          <Text style={styles.iconText}>⌁</Text>
+        </View>
+        <View style={styles.textBlock}>
+          <Text style={styles.mainText}>{mainText}</Text>
+          <Text style={styles.subText}>{subText}</Text>
+        </View>
       </View>
       <Pressable
         onPress={onEdit}
@@ -36,21 +41,42 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: spacing.md,
+    gap: spacing.lg,
     padding: spacing.lg,
-    borderRadius: radius.lg,
+    borderRadius: radius.xl,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    minHeight: 72,
+    minHeight: 74,
+  },
+  left: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  iconBadge: {
+    width: 38,
+    height: 38,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.full,
+    borderWidth: 1,
+    borderColor: colors.primaryBorder,
+    backgroundColor: colors.primaryMuted,
+  },
+  iconText: {
+    color: colors.primary,
+    fontSize: 22,
+    fontWeight: '700',
   },
   textBlock: {
     flex: 1,
-    gap: spacing.xs,
+    gap: 2,
   },
   mainText: {
     ...typography.body,
-    fontWeight: '600',
+    fontWeight: '700',
     color: colors.text,
   },
   subText: {
@@ -59,9 +85,9 @@ const styles = StyleSheet.create({
   },
   editButton: {
     minHeight: touchTarget,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
     justifyContent: 'center',
-    borderRadius: radius.md,
+    borderRadius: radius.full,
   },
   editPressed: {
     opacity: 0.85,

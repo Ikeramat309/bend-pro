@@ -20,7 +20,7 @@ export type BendAngleSelectorProps = {
 };
 
 export function AngleSelector({
-  label = 'Bend angle',
+  label = 'Angle',
   selectedAngle,
   angles = BEND_ANGLE_OPTIONS,
   commonAngle = 30,
@@ -68,7 +68,7 @@ export function AngleSelector({
 
 const styles = StyleSheet.create({
   wrap: {
-    gap: spacing.sm,
+    gap: spacing.md,
   },
   label: {
     ...typography.label,
@@ -76,24 +76,24 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    gap: spacing.sm,
+    gap: spacing.md,
   },
   chip: {
     flex: 1,
-    minHeight: touchTarget,
+    minHeight: touchTarget - 2,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface2,
+    backgroundColor: colors.surface,
   },
   chipSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
   chipCommon: {
-    borderColor: colors.warning,
+    borderColor: colors.primaryBorder,
   },
   chipPressed: {
     opacity: 0.9,
@@ -101,16 +101,17 @@ const styles = StyleSheet.create({
   chipText: {
     ...typography.chip,
     color: colors.text,
+    fontSize: 15,
   },
   chipTextSelected: {
     color: colors.background,
   },
   chipTextCommon: {
-    color: colors.warning,
+    color: colors.primary,
   },
   hint: {
     fontSize: 12,
-    color: colors.warning,
+    color: colors.muted,
     fontWeight: '500',
   },
 });

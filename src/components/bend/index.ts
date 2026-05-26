@@ -30,4 +30,6 @@ export {
   type ActionResultCardProps,
   type ActionResultVariant,
 } from './ActionResultCard';
+export { BendActionCard, type BendActionCardProps } from './BendActionCard';
+export { BendVisual, type BendVisualProps, type BendVisualType } from './BendVisual';
 export { DrawerRow, type DrawerRowProps, type DrawerRowVariant } from './DrawerRow';

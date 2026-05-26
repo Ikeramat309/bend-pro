@@ -55,9 +55,11 @@ export function DrawerRow({
             {trailingLabel}
           </Text>
         ) : null}
-        <Text style={[styles.chevron, isExpanded && styles.chevronExpanded]}>
-          {isExpanded ? '▼' : '▶'}
-        </Text>
+        {trailingLabel === '+' ? null : (
+          <Text style={[styles.chevron, isExpanded && styles.chevronExpanded]}>
+            {isExpanded ? '⌄' : '›'}
+          </Text>
+        )}
       </View>
     </Pressable>
   );
@@ -68,17 +70,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: touchTarget + spacing.sm,
+    minHeight: touchTarget + spacing.md,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
-    borderRadius: radius.lg,
+    borderRadius: radius.xl,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
     gap: spacing.md,
   },
   rowPrimary: {
-    backgroundColor: colors.primaryMuted,
+    backgroundColor: colors.surface,
     borderColor: colors.primaryBorder,
   },
   rowPressed: {
@@ -99,7 +101,8 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   title: {
-    ...typography.label,
+    ...typography.body,
+    fontWeight: '700',
     color: colors.text,
   },
   titlePrimary: {
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   subtitle: {
-    fontSize: 12,
+    ...typography.subtitle,
     color: colors.muted,
   },
   right: {
@@ -116,14 +119,17 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   trailing: {
-    ...typography.chip,
-    color: colors.muted,
+    fontSize: 22,
+    lineHeight: 24,
+    fontWeight: '500',
+    color: colors.primary,
   },
   trailingPrimary: {
     color: colors.primary,
   },
   chevron: {
-    fontSize: 12,
+    fontSize: 26,
+    lineHeight: 28,
     color: colors.muted,
   },
   chevronExpanded: {

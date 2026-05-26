@@ -22,13 +22,12 @@ import { useMemo, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import {
-  ActionResultCard,
   AngleSelector,
   AppTopBar,
+  BendActionCard,
   BigMeasurementInput,
   DrawerRow,
   EditSetupSheet,
-  MarkingGuide,
   SetupChip,
   type BendAngleOption,
   type OffsetSetupValues,
@@ -128,6 +127,8 @@ export default function OffsetScreen() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [setupVisible, setSetupVisible] = useState(false);
   const [guidedVisible, setGuidedVisible] = useState(false);
+  const [layoutVisible, setLayoutVisible] = useState(false);
+  const [anglePickerVisible, setAnglePickerVisible] = useState(false);
   const [menuNotice, setMenuNotice] = useState('');
 
   const [conduitType, setConduitType] = useState<ConduitType>(DEFAULT_CONDUIT_TYPE);
@@ -144,8 +145,9 @@ export default function OffsetScreen() {
   const firstMarkNumber = firstMark.trim() === '' ? undefined : Number(firstMark);
 
   const unitLabel = unit === 'metric' ? 'mm' : 'in';
-  const setupSummary = `${conduitType} ${conduitSize}" • ${bendAngle}°`;
-  const setupSubText = `${bender} • ${unit === 'metric' ? 'Metric' : 'Imperial'} • ${rounding}`;
+  const unitLabelText = unit === 'metric' ? 'Metric' : 'Imperial';
+  const setupSummary = `${conduitType} ${conduitSize}"`;
+  const setupSubText = `${unitLabelText} • ${rounding} rounding`;
 
   // ---------------------------------------------------------------------------
   // CALCULATION — UI sends input into the pure logic file
@@ -170,8 +172,13 @@ export default function OffsetScreen() {
       : undefined;
 
   const hasFirstMark = firstMarkNumber !== undefined && Number.isFinite(firstMarkNumber);
-  const mark1Value = hasFirstMark ? result.firstMarkFormatted ?? '—' : 'Start';
-  const mark2Value = hasFirstMark ? result.secondMarkFormatted ?? '—' : `+ ${result.spacingFormatted}`;
+  const hasValidOffset = offsetHeightText.trim() !== '' && offsetHeight > 0;
+  const mark1Value = hasValidOffset ? (hasFirstMark ? result.firstMarkFormatted ?? '—' : 'Start') : '—';
+  const mark2Value = hasValidOffset
+    ? hasFirstMark
+      ? result.secondMarkFormatted ?? '—'
+      : `+ ${result.spacingFormatted}`
+    : '—';
 
   function handleBackPress() {
     const safeRouter = router as typeof router & { canGoBack?: () => boolean };
@@ -192,6 +199,10 @@ export default function OffsetScreen() {
   function openGuidedModal() {
     setMenuVisible(false);
     setGuidedVisible(true);
+  }
+
+  function openLayoutModal() {
+    setLayoutVisible(true);
   }
 
   function openSwitchBendPlaceholder() {
@@ -244,53 +255,60 @@ export default function OffsetScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <SetupChip
-          mainText={setupSummary}
+          mainText={bender}
           subText={setupSubText}
           onEdit={openSetupModal}
         />
 
-        <BigMeasurementInput
-          label="Offset Height"
-          value={offsetHeightText}
-          onChangeText={setOffsetHeightText}
-          placeholder="0"
-          unit={unitLabel}
-          error={offsetHeightText !== '' && offsetHeight <= 0 ? 'Enter a value greater than 0.' : undefined}
-        />
+        <View style={styles.compactInputRow}>
+          <BigMeasurementInput
+            variant="compact"
+            label="Offset Height"
+            value={offsetHeightText}
+            onChangeText={setOffsetHeightText}
+            placeholder="0"
+            unit={unitLabel}
+            error={offsetHeightText !== '' && offsetHeight <= 0 ? 'Enter a value greater than 0.' : undefined}
+          />
 
-        <AngleSelector
-          selectedAngle={bendAngle as BendAngleOption}
-          onSelect={(angle) => setBendAngle(angle as BendAngle)}
-        />
+          <Pressable
+            onPress={() => setAnglePickerVisible(true)}
+            style={({ pressed }) => [styles.angleCard, pressed && styles.angleCardPressed]}
+            accessibilityRole="button"
+            accessibilityLabel="Choose bend angle">
+            <Text style={styles.compactLabel}>Bend Angle</Text>
+            <View style={styles.angleValueRow}>
+              <Text style={styles.angleValue}>{bendAngle}°</Text>
+              <Text style={styles.angleChevron}>›</Text>
+            </View>
+          </Pressable>
+        </View>
 
-        <MarkingGuide
+        <BendActionCard
+          title="Mark 2 Distance"
+          primaryValue={hasValidOffset ? result.spacingFormatted : '—'}
+          helperText={hasValidOffset ? 'Measure from Mark 1' : 'Enter offset height to calculate layout'}
+          bendType="offset"
           mark1Label="Mark 1"
           mark1Value={mark1Value}
           mark2Label="Mark 2"
           mark2Value={mark2Value}
-          distanceValue={result.spacingFormatted}
-          unit=""
-        />
-
-        <ActionResultCard
-          label="Mark 2 Distance"
-          value={result.spacingFormatted}
-          helperText="Measure from Mark 1"
-          variant="primary"
-        />
-
-        <ActionResultCard
-          label="Shrink"
-          value={result.shrinkFormatted}
-          helperText="Only if landing on target"
-          variant="secondary"
+          distanceValue={hasValidOffset ? result.spacingFormatted : '—'}
+          angleDeg={bendAngle}
+          shrinkValue={hasValidOffset ? result.shrinkFormatted : '—'}
+          shrinkHelperText="Only if landing on target"
+          layoutValue=""
+          layoutHelperText="Two opposite bends"
+          isEmpty={!hasValidOffset}
+          onPress={openLayoutModal}
         />
 
         <DrawerRow
-          title="Optional First Mark"
+          title={showFirstMark ? 'Optional First Mark' : '+ Optional First Mark'}
+          icon={<Text style={styles.rowIcon}>⌜</Text>}
           isExpanded={showFirstMark}
           onPress={() => setShowFirstMark((current) => !current)}
-          trailingLabel={showFirstMark ? 'Hide' : '+'}
+          trailingLabel={showFirstMark ? 'Hide' : undefined}
         />
 
         {showFirstMark ? (
@@ -300,6 +318,7 @@ export default function OffsetScreen() {
             onChangeText={setFirstMark}
             placeholder="Optional layout mark"
             unit={unitLabel}
+            variant="compact"
             error={firstMarkInputError}
           />
         ) : null}
@@ -307,6 +326,7 @@ export default function OffsetScreen() {
         <DrawerRow
           title="Guided Mode"
           subtitle="Open step-by-step learning view"
+          icon={<Text style={styles.rowIcon}>◎</Text>}
           variant="primary"
           onPress={openGuidedModal}
           trailingLabel="Open"
@@ -360,6 +380,20 @@ export default function OffsetScreen() {
           <Text style={styles.formulaText}>Shrink = Offset Height × Shrink Constant</Text>
         </View>
       </OffsetModal>
+
+      <OffsetModal visible={layoutVisible} title="View Layout" onClose={() => setLayoutVisible(false)}>
+        <Text style={styles.modalText}>Expanded layout view will live here.</Text>
+      </OffsetModal>
+
+      <OffsetModal visible={anglePickerVisible} title="Bend Angle" onClose={() => setAnglePickerVisible(false)}>
+        <AngleSelector
+          selectedAngle={bendAngle as BendAngleOption}
+          onSelect={(angle) => {
+            setBendAngle(angle as BendAngle);
+            setAnglePickerVisible(false);
+          }}
+        />
+      </OffsetModal>
     </View>
   );
 }
@@ -379,11 +413,60 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: spacing.lg,
     paddingBottom: spacing.section,
-    gap: spacing.xxl,
+    gap: spacing.lg,
   },
   menuIcon: {
     color: colors.text,
     fontSize: 22,
+    fontWeight: '700',
+  },
+  compactInputRow: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    alignItems: 'stretch',
+  },
+  angleCard: {
+    flex: 1,
+    minWidth: 0,
+    minHeight: 92,
+    justifyContent: 'space-between',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: spacing.lg,
+  },
+  angleCardPressed: {
+    opacity: 0.9,
+  },
+  compactLabel: {
+    color: colors.muted,
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: '500',
+  },
+  angleValueRow: {
+    minWidth: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+  },
+  angleValue: {
+    color: colors.text,
+    fontSize: 32,
+    lineHeight: 36,
+    fontWeight: '800',
+  },
+  angleChevron: {
+    color: colors.primary,
+    fontSize: 32,
+    lineHeight: 34,
+  },
+  rowIcon: {
+    color: colors.primary,
+    fontSize: 24,
+    lineHeight: 26,
     fontWeight: '700',
   },
   modalBackdrop: {

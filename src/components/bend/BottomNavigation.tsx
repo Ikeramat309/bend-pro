@@ -41,8 +41,12 @@ export function BottomNavigation({ activeTab, onTabChange }: BottomNavigationPro
           return (
             <Pressable
               key={tab.id}
-              onPress={() => onTabChange(tab.id)}
-              style={styles.tab}
+              onPress={() => {
+                if (!active) {
+                  onTabChange(tab.id);
+                }
+              }}
+              style={[styles.tab, active && styles.tabActive]}
               accessibilityRole="button"
               accessibilityState={{ selected: active }}>
               <Text style={[styles.tabIcon, { color: active ? colors.primary : colors.muted }]}>
@@ -75,6 +79,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing.xs,
     paddingVertical: spacing.md,
+    borderRadius: 12,
+  },
+  tabActive: {
+    backgroundColor: colors.primaryMuted,
   },
   tabIcon: {
     fontSize: 20,

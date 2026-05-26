@@ -44,12 +44,12 @@ export function ActionResultCard({
 
 const styles = StyleSheet.create({
   card: {
-    padding: spacing.xl,
-    borderRadius: radius.lg,
+    padding: spacing.lg,
+    borderRadius: radius.xl,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface2,
-    gap: spacing.md,
+    backgroundColor: colors.surface,
+    gap: spacing.sm,
   },
   label: {
     ...typography.label,
@@ -61,7 +61,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   value: {
-    ...typography.resultValue,
+    fontSize: 32,
+    lineHeight: 36,
+    fontWeight: '800',
   },
   unit: {
     ...typography.resultUnit,

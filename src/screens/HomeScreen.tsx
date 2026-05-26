@@ -10,58 +10,117 @@
 
 // IMPORTS
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { ScreenScaffold } from '@/components/screen-scaffold';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
+import { AppTopBar, BottomNavigation, type BendTabId } from '@/components/bend';
 import { Routes } from '@/navigation';
+import { colors, layout, radius, spacing, typography } from '@/theme';
 
 // CONSTANTS — menu items (add new calculators here later)
 const NAV_ITEMS = [
-  { label: 'Offset Bend Beta', route: Routes.offset },
-  { label: 'Calculator Workbench', route: Routes.calculatorWorkbench },
-  { label: 'Bender Database', route: Routes.benderDatabase },
-  { label: 'Settings', route: Routes.settings },
+  { label: 'Continue Layout', description: 'Open Basic Offset', route: Routes.offset },
+  { label: 'Bend Library', description: 'Choose a conduit layout', route: Routes.bends },
+  { label: 'Bender Database', description: 'Manage benders and shoes', route: Routes.benderDatabase },
 ] as const;
 
 // UI
 export function HomeScreen() {
   const router = useRouter();
 
+  function handleTabChange(tab: BendTabId) {
+    if (tab === 'layout') router.push(Routes.home);
+    if (tab === 'bends') router.push(Routes.bends);
+    if (tab === 'benders') router.push(Routes.benderDatabase);
+    if (tab === 'guide') router.push(Routes.guide);
+  }
+
   return (
-    <ScreenScaffold
-      title="Bend Pro"
-      subtitle="Conduit bending calculator — skeleton build"
-      placeholders={[
-        { title: 'Recent jobs', description: 'Saved calculations and work-in-progress runs.' },
-        { title: 'Quick actions', description: 'Start a new bend, open standards, or import data.' },
-      ]}>
-      <View style={styles.navSection}>
-        <ThemedText type="smallBold">Navigate</ThemedText>
-        {NAV_ITEMS.map((item) => (
-          <Pressable key={item.label} onPress={() => router.push(item.route)}>
-            <ThemedView type="backgroundSelected" style={styles.navButton}>
-              <ThemedText type="default">{item.label}</ThemedText>
-              <ThemedText type="linkPrimary">Open →</ThemedText>
-            </ThemedView>
-          </Pressable>
-        ))}
-      </View>
-    </ScreenScaffold>
+    <View style={styles.screen}>
+      <AppTopBar
+        title="Bend Pro"
+        subtitle="Layout"
+        badge="Beta"
+        rightIcon={<Text style={styles.topIcon}>⚙</Text>}
+        onRightPress={() => router.push(Routes.settings)}
+      />
+
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.navSection}>
+          <Text style={styles.sectionTitle}>Start</Text>
+          {NAV_ITEMS.map((item) => (
+            <Pressable key={item.label} onPress={() => router.push(item.route)}>
+              <View style={styles.navButton}>
+                <View style={styles.navText}>
+                  <Text style={styles.navLabel}>{item.label}</Text>
+                  <Text style={styles.navDescription}>{item.description}</Text>
+                </View>
+                <Text style={styles.navArrow}>›</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+      </ScrollView>
+      <BottomNavigation activeTab="layout" onTabChange={handleTabChange} />
+    </View>
   );
 }
 
 // STYLES
 const styles = StyleSheet.create({
-  navSection: { gap: Spacing.two },
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    width: '100%',
+    maxWidth: layout.maxContentWidth,
+    alignSelf: 'center',
+    padding: spacing.lg,
+    paddingBottom: spacing.section,
+    gap: spacing.xxl,
+  },
+  topIcon: {
+    color: colors.text,
+    fontSize: 20,
+  },
+  navSection: {
+    gap: spacing.md,
+  },
+  sectionTitle: {
+    ...typography.label,
+    color: colors.muted,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+  },
   navButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: Spacing.three,
-    borderRadius: Spacing.three,
+    minHeight: 72,
+    padding: spacing.lg,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    gap: spacing.md,
+  },
+  navText: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  navLabel: {
+    ...typography.body,
+    color: colors.text,
+    fontWeight: '700',
+  },
+  navDescription: {
+    ...typography.subtitle,
+    color: colors.muted,
+  },
+  navArrow: {
+    color: colors.primary,
+    fontSize: 28,
+    lineHeight: 32,
   },
 });
 

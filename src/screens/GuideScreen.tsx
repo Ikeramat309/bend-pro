@@ -1,7 +1,8 @@
 /**
- * FILE: src/screens/BenderDatabaseScreen.tsx
+ * FILE: src/screens/GuideScreen.tsx
  *
- * PURPOSE: Placeholder bender catalog screen — will read from src/data/ later.
+ * PURPOSE:
+ * Placeholder Guide tab destination for Phase 5 bottom navigation.
  */
 
 // IMPORTS
@@ -13,7 +14,7 @@ import { Routes } from '@/navigation';
 import { colors, layout, radius, spacing, typography } from '@/theme';
 
 // UI
-export function BenderDatabaseScreen() {
+export function GuideScreen() {
   const router = useRouter();
 
   function handleTabChange(tab: BendTabId) {
@@ -26,20 +27,20 @@ export function BenderDatabaseScreen() {
   return (
     <View style={styles.screen}>
       <AppTopBar
-        title="Benders"
-        subtitle="Bender database"
+        title="Guide"
+        subtitle="Learning content coming soon"
         rightIcon={<Text style={styles.topIcon}>⚙</Text>}
         onRightPress={() => router.push(Routes.settings)}
       />
       <View style={styles.content}>
         <View style={styles.card}>
-          <Text style={styles.title}>Bender database coming soon.</Text>
+          <Text style={styles.title}>Guided learning is coming soon.</Text>
           <Text style={styles.body}>
-            Search, current bender selection, manufacturer notes, and custom benders will live here.
+            Formulas, bend steps, common mistakes, and apprentice-friendly walkthroughs will live here.
           </Text>
         </View>
       </View>
-      <BottomNavigation activeTab="benders" onTabChange={handleTabChange} />
+      <BottomNavigation activeTab="guide" onTabChange={handleTabChange} />
     </View>
   );
 }
@@ -80,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// EXPORTS — BenderDatabaseScreen
+// EXPORTS — GuideScreen

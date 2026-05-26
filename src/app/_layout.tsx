@@ -26,9 +26,11 @@ export default function RootLayout() {
       <AnimatedSplashOverlay />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="bends" />
         <Stack.Screen name="calculator-workbench" />
         <Stack.Screen name="settings" />
         <Stack.Screen name="bender-database" />
+        <Stack.Screen name="guide" />
         <Stack.Screen name="offset" />
       </Stack>
     </ThemeProvider>

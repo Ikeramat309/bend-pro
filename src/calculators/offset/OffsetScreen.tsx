@@ -34,6 +34,7 @@ import {
   type OffsetSetupValues,
   type SetupBender,
 } from '@/components/bend';
+import { BEND_FAMILIES, type BendLibraryItem } from '@/data/bendLibrary';
 import { colors, layout, spacing } from '@/theme';
 import { Routes } from '@/navigation';
 
@@ -75,7 +76,9 @@ function OffsetModal({
             </Pressable>
           </View>
 
-          <View style={styles.modalBody}>{children}</View>
+          <ScrollView contentContainerStyle={styles.modalBody} showsVerticalScrollIndicator={false}>
+            {children}
+          </ScrollView>
 
           <Pressable onPress={onClose} style={styles.primaryButton} accessibilityRole="button">
             <Text style={styles.primaryButtonText}>Close</Text>
@@ -88,14 +91,17 @@ function OffsetModal({
 
 function MenuItem({
   title,
+  subtitle,
   onPress,
 }: {
   title: string;
+  subtitle?: string;
   onPress: () => void;
 }) {
   return (
     <Pressable onPress={onPress} style={styles.menuItem} accessibilityRole="button">
       <Text style={styles.menuItemText}>{title}</Text>
+      {subtitle ? <Text style={styles.menuItemSubtitle}>{subtitle}</Text> : null}
     </Pressable>
   );
 }
@@ -189,12 +195,21 @@ export default function OffsetScreen() {
   }
 
   function openSwitchBendPlaceholder() {
-    setMenuNotice('Switch Bend picker will live here.');
+    setMenuNotice('This bend type is coming soon.');
   }
 
   function openSettings() {
     setMenuVisible(false);
     router.push(Routes.settings);
+  }
+
+  function handleQuickBendPress(item: BendLibraryItem) {
+    if (item.status === 'active' && item.title === 'Basic Offset') {
+      setMenuNotice('Basic Offset is already open.');
+      return;
+    }
+
+    openSwitchBendPlaceholder();
   }
 
   function applySetup(nextSetup: OffsetSetupValues) {
@@ -299,7 +314,22 @@ export default function OffsetScreen() {
       </ScrollView>
 
       <OffsetModal visible={menuVisible} title="Offset Menu" onClose={() => setMenuVisible(false)}>
-        <MenuItem title="Switch Bend" onPress={openSwitchBendPlaceholder} />
+        <Text style={styles.menuSectionTitle}>Switch Bend</Text>
+        {BEND_FAMILIES.map((family) => (
+          <View key={family.title} style={styles.menuFamily}>
+            <Text style={styles.menuFamilyTitle}>{family.title}</Text>
+            {family.items.map((item) => (
+              <MenuItem
+                key={item.title}
+                title={item.title}
+                subtitle={item.status === 'active' ? 'Active' : 'Coming Soon'}
+                onPress={() => handleQuickBendPress(item)}
+              />
+            ))}
+          </View>
+        ))}
+
+        <Text style={styles.menuSectionTitle}>Actions</Text>
         <MenuItem title="Edit Setup" onPress={openSetupModal} />
         <MenuItem title="Guided Mode" onPress={openGuidedModal} />
         <MenuItem title="Settings" onPress={openSettings} />
@@ -365,6 +395,7 @@ const styles = StyleSheet.create({
   modalCard: {
     width: '100%',
     maxWidth: layout.maxContentWidth,
+    maxHeight: '88%',
     alignSelf: 'center',
     borderRadius: 16,
     borderWidth: 1,
@@ -397,6 +428,7 @@ const styles = StyleSheet.create({
   },
   modalBody: {
     gap: spacing.md,
+    paddingBottom: spacing.sm,
   },
   modalText: {
     color: colors.muted,
@@ -416,6 +448,26 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 16,
     fontWeight: '600',
+  },
+  menuItemSubtitle: {
+    color: colors.muted,
+    fontSize: 12,
+    marginTop: 2,
+  },
+  menuSectionTitle: {
+    color: colors.primary,
+    fontSize: 13,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  menuFamily: {
+    gap: spacing.sm,
+  },
+  menuFamilyTitle: {
+    color: colors.muted,
+    fontSize: 13,
+    fontWeight: '700',
   },
   placeholderText: {
     color: colors.warning,

@@ -14,9 +14,11 @@ import type { Href } from 'expo-router';
 // CONSTANTS — one path per screen file in src/app/
 export const Routes = {
   home: '/' as Href,
+  bends: '/bends' as Href,
   calculatorWorkbench: '/calculator-workbench' as Href,
   settings: '/settings' as Href,
   benderDatabase: '/bender-database' as Href,
+  guide: '/guide' as Href,
   offset: '/offset' as Href,
 } as const;
 

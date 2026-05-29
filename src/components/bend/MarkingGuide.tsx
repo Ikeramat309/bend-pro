@@ -63,7 +63,7 @@ export function MarkingGuide({
           {isEmpty ? (
             <View style={styles.emptyVisual}>
               <View style={styles.emptyPipe} />
-              <Text style={styles.emptyText}>Enter offset height</Text>
+              <Text style={styles.emptyText}>Enter rise</Text>
             </View>
           ) : (
             <>

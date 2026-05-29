@@ -79,9 +79,9 @@ export function BendActionCard({
         <View style={styles.metaItem}>
           <Text style={styles.metaIcon}>↕</Text>
           <View style={styles.metaText}>
-            <Text style={styles.metaLabel}>Shrink</Text>
+            <Text style={styles.metaLabel}>SHRINK</Text>
             <Text style={styles.metaValue}>{shrinkValue}</Text>
-            <Text style={styles.metaHelper}>{shrinkHelperText}</Text>
+            {shrinkHelperText ? <Text style={styles.metaHelper}>{shrinkHelperText}</Text> : null}
           </View>
         </View>
 
@@ -90,8 +90,7 @@ export function BendActionCard({
         <View style={styles.metaItem}>
           <Text style={styles.metaIcon}>⌁</Text>
           <View style={styles.metaText}>
-            <Text style={styles.metaLabel}>Bend Type</Text>
-            {layoutValue ? <Text style={styles.metaValue}>{layoutValue}</Text> : null}
+            <Text style={styles.metaLabel}>{layoutValue || '2-Bend Offset'}</Text>
             <Text style={styles.metaHelper}>{layoutHelperText}</Text>
           </View>
         </View>

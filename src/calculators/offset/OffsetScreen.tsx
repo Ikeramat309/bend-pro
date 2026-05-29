@@ -34,11 +34,15 @@ import {
   type SetupBender,
 } from '@/components/bend';
 import { BEND_FAMILIES, type BendLibraryItem } from '@/data/bendLibrary';
-import { colors, layout, spacing } from '@/theme';
+import { DEFAULT_BENDER_PROFILE_ID, getBenderProfile } from '@/data/benderProfiles';
 import { Routes } from '@/navigation';
+import { colors, layout, spacing } from '@/theme';
+import { getRoundingLabel } from '@/utils/rounding';
+import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
+import { hasPositiveNumber, parseOptionalNumber } from '@/utils/validation';
 
-import { calculateOffset } from './offset.logic';
-import type { BendAngle, ConduitType, RoundingOption, Unit } from './offset.types';
+import { calculateOffsetEngine } from './offsetEngine';
+import type { BendAngle, ConduitType, RoundingOption, Unit } from './offsetTypes';
 
 // =============================================================================
 // DEFAULTS — starting values for this calculator
@@ -48,6 +52,7 @@ const DEFAULT_UNIT: Unit = 'imperial';
 const DEFAULT_ANGLE: BendAngle = 30;
 const DEFAULT_CONDUIT_TYPE: ConduitType = 'EMT';
 const DEFAULT_BENDER: SetupBender = 'Generic Hand Bender';
+const DEFAULT_BENDER_PROFILE = getBenderProfile(DEFAULT_BENDER_PROFILE_ID);
 
 // =============================================================================
 // LOCAL MODAL COMPONENTS — placeholder interactions for Phase 3
@@ -142,26 +147,27 @@ export default function OffsetScreen() {
   const offsetHeight = Number(offsetHeightText || 0);
 
   // BEGINNER NOTE: undefined tells the engine to skip mark-distance outputs.
-  const firstMarkNumber = firstMark.trim() === '' ? undefined : Number(firstMark);
+  const firstMarkNumber = parseOptionalNumber(firstMark);
 
-  const unitLabel = unit === 'metric' ? 'mm' : 'in';
-  const unitLabelText = unit === 'metric' ? 'Metric' : 'Imperial';
+  const unitLabel = getLengthUnitLabel(unit);
+  const unitLabelText = getUnitSystemLabel(unit);
   const setupSummary = `${conduitType} ${conduitSize}"`;
-  const setupSubText = `${unitLabelText} • ${rounding} rounding`;
+  const setupSubText = `${unitLabelText} • ${getRoundingLabel(rounding)}`;
 
   // ---------------------------------------------------------------------------
   // CALCULATION — UI sends input into the pure logic file
   // ---------------------------------------------------------------------------
 
   const result = useMemo(() => {
-    return calculateOffset({
-      offsetHeight,
+    return calculateOffsetEngine({
+      rise: offsetHeight,
       firstMark: firstMarkNumber,
       bendAngle,
-      unit,
-      rounding,
-      conduitSize,
+      benderProfileId: DEFAULT_BENDER_PROFILE.id,
       conduitType,
+      tradeSize: conduitSize,
+      unitSystem: unit,
+      roundingPrecision: rounding,
     });
   }, [offsetHeight, firstMarkNumber, bendAngle, unit, rounding, conduitSize, conduitType]);
 
@@ -172,12 +178,12 @@ export default function OffsetScreen() {
       : undefined;
 
   const hasFirstMark = firstMarkNumber !== undefined && Number.isFinite(firstMarkNumber);
-  const hasValidOffset = offsetHeightText.trim() !== '' && offsetHeight > 0;
-  const mark1Value = hasValidOffset ? (hasFirstMark ? result.firstMarkFormatted ?? '—' : 'Start') : '—';
+  const hasValidOffset = hasPositiveNumber(offsetHeightText);
+  const mark1Value = hasValidOffset ? (hasFirstMark ? result.mark1Formatted ?? '—' : 'Start') : '—';
   const mark2Value = hasValidOffset
     ? hasFirstMark
-      ? result.secondMarkFormatted ?? '—'
-      : `+ ${result.spacingFormatted}`
+      ? result.mark2Formatted ?? '—'
+      : `+ ${result.markSpacingFormatted}`
     : '—';
 
   function handleBackPress() {
@@ -263,12 +269,12 @@ export default function OffsetScreen() {
         <View style={styles.compactInputRow}>
           <BigMeasurementInput
             variant="compact"
-            label="Offset Height"
+            label="RISE"
             value={offsetHeightText}
             onChangeText={setOffsetHeightText}
             placeholder="0"
             unit={unitLabel}
-            error={offsetHeightText !== '' && offsetHeight <= 0 ? 'Enter a value greater than 0.' : undefined}
+            error={offsetHeightText !== '' && offsetHeight <= 0 ? 'Enter a rise greater than 0.' : undefined}
           />
 
           <Pressable
@@ -276,7 +282,7 @@ export default function OffsetScreen() {
             style={({ pressed }) => [styles.angleCard, pressed && styles.angleCardPressed]}
             accessibilityRole="button"
             accessibilityLabel="Choose bend angle">
-            <Text style={styles.compactLabel}>Bend Angle</Text>
+            <Text style={styles.compactLabel}>BEND ANGLE</Text>
             <View style={styles.angleValueRow}>
               <Text style={styles.angleValue}>{bendAngle}°</Text>
               <Text style={styles.angleChevron}>›</Text>
@@ -285,19 +291,23 @@ export default function OffsetScreen() {
         </View>
 
         <BendActionCard
-          title="Mark 2 Distance"
-          primaryValue={hasValidOffset ? result.spacingFormatted : '—'}
-          helperText={hasValidOffset ? 'Measure from Mark 1' : 'Enter offset height to calculate layout'}
+          title="MARK SPACING"
+          primaryValue={hasValidOffset ? result.markSpacingFormatted : '—'}
+          helperText={
+            hasValidOffset
+              ? 'Distance between bends'
+              : 'Enter rise to generate mark spacing, shrink, and bend layout.'
+          }
           bendType="offset"
           mark1Label="Mark 1"
           mark1Value={mark1Value}
           mark2Label="Mark 2"
           mark2Value={mark2Value}
-          distanceValue={hasValidOffset ? result.spacingFormatted : '—'}
+          distanceValue={hasValidOffset ? result.markSpacingFormatted : '—'}
           angleDeg={bendAngle}
           shrinkValue={hasValidOffset ? result.shrinkFormatted : '—'}
-          shrinkHelperText="Only if landing on target"
-          layoutValue=""
+          shrinkHelperText=""
+          layoutValue="2-BEND OFFSET"
           layoutHelperText="Two opposite bends"
           isEmpty={!hasValidOffset}
           onPress={openLayoutModal}
@@ -313,10 +323,10 @@ export default function OffsetScreen() {
 
         {showFirstMark ? (
           <BigMeasurementInput
-            label="First Mark"
+            label="Start Mark"
             value={firstMark}
             onChangeText={setFirstMark}
-            placeholder="Optional layout mark"
+            placeholder="Optional"
             unit={unitLabel}
             variant="compact"
             error={firstMarkInputError}
@@ -376,8 +386,8 @@ export default function OffsetScreen() {
           Formulas, bend steps, common mistakes, and learning support will live here.
         </Text>
         <View style={styles.formulaCard}>
-          <Text style={styles.formulaText}>Spacing = Offset Height × Multiplier</Text>
-          <Text style={styles.formulaText}>Shrink = Offset Height × Shrink Constant</Text>
+          <Text style={styles.formulaText}>Mark spacing = rise × multiplier</Text>
+          <Text style={styles.formulaText}>Shrink = rise × shrink constant</Text>
         </View>
       </OffsetModal>
 

@@ -12,6 +12,7 @@ export type BigMeasurementInputProps = {
   value: string;
   unit: string;
   variant?: 'default' | 'compact';
+  helperText?: string;
   placeholder?: string;
   onChangeText: (text: string) => void;
   error?: string;
@@ -23,12 +24,16 @@ export function BigMeasurementInput({
   value,
   unit,
   variant = 'default',
+  helperText,
   placeholder = '0',
   onChangeText,
   error,
   inputProps,
 }: BigMeasurementInputProps) {
   if (variant === 'compact') {
+    const compactValueText = value || placeholder;
+    const compactInputWidth = Math.max(48, Math.min(104, compactValueText.length * 15 + 18));
+
     return (
       <View style={styles.wrapCompact}>
         <View
@@ -37,10 +42,13 @@ export function BigMeasurementInput({
             styles.inputRowCompact,
             { borderColor: error ? colors.error : colors.border },
           ]}>
-          <Text style={styles.label}>{label}</Text>
+          <View style={styles.compactLabelBlock}>
+            <Text style={[styles.label, styles.compactLabel]}>{label}</Text>
+            {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
+          </View>
           <View style={styles.compactValueRow}>
             <TextInput
-              style={[styles.input, styles.inputCompact]}
+              style={[styles.input, styles.inputCompact, { width: compactInputWidth }]}
               value={value}
               onChangeText={onChangeText}
               placeholder={placeholder}
@@ -60,6 +68,7 @@ export function BigMeasurementInput({
   return (
     <View style={styles.wrap}>
       <Text style={styles.label}>{label}</Text>
+      {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
       <View
         style={[
           styles.inputRow,
@@ -95,6 +104,20 @@ const styles = StyleSheet.create({
     ...typography.label,
     color: colors.muted,
   },
+  compactLabel: {
+    fontSize: 14,
+    lineHeight: 18,
+    fontWeight: '700',
+    letterSpacing: 0.4,
+  },
+  compactLabelBlock: {
+    gap: 1,
+  },
+  helperText: {
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.muted,
+  },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -116,7 +139,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
   input: {
     flex: 1,
@@ -126,11 +149,11 @@ const styles = StyleSheet.create({
   },
   inputCompact: {
     flex: 0,
-    width: 82,
     minWidth: 0,
-    fontSize: 32,
-    lineHeight: 36,
+    fontSize: 28,
+    lineHeight: 32,
     paddingVertical: 0,
+    paddingHorizontal: 0,
   },
   unit: {
     ...typography.resultUnit,
@@ -139,9 +162,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   unitCompact: {
-    fontSize: 24,
-    lineHeight: 28,
+    fontSize: 20,
+    lineHeight: 24,
     marginLeft: 0,
+    flexShrink: 0,
   },
   error: {
     fontSize: 12,

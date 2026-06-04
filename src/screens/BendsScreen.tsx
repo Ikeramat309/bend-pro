@@ -54,6 +54,11 @@ export function BendsScreen() {
       return;
     }
 
+    if (item.status === 'active' && item.title === 'Stub-Up 90') {
+      router.push(Routes.stub90);
+      return;
+    }
+
     setComingSoonVisible(true);
   }
 

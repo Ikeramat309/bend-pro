@@ -36,7 +36,11 @@ export const BEND_FAMILIES: BendFamily[] = [
   {
     title: '90s',
     items: [
-      { title: 'Stub-Up 90', status: 'coming-soon' },
+      {
+        title: 'Stub-Up 90',
+        description: 'Find first mark from stub height and take-up.',
+        status: 'active',
+      },
       { title: 'Back-to-Back 90', status: 'coming-soon' },
       { title: 'Kick 90', status: 'coming-soon' },
     ],

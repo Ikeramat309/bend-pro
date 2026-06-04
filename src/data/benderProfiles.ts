@@ -11,6 +11,7 @@ export type BenderProfile = {
   name: string;
   category: 'hand' | 'mechanical' | 'hydraulic' | 'custom';
   defaultUnitSystem: Unit;
+  stub90TakeUpInchesByTradeSize?: Record<string, number>;
   notes?: string[];
 };
 
@@ -20,6 +21,11 @@ export const BENDER_PROFILES: BenderProfile[] = [
     name: 'Generic Hand Bender',
     category: 'hand',
     defaultUnitSystem: 'metric',
+    stub90TakeUpInchesByTradeSize: {
+      '1/2': 5,
+      '3/4': 6,
+      '1': 8,
+    },
     notes: ['Use bender marks according to the shoe instructions.'],
   },
 ];

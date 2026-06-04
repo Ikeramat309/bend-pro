@@ -19,6 +19,7 @@ export type SetupBender =
   | 'Generic Hand Bender'
   | 'Generic Mechanical Bender'
   | 'Generic Hydraulic Bender';
+export type SetupBendAngle = BendAngle | 90;
 
 export type OffsetSetupValues = {
   conduitType: SetupConduitType;
@@ -26,7 +27,7 @@ export type OffsetSetupValues = {
   bender: SetupBender;
   unit: SetupUnit;
   rounding: SetupRounding;
-  bendAngle: BendAngle;
+  bendAngle: SetupBendAngle;
 };
 
 export type EditSetupSheetProps = {

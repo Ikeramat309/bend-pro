@@ -32,6 +32,7 @@ export default function RootLayout() {
         <Stack.Screen name="bender-database" />
         <Stack.Screen name="guide" />
         <Stack.Screen name="offset" />
+        <Stack.Screen name="stub90" />
       </Stack>
     </ThemeProvider>
   );

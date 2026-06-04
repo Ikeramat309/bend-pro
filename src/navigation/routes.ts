@@ -20,6 +20,7 @@ export const Routes = {
   benderDatabase: '/bender-database' as Href,
   guide: '/guide' as Href,
   offset: '/offset' as Href,
+  stub90: '/stub90' as Href,
 } as const;
 
 // EXPORTS — Routes

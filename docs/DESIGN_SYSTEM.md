@@ -72,6 +72,19 @@ Preferred direction:
 
 Avoid making every measurement a different bright color.
 
+### Implemented workspace tokens
+
+Pipe Workspace UI uses `src/theme/workspaceTheme.ts`:
+
+- `background`, `surface`, `surfaceElevated`, `border`
+- `textPrimary`, `textSecondary`, `textMuted`
+- `accentBlue`, `accentBlueSoft`, `accentOrange`
+- `pipeSteel`, `pipeDark`, `gridLine`
+
+Shared components live under `src/shared/ui/`, `src/shared/workspace/`, and `src/shared/diagrams/primitives/`.
+
+Preview route: `/dev-pipe-workspace` (static mockup only; no calculator wiring yet).
+
 ## Typography And Spacing
 
 Use shared theme spacing and typography.

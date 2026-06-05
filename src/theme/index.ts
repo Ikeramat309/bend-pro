@@ -6,3 +6,4 @@ export * from './spacing';
 export * from './typography';
 export * from './calculatorTheme';
 export { useCalculatorTheme } from './useCalculatorTheme';
+export * from './workspaceTheme';

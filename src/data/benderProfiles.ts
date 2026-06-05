@@ -4,7 +4,7 @@
  * This is intentionally small for now. Future hand, mechanical, hydraulic, and
  * custom benders can extend this shape without changing calculator screens.
  */
-import type { Unit } from '@/calculators/offset/offsetTypes';
+import type { Unit } from '@/features/bend-offset/engine/offsetTypes';
 
 export type BenderProfile = {
   id: string;

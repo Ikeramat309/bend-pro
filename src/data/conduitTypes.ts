@@ -1,7 +1,7 @@
 /**
  * Placeholder conduit metadata for setup/profile work.
  */
-import type { ConduitType } from '@/calculators/offset/offsetTypes';
+import type { ConduitType } from '@/features/bend-offset/engine/offsetTypes';
 
 export type ConduitTypeOption = {
   id: ConduitType;

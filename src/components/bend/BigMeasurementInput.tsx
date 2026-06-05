@@ -1,7 +1,8 @@
 /**
  * Figma: BigMeasurementInput — primary field measurement entry.
  */
-import { StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
+import { useRef } from 'react';
+import { Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 
 import { colors } from '@/theme/colors';
 import { radius, spacing, touchTarget } from '@/theme/spacing';
@@ -30,25 +31,28 @@ export function BigMeasurementInput({
   error,
   inputProps,
 }: BigMeasurementInputProps) {
-  if (variant === 'compact') {
-    const compactValueText = value || placeholder;
-    const compactInputWidth = Math.max(48, Math.min(104, compactValueText.length * 15 + 18));
+  const inputRef = useRef<TextInput>(null);
 
+  if (variant === 'compact') {
     return (
       <View style={styles.wrapCompact}>
-        <View
-          style={[
+        <Pressable
+          onPress={() => inputRef.current?.focus()}
+          style={({ pressed }) => [
             styles.inputRow,
             styles.inputRowCompact,
             { borderColor: error ? colors.error : colors.border },
-          ]}>
+            pressed && styles.inputRowCompactPressed,
+          ]}
+          accessibilityRole="none">
           <View style={styles.compactLabelBlock}>
             <Text style={[styles.label, styles.compactLabel]}>{label}</Text>
             {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
           </View>
           <View style={styles.compactValueRow}>
             <TextInput
-              style={[styles.input, styles.inputCompact, { width: compactInputWidth }]}
+              ref={inputRef}
+              style={[styles.input, styles.inputCompact]}
               value={value}
               onChangeText={onChangeText}
               placeholder={placeholder}
@@ -59,7 +63,7 @@ export function BigMeasurementInput({
             />
             <Text style={[styles.unit, styles.unitCompact]}>{unit}</Text>
           </View>
-        </View>
+        </Pressable>
         {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
     );
@@ -135,10 +139,15 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     borderRadius: radius.lg,
   },
+  inputRowCompactPressed: {
+    opacity: 0.92,
+  },
   compactValueRow: {
+    flex: 1,
     minWidth: 0,
     flexDirection: 'row',
     alignItems: 'baseline',
+    justifyContent: 'flex-end',
     gap: spacing.xs,
   },
   input: {
@@ -148,12 +157,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.lg,
   },
   inputCompact: {
-    flex: 0,
-    minWidth: 0,
+    flex: 1,
+    minWidth: 48,
     fontSize: 28,
     lineHeight: 32,
     paddingVertical: 0,
     paddingHorizontal: 0,
+    textAlign: 'right',
   },
   unit: {
     ...typography.resultUnit,

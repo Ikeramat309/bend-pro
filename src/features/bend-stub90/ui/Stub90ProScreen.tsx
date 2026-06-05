@@ -24,9 +24,9 @@ import { getRoundingLabel } from '@/utils/rounding';
 import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
 import { hasPositiveNumber, parseOptionalNumber } from '@/utils/validation';
 
-import { calculateStub90Engine } from './stub90Engine';
+import { calculateStub90Engine } from '../engine/stub90Engine';
 import { Stub90Diagram } from './Stub90Diagram';
-import type { ConduitType, RoundingOption, Unit } from './stub90Types';
+import type { ConduitType, RoundingOption, Unit } from '../engine/stub90Types';
 
 const DEFAULT_UNIT: Unit = 'imperial';
 const DEFAULT_CONDUIT_TYPE: ConduitType = 'EMT';

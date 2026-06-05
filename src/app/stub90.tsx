@@ -5,4 +5,4 @@
  * Route entry for the Stub 90 calculator.
  */
 
-export { default } from '@/calculators/stub90/Stub90CalculatorScreen';
+export { default } from '@/features/bend-stub90/ui/Stub90ProScreen';

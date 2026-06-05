@@ -7,7 +7,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import type { BendAngle } from '@/calculators/offset/offset.types';
+import type { BendAngle } from '@/features/bend-offset/engine/offset.types';
 import { colors } from '@/theme/colors';
 import { layout, spacing, touchTarget } from '@/theme/spacing';
 import { typography } from '@/theme/typography';

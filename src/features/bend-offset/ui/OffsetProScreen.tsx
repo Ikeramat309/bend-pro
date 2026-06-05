@@ -41,8 +41,8 @@ import { getRoundingLabel } from '@/utils/rounding';
 import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
 import { hasPositiveNumber, parseOptionalNumber } from '@/utils/validation';
 
-import { calculateOffsetEngine } from './offsetEngine';
-import type { BendAngle, ConduitType, RoundingOption, Unit } from './offsetTypes';
+import { calculateOffsetEngine } from '../engine/offsetEngine';
+import type { BendAngle, ConduitType, RoundingOption, Unit } from '../engine/offsetTypes';
 
 // =============================================================================
 // DEFAULTS — starting values for this calculator

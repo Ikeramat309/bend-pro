@@ -1,7 +1,7 @@
 /**
  * Shared bend angle presets used by calculators and setup controls.
  */
-import type { BendAngle } from '@/calculators/offset/offsetTypes';
+import type { BendAngle } from '@/features/bend-offset/engine/offsetTypes';
 
 export const OFFSET_ANGLE_PRESETS: BendAngle[] = [10, 22.5, 30, 45, 60];
 

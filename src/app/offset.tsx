@@ -5,5 +5,5 @@
  * Route entry for the final Offset Bend calculator.
  */
 
-export { default } from '@/calculators/offset/OffsetScreen';
+export { default } from '@/features/bend-offset/ui/OffsetProScreen';
 

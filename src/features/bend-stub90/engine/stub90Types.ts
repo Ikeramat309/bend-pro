@@ -2,7 +2,7 @@
  * Stub 90 calculator input/result contracts.
  */
 import type { BenderProfile } from '@/data/benderProfiles';
-import type { ConduitType, RoundingOption, Unit } from '@/calculators/offset/offsetTypes';
+import type { ConduitType, RoundingOption, Unit } from '@/features/bend-offset/engine/offsetTypes';
 
 export type Stub90EngineInput = {
   stubHeight: number;

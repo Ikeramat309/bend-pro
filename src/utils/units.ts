@@ -1,7 +1,7 @@
 /**
  * Small app-level unit helpers.
  */
-import type { Unit } from '@/calculators/offset/offsetTypes';
+import type { Unit } from '@/features/bend-offset/engine/offsetTypes';
 
 export function getLengthUnitLabel(unitSystem: Unit): 'in' | 'mm' {
   return unitSystem === 'metric' ? 'mm' : 'in';

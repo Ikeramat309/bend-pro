@@ -10,6 +10,7 @@ export type DimensionLineProps = {
   showArrows?: boolean;
   arrowMarkerId?: string;
   extensionLines?: { x1: number; y1: number; x2: number; y2: number }[];
+  opacity?: number;
 };
 
 /** Measurement dimension line with optional arrow markers and extension ticks. */
@@ -21,9 +22,10 @@ export function DimensionLine({
   showArrows = true,
   arrowMarkerId = 'diagramArrow',
   extensionLines = [],
+  opacity = 1,
 }: DimensionLineProps) {
   return (
-    <G>
+    <G opacity={opacity}>
       <Line
         x1={x1}
         y1={y1}
@@ -42,7 +44,7 @@ export function DimensionLine({
           x2={line.x2}
           y2={line.y2}
           stroke={diagramTheme.dimension}
-          strokeWidth={0.7}
+          strokeWidth={diagramMetrics.extensionStroke}
         />
       ))}
     </G>

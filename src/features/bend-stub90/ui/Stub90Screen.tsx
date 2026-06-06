@@ -5,15 +5,22 @@
  */
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import type { ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes } from '@/navigation';
 import { AppHeader, AppScreen, FieldInput } from '@/shared/ui';
-import { EditSetupSheet, PipeWorkspaceResult, SetupSummary, type SetupValues } from '@/shared/workspace';
-import { colors, radius, spacing, typography } from '@/theme';
+import {
+  EditSetupSheet,
+  OptionalFieldButton,
+  PipeWorkspaceResult,
+  SetupSummary,
+  WarningList,
+  type SetupValues,
+} from '@/shared/workspace';
+import { colors, spacing } from '@/theme';
 import { getRoundingLabel } from '@/utils/rounding';
 import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
 import { hasPositiveNumber, parseOptionalNumber } from '@/utils/validation';
@@ -149,13 +156,10 @@ export default function Stub90Screen() {
               error={legLengthError}
             />
           ) : (
-            <Pressable
+            <OptionalFieldButton
+              label={stub90Copy.fields.leg.addButton}
               onPress={() => setShowLegInput(true)}
-              style={({ pressed }) => [styles.addLegButton, pressed && styles.addLegButtonPressed]}
-              accessibilityRole="button">
-              <Text style={styles.addLegIcon}>＋</Text>
-              <Text style={styles.addLegText}>{stub90Copy.fields.leg.addButton}</Text>
-            </Pressable>
+            />
           )}
         </View>
 
@@ -179,15 +183,7 @@ export default function Stub90Screen() {
           ]}
         />
 
-        {visibleWarnings.length > 0 ? (
-          <View style={styles.warningCard}>
-            {visibleWarnings.map((warning) => (
-              <Text key={warning} style={styles.warningText}>
-                {warning}
-              </Text>
-            ))}
-          </View>
-        ) : null}
+        <WarningList warnings={visibleWarnings} />
       </AppScreen>
 
       <EditSetupSheet
@@ -214,42 +210,5 @@ const styles = StyleSheet.create({
   },
   legPanel: {
     marginTop: -spacing.xs,
-  },
-  addLegButton: {
-    minHeight: 40,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.md,
-  },
-  addLegButtonPressed: {
-    opacity: 0.88,
-  },
-  addLegIcon: {
-    color: colors.primary,
-    fontSize: 18,
-    lineHeight: 20,
-    fontWeight: '800',
-  },
-  addLegText: {
-    ...typography.chip,
-    color: colors.primary,
-  },
-  warningCard: {
-    gap: spacing.sm,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.warning,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-  },
-  warningText: {
-    ...typography.subtitle,
-    color: colors.warning,
   },
 });

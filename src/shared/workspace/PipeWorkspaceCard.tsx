@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography } from '@/theme';
 
 export type PipeWorkspaceCardProps = {
   children: ReactNode;
@@ -17,10 +17,16 @@ export function PipeWorkspaceCard({
   variant = 'default',
   onPress,
 }: PipeWorkspaceCardProps) {
-  const cardStyle = [styles.card, variant === 'highlight' && styles.cardHighlight];
+  const isWorkspace = variant === 'highlight';
+  const cardStyle: StyleProp<ViewStyle> = [
+    styles.card,
+    isWorkspace && styles.cardWorkspace,
+  ];
   const body = (
     <>
-      {title ? <Text style={styles.title}>{title}</Text> : null}
+      {title ? (
+        <Text style={[styles.title, isWorkspace && styles.titleWorkspace]}>{title}</Text>
+      ) : null}
       {children}
     </>
   );
@@ -42,7 +48,7 @@ export function PipeWorkspaceCard({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 18,
+    borderRadius: radius.xl,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
@@ -50,9 +56,11 @@ const styles = StyleSheet.create({
     gap: spacing.lg,
     overflow: 'hidden',
   },
-  cardHighlight: {
-    borderColor: colors.primary,
-    backgroundColor: colors.surface2,
+  cardWorkspace: {
+    padding: 0,
+    gap: 0,
+    borderColor: 'rgba(59, 189, 248, 0.18)',
+    backgroundColor: colors.surface,
   },
   pressed: {
     opacity: 0.92,
@@ -61,5 +69,16 @@ const styles = StyleSheet.create({
     ...typography.label,
     color: colors.primary,
     fontWeight: '700',
+  },
+  titleWorkspace: {
+    fontSize: 11,
+    lineHeight: 14,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: colors.muted,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.sm,
   },
 });

@@ -1,33 +1,71 @@
 import { useRef } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 
-import { colors, radius, spacing, touchTarget, typography } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
+
+export type FieldInputVariant = 'default' | 'compact' | 'picker';
 
 export type FieldInputProps = {
   label: string;
   value: string;
-  unit: string;
-  variant?: 'default' | 'compact';
+  unit?: string;
+  variant?: FieldInputVariant;
   helperText?: string;
   placeholder?: string;
   onChangeText: (text: string) => void;
+  onPress?: () => void;
   error?: string;
   inputProps?: Omit<TextInputProps, 'value' | 'onChangeText' | 'placeholder'>;
 };
 
-/** Primary measurement field — large default or compact side-by-side layout. */
+const fieldLabelStyle = {
+  fontSize: 10,
+  lineHeight: 13,
+  fontWeight: '600' as const,
+  letterSpacing: 0.65,
+  textTransform: 'uppercase' as const,
+  color: colors.muted,
+};
+
+/** Primary measurement field — default, compact row, or picker row. */
 export function FieldInput({
   label,
   value,
-  unit,
+  unit = '',
   variant = 'default',
   helperText,
   placeholder = '0',
   onChangeText,
+  onPress,
   error,
   inputProps,
 }: FieldInputProps) {
   const inputRef = useRef<TextInput>(null);
+  const borderColor = error ? colors.error : colors.border;
+
+  if (variant === 'picker') {
+    return (
+      <View style={styles.wrapCompact}>
+        <Pressable
+          onPress={onPress}
+          style={({ pressed }) => [
+            styles.fieldShell,
+            styles.fieldShellCompact,
+            { borderColor },
+            pressed && styles.fieldShellPressed,
+          ]}
+          accessibilityRole="button"
+          accessibilityLabel={label}>
+          <Text style={styles.fieldLabel}>{label}</Text>
+          <View style={styles.compactValueRow}>
+            <Text style={styles.pickerValue}>{value}</Text>
+            <Text style={styles.pickerChevron}>›</Text>
+          </View>
+        </Pressable>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+      </View>
+    );
+  }
 
   if (variant === 'compact') {
     return (
@@ -35,20 +73,20 @@ export function FieldInput({
         <Pressable
           onPress={() => inputRef.current?.focus()}
           style={({ pressed }) => [
-            styles.inputRow,
-            styles.inputRowCompact,
-            { borderColor: error ? colors.error : colors.border },
-            pressed && styles.inputRowCompactPressed,
+            styles.fieldShell,
+            styles.fieldShellCompact,
+            { borderColor },
+            pressed && styles.fieldShellPressed,
           ]}
           accessibilityRole="none">
           <View style={styles.compactLabelBlock}>
-            <Text style={[styles.label, styles.compactLabel]}>{label}</Text>
+            <Text style={styles.fieldLabel}>{label}</Text>
             {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
           </View>
           <View style={styles.compactValueRow}>
             <TextInput
               ref={inputRef}
-              style={[styles.input, styles.inputCompact]}
+              style={styles.inputCompact}
               value={value}
               onChangeText={onChangeText}
               placeholder={placeholder}
@@ -57,7 +95,7 @@ export function FieldInput({
               returnKeyType="done"
               {...inputProps}
             />
-            <Text style={[styles.unit, styles.unitCompact]}>{unit}</Text>
+            {unit ? <Text style={styles.unitCompact}>{unit}</Text> : null}
           </View>
         </Pressable>
         {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -67,11 +105,11 @@ export function FieldInput({
 
   return (
     <View style={styles.wrap}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.fieldLabel}>{label}</Text>
       {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
-      <View style={[styles.inputRow, { borderColor: error ? colors.error : colors.border }]}>
+      <View style={[styles.fieldShell, styles.fieldShellDefault, { borderColor }]}>
         <TextInput
-          style={styles.input}
+          style={styles.inputDefault}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
@@ -80,7 +118,7 @@ export function FieldInput({
           returnKeyType="done"
           {...inputProps}
         />
-        <Text style={styles.unit}>{unit}</Text>
+        {unit ? <Text style={styles.unitDefault}>{unit}</Text> : null}
       </View>
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
@@ -89,50 +127,46 @@ export function FieldInput({
 
 const styles = StyleSheet.create({
   wrap: {
-    gap: spacing.md,
+    gap: spacing.xs,
   },
   wrapCompact: {
     flex: 1,
     minWidth: 0,
     gap: spacing.xs,
   },
-  label: {
-    ...typography.label,
-    color: colors.muted,
+  fieldShell: {
+    borderWidth: 1,
+    borderRadius: radius.sm,
+    backgroundColor: colors.surface2,
+    paddingHorizontal: spacing.md,
   },
-  compactLabel: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: '700',
-    letterSpacing: 0.4,
+  fieldShellDefault: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    minHeight: 56,
+    paddingVertical: spacing.sm,
+    gap: spacing.sm,
   },
+  fieldShellCompact: {
+    minHeight: 72,
+    paddingVertical: 10,
+    justifyContent: 'space-between',
+    gap: 3,
+  },
+  fieldShellPressed: {
+    opacity: 0.88,
+  },
+  fieldLabel: fieldLabelStyle,
   compactLabelBlock: {
     gap: 1,
   },
   helperText: {
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 11,
+    lineHeight: 14,
     color: colors.muted,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: touchTarget + spacing.xxl,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.xl,
-    borderWidth: 1,
-    backgroundColor: colors.surface,
-  },
-  inputRowCompact: {
-    minHeight: 92,
-    alignItems: 'stretch',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderRadius: radius.lg,
-  },
-  inputRowCompactPressed: {
-    opacity: 0.92,
+    textTransform: 'none',
+    letterSpacing: 0,
+    fontWeight: '500',
   },
   compactValueRow: {
     flex: 1,
@@ -142,35 +176,63 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     gap: spacing.xs,
   },
-  input: {
+  inputDefault: {
     flex: 1,
-    ...typography.inputLarge,
+    minWidth: 0,
+    fontSize: 28,
+    lineHeight: 32,
+    fontWeight: '600',
     color: colors.text,
-    paddingVertical: spacing.lg,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    fontVariant: ['tabular-nums'],
   },
   inputCompact: {
     flex: 1,
     minWidth: 48,
-    fontSize: 28,
-    lineHeight: 32,
+    fontSize: 24,
+    lineHeight: 28,
+    fontWeight: '600',
+    color: colors.text,
     paddingVertical: 0,
     paddingHorizontal: 0,
     textAlign: 'right',
+    fontVariant: ['tabular-nums'],
   },
-  unit: {
-    ...typography.resultUnit,
+  unitDefault: {
+    fontSize: 18,
+    lineHeight: 22,
+    fontWeight: '600',
     color: colors.primary,
-    marginLeft: spacing.md,
-    fontWeight: '700',
+    flexShrink: 0,
   },
   unitCompact: {
-    fontSize: 20,
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: '600',
+    color: colors.primary,
+    flexShrink: 0,
+  },
+  pickerValue: {
+    flex: 1,
+    minWidth: 0,
+    fontSize: 24,
+    lineHeight: 28,
+    fontWeight: '600',
+    color: colors.text,
+    textAlign: 'right',
+    fontVariant: ['tabular-nums'],
+  },
+  pickerChevron: {
+    color: colors.primary,
+    fontSize: 22,
     lineHeight: 24,
-    marginLeft: 0,
+    fontWeight: '600',
     flexShrink: 0,
   },
   error: {
-    fontSize: 12,
+    fontSize: 11,
+    lineHeight: 14,
     color: colors.error,
   },
 });

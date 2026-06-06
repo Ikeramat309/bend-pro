@@ -1,6 +1,6 @@
 import { G, Line } from 'react-native-svg';
 
-import { DiagramLabel } from './DiagramLabel';
+import { DiagramLabel, type DiagramLabelVariant } from './DiagramLabel';
 import { diagramMetrics, diagramTheme } from './diagramTheme';
 
 export type MarkLineProps = {
@@ -11,12 +11,33 @@ export type MarkLineProps = {
   label?: string;
   labelX?: number;
   labelY?: number;
+  labelVariant?: DiagramLabelVariant;
+  opacity?: number;
 };
 
-/** Bend mark indicator on the pipe. */
-export function MarkLine({ x1, y1, x2, y2, label, labelX, labelY }: MarkLineProps) {
+/** Bend mark tick on the pipe — orange for visibility. */
+export function MarkLine({
+  x1,
+  y1,
+  x2,
+  y2,
+  label,
+  labelX,
+  labelY,
+  labelVariant = 'muted',
+  opacity = 1,
+}: MarkLineProps) {
   return (
-    <G>
+    <G opacity={opacity}>
+      <Line
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        stroke={diagramTheme.markGlow}
+        strokeWidth={diagramMetrics.markStroke + 5}
+        strokeLinecap="round"
+      />
       <Line
         x1={x1}
         y1={y1}
@@ -27,7 +48,14 @@ export function MarkLine({ x1, y1, x2, y2, label, labelX, labelY }: MarkLineProp
         strokeLinecap="round"
       />
       {label && labelX != null && labelY != null ? (
-        <DiagramLabel x={labelX} y={labelY} text={label} variant="mark" />
+        <DiagramLabel
+          x={labelX}
+          y={labelY}
+          text={label}
+          variant={labelVariant}
+          fontSize={9.5}
+          fontWeight="600"
+        />
       ) : null}
     </G>
   );

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing } from '@/theme';
 
 export type MeasurementChipTone = 'default' | 'primary' | 'warning';
 
@@ -11,10 +11,13 @@ export type MeasurementChipProps = {
   onPress?: () => void;
 };
 
-const toneStyles: Record<MeasurementChipTone, { border: string; bg: string; label: string; value: string }> = {
+const toneStyles: Record<
+  MeasurementChipTone,
+  { border: string; bg: string; label: string; value: string }
+> = {
   default: {
     border: colors.border,
-    bg: colors.surface,
+    bg: colors.surface2,
     label: colors.muted,
     value: colors.text,
   },
@@ -22,55 +25,78 @@ const toneStyles: Record<MeasurementChipTone, { border: string; bg: string; labe
     border: colors.primaryBorder,
     bg: colors.primaryMuted,
     label: colors.primary,
-    value: colors.primary,
+    value: colors.text,
   },
   warning: {
-    border: colors.warning,
-    bg: 'rgba(245, 158, 11, 0.12)',
+    border: 'rgba(255, 210, 46, 0.28)',
+    bg: 'rgba(255, 210, 46, 0.06)',
     label: colors.warning,
     value: colors.text,
   },
 };
 
-/** Compact label + value chip for marks, distances, and secondary results. */
+/** Compact field readout for marks, distances, and secondary results. */
 export function MeasurementChip({ label, value, tone = 'default', onPress }: MeasurementChipProps) {
   const palette = toneStyles[tone];
-  const content = (
-    <View style={[styles.chip, { borderColor: palette.border, backgroundColor: palette.bg }]}>
-      <Text style={[styles.label, { color: palette.label }]}>{label}</Text>
-      <Text style={[styles.value, { color: palette.value }]}>{value}</Text>
+  const readout = (
+    <View style={[styles.readout, { borderColor: palette.border, backgroundColor: palette.bg }]}>
+      <Text style={[styles.label, { color: palette.label }]} numberOfLines={2}>
+        {label}
+      </Text>
+      <Text
+        style={[styles.value, { color: palette.value }]}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.85}>
+        {value}
+      </Text>
     </View>
   );
 
   if (onPress) {
     return (
-      <Pressable onPress={onPress} accessibilityRole="button" style={({ pressed }) => pressed && styles.pressed}>
-        {content}
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        style={({ pressed }) => [styles.wrapper, pressed && styles.pressed]}>
+        {readout}
       </Pressable>
     );
   }
 
-  return content;
+  return <View style={styles.wrapper}>{readout}</View>;
 }
 
 const styles = StyleSheet.create({
-  chip: {
-    minWidth: 88,
-    gap: 2,
+  wrapper: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: '47%',
+    minWidth: 112,
+    maxWidth: '100%',
+  },
+  readout: {
+    width: '100%',
+    gap: 3,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.lg,
+    paddingVertical: 10,
+    borderRadius: radius.sm,
     borderWidth: 1,
   },
   label: {
-    ...typography.tabLabel,
+    fontSize: 10,
+    lineHeight: 13,
+    fontWeight: '600',
+    letterSpacing: 0.65,
+    textTransform: 'uppercase',
   },
   value: {
     fontSize: 16,
     lineHeight: 20,
-    fontWeight: '800',
+    fontWeight: '600',
+    fontVariant: ['tabular-nums'],
   },
   pressed: {
-    opacity: 0.9,
+    opacity: 0.88,
   },
 });

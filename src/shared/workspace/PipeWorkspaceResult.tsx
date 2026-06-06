@@ -30,45 +30,62 @@ export function PipeWorkspaceResult({
 }: PipeWorkspaceResultProps) {
   return (
     <PipeWorkspaceCard variant="highlight" title={title}>
-      {diagram}
+      <View style={styles.diagramWell}>{diagram}</View>
 
-      <View style={styles.resultBlock}>
-        <Text style={styles.resultLabel}>{primaryLabel}</Text>
-        <Text style={styles.resultValue}>{primaryValue}</Text>
-      </View>
+      <View style={styles.resultsPanel}>
+        <View style={styles.resultBlock}>
+          <Text style={styles.resultLabel}>{primaryLabel}</Text>
+          <Text style={styles.resultValue}>{primaryValue}</Text>
+        </View>
 
-      <View style={styles.chipRow}>
-        {chips.map((chip) => (
-          <MeasurementChip
-            key={chip.label}
-            label={chip.label}
-            value={chip.value}
-            tone={chip.tone}
-          />
-        ))}
+        <View style={styles.chipRow}>
+          {chips.map((chip) => (
+            <MeasurementChip
+              key={chip.label}
+              label={chip.label}
+              value={chip.value}
+              tone={chip.tone}
+            />
+          ))}
+        </View>
       </View>
     </PipeWorkspaceCard>
   );
 }
 
 const styles = StyleSheet.create({
+  diagramWell: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  resultsPanel: {
+    gap: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.lg,
+  },
   resultBlock: {
     gap: spacing.xs,
   },
   resultLabel: {
-    ...typography.label,
-    color: colors.primary,
-    fontWeight: '700',
+    ...typography.tabLabel,
+    color: colors.muted,
+    fontWeight: '600',
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
   },
   resultValue: {
-    fontSize: 40,
-    lineHeight: 44,
-    fontWeight: '800',
-    color: colors.primary,
+    fontSize: 30,
+    lineHeight: 34,
+    fontWeight: '700',
+    color: colors.text,
+    fontVariant: ['tabular-nums'],
   },
   chipRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    alignItems: 'stretch',
     gap: spacing.sm,
+    rowGap: spacing.sm,
   },
 });

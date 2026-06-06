@@ -25,6 +25,7 @@ export const stub90Copy = {
     stubLength: 'Stub Length',
     deduct: 'Deduct',
     deductMark: 'Deduct Mark',
+    bendMark: 'Bend Mark',
     leg: 'Leg',
     emptyMessage: 'Enter stub length to calculate Deduct Mark.',
     invalidMessage: 'Stub length must be greater than deduct.',

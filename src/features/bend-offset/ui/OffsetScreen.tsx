@@ -5,7 +5,7 @@
  */
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
@@ -15,12 +15,14 @@ import { AppHeader, AppScreen, FieldInput, Sheet } from '@/shared/ui';
 import {
   AngleSelector,
   EditSetupSheet,
+  OptionalFieldButton,
   PipeWorkspaceResult,
   SetupSummary,
+  WarningList,
   type BendAngleOption,
   type SetupValues,
 } from '@/shared/workspace';
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, spacing } from '@/theme';
 import { getRoundingLabel } from '@/utils/rounding';
 import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
 import { hasPositiveNumber, parseOptionalNumber } from '@/utils/validation';
@@ -165,17 +167,13 @@ export default function OffsetScreen() {
             }
           />
 
-          <Pressable
+          <FieldInput
+            variant="picker"
+            label={offsetCopy.fields.bendAngle.label}
+            value={`${bendAngle}°`}
+            onChangeText={() => {}}
             onPress={() => setAngleSheetVisible(true)}
-            style={({ pressed }) => [styles.angleCard, pressed && styles.angleCardPressed]}
-            accessibilityRole="button"
-            accessibilityLabel={offsetCopy.fields.bendAngle.label}>
-            <Text style={styles.angleLabel}>{offsetCopy.fields.bendAngle.label}</Text>
-            <View style={styles.angleValueRow}>
-              <Text style={styles.angleValue}>{bendAngle}°</Text>
-              <Text style={styles.angleChevron}>›</Text>
-            </View>
-          </Pressable>
+          />
         </View>
 
         <View style={styles.markPanel}>
@@ -190,13 +188,10 @@ export default function OffsetScreen() {
               error={mark1Error}
             />
           ) : (
-            <Pressable
+            <OptionalFieldButton
+              label={offsetCopy.fields.mark1.addButton}
               onPress={() => setShowMark1Input(true)}
-              style={({ pressed }) => [styles.addMarkButton, pressed && styles.addMarkButtonPressed]}
-              accessibilityRole="button">
-              <Text style={styles.addMarkIcon}>＋</Text>
-              <Text style={styles.addMarkText}>{offsetCopy.fields.mark1.addButton}</Text>
-            </Pressable>
+            />
           )}
         </View>
 
@@ -222,15 +217,7 @@ export default function OffsetScreen() {
           ]}
         />
 
-        {visibleWarnings.length > 0 ? (
-          <View style={styles.warningCard}>
-            {visibleWarnings.map((warning) => (
-              <Text key={warning} style={styles.warningText}>
-                {warning}
-              </Text>
-            ))}
-          </View>
-        ) : null}
+        <WarningList warnings={visibleWarnings} />
       </AppScreen>
 
       <Sheet
@@ -275,83 +262,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     alignItems: 'stretch',
   },
-  angleCard: {
-    flex: 1,
-    minWidth: 0,
-    minHeight: 92,
-    justifyContent: 'space-between',
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-  },
-  angleCardPressed: {
-    opacity: 0.9,
-  },
-  angleLabel: {
-    color: colors.muted,
-    fontSize: 14,
-    lineHeight: 18,
-    fontWeight: '700',
-    letterSpacing: 0.4,
-  },
-  angleValueRow: {
-    minWidth: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.md,
-  },
-  angleValue: {
-    color: colors.text,
-    fontSize: 32,
-    lineHeight: 36,
-    fontWeight: '800',
-  },
-  angleChevron: {
-    color: colors.primary,
-    fontSize: 32,
-    lineHeight: 34,
-  },
   markPanel: {
     marginTop: -spacing.xs,
-  },
-  addMarkButton: {
-    minHeight: 40,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.md,
-  },
-  addMarkButtonPressed: {
-    opacity: 0.88,
-  },
-  addMarkIcon: {
-    color: colors.primary,
-    fontSize: 18,
-    lineHeight: 20,
-    fontWeight: '800',
-  },
-  addMarkText: {
-    ...typography.chip,
-    color: colors.primary,
-  },
-  warningCard: {
-    gap: spacing.sm,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.warning,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-  },
-  warningText: {
-    ...typography.subtitle,
-    color: colors.warning,
   },
 });

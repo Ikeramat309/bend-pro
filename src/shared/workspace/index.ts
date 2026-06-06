@@ -13,4 +13,6 @@ export {
   type PipeWorkspaceResultChip,
   type PipeWorkspaceResultProps,
 } from './PipeWorkspaceResult';
+export { OptionalFieldButton, type OptionalFieldButtonProps } from './OptionalFieldButton';
 export { SetupSummary, type SetupSummaryProps } from './SetupSummary';
+export { WarningList, type WarningListProps } from './WarningList';

@@ -1,0 +1,114 @@
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { colors } from '@/theme/colors';
+import { radius, spacing, touchTarget } from '@/theme/spacing';
+import { typography } from '@/theme/typography';
+
+export const BEND_ANGLE_OPTIONS = [10, 22.5, 30, 45, 60] as const;
+export type BendAngleOption = (typeof BEND_ANGLE_OPTIONS)[number];
+
+export type BendAngleSelectorProps = {
+  label?: string;
+  selectedAngle: BendAngleOption;
+  angles?: readonly BendAngleOption[];
+  commonAngle?: BendAngleOption;
+  onSelect: (angle: BendAngleOption) => void;
+  disabled?: boolean;
+};
+
+export function AngleSelector({
+  label = 'Angle',
+  selectedAngle,
+  angles = BEND_ANGLE_OPTIONS,
+  commonAngle = 30,
+  onSelect,
+  disabled = false,
+}: BendAngleSelectorProps) {
+  return (
+    <View style={styles.wrap}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.row}>
+        {angles.map((angle) => {
+          const selected = selectedAngle === angle;
+          const isCommon = commonAngle === angle;
+          return (
+            <Pressable
+              key={angle}
+              disabled={disabled}
+              onPress={() => onSelect(angle)}
+              style={({ pressed }) => [
+                styles.chip,
+                selected && styles.chipSelected,
+                isCommon && !selected && styles.chipCommon,
+                pressed && !disabled && styles.chipPressed,
+              ]}
+              accessibilityRole="button"
+              accessibilityState={{ selected }}>
+              <Text
+                style={[
+                  styles.chipText,
+                  selected && styles.chipTextSelected,
+                  isCommon && !selected && styles.chipTextCommon,
+                ]}>
+                {angle}°
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+      {commonAngle != null ? (
+        <Text style={styles.hint}>Most common: {commonAngle}°</Text>
+      ) : null}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  wrap: {
+    gap: spacing.md,
+  },
+  label: {
+    ...typography.label,
+    color: colors.muted,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: spacing.md,
+  },
+  chip: {
+    flex: 1,
+    minHeight: touchTarget - 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  chipSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  chipCommon: {
+    borderColor: colors.primaryBorder,
+  },
+  chipPressed: {
+    opacity: 0.9,
+  },
+  chipText: {
+    ...typography.chip,
+    color: colors.text,
+    fontSize: 15,
+  },
+  chipTextSelected: {
+    color: colors.background,
+  },
+  chipTextCommon: {
+    color: colors.primary,
+  },
+  hint: {
+    fontSize: 12,
+    color: colors.muted,
+    fontWeight: '500',
+  },
+});

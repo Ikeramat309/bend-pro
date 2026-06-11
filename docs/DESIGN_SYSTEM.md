@@ -1,8 +1,10 @@
 # Design System Direction
 
+Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
+
 This document describes the intended design direction. It is not a redesign task list.
 
-Do not implement these ideas unless a task specifically asks for visual work.
+Do not implement these ideas unless a task specifically asks for visual work. For diagram-specific rules and the current primitive set, see [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md).
 
 ## Overall Direction
 

@@ -8,17 +8,17 @@ import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import type { ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
-import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
+import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { Routes } from '@/navigation';
 import { AppHeader, AppScreen, FieldInput } from '@/shared/ui';
 import {
-  EditSetupSheet,
-  OptionalFieldButton,
-  PipeWorkspaceResult,
-  SetupSummary,
-  WarningList,
-  type SetupValues,
+    EditSetupSheet,
+    OptionalFieldButton,
+    PipeWorkspaceResult,
+    SetupSummary,
+    WarningList,
+    type SetupValues,
 } from '@/shared/workspace';
 import { colors, spacing } from '@/theme';
 import { getRoundingLabel } from '@/utils/rounding';

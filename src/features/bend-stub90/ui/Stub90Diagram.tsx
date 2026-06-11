@@ -2,14 +2,14 @@ import { StyleSheet, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
 import {
-  DiagramCallout,
-  DiagramCanvas,
-  DiagramDefs,
-  DiagramLabel,
-  DimensionLine,
-  MarkLine,
-  PipeSegment,
-  diagramTheme,
+    DiagramCallout,
+    DiagramCanvas,
+    DiagramDefs,
+    DiagramLabel,
+    DimensionLine,
+    MarkLine,
+    PipeSegment,
+    diagramTheme,
 } from '@/shared/diagrams';
 import type { Stub90DiagramViewData } from '../engine/stub90.types';
 import { STUB90_CONFIG } from '../stub90.config';

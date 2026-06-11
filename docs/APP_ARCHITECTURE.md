@@ -1,6 +1,8 @@
 # App Architecture
 
-Bend Pro uses thin routes, self-contained calculator features, and shared UI/diagram layers.
+Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
+
+Bend Pro uses thin routes, self-contained calculator features, and shared UI/diagram layers. Related: [`PROJECT_MAP.md`](PROJECT_MAP.md) (folder layout), [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md) (engine rules), [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md) (diagram rules).
 
 ## Flow
 

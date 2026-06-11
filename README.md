@@ -40,4 +40,5 @@ npx tsc --noEmit     # TypeScript check
 
 ## Docs
 
-See `docs/PROJECT_MAP.md` and `docs/APP_ARCHITECTURE.md` for folder conventions and feature layout.
+- **AI agents:** start at [`AGENTS.md`](AGENTS.md), then follow the reading order in [`docs/README.md`](docs/README.md).
+- **Humans:** [`docs/README.md`](docs/README.md) is the full documentation index. `docs/PROJECT_MAP.md` and `docs/APP_ARCHITECTURE.md` cover folder conventions and feature layout.

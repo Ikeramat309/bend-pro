@@ -1,6 +1,8 @@
 # Project Map
 
-Where code lives today and where new code should go.
+Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
+
+Where code lives today and where new code should go. For layering rules see [`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md); for editing rules see [`AI_AGENT_WORKFLOW.md`](AI_AGENT_WORKFLOW.md).
 
 ## Routes
 

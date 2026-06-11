@@ -1,6 +1,8 @@
 # Naming Rules
 
-Use one name for one measurement concept.
+Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
+
+Use one name for one measurement concept. For term definitions and preferred vs. avoided wording, see [`GLOSSARY.md`](GLOSSARY.md); this doc maps those terms to exact UI labels and engine keys.
 
 Changing measurement names randomly makes the app harder for beginners, electricians, and coding agents to understand.
 

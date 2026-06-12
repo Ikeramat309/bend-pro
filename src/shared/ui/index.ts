@@ -3,3 +3,4 @@ export { AppHeader, type AppHeaderProps } from './AppHeader';
 export { BottomNav, type BottomNavProps, type BendTabId } from './BottomNav';
 export { Sheet, type SheetProps } from './Sheet';
 export { FieldInput, type FieldInputProps, type FieldInputVariant } from './FieldInput';
+export { OptionChipGroup, type OptionChipGroupProps } from './OptionChipGroup';

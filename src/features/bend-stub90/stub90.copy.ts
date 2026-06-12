@@ -17,15 +17,23 @@ export const stub90Copy = {
   results: {
     deductMark: 'Deduct Mark',
     deduct: 'Deduct',
-    takeUp: 'Take-Up',
+    deductCustom: 'Deduct • Custom',
     leg: 'Leg',
+  },
+  deductOverride: {
+    title: 'Deduct Override',
+    fieldLabel: 'Custom Deduct',
+    placeholder: 'Bender value',
+    description:
+      'Measured a different take-up on your bender? Enter it here — it replaces the chart value for this EMT size.',
+    clearHint: 'Leave blank to use the bender value.',
+    errorInvalid: 'Enter a value greater than 0, or leave blank.',
   },
   diagram: {
     title: '90° Stub',
     stubLength: 'Stub Length',
     deduct: 'Deduct',
     deductMark: 'Deduct Mark',
-    bendMark: 'Bend Mark',
     leg: 'Leg',
     emptyMessage: 'Enter stub length to calculate Deduct Mark.',
     invalidMessage: 'Stub length must be greater than deduct.',

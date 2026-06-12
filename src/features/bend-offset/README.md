@@ -24,7 +24,7 @@ bend-offset/
 
 **UI labels:** Offset Height, Bend Angle, Distance Between Bends, Shrink, Mark 1, Mark 2
 
-**Engine keys (internal):** `offsetHeight`, `distanceBetweenBends`, `firstMark` → `mark1`, `secondMark` → `mark2`
+**Engine keys (internal):** `offsetHeight`, `distanceBetweenBends`, `mark1`, `mark2`
 
 ## Shared components used
 

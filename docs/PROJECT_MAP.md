@@ -38,7 +38,7 @@ bend-stub90/
 
 | Layer | Path | Purpose |
 |-------|------|---------|
-| App shell | `src/shared/ui/` | AppHeader, AppScreen, BottomNav, Sheet, FieldInput |
+| App shell | `src/shared/ui/` | AppHeader, AppScreen, BottomNav, Sheet, FieldInput, OptionChipGroup |
 | Workspace | `src/shared/workspace/` | SetupSummary, PipeWorkspaceCard, MeasurementChip, EditSetupSheet, AngleSelector |
 | Diagrams | `src/shared/diagrams/` | PipeSegment, MarkLine, DimensionLine, DiagramLabel, diagramTheme |
 
@@ -56,8 +56,9 @@ bend-stub90/
 | Layer | Path |
 |-------|------|
 | Shared types | `src/core/types.ts` |
+| Persisted calculator setup (unit, rounding, size, bender) | `src/core/settings/` |
 | Theme tokens | `src/theme/` |
-| Formatting helpers | `src/utils/rounding.ts`, `units.ts`, `validation.ts` |
+| Formatting/parsing helpers | `src/utils/rounding.ts`, `units.ts`, `formatLength.ts`, `parseLengthInput.ts` |
 
 ## Hub Screens
 

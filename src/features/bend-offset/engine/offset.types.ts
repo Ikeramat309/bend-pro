@@ -6,7 +6,8 @@ import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } fr
 
 export type OffsetEngineInput = {
   offsetHeight: number;
-  firstMark?: number;
+  /** Optional first layout mark. UI term is "Mark 1". */
+  mark1?: number;
   bendAngle: BendAngle;
   benderProfileId: string;
   conduitType: ConduitType;
@@ -15,15 +16,26 @@ export type OffsetEngineInput = {
   roundingPrecision: RoundingOption;
 };
 
-/** Formatted strings passed from engine result into the diagram component. */
-export type OffsetDiagramViewData = {
-  distanceBetweenBends: string;
-  offsetHeight: string;
-  shrink: string;
-  mark1: string;
-  mark2: string;
-  showMarks: boolean;
-  angleDeg: number;
+/**
+ * Single diagram contract. Numeric values (inches) drive future
+ * semi-proportional layout; `display` strings are ready-to-render labels.
+ * Present on the engine result only when the calculation is valid.
+ */
+export type OffsetDiagramData = {
+  calculatorType: 'offset';
+  offsetHeightInches: number;
+  distanceBetweenBendsInches: number;
+  shrinkInches: number;
+  mark1Inches?: number;
+  mark2Inches?: number;
+  bendAngle: BendAngle;
+  display: {
+    offsetHeight: string;
+    distanceBetweenBends: string;
+    shrink: string;
+    mark1?: string;
+    mark2?: string;
+  };
 };
 
 export type OffsetBenderProfileUsed = {
@@ -43,6 +55,7 @@ export type OffsetEngineResult = {
   isValid: boolean;
   warnings: string[];
   benderProfileUsed: OffsetBenderProfileUsed;
+  diagramData?: OffsetDiagramData;
 
   offsetHeightFormatted: string;
   distanceBetweenBendsFormatted: string;

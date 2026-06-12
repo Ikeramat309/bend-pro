@@ -34,6 +34,8 @@ Each feature owns:
 
 Features must not import from other feature folders. Shared types come from `@/core/types`.
 
+Calculator setup (unit, rounding, trade size, bender profile) is shared app state: `@/core/settings` provides `SettingsProvider` (mounted in `src/app/_layout.tsx`, persisted via AsyncStorage) and the `useCalculatorSetup` hook. Screens must not keep their own copies of these values.
+
 ## Shared UI
 
 - **`src/shared/ui/`** — app shell (header, screen, nav, sheet, field input)

@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import Svg from 'react-native-svg';
 
 import {
+  BendRadiusZone,
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
@@ -11,19 +12,37 @@ import {
   PipeSegment,
   diagramTheme,
 } from '@/shared/diagrams';
-import type { OffsetDiagramViewData } from '../engine/offset.types';
+import type { OffsetDiagramData } from '../engine/offset.types';
 import { OFFSET_CONFIG } from '../offset.config';
 import { offsetCopy } from '../offset.copy';
 
-const RUN_LEFT = 'M 24 230 H 130';
-const RUN_RISE = 'M 130 230 L 210 150';
-const RUN_RIGHT = 'M 210 150 H 336';
-const GHOST_PIPE = 'M 24 230 H 130 L 210 150 H 336';
+const GHOST_PIPE = 'M 24 230 H 88 L 192 126 H 336';
 const GHOST_MARK_OPACITY = 0.38;
 const GHOST_DIM_OPACITY = 0.34;
 
+/** Left end of the pipe. */
+const START_X = 24;
+/** Right end of the pipe. */
+const END_X = 336;
+/** Centerline of the low (entry) run. */
+const BOTTOM_Y = 230;
+/** Max horizontal travel of the diagonal between bends. */
+const DX_MAX = 150;
+/** Max vertical rise between the two runs. */
+const RISE_MAX = 104;
+const RISE_MIN = 20;
+/** Corner radius of the bend zones, in px. Fixed shoe geometry. */
+const CORNER_R = 18;
+const LEFT_RUN_DEFAULT = 64;
+const LEFT_RUN_MIN = 44;
+const LEFT_RUN_MAX = 110;
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
+
 export type OffsetDiagramProps = {
-  data?: OffsetDiagramViewData;
+  data?: OffsetDiagramData;
   isEmpty?: boolean;
   isInvalid?: boolean;
 };
@@ -52,9 +71,9 @@ function OffsetGhostDiagram({ message }: { message: string }) {
       <DiagramCanvas />
       <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={0.55} />
       <PipeSegment d={GHOST_PIPE} variant="pipe" gradientId="offsetGhostGradient" />
-      <MarkLine x1={130} y1={220} x2={130} y2={244} opacity={GHOST_MARK_OPACITY} />
-      <MarkLine x1={210} y1={140} x2={210} y2={164} opacity={GHOST_MARK_OPACITY} />
-      <DimensionLine x1={130} y1={268} x2={210} y2={268} showArrows={false} opacity={GHOST_DIM_OPACITY} />
+      <MarkLine x1={88} y1={218} x2={88} y2={242} opacity={GHOST_MARK_OPACITY} />
+      <MarkLine x1={192} y1={114} x2={192} y2={138} opacity={GHOST_MARK_OPACITY} />
+      <DimensionLine x1={88} y1={268} x2={192} y2={268} showArrows={false} opacity={GHOST_DIM_OPACITY} />
       <DiagramLabel
         x={180}
         y={286}
@@ -67,79 +86,138 @@ function OffsetGhostDiagram({ message }: { message: string }) {
   );
 }
 
-function OffsetLiveDiagram({ data }: { data: OffsetDiagramViewData }) {
+function OffsetLiveDiagram({ data }: { data: OffsetDiagramData }) {
+  const mark1Display = data.mark1Inches !== undefined ? data.display.mark1 : undefined;
+  const mark2Display = data.mark2Inches !== undefined ? data.display.mark2 : undefined;
+
+  // Semi-proportional layout: the diagonal slope IS the real bend angle —
+  // a 10° offset draws shallow and long, a 60° offset short and steep.
+  // The rise is sized so the diagonal always fits, clamped for readability.
+  const radians = (data.bendAngle * Math.PI) / 180;
+  const tangent = Math.tan(radians);
+  const rise = clamp(tangent * DX_MAX, RISE_MIN, RISE_MAX);
+  const dx = rise / tangent;
+  const topY = BOTTOM_Y - rise;
+
+  const diagonalPx = Math.hypot(dx, rise);
+  const cosA = dx / diagonalPx;
+  const sinA = rise / diagonalPx;
+
+  // With Mark 1 given, the entry run length is proportional to the
+  // diagonal (same px-per-inch); otherwise a neutral default.
+  const pxPerInch = diagonalPx / data.distanceBetweenBendsInches;
+  const leftRun =
+    data.mark1Inches !== undefined
+      ? clamp(data.mark1Inches * pxPerInch, LEFT_RUN_MIN, LEFT_RUN_MAX)
+      : LEFT_RUN_DEFAULT;
+
+  // Bend vertices: bend 1 leaves the low run, bend 2 lands on the high run.
+  const x1 = START_X + leftRun;
+  const x2 = x1 + dx;
+  const p1x = x1 + CORNER_R * cosA;
+  const p1y = BOTTOM_Y - CORNER_R * sinA;
+  const p2x = x2 - CORNER_R * cosA;
+  const p2y = topY + CORNER_R * sinA;
+
+  const pipePath = `M ${START_X} ${BOTTOM_Y} H ${x1 - CORNER_R} Q ${x1} ${BOTTOM_Y} ${p1x} ${p1y} L ${p2x} ${p2y} Q ${x2} ${topY} ${x2 + CORNER_R} ${topY} H ${END_X}`;
+  const bendZone1 = `M ${x1 - CORNER_R} ${BOTTOM_Y} Q ${x1} ${BOTTOM_Y} ${p1x} ${p1y}`;
+  const bendZone2 = `M ${p2x} ${p2y} Q ${x2} ${topY} ${x2 + CORNER_R} ${topY}`;
+
+  // Distance Between Bends runs ALONG the pipe diagonal (that is what the
+  // number means), offset perpendicular to the run. Labels stay horizontal.
+  const nx = sinA;
+  const ny = cosA;
+  const dimOffset = 24;
+  const dbb1 = { x: x1 + nx * dimOffset, y: BOTTOM_Y + ny * dimOffset };
+  const dbb2 = { x: x2 + nx * dimOffset, y: topY + ny * dimOffset };
+  const dbbLabelX = (dbb1.x + dbb2.x) / 2 + 26;
+  const dbbLabelY = (dbb1.y + dbb2.y) / 2 + 18;
+
+  const offsetMidY = (BOTTOM_Y + topY) / 2;
+
   return (
     <Svg viewBox={OFFSET_CONFIG.diagramViewBox} width="100%" height={OFFSET_CONFIG.diagramHeight}>
       <DiagramDefs gradientId="offsetPipeGradient" />
       <DiagramCanvas />
 
-      <PipeSegment d={RUN_LEFT} variant="shadow" />
-      <PipeSegment d={RUN_RISE} variant="shadow" />
-      <PipeSegment d={RUN_RIGHT} variant="shadow" />
-      <PipeSegment d={RUN_LEFT} variant="pipe" gradientId="offsetPipeGradient" />
-      <PipeSegment d={RUN_RISE} variant="pipe" gradientId="offsetPipeGradient" />
-      <PipeSegment d={RUN_RIGHT} variant="pipe" gradientId="offsetPipeGradient" />
+      <PipeSegment d={pipePath} variant="shadow" />
+      <PipeSegment d={pipePath} variant="pipe" gradientId="offsetPipeGradient" />
 
-      <MarkLine
-        x1={130}
-        y1={220}
-        x2={130}
-        y2={244}
-        label={offsetCopy.diagram.mark1}
-        labelX={108}
-        labelY={232}
-        labelVariant="muted"
-      />
-      <MarkLine
-        x1={210}
-        y1={140}
-        x2={210}
-        y2={164}
-        label={offsetCopy.diagram.mark2}
-        labelX={210}
-        labelY={128}
-        labelVariant="muted"
-      />
+      <BendRadiusZone d={bendZone1} glowWidth={18} />
+      <BendRadiusZone d={bendZone2} glowWidth={18} />
 
+      {/* Mark 1 — on the low run at bend 1, measured from the left end. */}
+      <MarkLine x1={x1} y1={BOTTOM_Y - 12} x2={x1} y2={BOTTOM_Y + 12} />
+      <DiagramLabel
+        x={x1}
+        y={262}
+        text={offsetCopy.diagram.mark1}
+        variant="muted"
+        fontSize={9.5}
+        fontWeight="600"
+      />
+      {mark1Display ? (
+        <DiagramLabel x={x1} y={276} text={mark1Display} variant="default" fontSize={11} />
+      ) : null}
+
+      {/* Mark 2 — on the high run at bend 2. */}
+      <MarkLine x1={x2} y1={topY - 12} x2={x2} y2={topY + 12} />
+      <DiagramLabel
+        x={x2}
+        y={topY - 30}
+        text={offsetCopy.diagram.mark2}
+        variant="muted"
+        fontSize={9.5}
+        fontWeight="600"
+      />
+      {mark2Display ? (
+        <DiagramLabel x={x2} y={topY - 16} text={mark2Display} variant="default" fontSize={11} />
+      ) : null}
+
+      {/* Distance Between Bends — along the diagonal. */}
       <DimensionLine
-        x1={130}
-        y1={268}
-        x2={210}
-        y2={268}
+        x1={dbb1.x}
+        y1={dbb1.y}
+        x2={dbb2.x}
+        y2={dbb2.y}
         extensionLines={[
-          { x1: 130, y1: 246, x2: 130, y2: 280 },
-          { x1: 210, y1: 166, x2: 210, y2: 280 },
+          { x1: x1 + nx * 8, y1: BOTTOM_Y + ny * 8, x2: x1 + nx * 30, y2: BOTTOM_Y + ny * 30 },
+          { x1: x2 + nx * 8, y1: topY + ny * 8, x2: x2 + nx * 30, y2: topY + ny * 30 },
         ]}
       />
       <DiagramLabel
-        x={170}
-        y={260}
+        x={dbbLabelX}
+        y={dbbLabelY}
         text={offsetCopy.diagram.distanceBetweenBends}
         variant="muted"
         fontSize={9.5}
         fontWeight="600"
       />
       <DiagramLabel
-        x={170}
-        y={282}
-        text={data.distanceBetweenBends}
+        x={dbbLabelX}
+        y={dbbLabelY + 14}
+        text={data.display.distanceBetweenBends}
         variant="default"
         fontSize={11}
       />
 
+      {/* Offset Height — the rise between the two runs. */}
       <DimensionLine
         x1={52}
-        y1={230}
+        y1={BOTTOM_Y}
         x2={52}
-        y2={150}
+        y2={topY}
+        showArrows={rise >= 28}
         extensionLines={[
-          { x1: 24, y1: 230, x2: 80, y2: 230 },
-          { x1: 24, y1: 150, x2: 80, y2: 150 },
+          { x1: START_X, y1: BOTTOM_Y, x2: 80, y2: BOTTOM_Y },
+          { x1: START_X, y1: topY, x2: 80, y2: topY },
         ]}
       />
+      {/* Rotated label and value share one column; separated along the
+          rotated axis so the texts cannot overlap. */}
       <DiagramLabel
         x={12}
-        y={190}
+        y={offsetMidY - 28}
         text={offsetCopy.diagram.offsetHeight}
         variant="muted"
         fontSize={9.5}
@@ -148,54 +226,34 @@ function OffsetLiveDiagram({ data }: { data: OffsetDiagramViewData }) {
       />
       <DiagramLabel
         x={12}
-        y={206}
-        text={data.offsetHeight}
+        y={offsetMidY + 28}
+        text={data.display.offsetHeight}
         variant="default"
         fontSize={10.5}
         rotation={-90}
       />
 
+      {/* Shrink — always visible; mark values live at the marks. */}
+      <DiagramCallout x={214} y={16} width={132} height={28}>
+        <DiagramLabel
+          x={228}
+          y={34}
+          text={`${offsetCopy.diagram.shrink}  ${data.display.shrink}`}
+          variant="default"
+          fontSize={10}
+          textAnchor="start"
+        />
+      </DiagramCallout>
+
       <DiagramLabel
-        x={286}
-        y={18}
-        text={`${offsetCopy.diagram.title} • ${data.angleDeg}°`}
+        x={346}
+        y={292}
+        text={`${offsetCopy.diagram.title} • ${data.bendAngle}°`}
         variant="muted"
         fontSize={10}
         fontWeight="600"
         textAnchor="end"
       />
-
-      {data.showMarks ? (
-        <DiagramCallout x={88} y={16} width={184} height={40}>
-          <DiagramLabel
-            x={104}
-            y={30}
-            text={`${offsetCopy.diagram.mark1}  ${data.mark1}`}
-            variant="default"
-            fontSize={10}
-            textAnchor="start"
-          />
-          <DiagramLabel
-            x={104}
-            y={46}
-            text={`${offsetCopy.diagram.mark2}  ${data.mark2}`}
-            variant="default"
-            fontSize={10}
-            textAnchor="start"
-          />
-        </DiagramCallout>
-      ) : (
-        <DiagramCallout x={214} y={16} width={132} height={28}>
-          <DiagramLabel
-            x={228}
-            y={34}
-            text={`${offsetCopy.diagram.shrink}  ${data.shrink}`}
-            variant="default"
-            fontSize={10}
-            textAnchor="start"
-          />
-        </DiagramCallout>
-      )}
     </Svg>
   );
 }

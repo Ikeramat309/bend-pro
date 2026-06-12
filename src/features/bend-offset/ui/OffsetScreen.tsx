@@ -7,7 +7,8 @@ import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
+import type { BendAngle } from '@/core/types';
+import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes } from '@/navigation';
@@ -25,10 +26,9 @@ import {
 import { colors, spacing } from '@/theme';
 import { getRoundingLabel } from '@/utils/rounding';
 import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
-import { hasPositiveNumber, parseOptionalNumber } from '@/utils/validation';
+import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateOffset } from '../engine/offset.engine';
-import type { OffsetDiagramViewData } from '../engine/offset.types';
 import { OFFSET_CONFIG } from '../offset.config';
 import { offsetCopy } from '../offset.copy';
 import { OffsetDiagram } from './OffsetDiagram';
@@ -40,28 +40,30 @@ export default function OffsetScreen() {
   const [mark1Text, setMark1Text] = useState('');
   const [showMark1Input, setShowMark1Input] = useState(false);
   const [bendAngle, setBendAngle] = useState<BendAngle>(OFFSET_CONFIG.defaultAngle);
-  const [unit, setUnit] = useState<UnitSystem>(OFFSET_CONFIG.defaultUnit);
-  const [rounding, setRounding] = useState<RoundingOption>(OFFSET_CONFIG.defaultRounding);
-  const [conduitType, setConduitType] = useState<ConduitType>(OFFSET_CONFIG.defaultConduitType);
-  const [conduitSize, setConduitSize] = useState<TradeSize>(OFFSET_CONFIG.defaultTradeSize);
-  const [benderProfileId, setBenderProfileId] = useState(OFFSET_CONFIG.defaultBenderProfileId);
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
 
+  // Shared, persisted setup — follows the user across calculators and restarts.
+  const { setup, setSetup } = useCalculatorSetup();
+  const { unit, rounding, conduitType, conduitSize, benderProfileId } = setup;
+
   const benderProfile = getBenderProfile(benderProfileId);
-  const offsetHeight = Number(offsetHeightText || 0);
-  const mark1Number = parseOptionalNumber(mark1Text);
-  const hasMark1 = mark1Number !== undefined && Number.isFinite(mark1Number);
+  const offsetHeight = parseLengthInput(offsetHeightText);
+  const mark1Number = parseLengthInput(mark1Text);
+  const hasMark1 = mark1Number !== undefined;
   const unitLabel = getLengthUnitLabel(unit);
   const setupSummary = `${conduitType} ${conduitSize}"`;
   const setupSubtitle = `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`;
-  const hasValidOffset = hasPositiveNumber(offsetHeightText);
+  const hasValidOffset = offsetHeight !== undefined && offsetHeight > 0;
+  // Imperial users type tape-measure fractions ("12 3/8") — needs a keyboard
+  // with space and slash. Falls back to the default keyboard on Android.
+  const lengthKeyboard = unit === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
 
   const result = useMemo(
     () =>
       calculateOffset({
-        offsetHeight,
-        firstMark: hasMark1 ? mark1Number : undefined,
+        offsetHeight: offsetHeight ?? Number.NaN,
+        mark1: hasMark1 ? mark1Number : undefined,
         bendAngle,
         benderProfileId,
         conduitType,
@@ -95,21 +97,8 @@ export default function OffsetScreen() {
     : '—';
   const visibleWarnings = offsetHeightText.trim() !== '' ? result.warnings : [];
 
-  const diagramData: OffsetDiagramViewData | undefined = hasValidOffset
-    ? {
-        distanceBetweenBends: result.distanceBetweenBendsFormatted,
-        offsetHeight: result.offsetHeightFormatted,
-        shrink: result.shrinkFormatted,
-        mark1: mark1Value,
-        mark2: mark2Value,
-        showMarks: hasMark1,
-        angleDeg: bendAngle,
-      }
-    : undefined;
-
   const mark1Error =
-    mark1Text.trim() !== '' &&
-    (mark1Number === undefined || !Number.isFinite(mark1Number) || mark1Number < 0)
+    mark1Text.trim() !== '' && mark1Number === undefined
       ? offsetCopy.fields.mark1.errorInvalid
       : undefined;
 
@@ -125,11 +114,15 @@ export default function OffsetScreen() {
   }
 
   function applySetup(nextSetup: SetupValues) {
-    setConduitType(DEFAULT_CONDUIT_TYPE);
-    setConduitSize(nextSetup.conduitSize);
-    setBenderProfileId(nextSetup.benderProfileId);
-    setUnit(nextSetup.unit);
-    setRounding(nextSetup.rounding);
+    setSetup(
+      patchCalculatorSetup(setup, {
+        conduitType: DEFAULT_CONDUIT_TYPE,
+        conduitSize: nextSetup.conduitSize,
+        benderProfileId: nextSetup.benderProfileId,
+        unit: nextSetup.unit,
+        rounding: nextSetup.rounding,
+      }),
+    );
     if (nextSetup.bendAngle !== 90) {
       setBendAngle(nextSetup.bendAngle);
     }
@@ -160,8 +153,9 @@ export default function OffsetScreen() {
             onChangeText={setOffsetHeightText}
             placeholder={offsetCopy.fields.offsetHeight.placeholder}
             unit={unitLabel}
+            inputProps={{ keyboardType: lengthKeyboard }}
             error={
-              offsetHeightText !== '' && offsetHeight <= 0
+              offsetHeightText !== '' && !hasValidOffset
                 ? offsetCopy.fields.offsetHeight.errorRequired
                 : undefined
             }
@@ -185,6 +179,7 @@ export default function OffsetScreen() {
               placeholder={offsetCopy.fields.mark1.placeholder}
               unit={unitLabel}
               variant="compact"
+              inputProps={{ keyboardType: lengthKeyboard }}
               error={mark1Error}
             />
           ) : (
@@ -199,9 +194,9 @@ export default function OffsetScreen() {
           title={offsetCopy.workspaceTitle}
           diagram={
             <OffsetDiagram
-              data={diagramData}
+              data={result.diagramData}
               isEmpty={!hasValidOffset}
-              isInvalid={offsetHeightText !== '' && offsetHeight <= 0}
+              isInvalid={offsetHeightText !== '' && !hasValidOffset}
             />
           }
           primaryLabel={offsetCopy.results.distanceBetweenBends}

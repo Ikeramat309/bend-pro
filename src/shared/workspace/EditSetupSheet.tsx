@@ -2,9 +2,10 @@
  * Edit Setup bottom sheet — draft state while open; parent updates only on Apply.
  */
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
+import { IMPERIAL_ROUNDING_OPTIONS, METRIC_ROUNDING_OPTIONS } from '@/core/settings';
 import {
   BENDER_PROFILES,
   getBenderProfile,
@@ -13,8 +14,9 @@ import {
 } from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { EMT_TRADE_SIZES } from '@/data/emt';
+import { OptionChipGroup } from '@/shared/ui/OptionChipGroup';
 import { Sheet } from '@/shared/ui/Sheet';
-import { colors, spacing, touchTarget, typography } from '@/theme';
+import { colors, spacing, typography } from '@/theme';
 
 export type SetupUnit = UnitSystem;
 export type SetupRounding = RoundingOption;
@@ -41,8 +43,6 @@ const UNITS: { label: string; value: SetupUnit }[] = [
   { label: 'Imperial', value: 'imperial' },
   { label: 'Metric', value: 'metric' },
 ];
-const IMPERIAL_ROUNDING: SetupRounding[] = ['exact', '1/16', '1/8', '1/4'];
-const METRIC_ROUNDING: SetupRounding[] = ['1mm', '5mm', '10mm'];
 
 export function EditSetupSheet({ visible, values, onCancel, onApply }: EditSetupSheetProps) {
   if (!visible) {
@@ -67,16 +67,17 @@ function EditSetupSheetOpen({
   onApply,
 }: Pick<EditSetupSheetProps, 'values' | 'onCancel' | 'onApply'>) {
   const [draft, setDraft] = useState<SetupValues>(values);
-  const roundingOptions = draft.unit === 'imperial' ? IMPERIAL_ROUNDING : METRIC_ROUNDING;
+  const roundingOptions =
+    draft.unit === 'imperial' ? IMPERIAL_ROUNDING_OPTIONS : METRIC_ROUNDING_OPTIONS;
 
   function updateDraft(patch: Partial<SetupValues>) {
     setDraft((current) => {
       const next = { ...current, ...patch };
 
-      if (patch.unit === 'imperial' && !IMPERIAL_ROUNDING.includes(next.rounding)) {
+      if (patch.unit === 'imperial' && !IMPERIAL_ROUNDING_OPTIONS.includes(next.rounding)) {
         next.rounding = '1/16';
       }
-      if (patch.unit === 'metric' && !METRIC_ROUNDING.includes(next.rounding)) {
+      if (patch.unit === 'metric' && !METRIC_ROUNDING_OPTIONS.includes(next.rounding)) {
         next.rounding = '1mm';
       }
 
@@ -92,7 +93,7 @@ function EditSetupSheetOpen({
       onClose={onCancel}
       onSecondaryPress={onCancel}
       onPrimaryPress={() => onApply(draft)}>
-      <OptionGroup
+      <OptionChipGroup
         title="EMT Size"
         options={EMT_TRADE_SIZES}
         selected={draft.conduitSize}
@@ -101,14 +102,14 @@ function EditSetupSheetOpen({
         }
       />
 
-      <OptionGroup
+      <OptionChipGroup
         title="Bender Profile"
         options={BENDER_PROFILE_NAMES}
         selected={getBenderProfile(draft.benderProfileId).name}
         onSelect={(name) => updateDraft({ benderProfileId: getBenderProfileIdByName(name) })}
       />
 
-      <OptionGroup
+      <OptionChipGroup
         title="Unit"
         options={UNITS.map((unit) => unit.label)}
         selected={draft.unit === 'imperial' ? 'Imperial' : 'Metric'}
@@ -117,7 +118,7 @@ function EditSetupSheetOpen({
         }}
       />
 
-      <OptionGroup
+      <OptionChipGroup
         title="Rounding"
         options={roundingOptions}
         selected={draft.rounding}
@@ -140,73 +141,7 @@ function EditSetupSheetOpen({
   );
 }
 
-function OptionGroup<T extends string>({
-  title,
-  options,
-  selected,
-  onSelect,
-}: {
-  title: string;
-  options: readonly T[];
-  selected: T;
-  onSelect: (value: T) => void;
-}) {
-  return (
-    <View style={styles.group}>
-      <Text style={styles.groupTitle}>{title}</Text>
-      <View style={styles.chipWrap}>
-        {options.map((option) => {
-          const active = selected === option;
-          return (
-            <Pressable
-              key={option}
-              onPress={() => onSelect(option)}
-              style={[styles.chip, active && styles.chipActive]}
-              accessibilityRole="button"
-              accessibilityState={{ selected: active }}>
-              <Text style={[styles.chipText, active && styles.chipTextActive]}>{option}</Text>
-            </Pressable>
-          );
-        })}
-      </View>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  group: {
-    gap: spacing.sm,
-  },
-  groupTitle: {
-    ...typography.label,
-    color: colors.muted,
-  },
-  chipWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  chip: {
-    minHeight: touchTarget,
-    justifyContent: 'center',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  chipActive: {
-    borderColor: colors.primary,
-    backgroundColor: colors.primaryMuted,
-  },
-  chipText: {
-    ...typography.chip,
-    color: colors.text,
-  },
-  chipTextActive: {
-    color: colors.primary,
-  },
   currentCard: {
     gap: spacing.xs,
     borderRadius: 12,

@@ -25,16 +25,16 @@ Both follow the same feature pattern: `*.config.ts`, `*.copy.ts`, `engine/` (pur
 
 ## What is incomplete
 
-- **Bender profiles** — only one profile exists: `generic-hand-bender` with approximate take-up values for 1/2", 3/4", and 1" EMT, plus a hard-coded default fallback of 5". Values are generic field references, not manufacturer shoe charts. There is no manual override and no way to add or select other benders.
+- **Bender profiles** — only one profile exists: `generic-hand-bender` with approximate take-up values for 1/2", 3/4", and 1" EMT, plus a hard-coded default fallback of 5". Values are generic field references, not manufacturer shoe charts. A **manual deduct override** exists (tap the Deduct chip on Stub 90): per-EMT-size, stored in inches in the persisted setup, replaces the chart value and is flagged in results as `isDeductOverridden`. There is still no way to add or select other benders.
 - **Bender database screen** (`/bender-database`) — placeholder only ("coming soon"). No search, selection, or custom benders.
 - **Guide screen** (`/guide`) — placeholder only. No learning content or guided mode.
 - **Calculator registry** — not implemented. Calculator availability is defined by `src/data/bendLibrary.ts` and `src/navigation/routes.ts`.
-- **Engine tests** — no automated tests exist for the calculator engines.
+- **Engine tests** — ~~no automated tests exist for the calculator engines.~~ **Resolved:** Jest (`jest-expo`) covers both engines, input parsing, formatting, settings sanitizing, and diagram proportion scaling. Run `npm test`.
 - **Diagram system migration** — shared primitives exist, but the planned `src/shared/diagrams/primitives/` organization (per `DESIGN_SYSTEM.md`) has not happened. Feature diagrams (`OffsetDiagram`, `Stub90Diagram`) still own a fair amount of layout logic.
 
 ## What needs cleanup
 
-- **Terminology drift between engine keys and UI labels.** The Stub 90 engine exposes both `takeUp` and `deduct` (same value) and calls the result `firstMark` internally, while the UI term is **Deduct Mark** ("First Mark" is reserved for offset layout). The Offset engine input uses `firstMark` for what the UI calls **Mark 1**. See `NAMING_RULES.md` — legacy keys are tolerated during migration but should converge.
+- ~~Terminology drift between engine keys and UI labels.~~ **Resolved:** the Stub 90 engine surface now uses `deductMark` / `isValidDeductMark` (the legacy `firstMark` and duplicate `takeUp` keys were removed), and the Offset engine input uses `mark1`. Engine keys match `NAMING_RULES.md`.
 - **Leftover boilerplate comments** in some screens (`FILE:`, section banners, stale phase references) — remove when touching those files, per workflow rules.
 - **Mixed concerns in feature diagrams** — diagram layout math vs. shared primitives, to be addressed by the diagram system phase.
 
@@ -42,7 +42,7 @@ Both follow the same feature pattern: `*.config.ts`, `*.copy.ts`, `engine/` (pur
 
 1. Offset and Stub 90 math, validation, and terminology (with engine tests and documented example cases)
 2. The reusable pipe diagram system (`DIAGRAM_SYSTEM.md`)
-3. Bender profile selection and manual deduct/take-up override
+3. Bender profile selection (manual deduct/take-up override is done; profile selection beyond the generic bender is not)
 
 See [`ROADMAP.md`](ROADMAP.md) for the phased order.
 

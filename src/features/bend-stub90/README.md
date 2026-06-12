@@ -24,7 +24,7 @@ bend-stub90/
 
 **UI labels:** Stub Length, Deduct, Deduct Mark, Leg, Take-Up
 
-**Engine keys (internal):** `stubHeight`, `deduct`, `takeUp`, `firstMark`, `legLength`
+**Engine keys (internal):** `stubHeight`, `deduct`, `deductMark`, `legLength`
 
 ## Shared components used
 

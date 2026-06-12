@@ -12,25 +12,31 @@ export type Stub90EngineInput = {
   tradeSize: TradeSize;
   unitSystem: UnitSystem;
   roundingPrecision: RoundingOption;
+  /**
+   * User-measured deduct in inches — replaces the bender profile's chart
+   * value when present. Ignored unless finite and > 0.
+   */
+  deductOverrideInches?: number;
 };
 
+/**
+ * Single diagram contract. Numeric values (inches) drive future
+ * semi-proportional layout; `display` strings are ready-to-render labels.
+ * Present on the engine result only when the calculation is valid.
+ */
 export type Stub90DiagramData = {
   calculatorType: 'stub90';
   stubHeightInches: number;
   deductInches: number;
-  firstMarkInches: number;
+  deductMarkInches: number;
   legLengthInches?: number;
-  conduitLengthInches?: number;
   bendAngle: 90;
-};
-
-/** Formatted strings passed from engine result into the diagram component. */
-export type Stub90DiagramViewData = {
-  deductMark: string;
-  stubLength: string;
-  deduct: string;
-  leg?: string;
-  showLeg: boolean;
+  display: {
+    stubLength: string;
+    deduct: string;
+    deductMark: string;
+    leg?: string;
+  };
 };
 
 export type Stub90BenderProfileUsed = {
@@ -41,20 +47,21 @@ export type Stub90BenderProfileUsed = {
 
 export type Stub90EngineResult = {
   stubHeight: number;
-  takeUp: number;
+  /** Bender take-up. UI term is always "Deduct" — see docs/GLOSSARY.md. */
   deduct: number;
-  firstMark?: number;
+  /** Stub length minus deduct. Never called "First Mark" — that is offset language. */
+  deductMark?: number;
   legLength?: number;
   bendAngle: 90;
-  isValidFirstMark: boolean;
+  isValidDeductMark: boolean;
+  /** True when the deduct came from a manual override, not the profile chart. */
+  isDeductOverridden: boolean;
   warnings: string[];
   benderProfileUsed: Stub90BenderProfileUsed;
   diagramData?: Stub90DiagramData;
 
   stubHeightFormatted: string;
-  takeUpFormatted: string;
   deductFormatted: string;
-  firstMarkFormatted?: string;
+  deductMarkFormatted?: string;
   legLengthFormatted?: string;
-  conduitLengthFormatted?: string;
 };

@@ -37,9 +37,15 @@ Shared primitives live in `src/shared/diagrams/`:
 | `DimensionLine` | A measurement vector with arrowheads |
 | `DiagramLabel` | Text attached to a diagram element |
 | `DiagramCallout` | Result callout on the diagram |
+| `BendRadiusZone` | Highlighted take-up arc consumed by the bender shoe |
+| `resolveProportionalSpans` | Clamped proportional scaling for semi-proportional layout |
 | `diagramTheme` | Diagram colors and stroke sizes |
 
-Feature diagrams (`OffsetDiagram`, `Stub90Diagram`) compose these primitives. Do not fork one-off drawing logic per screen — if a calculator needs a new visual element, add a primitive (or extend one) in `src/shared/diagrams/` so the next calculator can reuse it. Future primitives planned in `DESIGN_SYSTEM.md` include bend radius zones and empty preview states.
+Feature diagrams (`OffsetDiagram`, `Stub90Diagram`) compose these primitives. Do not fork one-off drawing logic per screen — if a calculator needs a new visual element, add a primitive (or extend one) in `src/shared/diagrams/` so the next calculator can reuse it.
+
+### Semi-proportional layout
+
+Diagrams are **semi-proportional**, not to-scale CAD drawings. Geometry is computed from the numeric values in the engine's `diagramData` via `resolveProportionalSpans`: relative proportions respond to the user's numbers (a 30" stub looks taller than a 6" stub), but every span is clamped to readable pixel bounds so extreme ratios never collapse the drawing. Fixed visual elements (e.g. the bend arc radius, which represents shoe geometry) intentionally do not scale.
 
 ### Diagram components must not contain calculator math
 
@@ -47,7 +53,7 @@ No formulas, multipliers, deducts, or unit conversions inside diagram components
 
 ### Calculators pass diagram-ready values into diagrams
 
-Engines return a `diagramData` object with everything the diagram needs (e.g. `stubHeightInches`, `deductInches`, `firstMarkInches`, `bendAngle`). The diagram renders what it is given. If a diagram needs a value it doesn't have, the fix is in the engine contract — not math in the diagram.
+Engines return a `diagramData` object with everything the diagram needs (e.g. `stubHeightInches`, `deductInches`, `deductMarkInches`, `bendAngle`). The diagram renders what it is given. If a diagram needs a value it doesn't have, the fix is in the engine contract — not math in the diagram.
 
 This separation means a math fix can never be hidden inside a rendering change, and a rendering fix can never move a real-world mark. See [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md).
 
@@ -64,5 +70,6 @@ Follow [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) and `diagramTheme`:
 ## Status
 
 - **Existing:** the primitives listed above, used by both calculator diagrams.
-- **In progress (Phase 2):** consolidating feature-diagram layout logic into reusable primitives; `primitives/` folder organization when ready.
-- **Planned:** bend radius zones, result callout patterns, empty preview states. Do not build these without an explicit task.
+- **Done (Phase 2):** Stub 90 and Offset live diagrams are semi-proportional — geometry computed from `diagramData` numbers. Stub 90 uses clamped spans (leg vs. stub height); Offset draws its diagonal at the real bend angle. `BendRadiusZone` is a shared primitive used by both.
+- **In progress (Phase 2):** anchored result callouts with leader lines as a shared primitive (Stub 90 has an inline leader).
+- **Planned:** empty preview states, additional callout patterns. Do not build these without an explicit task.

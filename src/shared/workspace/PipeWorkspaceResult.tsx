@@ -10,6 +10,7 @@ export type PipeWorkspaceResultChip = {
   label: string;
   value: string;
   tone?: MeasurementChipTone;
+  onPress?: () => void;
 };
 
 export type PipeWorkspaceResultProps = {
@@ -45,6 +46,7 @@ export function PipeWorkspaceResult({
               label={chip.label}
               value={chip.value}
               tone={chip.tone}
+              onPress={chip.onPress}
             />
           ))}
         </View>

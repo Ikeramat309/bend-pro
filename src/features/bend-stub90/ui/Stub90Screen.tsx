@@ -7,8 +7,12 @@ import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import type { ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
-import { getBenderProfile } from '@/data/benders';
+import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import {
+    DEFAULT_EMT_STUB90_TAKE_UP_INCHES,
+    getBenderProfile,
+    getEmtStub90TakeUpInches,
+} from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { Routes } from '@/navigation';
 import { AppHeader, AppScreen, FieldInput } from '@/shared/ui';
@@ -21,14 +25,15 @@ import {
     type SetupValues,
 } from '@/shared/workspace';
 import { colors, spacing } from '@/theme';
+import { formatLength } from '@/utils/formatLength';
 import { getRoundingLabel } from '@/utils/rounding';
 import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
-import { hasPositiveNumber, parseOptionalNumber } from '@/utils/validation';
+import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateStub90 } from '../engine/stub90.engine';
-import type { Stub90DiagramViewData } from '../engine/stub90.types';
 import { STUB90_CONFIG } from '../stub90.config';
 import { stub90Copy } from '../stub90.copy';
+import { DeductOverrideSheet } from './DeductOverrideSheet';
 import { Stub90Diagram } from './Stub90Diagram';
 
 export default function Stub90Screen() {
@@ -37,37 +42,45 @@ export default function Stub90Screen() {
   const [stubLengthText, setStubLengthText] = useState('');
   const [legLengthText, setLegLengthText] = useState('');
   const [showLegInput, setShowLegInput] = useState(false);
-  const [unit, setUnit] = useState<UnitSystem>(STUB90_CONFIG.defaultUnit);
-  const [rounding, setRounding] = useState<RoundingOption>(STUB90_CONFIG.defaultRounding);
-  const [conduitType, setConduitType] = useState<ConduitType>(STUB90_CONFIG.defaultConduitType);
-  const [conduitSize, setConduitSize] = useState<TradeSize>(STUB90_CONFIG.defaultTradeSize);
-  const [benderProfileId, setBenderProfileId] = useState(STUB90_CONFIG.defaultBenderProfileId);
   const [setupVisible, setSetupVisible] = useState(false);
+  const [deductSheetVisible, setDeductSheetVisible] = useState(false);
+
+  // Shared, persisted setup — follows the user across calculators and restarts.
+  const { setup, setSetup } = useCalculatorSetup();
+  const { unit, rounding, conduitType, conduitSize, benderProfileId } = setup;
+  const deductOverrideInches = setup.stub90DeductOverridesInches[conduitSize];
 
   const benderProfile = getBenderProfile(benderProfileId);
-  const stubLength = Number(stubLengthText || 0);
-  const legLength = parseOptionalNumber(legLengthText);
-  const hasValidLegLength = legLength !== undefined && Number.isFinite(legLength) && legLength > 0;
+  const benderChartDeductInches =
+    getEmtStub90TakeUpInches(benderProfile, conduitSize) ?? DEFAULT_EMT_STUB90_TAKE_UP_INCHES;
+  const stubLength = parseLengthInput(stubLengthText);
+  const legLength = parseLengthInput(legLengthText);
+  const hasValidLegLength = legLength !== undefined && legLength > 0;
   const unitLabel = getLengthUnitLabel(unit);
   const setupSummary = `${conduitType} ${conduitSize}"`;
   const setupSubtitle = `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`;
-  const hasValidStubLength = hasPositiveNumber(stubLengthText);
+  const hasValidStubLength = stubLength !== undefined && stubLength > 0;
+  // Imperial users type tape-measure fractions ("12 3/8") — needs a keyboard
+  // with space and slash. Falls back to the default keyboard on Android.
+  const lengthKeyboard = unit === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
 
   const result = useMemo(
     () =>
       calculateStub90({
-        stubHeight: stubLength,
+        stubHeight: stubLength ?? Number.NaN,
         legLength: hasValidLegLength ? legLength : undefined,
         benderProfileId,
         conduitType,
         tradeSize: conduitSize,
         unitSystem: unit,
         roundingPrecision: rounding,
+        deductOverrideInches,
       }),
     [
       benderProfileId,
       conduitSize,
       conduitType,
+      deductOverrideInches,
       hasValidLegLength,
       legLength,
       rounding,
@@ -76,19 +89,9 @@ export default function Stub90Screen() {
     ],
   );
 
-  const hasValidDeductMark = hasValidStubLength && result.isValidFirstMark;
-  const deductMarkValue = hasValidDeductMark ? result.firstMarkFormatted ?? '—' : '—';
+  const hasValidDeductMark = hasValidStubLength && result.isValidDeductMark;
+  const deductMarkValue = hasValidDeductMark ? result.deductMarkFormatted ?? '—' : '—';
   const visibleWarnings = stubLengthText.trim() !== '' ? result.warnings : [];
-
-  const diagramData: Stub90DiagramViewData | undefined = hasValidDeductMark
-    ? {
-        deductMark: result.firstMarkFormatted ?? '—',
-        stubLength: result.stubHeightFormatted,
-        deduct: result.deductFormatted,
-        leg: result.legLengthFormatted,
-        showLeg: hasValidLegLength,
-      }
-    : undefined;
 
   const legLengthError =
     legLengthText.trim() !== '' && !hasValidLegLength
@@ -107,12 +110,27 @@ export default function Stub90Screen() {
   }
 
   function applySetup(nextSetup: SetupValues) {
-    setConduitType(DEFAULT_CONDUIT_TYPE);
-    setConduitSize(nextSetup.conduitSize);
-    setBenderProfileId(nextSetup.benderProfileId);
-    setUnit(nextSetup.unit);
-    setRounding(nextSetup.rounding);
+    setSetup(
+      patchCalculatorSetup(setup, {
+        conduitType: DEFAULT_CONDUIT_TYPE,
+        conduitSize: nextSetup.conduitSize,
+        benderProfileId: nextSetup.benderProfileId,
+        unit: nextSetup.unit,
+        rounding: nextSetup.rounding,
+      }),
+    );
     setSetupVisible(false);
+  }
+
+  function applyDeductOverride(overrideInches: number | undefined) {
+    const overrides = { ...setup.stub90DeductOverridesInches };
+    if (overrideInches === undefined) {
+      delete overrides[conduitSize];
+    } else {
+      overrides[conduitSize] = overrideInches;
+    }
+    setSetup(patchCalculatorSetup(setup, { stub90DeductOverridesInches: overrides }));
+    setDeductSheetVisible(false);
   }
 
   return (
@@ -137,8 +155,9 @@ export default function Stub90Screen() {
           onChangeText={setStubLengthText}
           placeholder={stub90Copy.fields.stubLength.placeholder}
           unit={unitLabel}
+          inputProps={{ keyboardType: lengthKeyboard }}
           error={
-            stubLengthText !== '' && stubLength <= 0
+            stubLengthText !== '' && !hasValidStubLength
               ? stub90Copy.fields.stubLength.errorRequired
               : undefined
           }
@@ -153,6 +172,7 @@ export default function Stub90Screen() {
               placeholder={stub90Copy.fields.leg.placeholder}
               unit={unitLabel}
               variant="compact"
+              inputProps={{ keyboardType: lengthKeyboard }}
               error={legLengthError}
             />
           ) : (
@@ -167,16 +187,22 @@ export default function Stub90Screen() {
           title={stub90Copy.workspaceTitle}
           diagram={
             <Stub90Diagram
-              data={diagramData}
+              data={result.diagramData}
               isEmpty={!hasValidStubLength}
-              isInvalid={hasValidStubLength && !result.isValidFirstMark}
+              isInvalid={hasValidStubLength && !result.isValidDeductMark}
             />
           }
           primaryLabel={stub90Copy.results.deductMark}
           primaryValue={deductMarkValue}
           chips={[
-            { label: stub90Copy.results.deduct, value: result.deductFormatted },
-            { label: stub90Copy.results.takeUp, value: result.takeUpFormatted },
+            {
+              label: result.isDeductOverridden
+                ? stub90Copy.results.deductCustom
+                : stub90Copy.results.deduct,
+              value: result.deductFormatted,
+              tone: result.isDeductOverridden ? ('primary' as const) : undefined,
+              onPress: () => setDeductSheetVisible(true),
+            },
             ...(hasValidLegLength && result.legLengthFormatted
               ? [{ label: stub90Copy.results.leg, value: result.legLengthFormatted }]
               : []),
@@ -198,6 +224,17 @@ export default function Stub90Screen() {
         }}
         onCancel={() => setSetupVisible(false)}
         onApply={applySetup}
+      />
+
+      <DeductOverrideSheet
+        visible={deductSheetVisible}
+        tradeSize={conduitSize}
+        unitSystem={unit}
+        benderName={benderProfile.name}
+        benderDeductFormatted={formatLength(benderChartDeductInches, unit, rounding)}
+        currentOverrideInches={deductOverrideInches}
+        onCancel={() => setDeductSheetVisible(false)}
+        onApply={applyDeductOverride}
       />
     </View>
   );

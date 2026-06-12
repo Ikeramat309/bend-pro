@@ -4,22 +4,25 @@ import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { SettingsProvider } from '@/core/settings';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="bends" />
-        <Stack.Screen name="settings" />
-        <Stack.Screen name="bender-database" />
-        <Stack.Screen name="guide" />
-        <Stack.Screen name="offset" />
-        <Stack.Screen name="stub90" />
-      </Stack>
+      <SettingsProvider>
+        <AnimatedSplashOverlay />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="bends" />
+          <Stack.Screen name="settings" />
+          <Stack.Screen name="bender-database" />
+          <Stack.Screen name="guide" />
+          <Stack.Screen name="offset" />
+          <Stack.Screen name="stub90" />
+        </Stack>
+      </SettingsProvider>
     </ThemeProvider>
   );
 }

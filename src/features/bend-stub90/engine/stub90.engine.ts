@@ -23,59 +23,78 @@ export function calculateStub90(input: Stub90EngineInput): Stub90EngineResult {
   const warnings: string[] = [];
   const benderProfile = getBenderProfile(input.benderProfileId);
   const profileTakeUp = getEmtStub90TakeUpInches(benderProfile, input.tradeSize);
-  const deductInches = profileTakeUp ?? DEFAULT_EMT_STUB90_TAKE_UP_INCHES;
+  const overrideDeduct =
+    input.deductOverrideInches !== undefined &&
+    Number.isFinite(input.deductOverrideInches) &&
+    input.deductOverrideInches > 0
+      ? input.deductOverrideInches
+      : undefined;
+  const isDeductOverridden = overrideDeduct !== undefined;
+  const deductInches = overrideDeduct ?? profileTakeUp ?? DEFAULT_EMT_STUB90_TAKE_UP_INCHES;
   const stubHeightInches = toInches(input.stubHeight || 0, input.unitSystem);
   const legLengthInches =
     input.legLength !== undefined ? toInches(input.legLength, input.unitSystem) : undefined;
-  const firstMarkInches = stubHeightInches - deductInches;
-  const isValidFirstMark =
-    Number.isFinite(input.stubHeight) && input.stubHeight > 0 && firstMarkInches > 0;
+  const deductMarkInches = stubHeightInches - deductInches;
+  const isValidDeductMark =
+    Number.isFinite(input.stubHeight) && input.stubHeight > 0 && deductMarkInches > 0;
 
   if (!Number.isFinite(input.stubHeight) || input.stubHeight <= 0) {
     warnings.push('Enter a stub length greater than 0.');
   }
 
-  if (profileTakeUp === undefined) {
+  if (profileTakeUp === undefined && !isDeductOverridden) {
     warnings.push('Using default take-up because this EMT size is not on the selected bender profile.');
   }
 
-  if (Number.isFinite(input.stubHeight) && input.stubHeight > 0 && firstMarkInches <= 0) {
+  if (Number.isFinite(input.stubHeight) && input.stubHeight > 0 && deductMarkInches <= 0) {
     warnings.push('Stub length must be greater than deduct.');
   }
 
+  const stubHeightFormatted = formatLength(stubHeightInches, input.unitSystem, input.roundingPrecision);
+  const deductFormatted = formatLength(deductInches, input.unitSystem, input.roundingPrecision);
+  const deductMarkFormatted = isValidDeductMark
+    ? formatLength(deductMarkInches, input.unitSystem, input.roundingPrecision)
+    : undefined;
+  const legLengthFormatted =
+    legLengthInches !== undefined
+      ? formatLength(legLengthInches, input.unitSystem, input.roundingPrecision)
+      : undefined;
+
   return {
     stubHeight: stubHeightInches,
-    takeUp: deductInches,
     deduct: deductInches,
-    firstMark: isValidFirstMark ? firstMarkInches : undefined,
+    deductMark: isValidDeductMark ? deductMarkInches : undefined,
     legLength: legLengthInches,
     bendAngle: 90,
-    isValidFirstMark,
+    isValidDeductMark,
+    isDeductOverridden,
     warnings,
     benderProfileUsed: {
       id: benderProfile.id,
       name: benderProfile.name,
       category: benderProfile.category,
     },
-    diagramData: {
-      calculatorType: 'stub90',
-      stubHeightInches,
-      deductInches,
-      firstMarkInches,
-      legLengthInches,
-      bendAngle: 90,
-    },
-
-    stubHeightFormatted: formatLength(stubHeightInches, input.unitSystem, input.roundingPrecision),
-    takeUpFormatted: formatLength(deductInches, input.unitSystem, input.roundingPrecision),
-    deductFormatted: formatLength(deductInches, input.unitSystem, input.roundingPrecision),
-    firstMarkFormatted: isValidFirstMark
-      ? formatLength(firstMarkInches, input.unitSystem, input.roundingPrecision)
-      : undefined,
-    legLengthFormatted:
-      legLengthInches !== undefined
-        ? formatLength(legLengthInches, input.unitSystem, input.roundingPrecision)
+    diagramData:
+      isValidDeductMark && deductMarkFormatted
+        ? {
+            calculatorType: 'stub90',
+            stubHeightInches,
+            deductInches,
+            deductMarkInches,
+            legLengthInches,
+            bendAngle: 90,
+            display: {
+              stubLength: stubHeightFormatted,
+              deduct: deductFormatted,
+              deductMark: deductMarkFormatted,
+              leg: legLengthFormatted,
+            },
+          }
         : undefined,
-    conduitLengthFormatted: undefined,
+
+    stubHeightFormatted,
+    deductFormatted,
+    deductMarkFormatted,
+    legLengthFormatted,
   };
 }

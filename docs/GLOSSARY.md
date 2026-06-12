@@ -54,4 +54,4 @@ Terminology is part of the product. Electricians use these words on real job sit
 | Stub Length | Stub Height | Stub 90 input |
 | Bend Angle | Angle (alone, when ambiguous) | All calculators |
 
-Internal/engine code may still carry legacy keys (`firstMark`, `rise`, `stubHeight`, `takeUp`) during migration — see [`NAMING_RULES.md`](NAMING_RULES.md). Prefer the glossary terms for all **new** UI copy and public contracts, and never introduce a new name for a concept that already has one.
+The legacy `firstMark` and `takeUp` engine keys have been removed — engine surfaces now match this glossary (`deductMark`, `mark1`/`mark2`; `stubHeight` remains as the engine key for Stub Length). See [`NAMING_RULES.md`](NAMING_RULES.md) for the exact key lists. Prefer the glossary terms for all **new** UI copy and public contracts, and never introduce a new name for a concept that already has one.

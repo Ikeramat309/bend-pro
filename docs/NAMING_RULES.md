@@ -10,17 +10,15 @@ Changing measurement names randomly makes the app harder for beginners, electric
 
 **UI labels:** Stub Length, Deduct, Deduct Mark, Bend Mark (general mark language), Leg, Take-Up (sparingly).
 
-**Engine keys:** `stubHeight` / `stubLength`, `deduct`, `takeUp`, `deductMark`, `legLength`.
+**Engine keys:** `stubHeight`, `deduct`, `deductMark`, `legLength` (plus `isValidDeductMark`, `*Formatted` variants, and `diagramData`).
 
-Never call the stub 90 result "First Mark" or "Start Mark" in the UI.
-
-Legacy engine code may still contain older names during migration. Prefer the names above for new UI copy and new public contracts.
+Never call the stub 90 result "First Mark" or "Start Mark" in the UI — or in engine keys. The legacy `firstMark` and `takeUp` engine keys were removed; the engine surface now matches the UI language.
 
 ## Offset Names
 
 **UI labels:** Offset Height, Bend Angle, Distance Between Bends, Shrink, Mark 1, Mark 2.
 
-**Engine keys:** `rise` (offset height), `markSpacing` (distance between bends), `shrink`, `mark1`, `mark2`.
+**Engine keys:** `offsetHeight`, `distanceBetweenBends`, `shrink`, `mark1`, `mark2`, `bendAngle`, `multiplier`.
 
 ## General Rules
 

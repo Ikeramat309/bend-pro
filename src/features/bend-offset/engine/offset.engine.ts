@@ -33,10 +33,7 @@ function collectWarnings(input: OffsetEngineInput): string[] {
     warnings.push('Offset height must be greater than 0.');
   }
 
-  if (
-    input.firstMark !== undefined &&
-    (!Number.isFinite(input.firstMark) || input.firstMark < 0)
-  ) {
+  if (input.mark1 !== undefined && (!Number.isFinite(input.mark1) || input.mark1 < 0)) {
     warnings.push('Mark 1 cannot be negative.');
   }
 
@@ -66,27 +63,44 @@ function collectWarnings(input: OffsetEngineInput): string[] {
 export function calculateOffset(input: OffsetEngineInput): OffsetEngineResult {
   const warnings = collectWarnings(input);
   const benderProfile = getBenderProfile(input.benderProfileId);
-  const angleInfo = ANGLE_DATA[input.bendAngle];
+
+  // Guard against angles outside the table (unreachable through the UI,
+  // but an unknown angle must produce an invalid result, not a crash).
+  const angleInfo: { multiplier: number; shrinkPerInch: number } | undefined =
+    ANGLE_DATA[input.bendAngle];
+  const safeAngleInfo = angleInfo ?? { multiplier: 0, shrinkPerInch: 0 };
 
   const offsetHeightInches = toInches(input.offsetHeight || 0, input.unitSystem);
-  const spacingInches = offsetHeightInches * angleInfo.multiplier;
-  const shrinkInches = offsetHeightInches * angleInfo.shrinkPerInch;
+  const spacingInches = offsetHeightInches * safeAngleInfo.multiplier;
+  const shrinkInches = offsetHeightInches * safeAngleInfo.shrinkPerInch;
 
-  const firstMarkInches =
-    input.firstMark !== undefined ? toInches(input.firstMark, input.unitSystem) : undefined;
-  const secondMarkInches =
-    firstMarkInches !== undefined ? firstMarkInches + spacingInches : undefined;
+  const mark1Inches =
+    input.mark1 !== undefined ? toInches(input.mark1, input.unitSystem) : undefined;
+  const mark2Inches = mark1Inches !== undefined ? mark1Inches + spacingInches : undefined;
 
-  const isValid = Number.isFinite(input.offsetHeight) && input.offsetHeight > 0;
+  const isValid =
+    Number.isFinite(input.offsetHeight) && input.offsetHeight > 0 && angleInfo !== undefined;
+
+  const offsetHeightFormatted = formatLength(offsetHeightInches, input.unitSystem, input.roundingPrecision);
+  const distanceBetweenBendsFormatted = formatLength(spacingInches, input.unitSystem, input.roundingPrecision);
+  const shrinkFormatted = formatLength(shrinkInches, input.unitSystem, input.roundingPrecision);
+  const mark1Formatted =
+    mark1Inches !== undefined
+      ? formatLength(mark1Inches, input.unitSystem, input.roundingPrecision)
+      : undefined;
+  const mark2Formatted =
+    mark2Inches !== undefined
+      ? formatLength(mark2Inches, input.unitSystem, input.roundingPrecision)
+      : undefined;
 
   return {
     offsetHeight: offsetHeightInches,
     distanceBetweenBends: spacingInches,
     shrink: shrinkInches,
-    mark1: firstMarkInches,
-    mark2: secondMarkInches,
+    mark1: mark1Inches,
+    mark2: mark2Inches,
     bendAngle: input.bendAngle,
-    multiplier: angleInfo.multiplier,
+    multiplier: safeAngleInfo.multiplier,
     isValid,
     warnings,
     benderProfileUsed: {
@@ -94,17 +108,29 @@ export function calculateOffset(input: OffsetEngineInput): OffsetEngineResult {
       name: benderProfile.name,
       category: benderProfile.category,
     },
+    diagramData: isValid
+      ? {
+          calculatorType: 'offset',
+          offsetHeightInches,
+          distanceBetweenBendsInches: spacingInches,
+          shrinkInches,
+          mark1Inches,
+          mark2Inches,
+          bendAngle: input.bendAngle,
+          display: {
+            offsetHeight: offsetHeightFormatted,
+            distanceBetweenBends: distanceBetweenBendsFormatted,
+            shrink: shrinkFormatted,
+            mark1: mark1Formatted,
+            mark2: mark2Formatted,
+          },
+        }
+      : undefined,
 
-    offsetHeightFormatted: formatLength(offsetHeightInches, input.unitSystem, input.roundingPrecision),
-    distanceBetweenBendsFormatted: formatLength(spacingInches, input.unitSystem, input.roundingPrecision),
-    shrinkFormatted: formatLength(shrinkInches, input.unitSystem, input.roundingPrecision),
-    mark1Formatted:
-      firstMarkInches !== undefined
-        ? formatLength(firstMarkInches, input.unitSystem, input.roundingPrecision)
-        : undefined,
-    mark2Formatted:
-      secondMarkInches !== undefined
-        ? formatLength(secondMarkInches, input.unitSystem, input.roundingPrecision)
-        : undefined,
+    offsetHeightFormatted,
+    distanceBetweenBendsFormatted,
+    shrinkFormatted,
+    mark1Formatted,
+    mark2Formatted,
   };
 }

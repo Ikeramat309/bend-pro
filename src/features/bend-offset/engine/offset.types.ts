@@ -14,6 +14,16 @@ export type OffsetEngineInput = {
   tradeSize: TradeSize;
   unitSystem: UnitSystem;
   roundingPrecision: RoundingOption;
+  /**
+   * User-entered multiplier — replaces the standard angle-table value when
+   * present. Ignored unless finite and > 0.
+   */
+  multiplierOverride?: number;
+  /**
+   * User-entered shrink per inch of offset height (inches). Replaces the
+   * standard angle-table shrink rate when present.
+   */
+  shrinkPerInchOverride?: number;
 };
 
 /**
@@ -52,6 +62,12 @@ export type OffsetEngineResult = {
   mark2?: number;
   bendAngle: BendAngle;
   multiplier: number;
+  /** True when distance between bends used a manual multiplier override. */
+  isMultiplierOverridden: boolean;
+  /** Shrink rate used (inches lost per inch of offset height). */
+  shrinkPerInch: number;
+  /** True when shrink used a manual shrink-per-inch override. */
+  isShrinkOverridden: boolean;
   isValid: boolean;
   warnings: string[];
   benderProfileUsed: OffsetBenderProfileUsed;

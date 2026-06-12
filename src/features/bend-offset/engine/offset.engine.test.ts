@@ -32,6 +32,9 @@ describe('calculateOffset', () => {
     expect(result.distanceBetweenBends).toBe(12);
     expect(result.shrink).toBe(1.5);
     expect(result.multiplier).toBe(2);
+    expect(result.isMultiplierOverridden).toBe(false);
+    expect(result.shrinkPerInch).toBe(0.25);
+    expect(result.isShrinkOverridden).toBe(false);
     expect(result.isValid).toBe(true);
     expect(result.warnings).toEqual([]);
     expect(result.distanceBetweenBendsFormatted).toBe('12"');
@@ -67,6 +70,67 @@ describe('calculateOffset', () => {
         expect(result.shrinkFormatted).toBe(shrinkFormatted);
       },
     );
+  });
+
+  describe('multiplier override', () => {
+    test('override replaces the standard table multiplier for distance', () => {
+      const result = calculateOffset(baseInput({ multiplierOverride: 2.1 }));
+
+      expect(result.multiplier).toBe(2.1);
+      expect(result.distanceBetweenBends).toBeCloseTo(12.6, 10);
+      expect(result.shrink).toBe(1.5);
+      expect(result.isMultiplierOverridden).toBe(true);
+      expect(result.warnings).toEqual([]);
+    });
+
+    test('non-positive or non-finite override is ignored', () => {
+      for (const bad of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) {
+        const result = calculateOffset(baseInput({ multiplierOverride: bad }));
+
+        expect(result.multiplier).toBe(2);
+        expect(result.isMultiplierOverridden).toBe(false);
+      }
+    });
+
+    test('no override uses the table value', () => {
+      expect(calculateOffset(baseInput()).isMultiplierOverridden).toBe(false);
+    });
+  });
+
+  describe('shrink per inch override', () => {
+    test('override replaces the standard table shrink rate', () => {
+      const result = calculateOffset(baseInput({ shrinkPerInchOverride: 0.3125 }));
+
+      expect(result.shrinkPerInch).toBe(0.3125);
+      expect(result.shrink).toBeCloseTo(1.875, 10);
+      expect(result.distanceBetweenBends).toBe(12);
+      expect(result.isShrinkOverridden).toBe(true);
+      expect(result.warnings).toEqual([]);
+    });
+
+    test('multiplier and shrink overrides are independent', () => {
+      const result = calculateOffset(
+        baseInput({ multiplierOverride: 2.1, shrinkPerInchOverride: 0.3125 }),
+      );
+
+      expect(result.distanceBetweenBends).toBeCloseTo(12.6, 10);
+      expect(result.shrink).toBeCloseTo(1.875, 10);
+      expect(result.isMultiplierOverridden).toBe(true);
+      expect(result.isShrinkOverridden).toBe(true);
+    });
+
+    test('non-positive or non-finite override is ignored', () => {
+      for (const bad of [0, -0.1, Number.NaN, Number.POSITIVE_INFINITY]) {
+        const result = calculateOffset(baseInput({ shrinkPerInchOverride: bad }));
+
+        expect(result.shrinkPerInch).toBe(0.25);
+        expect(result.isShrinkOverridden).toBe(false);
+      }
+    });
+
+    test('no override uses the table value', () => {
+      expect(calculateOffset(baseInput()).isShrinkOverridden).toBe(false);
+    });
   });
 
   describe('marks', () => {

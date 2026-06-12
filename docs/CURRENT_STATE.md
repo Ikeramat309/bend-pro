@@ -8,7 +8,7 @@ Honest snapshot of where the app stands. The app is in a **regroup/refactor phas
 
 ### Working calculators
 
-- **Offset** (`/offset`, `src/features/bend-offset/`) — offset height + bend angle → distance between bends, shrink, optional Mark 1 / Mark 2. Uses standard angle multipliers and shrink-per-inch constants (10°, 22.5°, 30°, 45°, 60°).
+- **Offset** (`/offset`, `src/features/bend-offset/`) — offset height + bend angle → distance between bends, shrink, optional Mark 1 / Mark 2. Uses standard angle multipliers and shrink-per-inch constants (10°, 22.5°, 30°, 45°, 60°). The active **multiplier** and **shrink rate** are visible and tappable on the results row; per-angle manual overrides persist in setup and replace the table values independently.
 - **Stub 90** (`/stub90`, `src/features/bend-stub90/`) — stub length − deduct (take-up) → deduct mark, with optional leg length. Deduct comes from the active bender profile.
 
 Both follow the same feature pattern: `*.config.ts`, `*.copy.ts`, `engine/` (pure math + types), `ui/` (screen + diagram). Both produce warnings for invalid or impractical inputs and format results via shared `formatLength`.

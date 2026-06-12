@@ -5,13 +5,25 @@
  * Pure module: types, defaults, and stored-value sanitizing live here so they
  * can be unit-tested without touching AsyncStorage or React.
  */
-import type { ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
+import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
 import { BENDER_PROFILES, DEFAULT_BENDER_PROFILE_ID, type BenderProfileId } from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { DEFAULT_EMT_TRADE_SIZE, isEmtTradeSize } from '@/data/emt';
 
+const VALID_OFFSET_ANGLES: readonly number[] = [10, 22.5, 30, 45, 60];
+
+function isOffsetBendAngle(value: number): value is BendAngle {
+  return VALID_OFFSET_ANGLES.includes(value);
+}
+
 /** Manual stub-90 deduct (take-up) overrides in inches, keyed by EMT size. */
 export type Stub90DeductOverrides = Partial<Record<TradeSize, number>>;
+
+/** Manual offset multipliers, keyed by bend angle. */
+export type OffsetMultiplierOverrides = Partial<Record<BendAngle, number>>;
+
+/** Manual offset shrink rates (inches per inch of offset height), keyed by bend angle. */
+export type OffsetShrinkPerInchOverrides = Partial<Record<BendAngle, number>>;
 
 export type CalculatorSetup = {
   unit: UnitSystem;
@@ -24,6 +36,10 @@ export type CalculatorSetup = {
    * Always stored in inches, regardless of the display unit system.
    */
   stub90DeductOverridesInches: Stub90DeductOverrides;
+  /** User-entered multipliers that replace the standard offset angle table. */
+  offsetMultiplierOverrides: OffsetMultiplierOverrides;
+  /** User-entered shrink-per-inch rates for offset (stored in inches). */
+  offsetShrinkPerInchOverrides: OffsetShrinkPerInchOverrides;
 };
 
 export const DEFAULT_CALCULATOR_SETUP: CalculatorSetup = {
@@ -33,10 +49,18 @@ export const DEFAULT_CALCULATOR_SETUP: CalculatorSetup = {
   conduitSize: DEFAULT_EMT_TRADE_SIZE,
   benderProfileId: DEFAULT_BENDER_PROFILE_ID,
   stub90DeductOverridesInches: {},
+  offsetMultiplierOverrides: {},
+  offsetShrinkPerInchOverrides: {},
 };
 
 /** Sanity ceiling for a manual deduct — nothing on a hand bender exceeds this. */
 export const MAX_DEDUCT_OVERRIDE_INCHES = 24;
+
+/** Sanity ceiling for a manual offset multiplier. */
+export const MAX_OFFSET_MULTIPLIER = 20;
+
+/** Sanity ceiling for shrink per inch of offset height. */
+export const MAX_OFFSET_SHRINK_PER_INCH = 2;
 
 export const IMPERIAL_ROUNDING_OPTIONS: readonly RoundingOption[] = ['exact', '1/16', '1/8', '1/4'];
 export const METRIC_ROUNDING_OPTIONS: readonly RoundingOption[] = ['1mm', '5mm', '10mm'];
@@ -52,7 +76,12 @@ function isKnownBenderProfileId(value: string): value is BenderProfileId {
  */
 export function sanitizeStoredSetup(raw: unknown): CalculatorSetup {
   // Fresh overrides object so the shared default is never mutated.
-  const setup = { ...DEFAULT_CALCULATOR_SETUP, stub90DeductOverridesInches: {} };
+  const setup = {
+    ...DEFAULT_CALCULATOR_SETUP,
+    stub90DeductOverridesInches: {},
+    offsetMultiplierOverrides: {},
+    offsetShrinkPerInchOverrides: {},
+  };
 
   if (typeof raw !== 'object' || raw === null) return setup;
   const record = raw as Record<string, unknown>;
@@ -86,6 +115,46 @@ export function sanitizeStoredSetup(raw: unknown): CalculatorSetup {
       }
     }
     setup.stub90DeductOverridesInches = overrides;
+  }
+
+  if (
+    typeof record.offsetMultiplierOverrides === 'object' &&
+    record.offsetMultiplierOverrides !== null
+  ) {
+    const overrides: OffsetMultiplierOverrides = {};
+    for (const [key, value] of Object.entries(record.offsetMultiplierOverrides)) {
+      const angle = Number(key);
+      if (
+        isOffsetBendAngle(angle) &&
+        typeof value === 'number' &&
+        Number.isFinite(value) &&
+        value > 0 &&
+        value <= MAX_OFFSET_MULTIPLIER
+      ) {
+        overrides[angle] = value;
+      }
+    }
+    setup.offsetMultiplierOverrides = overrides;
+  }
+
+  if (
+    typeof record.offsetShrinkPerInchOverrides === 'object' &&
+    record.offsetShrinkPerInchOverrides !== null
+  ) {
+    const overrides: OffsetShrinkPerInchOverrides = {};
+    for (const [key, value] of Object.entries(record.offsetShrinkPerInchOverrides)) {
+      const angle = Number(key);
+      if (
+        isOffsetBendAngle(angle) &&
+        typeof value === 'number' &&
+        Number.isFinite(value) &&
+        value > 0 &&
+        value <= MAX_OFFSET_SHRINK_PER_INCH
+      ) {
+        overrides[angle] = value;
+      }
+    }
+    setup.offsetShrinkPerInchOverrides = overrides;
   }
 
   const validRounding =

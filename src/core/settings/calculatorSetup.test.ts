@@ -25,6 +25,8 @@ describe('sanitizeStoredSetup', () => {
       conduitSize: '3/4',
       benderProfileId: 'generic-hand-bender',
       stub90DeductOverridesInches: {},
+      offsetMultiplierOverrides: {},
+      offsetShrinkPerInchOverrides: {},
     });
   });
 
@@ -93,6 +95,68 @@ describe('sanitizeStoredSetup', () => {
       expect(sanitizeStoredSetup({}).stub90DeductOverridesInches).toEqual({});
       expect(
         sanitizeStoredSetup({ stub90DeductOverridesInches: 'garbage' }).stub90DeductOverridesInches,
+      ).toEqual({});
+    });
+  });
+
+  describe('offset multiplier overrides', () => {
+    test('valid overrides pass through', () => {
+      const result = sanitizeStoredSetup({
+        offsetMultiplierOverrides: { 30: 2.1, 45: 1.35 },
+      });
+
+      expect(result.offsetMultiplierOverrides).toEqual({ 30: 2.1, 45: 1.35 });
+    });
+
+    test('invalid entries are dropped individually', () => {
+      const result = sanitizeStoredSetup({
+        offsetMultiplierOverrides: {
+          30: 2.1,
+          15: 2,
+          60: -1,
+          45: Number.NaN,
+          10: 999,
+        },
+      });
+
+      expect(result.offsetMultiplierOverrides).toEqual({ 30: 2.1 });
+    });
+
+    test('missing or malformed overrides default to empty', () => {
+      expect(sanitizeStoredSetup({}).offsetMultiplierOverrides).toEqual({});
+      expect(
+        sanitizeStoredSetup({ offsetMultiplierOverrides: null }).offsetMultiplierOverrides,
+      ).toEqual({});
+    });
+  });
+
+  describe('offset shrink per inch overrides', () => {
+    test('valid overrides pass through', () => {
+      const result = sanitizeStoredSetup({
+        offsetShrinkPerInchOverrides: { 30: 0.3125, 45: 0.5 },
+      });
+
+      expect(result.offsetShrinkPerInchOverrides).toEqual({ 30: 0.3125, 45: 0.5 });
+    });
+
+    test('invalid entries are dropped individually', () => {
+      const result = sanitizeStoredSetup({
+        offsetShrinkPerInchOverrides: {
+          30: 0.3125,
+          15: 0.25,
+          60: -0.1,
+          45: Number.NaN,
+          10: 99,
+        },
+      });
+
+      expect(result.offsetShrinkPerInchOverrides).toEqual({ 30: 0.3125 });
+    });
+
+    test('missing or malformed overrides default to empty', () => {
+      expect(sanitizeStoredSetup({}).offsetShrinkPerInchOverrides).toEqual({});
+      expect(
+        sanitizeStoredSetup({ offsetShrinkPerInchOverrides: 'garbage' }).offsetShrinkPerInchOverrides,
       ).toEqual({});
     });
   });

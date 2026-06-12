@@ -24,14 +24,18 @@ import {
   type SetupValues,
 } from '@/shared/workspace';
 import { colors, spacing } from '@/theme';
+import { formatLength } from '@/utils/formatLength';
 import { getRoundingLabel } from '@/utils/rounding';
 import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateOffset } from '../engine/offset.engine';
+import { formatMultiplier, getOffsetAngleData } from '../engine/offsetAngleData';
 import { OFFSET_CONFIG } from '../offset.config';
 import { offsetCopy } from '../offset.copy';
+import { MultiplierOverrideSheet } from './MultiplierOverrideSheet';
 import { OffsetDiagram } from './OffsetDiagram';
+import { ShrinkOverrideSheet } from './ShrinkOverrideSheet';
 
 export default function OffsetScreen() {
   const router = useRouter();
@@ -42,12 +46,19 @@ export default function OffsetScreen() {
   const [bendAngle, setBendAngle] = useState<BendAngle>(OFFSET_CONFIG.defaultAngle);
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
+  const [multiplierSheetVisible, setMultiplierSheetVisible] = useState(false);
+  const [shrinkSheetVisible, setShrinkSheetVisible] = useState(false);
 
   // Shared, persisted setup — follows the user across calculators and restarts.
   const { setup, setSetup } = useCalculatorSetup();
   const { unit, rounding, conduitType, conduitSize, benderProfileId } = setup;
+  const multiplierOverride = setup.offsetMultiplierOverrides[bendAngle];
+  const shrinkPerInchOverride = setup.offsetShrinkPerInchOverrides[bendAngle];
 
   const benderProfile = getBenderProfile(benderProfileId);
+  const chartAngleData = getOffsetAngleData(bendAngle);
+  const chartMultiplier = chartAngleData?.multiplier ?? 0;
+  const chartShrinkPerInch = chartAngleData?.shrinkPerInch ?? 0;
   const offsetHeight = parseLengthInput(offsetHeightText);
   const mark1Number = parseLengthInput(mark1Text);
   const hasMark1 = mark1Number !== undefined;
@@ -70,6 +81,8 @@ export default function OffsetScreen() {
         tradeSize: conduitSize,
         unitSystem: unit,
         roundingPrecision: rounding,
+        multiplierOverride,
+        shrinkPerInchOverride,
       }),
     [
       benderProfileId,
@@ -78,6 +91,8 @@ export default function OffsetScreen() {
       conduitType,
       hasMark1,
       mark1Number,
+      multiplierOverride,
+      shrinkPerInchOverride,
       offsetHeight,
       rounding,
       unit,
@@ -128,6 +143,36 @@ export default function OffsetScreen() {
     }
     setSetupVisible(false);
   }
+
+  function applyMultiplierOverride(override: number | undefined) {
+    const overrides = { ...setup.offsetMultiplierOverrides };
+    if (override === undefined) {
+      delete overrides[bendAngle];
+    } else {
+      overrides[bendAngle] = override;
+    }
+    setSetup(patchCalculatorSetup(setup, { offsetMultiplierOverrides: overrides }));
+    setMultiplierSheetVisible(false);
+  }
+
+  function applyShrinkOverride(overrideInches: number | undefined) {
+    const overrides = { ...setup.offsetShrinkPerInchOverrides };
+    if (overrideInches === undefined) {
+      delete overrides[bendAngle];
+    } else {
+      overrides[bendAngle] = overrideInches;
+    }
+    setSetup(patchCalculatorSetup(setup, { offsetShrinkPerInchOverrides: overrides }));
+    setShrinkSheetVisible(false);
+  }
+
+  const multiplierChipLabel = result.isMultiplierOverridden
+    ? `${offsetCopy.results.multiplierCustom} (${bendAngle}°)`
+    : `${offsetCopy.results.multiplier} (${bendAngle}°)`;
+
+  const shrinkChipLabel = result.isShrinkOverridden
+    ? `${offsetCopy.results.shrinkCustom} (${bendAngle}°)`
+    : `${offsetCopy.results.shrink} (${bendAngle}°)`;
 
   return (
     <View style={styles.screen}>
@@ -202,7 +247,18 @@ export default function OffsetScreen() {
           primaryLabel={offsetCopy.results.distanceBetweenBends}
           primaryValue={distanceValue}
           chips={[
-            { label: offsetCopy.results.shrink, value: result.shrinkFormatted },
+            {
+              label: multiplierChipLabel,
+              value: formatMultiplier(result.multiplier),
+              tone: result.isMultiplierOverridden ? 'primary' : undefined,
+              onPress: () => setMultiplierSheetVisible(true),
+            },
+            {
+              label: shrinkChipLabel,
+              value: result.shrinkFormatted,
+              tone: result.isShrinkOverridden ? 'primary' : undefined,
+              onPress: () => setShrinkSheetVisible(true),
+            },
             {
               label: offsetCopy.results.mark1,
               value: mark1Value,
@@ -242,6 +298,27 @@ export default function OffsetScreen() {
         }}
         onCancel={() => setSetupVisible(false)}
         onApply={applySetup}
+      />
+
+      <MultiplierOverrideSheet
+        visible={multiplierSheetVisible}
+        bendAngle={bendAngle}
+        benderName={benderProfile.name}
+        chartMultiplierFormatted={formatMultiplier(chartMultiplier)}
+        currentOverride={multiplierOverride}
+        onCancel={() => setMultiplierSheetVisible(false)}
+        onApply={applyMultiplierOverride}
+      />
+
+      <ShrinkOverrideSheet
+        visible={shrinkSheetVisible}
+        bendAngle={bendAngle}
+        benderName={benderProfile.name}
+        unitSystem={unit}
+        chartShrinkPerInchFormatted={formatLength(chartShrinkPerInch, unit, rounding)}
+        currentOverrideInches={shrinkPerInchOverride}
+        onCancel={() => setShrinkSheetVisible(false)}
+        onApply={applyShrinkOverride}
       />
     </View>
   );

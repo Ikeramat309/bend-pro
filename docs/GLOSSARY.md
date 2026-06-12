@@ -36,7 +36,7 @@ Terminology is part of the product. Electricians use these words on real job sit
 | Term | Definition |
 |------|------------|
 | **Bender profile** | A data record describing a specific bender (or generic class of bender) and its take-up/deduct values per trade size. Lives in `src/data/benders/`. Only `generic-hand-bender` exists today. |
-| **Manual override** | *(Planned — Phase 3, not built yet.)* Letting the user type their own deduct/take-up when their bender differs from the selected profile. |
+| **Manual override** | Lets the user replace chart/table values when their bender or sticker differs. **Stub 90:** manual deduct override per EMT size (tap the Deduct chip). **Offset:** manual multiplier override and manual shrink-per-inch override per bend angle (tap the Multiplier or Shrink chips). All persist in calculator setup. |
 | **Guide mode** | *(Planned — Phase 5, placeholder screen only.)* Teaching/walkthrough content for apprentices: formulas, bend steps, common mistakes. |
 | **Diagram primitive** | A small reusable SVG building block in `src/shared/diagrams/` (pipe segment, mark line, dimension line, label, callout). Calculators compose primitives instead of drawing one-off graphics. |
 | **Pipe segment** | The diagram primitive that draws a straight run of conduit (`PipeSegment`). |

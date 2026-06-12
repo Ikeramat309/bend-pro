@@ -5,22 +5,15 @@
  * distanceBetweenBends = offsetHeight × multiplier
  * shrink = offsetHeight × shrinkPerInch
  */
-import type { BendAngle, UnitSystem } from '@/core/types';
+import type { UnitSystem } from '@/core/types';
 import { getBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { OffsetEngineInput, OffsetEngineResult } from './offset.types';
+import { getOffsetAngleData } from './offsetAngleData';
 import { OFFSET_CONFIG } from '../offset.config';
 
 const MM_PER_INCH = 25.4;
-
-const ANGLE_DATA: Record<BendAngle, { multiplier: number; shrinkPerInch: number }> = {
-  10: { multiplier: 6.0, shrinkPerInch: 1 / 16 },
-  22.5: { multiplier: 2.6, shrinkPerInch: 3 / 16 },
-  30: { multiplier: 2.0, shrinkPerInch: 1 / 4 },
-  45: { multiplier: 1.4, shrinkPerInch: 3 / 8 },
-  60: { multiplier: 1.2, shrinkPerInch: 1 / 2 },
-};
 
 function toInches(value: number, unitSystem: UnitSystem): number {
   return unitSystem === 'metric' ? value / MM_PER_INCH : value;
@@ -66,13 +59,31 @@ export function calculateOffset(input: OffsetEngineInput): OffsetEngineResult {
 
   // Guard against angles outside the table (unreachable through the UI,
   // but an unknown angle must produce an invalid result, not a crash).
-  const angleInfo: { multiplier: number; shrinkPerInch: number } | undefined =
-    ANGLE_DATA[input.bendAngle];
-  const safeAngleInfo = angleInfo ?? { multiplier: 0, shrinkPerInch: 0 };
+  const angleInfo = getOffsetAngleData(input.bendAngle);
+  const chartMultiplier = angleInfo?.multiplier ?? 0;
+  const chartShrinkPerInch = angleInfo?.shrinkPerInch ?? 0;
+
+  const overrideMultiplier =
+    input.multiplierOverride !== undefined &&
+    Number.isFinite(input.multiplierOverride) &&
+    input.multiplierOverride > 0
+      ? input.multiplierOverride
+      : undefined;
+  const isMultiplierOverridden = overrideMultiplier !== undefined;
+  const effectiveMultiplier = overrideMultiplier ?? chartMultiplier;
+
+  const overrideShrinkPerInch =
+    input.shrinkPerInchOverride !== undefined &&
+    Number.isFinite(input.shrinkPerInchOverride) &&
+    input.shrinkPerInchOverride > 0
+      ? input.shrinkPerInchOverride
+      : undefined;
+  const isShrinkOverridden = overrideShrinkPerInch !== undefined;
+  const effectiveShrinkPerInch = overrideShrinkPerInch ?? chartShrinkPerInch;
 
   const offsetHeightInches = toInches(input.offsetHeight || 0, input.unitSystem);
-  const spacingInches = offsetHeightInches * safeAngleInfo.multiplier;
-  const shrinkInches = offsetHeightInches * safeAngleInfo.shrinkPerInch;
+  const spacingInches = offsetHeightInches * effectiveMultiplier;
+  const shrinkInches = offsetHeightInches * effectiveShrinkPerInch;
 
   const mark1Inches =
     input.mark1 !== undefined ? toInches(input.mark1, input.unitSystem) : undefined;
@@ -100,7 +111,10 @@ export function calculateOffset(input: OffsetEngineInput): OffsetEngineResult {
     mark1: mark1Inches,
     mark2: mark2Inches,
     bendAngle: input.bendAngle,
-    multiplier: safeAngleInfo.multiplier,
+    multiplier: effectiveMultiplier,
+    isMultiplierOverridden,
+    shrinkPerInch: effectiveShrinkPerInch,
+    isShrinkOverridden,
     isValid,
     warnings,
     benderProfileUsed: {

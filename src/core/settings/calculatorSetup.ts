@@ -189,3 +189,37 @@ export function patchCalculatorSetup(
 
   return next;
 }
+
+export type SetupOverrideHintContext =
+  | { calculator: 'stub90' }
+  | { calculator: 'offset'; bendAngle: BendAngle };
+
+/**
+ * Short subtitle hint when manual chart overrides are active for the current
+ * calculator context. Returns undefined when everything uses table values.
+ */
+export function getSetupOverrideHint(
+  setup: CalculatorSetup,
+  context: SetupOverrideHintContext,
+): string | undefined {
+  if (context.calculator === 'stub90') {
+    if (setup.stub90DeductOverridesInches[setup.conduitSize] !== undefined) {
+      return `Custom deduct on ${setup.conduitSize}" EMT`;
+    }
+    return undefined;
+  }
+
+  const hasMultiplier = setup.offsetMultiplierOverrides[context.bendAngle] !== undefined;
+  const hasShrink = setup.offsetShrinkPerInchOverrides[context.bendAngle] !== undefined;
+
+  if (hasMultiplier && hasShrink) {
+    return `Custom multiplier & shrink at ${context.bendAngle}°`;
+  }
+  if (hasMultiplier) {
+    return `Custom multiplier at ${context.bendAngle}°`;
+  }
+  if (hasShrink) {
+    return `Custom shrink at ${context.bendAngle}°`;
+  }
+  return undefined;
+}

@@ -4,6 +4,7 @@
  */
 import {
   DEFAULT_CALCULATOR_SETUP,
+  getSetupOverrideHint,
   patchCalculatorSetup,
   sanitizeStoredSetup,
 } from './calculatorSetup';
@@ -198,5 +199,56 @@ describe('patchCalculatorSetup', () => {
     });
 
     expect(next.conduitType).toBe('EMT');
+  });
+});
+
+describe('getSetupOverrideHint', () => {
+  test('stub90 hint when deduct is overridden for the active size', () => {
+    const setup = patchCalculatorSetup(DEFAULT_CALCULATOR_SETUP, {
+      conduitSize: '3/4',
+      stub90DeductOverridesInches: { '3/4': 6.25 },
+    });
+
+    expect(getSetupOverrideHint(setup, { calculator: 'stub90' })).toBe(
+      'Custom deduct on 3/4" EMT',
+    );
+  });
+
+  test('stub90 returns undefined when no deduct override', () => {
+    expect(getSetupOverrideHint(DEFAULT_CALCULATOR_SETUP, { calculator: 'stub90' })).toBeUndefined();
+  });
+
+  test('offset hints for multiplier, shrink, or both', () => {
+    const multiplierOnly = patchCalculatorSetup(DEFAULT_CALCULATOR_SETUP, {
+      offsetMultiplierOverrides: { 30: 2.1 },
+    });
+    expect(getSetupOverrideHint(multiplierOnly, { calculator: 'offset', bendAngle: 30 })).toBe(
+      'Custom multiplier at 30°',
+    );
+
+    const shrinkOnly = patchCalculatorSetup(DEFAULT_CALCULATOR_SETUP, {
+      offsetShrinkPerInchOverrides: { 30: 0.3125 },
+    });
+    expect(getSetupOverrideHint(shrinkOnly, { calculator: 'offset', bendAngle: 30 })).toBe(
+      'Custom shrink at 30°',
+    );
+
+    const both = patchCalculatorSetup(DEFAULT_CALCULATOR_SETUP, {
+      offsetMultiplierOverrides: { 30: 2.1 },
+      offsetShrinkPerInchOverrides: { 30: 0.3125 },
+    });
+    expect(getSetupOverrideHint(both, { calculator: 'offset', bendAngle: 30 })).toBe(
+      'Custom multiplier & shrink at 30°',
+    );
+  });
+
+  test('offset returns undefined when overrides are for a different angle', () => {
+    const setup = patchCalculatorSetup(DEFAULT_CALCULATOR_SETUP, {
+      offsetMultiplierOverrides: { 45: 1.35 },
+    });
+
+    expect(
+      getSetupOverrideHint(setup, { calculator: 'offset', bendAngle: 30 }),
+    ).toBeUndefined();
   });
 });

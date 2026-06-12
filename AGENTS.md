@@ -14,7 +14,7 @@ It is **not** a generic calculator app. It is a field tool. People will mark and
 
 ## Current phase
 
-The app is in a **regroup/refactor phase**. Offset and Stub 90 are the core calculators. The priority is stabilizing them, cleaning terminology, improving bender override support, and building a reusable pipe diagram system — **before** adding more calculators. See `docs/CURRENT_STATE.md` and `docs/ROADMAP.md`.
+**Phase 3 — bender profiles and selection.** Phases 1 (calculator stabilization) and 2 (diagram system) are complete. Offset and Stub 90 are the core calculators. The priority is expanding bender profile support and the bender database — manual chart overrides already exist. Do not add new calculators until Phase 3 exit criteria are met. See `docs/CURRENT_STATE.md` and `docs/ROADMAP.md`.
 
 ## Read these docs first
 

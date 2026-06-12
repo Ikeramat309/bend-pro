@@ -7,7 +7,7 @@ import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import {
     DEFAULT_EMT_STUB90_TAKE_UP_INCHES,
     getBenderProfile,
@@ -58,7 +58,13 @@ export default function Stub90Screen() {
   const hasValidLegLength = legLength !== undefined && legLength > 0;
   const unitLabel = getLengthUnitLabel(unit);
   const setupSummary = `${conduitType} ${conduitSize}"`;
-  const setupSubtitle = `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`;
+  const overrideHint = getSetupOverrideHint(setup, { calculator: 'stub90' });
+  const setupSubtitle = [
+    `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`,
+    overrideHint,
+  ]
+    .filter(Boolean)
+    .join(' • ');
   const hasValidStubLength = stubLength !== undefined && stubLength > 0;
   // Imperial users type tape-measure fractions ("12 3/8") — needs a keyboard
   // with space and slash. Falls back to the default keyboard on Android.

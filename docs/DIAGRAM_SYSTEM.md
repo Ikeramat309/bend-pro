@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Bend Pro is **diagram-first**. The pipe diagram is the hero of every calculator screen — the primary way a user understands where to mark, measure, and bend. This doc describes the principles for the current shared primitives and the reusable diagram system being built in Roadmap Phase 2.
+Bend Pro is **diagram-first**. The pipe diagram is the hero of every calculator screen — the primary way a user understands where to mark, measure, and bend. This doc describes the shared diagram primitives and layout rules established in Phase 2.
 
 ## Principles
 
@@ -38,6 +38,7 @@ Shared primitives live in `src/shared/diagrams/`:
 | `DiagramLabel` | Text attached to a diagram element |
 | `DiagramCallout` | Result callout on the diagram |
 | `BendRadiusZone` | Highlighted take-up arc consumed by the bender shoe |
+| `DiagramLeaderLine` | Thin line from a callout badge to the pipe element it describes |
 | `resolveProportionalSpans` | Clamped proportional scaling for semi-proportional layout |
 | `diagramTheme` | Diagram colors and stroke sizes |
 
@@ -67,9 +68,9 @@ Follow [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) and `diagramTheme`:
 - Neutral white/grey for labels and dimension lines
 - Avoid making every measurement a different bright color
 
-## Status
+## Status (Phase 2 complete)
 
-- **Existing:** the primitives listed above, used by both calculator diagrams.
-- **Done (Phase 2):** Stub 90 and Offset live diagrams are semi-proportional — geometry computed from `diagramData` numbers. Stub 90 uses clamped spans (leg vs. stub height); Offset draws its diagonal at the real bend angle. `BendRadiusZone` is a shared primitive used by both.
-- **In progress (Phase 2):** anchored result callouts with leader lines as a shared primitive (Stub 90 has an inline leader).
-- **Planned:** empty preview states, additional callout patterns. Do not build these without an explicit task.
+- **Live diagrams:** Stub 90 and Offset compute geometry from engine `diagramData` (semi-proportional, clamped for readability).
+- **Stub 90 semantics:** mark on the stub (measured from stub tip); leg dimension under the horizontal run; deduct callout with leader line.
+- **Offset semantics:** diagonal at real bend angle; distance-between-bends dimension along the pipe; mark values at the marks.
+- **Deferred polish:** `primitives/` subfolder organization, richer empty-preview states, additional callout patterns. Do not build these without an explicit task.

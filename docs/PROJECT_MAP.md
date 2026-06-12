@@ -25,13 +25,13 @@ Each calculator is self-contained under `src/features/`.
 ```
 bend-offset/
   offset.config.ts, offset.copy.ts
-  engine/offset.engine.ts, offset.types.ts
-  ui/OffsetScreen.tsx, OffsetDiagram.tsx
+  engine/offset.engine.ts, offset.types.ts, offsetAngleData.ts
+  ui/OffsetScreen.tsx, OffsetDiagram.tsx, MultiplierOverrideSheet.tsx, ShrinkOverrideSheet.tsx
 
 bend-stub90/
   stub90.config.ts, stub90.copy.ts
   engine/stub90.engine.ts, stub90.types.ts
-  ui/Stub90Screen.tsx, Stub90Diagram.tsx
+  ui/Stub90Screen.tsx, Stub90Diagram.tsx, DeductOverrideSheet.tsx
 ```
 
 ## Shared UI
@@ -40,7 +40,7 @@ bend-stub90/
 |-------|------|---------|
 | App shell | `src/shared/ui/` | AppHeader, AppScreen, BottomNav, Sheet, FieldInput, OptionChipGroup |
 | Workspace | `src/shared/workspace/` | SetupSummary, PipeWorkspaceCard, MeasurementChip, EditSetupSheet, AngleSelector |
-| Diagrams | `src/shared/diagrams/` | PipeSegment, MarkLine, DimensionLine, DiagramLabel, diagramTheme |
+| Diagrams | `src/shared/diagrams/` | PipeSegment, MarkLine, DimensionLine, DiagramLabel, DiagramCallout, BendRadiusZone, DiagramLeaderLine, proportions helper, diagramTheme |
 
 ## Data
 
@@ -56,7 +56,7 @@ bend-stub90/
 | Layer | Path |
 |-------|------|
 | Shared types | `src/core/types.ts` |
-| Persisted calculator setup (unit, rounding, size, bender) | `src/core/settings/` |
+| Persisted calculator setup (unit, rounding, size, bender, manual overrides) | `src/core/settings/` |
 | Theme tokens | `src/theme/` |
 | Formatting/parsing helpers | `src/utils/rounding.ts`, `units.ts`, `formatLength.ts`, `parseLengthInput.ts` |
 

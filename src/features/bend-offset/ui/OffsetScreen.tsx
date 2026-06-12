@@ -8,7 +8,7 @@ import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import type { BendAngle } from '@/core/types';
-import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes } from '@/navigation';
@@ -64,7 +64,13 @@ export default function OffsetScreen() {
   const hasMark1 = mark1Number !== undefined;
   const unitLabel = getLengthUnitLabel(unit);
   const setupSummary = `${conduitType} ${conduitSize}"`;
-  const setupSubtitle = `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`;
+  const overrideHint = getSetupOverrideHint(setup, { calculator: 'offset', bendAngle });
+  const setupSubtitle = [
+    `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`,
+    overrideHint,
+  ]
+    .filter(Boolean)
+    .join(' • ');
   const hasValidOffset = offsetHeight !== undefined && offsetHeight > 0;
   // Imperial users type tape-measure fractions ("12 3/8") — needs a keyboard
   // with space and slash. Falls back to the default keyboard on Android.

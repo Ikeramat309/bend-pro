@@ -7,9 +7,11 @@ export {
   METRIC_ROUNDING_OPTIONS,
   patchCalculatorSetup,
   sanitizeStoredSetup,
+  getSetupOverrideHint,
   type CalculatorSetup,
   type OffsetMultiplierOverrides,
   type OffsetShrinkPerInchOverrides,
+  type SetupOverrideHintContext,
   type Stub90DeductOverrides,
 } from './calculatorSetup';
 export { SettingsProvider, useCalculatorSetup } from './SettingsContext';

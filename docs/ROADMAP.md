@@ -2,36 +2,46 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Phased plan for the regroup/refactor era. Phases are ordered by dependency: stabilization and the diagram system come **before** any new calculators. Everything below Phase 1 is **planned future work** — do not build it unless a task explicitly asks for it, and do not document it as if it exists.
+Phased plan for the regroup/refactor era. Phases are ordered by dependency: stabilization and the diagram system come **before** any new calculators. Everything below the current phase is **planned future work** — do not build it unless a task explicitly asks for it, and do not document it as if it exists.
 
-## Phase 1 — Stabilize Offset and Stub 90 (current)
+## Phase 1 — Stabilize Offset and Stub 90 ✅ complete
 
 - Lock down engine math, validation, and warnings for both calculators
 - Add engine tests with documented example cases (see `CALCULATOR_RULES.md`)
 - Clean terminology drift between engine keys and UI labels (`NAMING_RULES.md`, `GLOSSARY.md`)
-- Remove leftover boilerplate comments and stale phase references when touching files
+- Fraction-native input, persisted calculator setup, functional Settings screen
 - Keep both screens working at all times — small, safe change sets only
 
-**Exit criteria:** both calculators have tested engines, consistent terminology, and no known math or labeling bugs.
+**Exit criteria met:** both calculators have tested engines, consistent terminology, persisted setup, and no known math or labeling bugs.
 
-## Phase 2 — Reusable pipe diagram system
+## Phase 2 — Reusable pipe diagram system ✅ complete
 
-- Consolidate diagram building blocks into shared primitives (`src/shared/diagrams/`, with a `primitives/` organization when ready)
-- Primitives: conduit paths/segments, bend radius zones, marks, dimension vectors, arrowheads, labels, result callouts, empty preview states
-- Feature diagrams (`OffsetDiagram`, `Stub90Diagram`) become thin compositions of primitives
-- No calculator math inside diagram components — engines pass diagram-ready values (see `DIAGRAM_SYSTEM.md`)
+- Shared diagram primitives in `src/shared/diagrams/` (`PipeSegment`, `MarkLine`, `DimensionLine`, `DiagramLabel`, `DiagramCallout`, `BendRadiusZone`, `DiagramLeaderLine`, `resolveProportionalSpans`, `diagramTheme`)
+- Unified `diagramData` contract from engines — numeric values + formatted display strings
+- Semi-proportional live diagrams for Stub 90 and Offset (geometry from `diagramData`, clamped for readability)
+- Field-accurate diagram semantics (stub mark on the stub, offset diagonal at real bend angle, dimensions along the pipe)
+- Manual chart overrides surfaced on calculator screens (deduct, multiplier, shrink) with setup-row hints
 
-**Exit criteria:** both existing calculators render from shared primitives; adding a new calculator diagram requires composition, not new drawing code.
+**Exit criteria met:** both calculators render from shared primitives; new calculator diagrams should compose primitives rather than fork drawing code.
 
-## Phase 3 — Bender profiles and manual override
+**Deferred (not blocking Phase 3):** `primitives/` subfolder organization, richer empty-preview states, additional anchored callout patterns beyond the current leader line.
+
+## Phase 3 — Bender profiles and manual override (current)
+
+**Already done (partial):**
+
+- Manual deduct override (Stub 90, per EMT size)
+- Manual multiplier and shrink-per-inch overrides (Offset, per bend angle)
+- Override hints on setup rows; tappable result chips with override sheets
+
+**Still to do:**
 
 - Expand bender profile data beyond the single generic hand bender
-- Let users select a bender profile and see which profile produced their deduct/take-up
-- Manual override: users can enter their own deduct/take-up when their bender differs
-- Replace the silent default fallback with clear UI feedback
-- Build out the bender database screen (currently a placeholder)
+- Bender database screen (currently placeholder) — search, selection, custom profiles
+- Replace silent default fallback with clearer profile context where profiles are incomplete
+- Manufacturer / model-specific shoe charts (when data exists)
 
-**Exit criteria:** a user with any hand bender can get correct marks, either from a profile or a manual override.
+**Exit criteria:** a user with any hand bender can get correct marks from a profile or a manual override, and can **select** their bender — not only override a generic table.
 
 ## Phase 4 — More calculators (later)
 
@@ -39,7 +49,7 @@ Candidates (order undecided; see `PRODUCT_BRIEF.md`):
 
 - 3-point saddle, 4-point saddle, kick, rolling offset, segment bending
 
-Each new calculator must follow `FEATURE_TEMPLATE.md`, `CALCULATOR_RULES.md`, and reuse the diagram system from Phase 2. No new calculator starts until Phases 1–3 are done.
+Each new calculator must follow `FEATURE_TEMPLATE.md`, `CALCULATOR_RULES.md`, and reuse the diagram system from Phase 2. No new calculator starts until Phase 3 exit criteria are met.
 
 ## Phase 5 — Guide mode (later)
 

@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import Svg, { Circle, Line } from 'react-native-svg';
+import Svg, { Circle } from 'react-native-svg';
 
 import {
     BendRadiusZone,
@@ -7,10 +7,10 @@ import {
     DiagramCanvas,
     DiagramDefs,
     DiagramLabel,
+    DiagramLeaderLine,
     DimensionLine,
     MarkLine,
     PipeSegment,
-    diagramMetrics,
     diagramTheme,
     resolveProportionalSpans,
 } from '@/shared/diagrams';
@@ -201,13 +201,11 @@ function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
           textAnchor="start"
         />
       </DiagramCallout>
-      <Line
+      <DiagramLeaderLine
         x1={calloutX + 80}
         y1={calloutY + 34}
         x2={cornerX - 22}
         y2={204}
-        stroke={diagramTheme.dimension}
-        strokeWidth={diagramMetrics.dimensionStroke}
       />
 
       {/* Stub Length — full height of the vertical run. */}

@@ -56,6 +56,8 @@ Reference cases for the current calculators:
 - **Offset:** 6" offset height at 30° (multiplier 2.0, shrink 1/4"/inch) → distance between bends **12"**, shrink **1 1/2"**.
 - **3-Point Saddle:** 2" obstruction at 22.5°/45°, center at 24" → center to side **~5.23"**, shrink **3/8"**, center mark **24 3/8"**.
 - **4-Point Saddle:** 2" obstruction, 4" saddle width, 22.5°, center at 30" → between bends **5.2"** (2 × 2.6), total shrink **3/4"** (2 × 2 × 3/16), center mark **30 3/8"**, top marks **28 3/8" / 32 3/8"**, outer marks **~23 3/16" / ~37 9/16"**.
+- **Segment Bend:** 30" radius, 90° total, 10° per bend → **9 bends** at 10°, between bends **~5 1/4"** (π/180 × 30 × 10), developed length **~47 1/8"** (π/180 × 30 × 90).
+- **Rolling Offset:** 6" offset height, 8" offset roll, 30° → distance between bends **20"**, shrink **2 1/2"** (true offset 10" is internal only).
 
 Any math change must include updated example cases proving the new behavior.
 

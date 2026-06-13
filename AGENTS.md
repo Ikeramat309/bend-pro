@@ -14,7 +14,7 @@ It is **not** a generic calculator app. It is a field tool. People will mark and
 
 ## Current phase
 
-**Phase 4 — more calculators.** Phases 1 (calculator stabilization), 2 (diagram system), and 3 (bender profiles and selection) are complete. Offset and Stub 90 are the core calculators. Do not add new calculators unless a task explicitly asks for one — and follow `FEATURE_TEMPLATE.md` when you do. See `docs/CURRENT_STATE.md` and `docs/ROADMAP.md`.
+**Phase 4 wrapped (paused).** Phases 1–3 are complete; six calculators ship (Offset, Stub 90, 3-Point Saddle, 4-Point Saddle, Segment Bend, Rolling Offset). Do not add new calculators unless a task explicitly asks for one — follow `FEATURE_TEMPLATE.md` when you do. Next focus is calculator hardening and/or Phase 5 (Guide mode). See `docs/PHASE_4_WRAPUP.md`, `docs/CURRENT_STATE.md`, and `docs/ROADMAP.md`.
 
 ## Read these docs first
 

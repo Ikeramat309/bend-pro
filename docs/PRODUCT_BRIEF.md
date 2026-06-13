@@ -26,8 +26,10 @@ A generic calculator gives you a number. Bend Pro gives you a **layout**: a visu
 ## Current scope (this phase)
 
 - **EMT only.** No RMC, IMC, or PVC.
-- **Four core calculators:** Offset, Stub 90, 3-Point Saddle, and 4-Point Saddle.
-- **Stabilization over expansion:** new calculators follow the feature template and reuse the diagram system.
+- **Six calculators:** Offset, Stub 90, 3-Point Saddle, 4-Point Saddle, Segment Bend, and Rolling Offset — all live with engine tests and diagrams.
+- **Stabilization over expansion:** Phase 4 is wrapped; new calculators wait for explicit tasks. Hardening existing calculators is the preferred next work.
+
+See [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) for what shipped, what is deferred, and known gaps.
 
 ## Field-use priorities
 
@@ -45,14 +47,14 @@ A generic calculator gives you a number. Bend Pro gives you a **layout**: a visu
 | **Stub 90** | `/stub90` | 90° stub layout: deduct mark from stub length minus bender deduct (take-up) |
 | **3-Point Saddle** | `/saddle3` | Route over an obstruction: center-to-side spacing, shrink, and three layout marks |
 | **4-Point Saddle** | `/saddle4` | Route over a wide obstruction with a flat top: between-bends spacing, shrink, and four layout marks |
+| **Segment Bend** | `/segment` | Large-radius bend from equal shots: shot count, between-bends spacing, developed length, and marks |
+| **Rolling Offset** | `/rolling` | Two-direction offset: offset height + offset roll → distance between bends, shrink, optional marks |
 
 ## Planned calculators (future, not built)
 
 These are **planned future work** — they do not exist yet and must not be documented or coded as if they do:
 
 - Kick / 90 with kick
-- Rolling offset
-- Segment / concentric bending
 
 Exact order and scope are decided in [`ROADMAP.md`](ROADMAP.md), not here.
 
@@ -60,8 +62,7 @@ Exact order and scope are decided in [`ROADMAP.md`](ROADMAP.md), not here.
 
 - No new calculators unless explicitly requested — follow `FEATURE_TEMPLATE.md` when adding one
 - No conduit types beyond EMT
-- No guide/teaching mode yet (placeholder screen exists; content is future work)
-- No full bender database UI yet (placeholder screen exists; data layer is minimal)
+- No guide/teaching mode yet (placeholder screen exists; content is Phase 5)
 - No accounts, sync, or cloud features
 - No generic "math app" features — Bend Pro stays a conduit bending tool
 

@@ -18,7 +18,9 @@ Terminology is part of the product. Electricians use these words on real job sit
 |------|------------|
 | **Bend angle** | The angle of a single bend, e.g. 10°, 22.5°, 30°, 45°, 60°, 90°. |
 | **Offset** | A two-bend layout that shifts conduit sideways (e.g. up and over an obstacle) while keeping it parallel to its original run. |
-| **Offset height** | The vertical rise of the offset — how far the conduit needs to shift. Primary input of the Offset calculator. |
+| **Offset height** | The vertical rise of the offset — how far the conduit needs to shift. Primary input of the Offset and Rolling Offset calculators. |
+| **Offset roll** | The horizontal advance in the rolling plane — the second component of a rolling offset. UI label for the engine key `advance`. |
+| **Rolling offset** | An offset that shifts conduit in two directions (height and roll). The app combines them internally, then lays out a standard two-bend offset. |
 | **Travel** | The distance along the pipe between the two offset bends, derived from offset height × angle multiplier. **Preferred user-facing term: "Distance Between Bends"** — "travel" may appear in trade speech and internal discussion but is not the current UI label. |
 | **Shrink** | The effective conduit length "lost" because the offset path is longer than a straight line. Users add shrink to their measurement before marking. |
 | **Mark** | A pencil/marker line on the pipe showing where to position the bender. |
@@ -51,6 +53,7 @@ Terminology is part of the product. Electricians use these words on real job sit
 | Mark 1 / Mark 2 | First Mark / Second Mark | Offset layout |
 | Distance Between Bends | Travel, Mark Spacing | Offset |
 | Offset Height | Rise | Offset input |
+| Offset Roll | Advance (in UI) | Rolling offset input |
 | Stub Length | Stub Height | Stub 90 input |
 | Bend Angle | Angle (alone, when ambiguous) | All calculators |
 

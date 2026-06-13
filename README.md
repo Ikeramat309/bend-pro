@@ -6,6 +6,12 @@ EMT bending calculator app for the field. Built with Expo, React Native, and Typ
 
 - **Offset** (`/offset`) — two-bend offset layout
 - **Stub 90** (`/stub90`) — 90° stub deduct mark
+- **3-Point Saddle** (`/saddle3`) — route over an obstruction
+- **4-Point Saddle** (`/saddle4`) — wide obstruction with flat top
+- **Segment Bend** (`/segment`) — large-radius bend from equal shots
+- **Rolling Offset** (`/rolling`) — offset in height and roll
+
+Phase 4 is wrapped. See [`docs/PHASE_4_WRAPUP.md`](docs/PHASE_4_WRAPUP.md) for what shipped and what is still deferred.
 
 ## Architecture
 
@@ -36,6 +42,7 @@ npm run ios          # open on iOS
 npm run web          # open in browser
 npx expo lint        # ESLint
 npx tsc --noEmit     # TypeScript check
+npm test             # Jest (engines, formatting, settings)
 ```
 
 ## Docs

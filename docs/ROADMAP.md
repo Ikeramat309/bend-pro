@@ -45,21 +45,32 @@ Phased plan for the regroup/refactor era. Phases are ordered by dependency: stab
 
 - Manufacturer / model-specific shoe charts
 
-## Phase 4 — More calculators (current)
+## Phase 4 — More calculators ✅ wrapped (paused)
 
-**Delivered (partial):**
+See [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) for the full close-out snapshot.
+
+**Delivered:**
 
 - **3-Point Saddle** (`/saddle3`) — obstruction height, angle presets (22.5°/45°, 30°/60°, 45°/90°), optional distance to center, diagram + engine tests
 - **4-Point Saddle** (`/saddle4`) — obstruction height, saddle width, equal bend angle (22.5°/30°/45°), optional distance to center; two-offset (plateau) diagram + engine tests
+- **Segment Bend** (`/segment`) — radius, total angle, degrees-per-bend → shot count, between-bends spacing, developed length, optional start marks; arc diagram + engine tests
+- **Rolling Offset** (`/rolling`) — offset height + offset roll → distance between bends, shrink, optional marks; pipe-first diagram + engine tests
 
-**Still to do:**
+**Exit criteria met (for Phase 4 scope):** four new calculators follow the feature template, have tested engines, documented example cases, and ship in the bend library.
 
-- kick, rolling offset, segment bending (order undecided; see `PRODUCT_BRIEF.md`)
+**Deferred (future hardening or later phases):**
 
-## Phase 5 — Guide mode (later)
+- Kick / 90 with kick and other bend-library placeholders (parallel offset, box offset, back-to-back 90, hydraulic layout)
+- Saddle manual multiplier/shrink overrides (Offset parity)
+- Richer diagram empty states
+- Per-calculator visual polish pass
+
+## Phase 5 — Guide mode (next product focus)
 
 - Turn the placeholder Guide screen into real learning content: formulas, bend steps, common mistakes, apprentice walkthroughs
 - Guided mode stays separate from the main calculator result (see `DESIGN_SYSTEM.md`)
+
+**Optional parallel track:** calculator hardening (close gaps listed in `PHASE_4_WRAPUP.md`) — recommended before adding more calculators.
 
 ## Phase 6 — Polish, testing, and release preparation
 

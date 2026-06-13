@@ -23,6 +23,7 @@ The single entry point for the repo is the root [`AGENTS.md`](../AGENTS.md). Sta
 | [`PRODUCT_BRIEF.md`](PRODUCT_BRIEF.md) | Who Bend Pro is for, product philosophy, scope, current and planned calculators, non-goals. |
 | [`CURRENT_STATE.md`](CURRENT_STATE.md) | Honest snapshot: working, incomplete, needs cleanup, risk areas. |
 | [`ROADMAP.md`](ROADMAP.md) | Phased plan from stabilization through release prep. |
+| [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) | Phase 4 close-out: delivered, deferred, gaps, verification. |
 
 ### Rules for agents
 
@@ -56,6 +57,10 @@ Each calculator has its own README inside its feature folder:
 
 - `src/features/bend-offset/README.md`
 - `src/features/bend-stub90/README.md`
+- `src/features/bend-saddle3/README.md`
+- `src/features/bend-saddle4/README.md`
+- `src/features/bend-segment/README.md`
+- `src/features/bend-rolling/README.md`
 
 ## Documentation honesty rule
 

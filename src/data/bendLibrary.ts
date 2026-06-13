@@ -29,7 +29,11 @@ export const BEND_FAMILIES: BendFamily[] = [
         status: 'active',
       },
       { title: 'Parallel Offset', status: 'coming-soon' },
-      { title: 'Rolling Offset', status: 'coming-soon' },
+      {
+        title: 'Rolling Offset',
+        description: 'Offset in two directions — height and advance.',
+        status: 'active',
+      },
       { title: 'Box Offset', status: 'coming-soon' },
     ],
   },
@@ -63,7 +67,11 @@ export const BEND_FAMILIES: BendFamily[] = [
   {
     title: 'Large / Advanced',
     items: [
-      { title: 'Segment Bend', status: 'coming-soon' },
+      {
+        title: 'Segment Bend',
+        description: 'Large-radius bend from a series of equal shots.',
+        status: 'active',
+      },
       { title: 'Hydraulic Layout', status: 'coming-soon' },
     ],
   },

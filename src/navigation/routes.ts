@@ -11,4 +11,6 @@ export const Routes = {
   stub90: '/stub90' as Href,
   saddle3: '/saddle3' as Href,
   saddle4: '/saddle4' as Href,
+  segment: '/segment' as Href,
+  rolling: '/rolling' as Href,
 } as const;

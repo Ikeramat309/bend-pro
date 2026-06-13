@@ -36,6 +36,22 @@ The center-to-side spacing is shown in the UI as **Between Bends** (matching Off
 
 A 4-point saddle is two offsets, so `betweenBends` is shown the same way as the 3-Point Saddle and Offset spacing. **Shrink** is the total for both offsets; `shrinkToCenter` (half) is the part folded into the center mark. The four bend marks use **Outer** (the two baseline bends) and **Top** (the two flat-top bends) — never Offset's Mark 1 / Mark 2.
 
+## Segment Bend Names
+
+**UI labels:** Radius, Total Angle, Per Bend, Start of Bend, Between Bends, Bends, Bend Length.
+
+**Engine keys:** `radius`, `totalAngle`, `degreesPerBend`, `startOffset`, `spacing`, `numberOfBends`, `developedLength` (plus `requestedDegreesPerBend`, `marks`, `firstMark`, `lastMark`, `*Formatted` variants).
+
+The shot spacing is shown as **Between Bends** (consistent with Offset and the saddles); the engine key is `spacing`. "Per Bend" is the angle per shot (`degreesPerBend`, in degrees), and "Bend Length" is the developed arc length (`developedLength`). Total Angle and Per Bend are **degrees**, not lengths.
+
+## Rolling Offset Names
+
+**UI labels:** Offset Height, Offset Roll, Bend Angle, Distance Between Bends, Shrink, Mark 1, Mark 2.
+
+**Engine keys:** `offsetHeight`, `advance`, `trueOffset`, `bendAngle`, `distanceBetweenBends`, `shrink`, `mark1`, `mark2`, `multiplier`.
+
+The horizontal roll component is shown as **Offset Roll** in the UI; the engine key stays `advance`. **True Offset** (`trueOffset`) is internal math only — do not show it in the UI. Manual multiplier/shrink overrides share the same setup keys as basic Offset.
+
 ## General Rules
 
 Avoid using multiple names for the same field.

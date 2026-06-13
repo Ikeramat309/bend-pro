@@ -16,4 +16,5 @@ export {
 } from './PipeWorkspaceResult';
 export { SetupSummary, type SetupSummaryProps } from './SetupSummary';
 export { WarningList, type WarningListProps } from './WarningList';
+export { BenderProfileContext, type BenderProfileContextProps, type BenderProfileContextTone } from './BenderProfileContext';
 

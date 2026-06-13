@@ -55,7 +55,7 @@ function collectWarnings(input: OffsetEngineInput): string[] {
 
 export function calculateOffset(input: OffsetEngineInput): OffsetEngineResult {
   const warnings = collectWarnings(input);
-  const benderProfile = getBenderProfile(input.benderProfileId);
+  const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
 
   // Guard against angles outside the table (unreachable through the UI,
   // but an unknown angle must produce an invalid result, not a crash).

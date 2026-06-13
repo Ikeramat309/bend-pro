@@ -28,6 +28,7 @@ describe('calculateStub90', () => {
     expect(result.stubHeight).toBe(12);
     expect(result.deduct).toBe(5);
     expect(result.deductMark).toBe(7);
+    expect(result.deductSource).toBe('profile-chart');
     expect(result.bendAngle).toBe(90);
     expect(result.isValidDeductMark).toBe(true);
     expect(result.warnings).toEqual([]);
@@ -53,14 +54,13 @@ describe('calculateStub90', () => {
     });
   });
 
-  test('unlisted trade size falls back to default deduct with a warning', () => {
+  test('unlisted trade size falls back to default deduct without a warning', () => {
     const result = calculateStub90(baseInput({ tradeSize: '1-1/4' }));
 
     expect(result.deduct).toBe(5);
     expect(result.deductMark).toBe(7);
-    expect(result.warnings).toContain(
-      'Using default take-up because this EMT size is not on the selected bender profile.',
-    );
+    expect(result.deductSource).toBe('default-fallback');
+    expect(result.warnings).toEqual([]);
   });
 
   test('unknown bender profile id falls back to the generic profile', () => {
@@ -110,18 +110,18 @@ describe('calculateStub90', () => {
       const result = calculateStub90(baseInput({ deductOverrideInches: 5.25 }));
 
       expect(result.deduct).toBe(5.25);
+      expect(result.deductSource).toBe('override');
       expect(result.deductMark).toBe(6.75);
       expect(result.isDeductOverridden).toBe(true);
       expect(result.deductMarkFormatted).toBe('6 3/4"');
       expect(result.warnings).toEqual([]);
     });
 
-    test('override suppresses the unlisted-size warning', () => {
+    test('override suppresses the unlisted-size fallback source', () => {
       const result = calculateStub90(baseInput({ tradeSize: '1-1/4', deductOverrideInches: 11 }));
 
       expect(result.deduct).toBe(11);
-      expect(result.deductMark).toBe(1);
-      expect(result.isDeductOverridden).toBe(true);
+      expect(result.deductSource).toBe('override');
       expect(result.warnings).toEqual([]);
     });
 
@@ -137,6 +137,25 @@ describe('calculateStub90', () => {
     test('no override uses the profile value and reports not overridden', () => {
       expect(calculateStub90(baseInput()).isDeductOverridden).toBe(false);
     });
+  });
+
+  test('uses custom bender profile deduct from stored profile', () => {
+    const result = calculateStub90(
+      baseInput({
+        benderProfileId: 'custom-shop',
+        customBenderProfiles: [
+          {
+            id: 'custom-shop',
+            name: 'Shop bender',
+            emtStub90TakeUpInches: { '1/2': 5.75 },
+          },
+        ],
+      }),
+    );
+
+    expect(result.deduct).toBe(5.75);
+    expect(result.benderProfileUsed.name).toBe('Shop bender');
+    expect(result.benderProfileUsed.category).toBe('custom');
   });
 
   test('optional leg length passes through and formats', () => {

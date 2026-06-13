@@ -13,12 +13,11 @@ import {
   useCalculatorSetup,
   type CalculatorSetup,
 } from '@/core/settings';
-import { BENDER_PROFILES, getBenderProfile, getBenderProfileIdByName } from '@/data/benders';
+import { getBenderProfile, getBenderProfileIdByName, mergeBenderProfiles } from '@/data/benders';
 import { EMT_TRADE_SIZES } from '@/data/emt';
 import { AppHeader, OptionChipGroup } from '@/shared/ui';
 import { colors, layout, radius, spacing, typography } from '@/theme';
 
-const BENDER_PROFILE_NAMES = BENDER_PROFILES.map((profile) => profile.name);
 const UNIT_LABELS = ['Imperial', 'Metric'] as const;
 
 export function SettingsScreen() {
@@ -26,6 +25,9 @@ export function SettingsScreen() {
   const { setup, setSetup } = useCalculatorSetup();
   const roundingOptions =
     setup.unit === 'imperial' ? IMPERIAL_ROUNDING_OPTIONS : METRIC_ROUNDING_OPTIONS;
+  const benderProfileNames = mergeBenderProfiles(setup.customBenderProfiles).map(
+    (profile) => profile.name,
+  );
 
   function update(patch: Partial<CalculatorSetup>) {
     setSetup(patchCalculatorSetup(setup, patch));
@@ -68,9 +70,13 @@ export function SettingsScreen() {
           />
           <OptionChipGroup
             title="Bender Profile"
-            options={BENDER_PROFILE_NAMES}
-            selected={getBenderProfile(setup.benderProfileId).name}
-            onSelect={(name) => update({ benderProfileId: getBenderProfileIdByName(name) })}
+            options={benderProfileNames}
+            selected={getBenderProfile(setup.benderProfileId, setup.customBenderProfiles).name}
+            onSelect={(name) =>
+              update({
+                benderProfileId: getBenderProfileIdByName(name, setup.customBenderProfiles),
+              })
+            }
           />
         </View>
 

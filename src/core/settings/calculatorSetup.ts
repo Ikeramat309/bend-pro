@@ -6,7 +6,12 @@
  * can be unit-tested without touching AsyncStorage or React.
  */
 import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
-import { BENDER_PROFILES, DEFAULT_BENDER_PROFILE_ID, type BenderProfileId } from '@/data/benders';
+import {
+  BENDER_PROFILES,
+  DEFAULT_BENDER_PROFILE_ID,
+  sanitizeCustomBenderProfiles,
+  type CustomBenderProfileStored,
+} from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { DEFAULT_EMT_TRADE_SIZE, isEmtTradeSize } from '@/data/emt';
 
@@ -30,7 +35,9 @@ export type CalculatorSetup = {
   rounding: RoundingOption;
   conduitType: ConduitType;
   conduitSize: TradeSize;
-  benderProfileId: BenderProfileId;
+  benderProfileId: string;
+  /** User-created bender profiles with measured stub 90 deducts. */
+  customBenderProfiles: CustomBenderProfileStored[];
   /**
    * User-measured deduct values that replace the bender profile's chart.
    * Always stored in inches, regardless of the display unit system.
@@ -48,6 +55,7 @@ export const DEFAULT_CALCULATOR_SETUP: CalculatorSetup = {
   conduitType: DEFAULT_CONDUIT_TYPE,
   conduitSize: DEFAULT_EMT_TRADE_SIZE,
   benderProfileId: DEFAULT_BENDER_PROFILE_ID,
+  customBenderProfiles: [],
   stub90DeductOverridesInches: {},
   offsetMultiplierOverrides: {},
   offsetShrinkPerInchOverrides: {},
@@ -65,8 +73,18 @@ export const MAX_OFFSET_SHRINK_PER_INCH = 2;
 export const IMPERIAL_ROUNDING_OPTIONS: readonly RoundingOption[] = ['exact', '1/16', '1/8', '1/4'];
 export const METRIC_ROUNDING_OPTIONS: readonly RoundingOption[] = ['1mm', '5mm', '10mm'];
 
-function isKnownBenderProfileId(value: string): value is BenderProfileId {
+function isBuiltInBenderProfileId(value: string): boolean {
   return BENDER_PROFILES.some((profile) => profile.id === value);
+}
+
+function isKnownBenderProfileId(
+  value: string,
+  customProfiles: CustomBenderProfileStored[],
+): boolean {
+  return (
+    isBuiltInBenderProfileId(value) ||
+    customProfiles.some((profile) => profile.id === value)
+  );
 }
 
 /**
@@ -94,7 +112,12 @@ export function sanitizeStoredSetup(raw: unknown): CalculatorSetup {
     setup.conduitSize = record.conduitSize;
   }
 
-  if (typeof record.benderProfileId === 'string' && isKnownBenderProfileId(record.benderProfileId)) {
+  setup.customBenderProfiles = sanitizeCustomBenderProfiles(record.customBenderProfiles);
+
+  if (
+    typeof record.benderProfileId === 'string' &&
+    isKnownBenderProfileId(record.benderProfileId, setup.customBenderProfiles)
+  ) {
     setup.benderProfileId = record.benderProfileId;
   }
 

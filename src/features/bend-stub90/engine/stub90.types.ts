@@ -1,8 +1,11 @@
 /**
  * Stub 90 calculator input/result contracts.
  */
-import type { BenderCategory } from '@/data/benders';
+import type { BenderCategory, CustomBenderProfileStored } from '@/data/benders';
+import type { Stub90DeductSource } from '@/data/benders/profileContext';
 import type { ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
+
+export type { Stub90DeductSource };
 
 export type Stub90EngineInput = {
   stubHeight: number;
@@ -17,6 +20,8 @@ export type Stub90EngineInput = {
    * value when present. Ignored unless finite and > 0.
    */
   deductOverrideInches?: number;
+  /** User-created profiles merged at lookup time. */
+  customBenderProfiles?: readonly CustomBenderProfileStored[];
 };
 
 /**
@@ -49,6 +54,8 @@ export type Stub90EngineResult = {
   stubHeight: number;
   /** Bender take-up. UI term is always "Deduct" — see docs/GLOSSARY.md. */
   deduct: number;
+  /** Where the deduct value came from — drives profile context on screen. */
+  deductSource: Stub90DeductSource;
   /** Stub length minus deduct. Never called "First Mark" — that is offset language. */
   deductMark?: number;
   legLength?: number;

@@ -24,32 +24,34 @@ Phased plan for the regroup/refactor era. Phases are ordered by dependency: stab
 
 **Exit criteria met:** both calculators render from shared primitives; new calculator diagrams should compose primitives rather than fork drawing code.
 
-**Deferred (not blocking Phase 3):** `primitives/` subfolder organization, richer empty-preview states, additional anchored callout patterns beyond the current leader line.
+**Deferred (not blocking later phases):** `primitives/` subfolder organization, richer empty-preview states, additional anchored callout patterns beyond the current leader line.
 
-## Phase 3 — Bender profiles and manual override (current)
+## Phase 3 — Bender profiles and manual override ✅ complete
 
-**Already done (partial):**
+**Delivered:**
 
 - Manual deduct override (Stub 90, per EMT size)
 - Manual multiplier and shrink-per-inch overrides (Offset, per bend angle)
 - Override hints on setup rows; tappable result chips with override sheets
+- Three generic hand-bender profiles (field-reference charts, not manufacturer data)
+- Bender database — browse, search, select active profile
+- Custom bender profiles — create, edit, delete, select (measured stub 90 deducts)
+- Profile context banners on Stub 90 and Offset (`BenderProfileContext`)
+- Fraction input for custom bender deducts; scrollable bender chip lists when many profiles exist
 
-**Still to do:**
+**Exit criteria met:** a user with any hand bender can get correct marks from a profile or a manual override, and can **select** their bender — not only override a generic table.
 
-- Expand bender profile data beyond the single generic hand bender
-- Bender database screen (currently placeholder) — search, selection, custom profiles
-- Replace silent default fallback with clearer profile context where profiles are incomplete
-- Manufacturer / model-specific shoe charts (when data exists)
+**Deferred to future (requires real data, not invented values):**
 
-**Exit criteria:** a user with any hand bender can get correct marks from a profile or a manual override, and can **select** their bender — not only override a generic table.
+- Manufacturer / model-specific shoe charts
 
-## Phase 4 — More calculators (later)
+## Phase 4 — More calculators (current)
 
 Candidates (order undecided; see `PRODUCT_BRIEF.md`):
 
 - 3-point saddle, 4-point saddle, kick, rolling offset, segment bending
 
-Each new calculator must follow `FEATURE_TEMPLATE.md`, `CALCULATOR_RULES.md`, and reuse the diagram system from Phase 2. No new calculator starts until Phase 3 exit criteria are met.
+Each new calculator must follow `FEATURE_TEMPLATE.md`, `CALCULATOR_RULES.md`, and reuse the diagram system from Phase 2. Do not start a new calculator unless a task explicitly asks for it.
 
 ## Phase 5 — Guide mode (later)
 

@@ -39,7 +39,7 @@ bend-stub90/
 | Layer | Path | Purpose |
 |-------|------|---------|
 | App shell | `src/shared/ui/` | AppHeader, AppScreen, BottomNav, Sheet, FieldInput, OptionChipGroup |
-| Workspace | `src/shared/workspace/` | SetupSummary, PipeWorkspaceCard, MeasurementChip, EditSetupSheet, AngleSelector |
+| Workspace | `src/shared/workspace/` | SetupSummary, BenderProfileContext, PipeWorkspaceCard, MeasurementChip, EditSetupSheet, AngleSelector |
 | Diagrams | `src/shared/diagrams/` | PipeSegment, MarkLine, DimensionLine, DiagramLabel, DiagramCallout, BendRadiusZone, DiagramLeaderLine, proportions helper, diagramTheme |
 
 ## Data
@@ -48,7 +48,7 @@ bend-stub90/
 |------|------|
 | EMT sizes | `src/data/emt/` |
 | Conduit types (EMT only) | `src/data/conduit/` |
-| Bender profiles | `src/data/benders/` |
+| Bender profiles (3 generic + custom, persisted in setup) | `src/data/benders/`, `src/screens/BenderDatabaseScreen.tsx`, `src/screens/CustomBenderSheet.tsx` |
 | Bend library nav | `src/data/bendLibrary.ts` |
 
 ## Core & Utils

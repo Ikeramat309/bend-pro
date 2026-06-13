@@ -10,6 +10,7 @@ export const GENERIC_HAND_BENDER: BenderProfile = {
   id: 'generic-hand-bender',
   name: 'Generic Hand Bender',
   category: 'hand',
+  description: 'Default generic field reference for hand benders. Not a manufacturer chart.',
   emtStub90TakeUpInches: {
     '1/2': 5,
     '3/4': 6,

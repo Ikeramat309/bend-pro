@@ -25,6 +25,7 @@ describe('sanitizeStoredSetup', () => {
       conduitType: 'EMT',
       conduitSize: '3/4',
       benderProfileId: 'generic-hand-bender',
+      customBenderProfiles: [],
       stub90DeductOverridesInches: {},
       offsetMultiplierOverrides: {},
       offsetShrinkPerInchOverrides: {},
@@ -159,6 +160,33 @@ describe('sanitizeStoredSetup', () => {
       expect(
         sanitizeStoredSetup({ offsetShrinkPerInchOverrides: 'garbage' }).offsetShrinkPerInchOverrides,
       ).toEqual({});
+    });
+  });
+
+  describe('custom bender profiles', () => {
+    test('valid custom profiles pass through', () => {
+      const result = sanitizeStoredSetup({
+        customBenderProfiles: [
+          {
+            id: 'custom-abc',
+            name: 'Shop bender',
+            emtStub90TakeUpInches: { '1/2': 5.25, '3/4': 6 },
+          },
+        ],
+        benderProfileId: 'custom-abc',
+      });
+
+      expect(result.customBenderProfiles).toHaveLength(1);
+      expect(result.benderProfileId).toBe('custom-abc');
+    });
+
+    test('unknown benderProfileId falls back when custom profile missing', () => {
+      const result = sanitizeStoredSetup({
+        benderProfileId: 'custom-deleted',
+        customBenderProfiles: [],
+      });
+
+      expect(result.benderProfileId).toBe(DEFAULT_CALCULATOR_SETUP.benderProfileId);
     });
   });
 });

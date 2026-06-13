@@ -10,11 +10,12 @@ import { StyleSheet, View } from 'react-native';
 import type { BendAngle } from '@/core/types';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
-import { getBenderProfile } from '@/data/benders';
+import { getBenderProfile, formatOffsetProfileContextLine } from '@/data/benders';
 import { Routes } from '@/navigation';
 import { AppHeader, AppScreen, FieldInput, Sheet } from '@/shared/ui';
 import {
   AngleSelector,
+  BenderProfileContext,
   EditSetupSheet,
   OptionalFieldButton,
   PipeWorkspaceResult,
@@ -51,11 +52,11 @@ export default function OffsetScreen() {
 
   // Shared, persisted setup — follows the user across calculators and restarts.
   const { setup, setSetup } = useCalculatorSetup();
-  const { unit, rounding, conduitType, conduitSize, benderProfileId } = setup;
+  const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
   const multiplierOverride = setup.offsetMultiplierOverrides[bendAngle];
   const shrinkPerInchOverride = setup.offsetShrinkPerInchOverrides[bendAngle];
 
-  const benderProfile = getBenderProfile(benderProfileId);
+  const benderProfile = getBenderProfile(benderProfileId, customBenderProfiles);
   const chartAngleData = getOffsetAngleData(bendAngle);
   const chartMultiplier = chartAngleData?.multiplier ?? 0;
   const chartShrinkPerInch = chartAngleData?.shrinkPerInch ?? 0;
@@ -72,6 +73,7 @@ export default function OffsetScreen() {
     .filter(Boolean)
     .join(' • ');
   const hasValidOffset = offsetHeight !== undefined && offsetHeight > 0;
+  const profileContextMessage = formatOffsetProfileContextLine(benderProfile.name, bendAngle);
   // Imperial users type tape-measure fractions ("12 3/8") — needs a keyboard
   // with space and slash. Falls back to the default keyboard on Android.
   const lengthKeyboard = unit === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
@@ -89,9 +91,11 @@ export default function OffsetScreen() {
         roundingPrecision: rounding,
         multiplierOverride,
         shrinkPerInchOverride,
+        customBenderProfiles,
       }),
     [
       benderProfileId,
+      customBenderProfiles,
       bendAngle,
       conduitSize,
       conduitType,
@@ -195,6 +199,8 @@ export default function OffsetScreen() {
           subtitle={setupSubtitle}
           onEdit={() => setSetupVisible(true)}
         />
+
+        <BenderProfileContext message={profileContextMessage} tone="info" />
 
         <View style={styles.inputRow}>
           <FieldInput

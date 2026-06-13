@@ -5,12 +5,11 @@ import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
-import { IMPERIAL_ROUNDING_OPTIONS, METRIC_ROUNDING_OPTIONS } from '@/core/settings';
+import { IMPERIAL_ROUNDING_OPTIONS, METRIC_ROUNDING_OPTIONS, useCalculatorSetup } from '@/core/settings';
 import {
-  BENDER_PROFILES,
   getBenderProfile,
   getBenderProfileIdByName,
-  type BenderProfileId,
+  mergeBenderProfiles,
 } from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { EMT_TRADE_SIZES } from '@/data/emt';
@@ -25,7 +24,7 @@ export type SetupBendAngle = BendAngle | 90;
 export type SetupValues = {
   conduitType: ConduitType;
   conduitSize: TradeSize;
-  benderProfileId: BenderProfileId;
+  benderProfileId: string;
   unit: SetupUnit;
   rounding: SetupRounding;
   bendAngle: SetupBendAngle;
@@ -38,7 +37,6 @@ export type EditSetupSheetProps = {
   onApply: (nextValues: SetupValues) => void;
 };
 
-const BENDER_PROFILE_NAMES = BENDER_PROFILES.map((profile) => profile.name);
 const UNITS: { label: string; value: SetupUnit }[] = [
   { label: 'Imperial', value: 'imperial' },
   { label: 'Metric', value: 'metric' },
@@ -66,6 +64,10 @@ function EditSetupSheetOpen({
   onCancel,
   onApply,
 }: Pick<EditSetupSheetProps, 'values' | 'onCancel' | 'onApply'>) {
+  const { setup } = useCalculatorSetup();
+  const benderProfileNames = mergeBenderProfiles(setup.customBenderProfiles).map(
+    (profile) => profile.name,
+  );
   const [draft, setDraft] = useState<SetupValues>(values);
   const roundingOptions =
     draft.unit === 'imperial' ? IMPERIAL_ROUNDING_OPTIONS : METRIC_ROUNDING_OPTIONS;
@@ -104,9 +106,13 @@ function EditSetupSheetOpen({
 
       <OptionChipGroup
         title="Bender Profile"
-        options={BENDER_PROFILE_NAMES}
-        selected={getBenderProfile(draft.benderProfileId).name}
-        onSelect={(name) => updateDraft({ benderProfileId: getBenderProfileIdByName(name) })}
+        options={benderProfileNames}
+        selected={getBenderProfile(draft.benderProfileId, setup.customBenderProfiles).name}
+        onSelect={(name) =>
+          updateDraft({
+            benderProfileId: getBenderProfileIdByName(name, setup.customBenderProfiles),
+          })
+        }
       />
 
       <OptionChipGroup
@@ -131,7 +137,7 @@ function EditSetupSheetOpen({
           Conduit: {draft.conduitType} {draft.conduitSize}&quot;
         </Text>
         <Text style={styles.currentLine}>
-          Bender: {getBenderProfile(draft.benderProfileId).name}
+          Bender: {getBenderProfile(draft.benderProfileId, setup.customBenderProfiles).name}
         </Text>
         <Text style={styles.currentLine}>Angle: {draft.bendAngle}°</Text>
         <Text style={styles.currentLine}>Unit: {draft.unit}</Text>

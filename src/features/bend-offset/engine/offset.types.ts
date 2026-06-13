@@ -1,7 +1,7 @@
 /**
  * Offset calculator input/result contracts.
  */
-import type { BenderCategory } from '@/data/benders';
+import type { BenderCategory, CustomBenderProfileStored } from '@/data/benders';
 import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
 
 export type OffsetEngineInput = {
@@ -24,6 +24,7 @@ export type OffsetEngineInput = {
    * standard angle-table shrink rate when present.
    */
   shrinkPerInchOverride?: number;
+  customBenderProfiles?: readonly CustomBenderProfileStored[];
 };
 
 /**

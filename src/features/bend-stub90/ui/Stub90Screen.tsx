@@ -10,13 +10,17 @@ import { StyleSheet, View } from 'react-native';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import {
     DEFAULT_EMT_STUB90_TAKE_UP_INCHES,
+    formatStub90DeductContextAction,
+    formatStub90DeductContextLine,
     getBenderProfile,
     getEmtStub90TakeUpInches,
+    resolveStub90DeductContext,
 } from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { Routes } from '@/navigation';
 import { AppHeader, AppScreen, FieldInput } from '@/shared/ui';
 import {
+    BenderProfileContext,
     EditSetupSheet,
     OptionalFieldButton,
     PipeWorkspaceResult,
@@ -47,10 +51,10 @@ export default function Stub90Screen() {
 
   // Shared, persisted setup — follows the user across calculators and restarts.
   const { setup, setSetup } = useCalculatorSetup();
-  const { unit, rounding, conduitType, conduitSize, benderProfileId } = setup;
+  const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
   const deductOverrideInches = setup.stub90DeductOverridesInches[conduitSize];
 
-  const benderProfile = getBenderProfile(benderProfileId);
+  const benderProfile = getBenderProfile(benderProfileId, customBenderProfiles);
   const benderChartDeductInches =
     getEmtStub90TakeUpInches(benderProfile, conduitSize) ?? DEFAULT_EMT_STUB90_TAKE_UP_INCHES;
   const stubLength = parseLengthInput(stubLengthText);
@@ -81,9 +85,11 @@ export default function Stub90Screen() {
         unitSystem: unit,
         roundingPrecision: rounding,
         deductOverrideInches,
+        customBenderProfiles,
       }),
     [
       benderProfileId,
+      customBenderProfiles,
       conduitSize,
       conduitType,
       deductOverrideInches,
@@ -97,6 +103,15 @@ export default function Stub90Screen() {
 
   const hasValidDeductMark = hasValidStubLength && result.isValidDeductMark;
   const deductMarkValue = hasValidDeductMark ? result.deductMarkFormatted ?? '—' : '—';
+  const deductContext = resolveStub90DeductContext(
+    benderProfile,
+    conduitSize,
+    result.deduct,
+    deductOverrideInches,
+  );
+  const profileContextMessage = formatStub90DeductContextLine(deductContext, unit, rounding);
+  const profileContextAction = formatStub90DeductContextAction(deductContext);
+  const profileContextTone = deductContext.source === 'default-fallback' ? 'warning' : 'info';
   const visibleWarnings = stubLengthText.trim() !== '' ? result.warnings : [];
 
   const legLengthError =
@@ -153,6 +168,12 @@ export default function Stub90Screen() {
           title={benderProfile.name}
           subtitle={setupSubtitle}
           onEdit={() => setSetupVisible(true)}
+        />
+
+        <BenderProfileContext
+          message={profileContextMessage}
+          action={profileContextAction}
+          tone={profileContextTone}
         />
 
         <FieldInput

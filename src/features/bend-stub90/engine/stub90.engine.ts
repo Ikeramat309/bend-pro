@@ -4,11 +4,8 @@
  * Formula:
  * deductMark = stubLength - deduct (take-up)
  */
-import {
-  DEFAULT_EMT_STUB90_TAKE_UP_INCHES,
-  getBenderProfile,
-  getEmtStub90TakeUpInches,
-} from '@/data/benders';
+import { DEFAULT_EMT_STUB90_TAKE_UP_INCHES, getBenderProfile, getEmtStub90TakeUpInches } from '@/data/benders';
+import { resolveStub90DeductSource } from '@/data/benders/profileContext';
 import { formatLength } from '@/utils/formatLength';
 
 import type { Stub90EngineInput, Stub90EngineResult } from './stub90.types';
@@ -21,7 +18,7 @@ function toInches(value: number, unitSystem: Stub90EngineInput['unitSystem']): n
 
 export function calculateStub90(input: Stub90EngineInput): Stub90EngineResult {
   const warnings: string[] = [];
-  const benderProfile = getBenderProfile(input.benderProfileId);
+  const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
   const profileTakeUp = getEmtStub90TakeUpInches(benderProfile, input.tradeSize);
   const overrideDeduct =
     input.deductOverrideInches !== undefined &&
@@ -31,6 +28,7 @@ export function calculateStub90(input: Stub90EngineInput): Stub90EngineResult {
       : undefined;
   const isDeductOverridden = overrideDeduct !== undefined;
   const deductInches = overrideDeduct ?? profileTakeUp ?? DEFAULT_EMT_STUB90_TAKE_UP_INCHES;
+  const deductSource = resolveStub90DeductSource(benderProfile, input.tradeSize, overrideDeduct);
   const stubHeightInches = toInches(input.stubHeight || 0, input.unitSystem);
   const legLengthInches =
     input.legLength !== undefined ? toInches(input.legLength, input.unitSystem) : undefined;
@@ -40,10 +38,6 @@ export function calculateStub90(input: Stub90EngineInput): Stub90EngineResult {
 
   if (!Number.isFinite(input.stubHeight) || input.stubHeight <= 0) {
     warnings.push('Enter a stub length greater than 0.');
-  }
-
-  if (profileTakeUp === undefined && !isDeductOverridden) {
-    warnings.push('Using default take-up because this EMT size is not on the selected bender profile.');
   }
 
   if (Number.isFinite(input.stubHeight) && input.stubHeight > 0 && deductMarkInches <= 0) {
@@ -63,6 +57,7 @@ export function calculateStub90(input: Stub90EngineInput): Stub90EngineResult {
   return {
     stubHeight: stubHeightInches,
     deduct: deductInches,
+    deductSource,
     deductMark: isValidDeductMark ? deductMarkInches : undefined,
     legLength: legLengthInches,
     bendAngle: 90,

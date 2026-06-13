@@ -19,6 +19,8 @@ export type PipeWorkspaceResultProps = {
   primaryLabel: string;
   primaryValue: string;
   chips: PipeWorkspaceResultChip[];
+  /** Optional secondary line under the chips for lower-priority detail. */
+  note?: string;
 };
 
 /** Diagram-first pipe card with one primary result and measurement chips. */
@@ -28,6 +30,7 @@ export function PipeWorkspaceResult({
   primaryLabel,
   primaryValue,
   chips,
+  note,
 }: PipeWorkspaceResultProps) {
   return (
     <PipeWorkspaceCard variant="highlight" title={title}>
@@ -50,6 +53,8 @@ export function PipeWorkspaceResult({
             />
           ))}
         </View>
+
+        {note ? <Text style={styles.note}>{note}</Text> : null}
       </View>
     </PipeWorkspaceCard>
   );
@@ -89,5 +94,10 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     gap: spacing.sm,
     rowGap: spacing.sm,
+  },
+  note: {
+    ...typography.subtitle,
+    color: colors.muted,
+    marginTop: -spacing.xs,
   },
 });

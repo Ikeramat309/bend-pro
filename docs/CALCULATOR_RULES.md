@@ -54,6 +54,7 @@ Reference cases for the current calculators:
 
 - **Stub 90:** 12" stub length, 1/2" EMT on the generic hand bender (5" deduct) → deduct mark at **7"**.
 - **Offset:** 6" offset height at 30° (multiplier 2.0, shrink 1/4"/inch) → distance between bends **12"**, shrink **1 1/2"**.
+- **3-Point Saddle:** 2" obstruction at 22.5°/45°, center at 24" → center to side **~5.23"**, shrink **3/8"**, center mark **24 3/8"**.
 
 Any math change must include updated example cases proving the new behavior.
 

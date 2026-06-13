@@ -9,4 +9,5 @@ export const Routes = {
   guide: '/guide' as Href,
   offset: '/offset' as Href,
   stub90: '/stub90' as Href,
+  saddle3: '/saddle3' as Href,
 } as const;

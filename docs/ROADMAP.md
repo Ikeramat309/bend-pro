@@ -47,11 +47,13 @@ Phased plan for the regroup/refactor era. Phases are ordered by dependency: stab
 
 ## Phase 4 — More calculators (current)
 
-Candidates (order undecided; see `PRODUCT_BRIEF.md`):
+**Delivered (partial):**
 
-- 3-point saddle, 4-point saddle, kick, rolling offset, segment bending
+- **3-Point Saddle** (`/saddle3`) — obstruction height, angle presets (22.5°/45°, 30°/60°, 45°/90°), optional distance to center, diagram + engine tests
 
-Each new calculator must follow `FEATURE_TEMPLATE.md`, `CALCULATOR_RULES.md`, and reuse the diagram system from Phase 2. Do not start a new calculator unless a task explicitly asks for it.
+**Still to do:**
+
+- 4-point saddle, kick, rolling offset, segment bending (order undecided; see `PRODUCT_BRIEF.md`)
 
 ## Phase 5 — Guide mode (later)
 

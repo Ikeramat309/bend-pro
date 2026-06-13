@@ -14,6 +14,7 @@ Expo Router files in `src/app/` — keep them thin (export screens only).
 | `/bends` | `bends.tsx` | `BendsScreen` |
 | `/offset` | `offset.tsx` | `OffsetScreen` |
 | `/stub90` | `stub90.tsx` | `Stub90Screen` |
+| `/saddle3` | `saddle3.tsx` | `Saddle3Screen` |
 | `/settings` | `settings.tsx` | `SettingsScreen` |
 | `/bender-database` | `bender-database.tsx` | `BenderDatabaseScreen` |
 | `/guide` | `guide.tsx` | `GuideScreen` |
@@ -32,6 +33,11 @@ bend-stub90/
   stub90.config.ts, stub90.copy.ts
   engine/stub90.engine.ts, stub90.types.ts
   ui/Stub90Screen.tsx, Stub90Diagram.tsx, DeductOverrideSheet.tsx
+
+bend-saddle3/
+  saddle3.config.ts, saddle3.copy.ts
+  engine/saddle3.engine.ts, saddle3.types.ts, saddle3AngleData.ts
+  ui/Saddle3Screen.tsx, Saddle3Diagram.tsx
 ```
 
 ## Shared UI

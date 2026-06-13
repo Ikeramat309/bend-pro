@@ -20,6 +20,14 @@ Never call the stub 90 result "First Mark" or "Start Mark" in the UI — or in e
 
 **Engine keys:** `offsetHeight`, `distanceBetweenBends`, `shrink`, `mark1`, `mark2`, `bendAngle`, `multiplier`.
 
+## 3-Point Saddle Names
+
+**UI labels:** Obstruction Height, Distance to Center, Between Bends, Shrink, Center Mark, Side (marks, secondary), Bend Angles (preset picker).
+
+**Engine keys:** `obstructionHeight`, `distanceToCenter`, `centerToSide`, `shrink`, `centerMark`, `sideMark1`, `sideMark2`, `anglePreset`, `sideAngle`, `centerAngle`.
+
+The center-to-side spacing is shown in the UI as **Between Bends** (matching Offset's "Distance Between Bends"); the engine key stays `centerToSide`. Do not use Offset **Mark 1 / Mark 2** labels for saddle side marks — those terms are offset-only per the glossary.
+
 ## General Rules
 
 Avoid using multiple names for the same field.

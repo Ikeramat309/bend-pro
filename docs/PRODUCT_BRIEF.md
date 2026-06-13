@@ -26,8 +26,8 @@ A generic calculator gives you a number. Bend Pro gives you a **layout**: a visu
 ## Current scope (this phase)
 
 - **EMT only.** No RMC, IMC, or PVC.
-- **Two core calculators:** Offset and Stub 90.
-- **Stabilization over expansion:** clean terminology, solid math, reusable diagram system, and bender override support before any new calculators.
+- **Three core calculators:** Offset, Stub 90, and 3-Point Saddle.
+- **Stabilization over expansion:** new calculators follow the feature template and reuse the diagram system.
 
 ## Field-use priorities
 
@@ -43,12 +43,12 @@ A generic calculator gives you a number. Bend Pro gives you a **layout**: a visu
 |------------|-------|--------------|
 | **Offset** | `/offset` | Two-bend offset layout: distance between bends, shrink, Mark 1 / Mark 2 |
 | **Stub 90** | `/stub90` | 90° stub layout: deduct mark from stub length minus bender deduct (take-up) |
+| **3-Point Saddle** | `/saddle3` | Route over an obstruction: center-to-side spacing, shrink, and three layout marks |
 
 ## Planned calculators (future, not built)
 
 These are **planned future work** — they do not exist yet and must not be documented or coded as if they do:
 
-- 3-point saddle
 - 4-point saddle
 - Kick / 90 with kick
 - Rolling offset
@@ -58,7 +58,7 @@ Exact order and scope are decided in [`ROADMAP.md`](ROADMAP.md), not here.
 
 ## Non-goals for the current phase
 
-- No new calculators until Offset and Stub 90 are stable
+- No new calculators unless explicitly requested — follow `FEATURE_TEMPLATE.md` when adding one
 - No conduit types beyond EMT
 - No guide/teaching mode yet (placeholder screen exists; content is future work)
 - No full bender database UI yet (placeholder screen exists; data layer is minimal)

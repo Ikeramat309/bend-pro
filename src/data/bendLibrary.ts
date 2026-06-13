@@ -53,7 +53,11 @@ export const BEND_FAMILIES: BendFamily[] = [
         description: 'Route over an obstruction with three bends.',
         status: 'active',
       },
-      { title: '4-Point Saddle', status: 'coming-soon' },
+      {
+        title: '4-Point Saddle',
+        description: 'Route over a wide obstruction with a flat top.',
+        status: 'active',
+      },
     ],
   },
   {

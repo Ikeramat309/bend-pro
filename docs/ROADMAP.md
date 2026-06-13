@@ -50,10 +50,11 @@ Phased plan for the regroup/refactor era. Phases are ordered by dependency: stab
 **Delivered (partial):**
 
 - **3-Point Saddle** (`/saddle3`) — obstruction height, angle presets (22.5°/45°, 30°/60°, 45°/90°), optional distance to center, diagram + engine tests
+- **4-Point Saddle** (`/saddle4`) — obstruction height, saddle width, equal bend angle (22.5°/30°/45°), optional distance to center; two-offset (plateau) diagram + engine tests
 
 **Still to do:**
 
-- 4-point saddle, kick, rolling offset, segment bending (order undecided; see `PRODUCT_BRIEF.md`)
+- kick, rolling offset, segment bending (order undecided; see `PRODUCT_BRIEF.md`)
 
 ## Phase 5 — Guide mode (later)
 

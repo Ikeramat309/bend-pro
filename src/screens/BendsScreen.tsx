@@ -7,7 +7,8 @@
  *
  * IMPORTANT:
  * This screen contains navigation and display only. It does not add calculator
- * logic. Active calculators: Basic Offset, Stub-Up 90, and 3-Point Saddle.
+ * logic. Active calculators: Basic Offset, Stub-Up 90, 3-Point Saddle, and
+ * 4-Point Saddle.
  */
 
 // IMPORTS
@@ -61,6 +62,11 @@ export function BendsScreen() {
 
     if (item.status === 'active' && item.title === '3-Point Saddle') {
       router.push(Routes.saddle3);
+      return;
+    }
+
+    if (item.status === 'active' && item.title === '4-Point Saddle') {
+      router.push(Routes.saddle4);
       return;
     }
 

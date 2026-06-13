@@ -28,6 +28,14 @@ Never call the stub 90 result "First Mark" or "Start Mark" in the UI — or in e
 
 The center-to-side spacing is shown in the UI as **Between Bends** (matching Offset's "Distance Between Bends"); the engine key stays `centerToSide`. Do not use Offset **Mark 1 / Mark 2** labels for saddle side marks — those terms are offset-only per the glossary.
 
+## 4-Point Saddle Names
+
+**UI labels:** Obstruction Height, Saddle Width, Bend Angle, Distance to Center, Between Bends, Shrink, Center Mark, Outer / Top (marks, secondary).
+
+**Engine keys:** `obstructionHeight`, `saddleWidth`, `bendAngle`, `distanceToCenter`, `betweenBends`, `shrink`, `shrinkToCenter`, `centerMark`, `outerMark1`, `outerMark2`, `innerMark1`, `innerMark2`, `multiplier`.
+
+A 4-point saddle is two offsets, so `betweenBends` is shown the same way as the 3-Point Saddle and Offset spacing. **Shrink** is the total for both offsets; `shrinkToCenter` (half) is the part folded into the center mark. The four bend marks use **Outer** (the two baseline bends) and **Top** (the two flat-top bends) — never Offset's Mark 1 / Mark 2.
+
 ## General Rules
 
 Avoid using multiple names for the same field.

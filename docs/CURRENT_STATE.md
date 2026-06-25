@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Honest snapshot of where the app stands. **Phases 1–5 are complete; Phase 5.7 recovered diagram visibility and refined imperial length editing.** Six calculators ship on the shared workspace shell with hub UI polish, imperial fraction keypad, guide walkthroughs, and an improved bender database. See [`PHASE_5_WRAPUP.md`](PHASE_5_WRAPUP.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), [`ROADMAP.md`](ROADMAP.md), and [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md).
+Honest snapshot of where the app stands. **Phases 1–5 complete; Phases 5.6–5.8 delivered usability fixes, diagram recovery, and a stability checkpoint.** Six calculators ship on the shared workspace shell. See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), [`ROADMAP.md`](ROADMAP.md), [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md), and [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md).
 
 ## What currently exists
 
@@ -64,7 +64,7 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 - Hub screens: `src/screens/` (Home, Bends, Settings)
 - Persisted setup: `src/core/settings/`
 - Theme: `src/theme/`
-- **`npm run check`** — typecheck + lint + tests (`package.json`); **214 tests** passing at Phase 5.5 review
+- **`npm run check`** — typecheck + lint + tests; **220 tests** passing at Phase 5.8 checkpoint
 
 ## Known limitations
 

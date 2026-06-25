@@ -4,64 +4,68 @@ Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGEN
 
 Phased plan after the initial calculator build-out. **Do not expand scope** into a later phase unless a task explicitly asks for it.
 
-Historical phases (calculator stabilization, diagram system, bender profiles, additional calculators) are **complete** — see [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md). The roadmap below is the **current product sequence** for foundation, polish, and growth.
+Historical phase close-outs live in [`archive/`](archive/). The roadmap below is the **current product sequence**.
 
 ## Phase 1 — Calculator workspace foundation ✅ complete
 
-- Shared layout shell: `src/shared/workspace/BendCalculatorLayout.tsx` and siblings
-- Universal structure: Header · Trust strip · Input strip · Pipe workspace · Action dock · optional nav
-- All six calculators on the shared contract; Guide replaces Summary in the dock
-- Document layout rules in [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md)
-- `npm run check` script (typecheck + lint + tests)
+- Shared layout shell: `BendCalculatorLayout` and siblings
+- All six calculators on the shared contract; Guide in the dock
+- [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md)
+- `npm run check` script
 
-## Phase 2 — Visual UI polish / design system ✅ complete
+## Phase 2 — Visual UI polish ✅ complete
 
-See [`PHASE_2_WRAPUP.md`](PHASE_2_WRAPUP.md) for the close-out snapshot.
+See [`archive/PHASE_2_WRAPUP.md`](archive/PHASE_2_WRAPUP.md).
 
-**Delivered:** workspace + UI theme tokens; hub components and screen refactors; FieldInput/Sheet/OptionChipGroup polish; BenderProfileCard + CustomBenderSheet; shared diagram ghost chrome (`diagramTheme.ghost`, callout empty messages); label-only bottom nav.
-
-**Exit criteria met:** visual polish flows through shared tokens/components; calculator math unchanged; `npm run check` passes.
-
-**Deferred:** bespoke ghost illustrations, full legacy-style purge, animations.
+Hub components, theme tokens, diagram ghost chrome, label-only bottom nav.
 
 ## Phase 3 — Field-native fraction keypad ✅ complete
 
-See [`PHASE_3_WRAPUP.md`](PHASE_3_WRAPUP.md) for the close-out snapshot.
+See [`archive/PHASE_3_WRAPUP.md`](archive/PHASE_3_WRAPUP.md).
 
-**Delivered:** `fractionKeypad` utility + tests; `FractionKeypad` UI; `FieldInput.lengthInput`; all six calculators + override/custom bender sheets on imperial fraction entry.
+`fractionKeypad` utility, `FractionKeypad` UI, `FieldInput.lengthInput`.
 
-**Exit criteria met:** imperial fields use trade keypad; metric unchanged; parse/format utilities unchanged; `npm run check` passes.
+## Phase 4 — Guide mode ✅ complete
 
-## Phase 4 — Guide mode expansion ✅ complete
+See [`archive/PHASE_4_GUIDE_WRAPUP.md`](archive/PHASE_4_GUIDE_WRAPUP.md).
 
-See [`PHASE_4_GUIDE_WRAPUP.md`](PHASE_4_GUIDE_WRAPUP.md) for the close-out snapshot.
-
-**Delivered:** guide content module for all six calculators; Guide index + detail screens; contextual `guideRoute()` from calculator docks.
-
-**Exit criteria met:** real apprentice content; guide separate from calculator results; per-calculator entry from dock; `npm run check` passes.
+Guide content for all six calculators; index + contextual `guideRoute()`.
 
 ## Phase 5 — Bender database improvement ✅ complete
 
-See [`PHASE_5_WRAPUP.md`](PHASE_5_WRAPUP.md) for the close-out snapshot.
+See [`archive/PHASE_5_WRAPUP.md`](archive/PHASE_5_WRAPUP.md).
 
-**Delivered:** `BenderChartKind` profile model; profile chart helpers; detail sheet with full deduct table; override list/clear hub; grouped bender database; Edit Setup and Settings links.
+Profile chart kinds, detail sheet, override hub, grouped database.
 
-**Exit criteria met:** chart inspection and override discoverability improved; no invented manufacturer data; `npm run check` passes.
+## Phase 5.5 — QA and documentation alignment ✅ complete
 
-## Phase 5.5 — QA, hardening, and documentation alignment ✅ complete
+- `npm run check` verified; all routes registered in `_layout.tsx`
+- [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) created
 
-- **`npm run check`** verified (214 tests)
-- Route files confirmed for all hub and calculator screens; `_layout.tsx` registers all stack routes
-- Docs aligned: `APP_ARCHITECTURE`, `UI_WORKSPACE_LAYOUT`, `CURRENT_STATE`, phase wrap-ups
-- **`KNOWN_ISSUES.md`** created — practical limitations and deferred scope
+## Phase 5.6 — Calculator screen usability ✅ complete
 
-## Phase 6 — Future calculators (next)
+- Imperial `LengthInputSheet` (keypad off input strip)
+- Compact result strip in `BendPipeWorkspace`
+- Saddle fake Center Mark result cards removed
 
-- Kick, parallel offset, box offset, back-to-back 90, hydraulic layout — placeholders in `bendLibrary.ts`
-- Follow [`FEATURE_TEMPLATE.md`](../FEATURE_TEMPLATE.md) and compose `BendCalculatorLayout` + engine + diagram
-- Only when explicitly scoped; EMT only unless product direction changes
+## Phase 5.7 — Diagram recovery and input refinement ✅ complete
+
+- Pipe workspace flex chain fixed (diagram no longer collapses at large offsets)
+- `LengthInputSheet`: Cancel/Done, step buttons, tape ruler; single Done action
+- Optional Mark 1 / center distance via dock + `OptionalInputSummary` chips
+
+## Phase 5.8 — Cleanup and stability checkpoint ✅ complete
+
+- `npm run check` fully passing (typecheck, lint, 220 tests)
+- ESLint ignores `.expo/`; lint cache moved out of Expo cache dir
+- Docs audit; phase wrap-ups archived; [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md)
+
+## Phase 6 — Future calculators (not started)
+
+Kick, parallel offset, box offset, back-to-back 90, hydraulic layout — placeholders in `bendLibrary.ts` only.
+
+Follow [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md). EMT only unless product direction changes. **Do not start without explicit scope.**
 
 ## How to use this roadmap
 
-- Confirm phase before starting work. Update [`CURRENT_STATE.md`](CURRENT_STATE.md) when a phase completes or priorities shift.
-- Layout and architecture changes belong in Phase 1 docs ([`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md), [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md)).
+Confirm phase before starting work. Update [`CURRENT_STATE.md`](CURRENT_STATE.md) when a phase completes or priorities shift.

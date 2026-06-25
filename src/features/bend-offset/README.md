@@ -29,5 +29,5 @@ bend-offset/
 ## Shared components used
 
 - `@/shared/ui`: AppHeader, AppScreen, FieldInput, Sheet
-- `@/shared/workspace`: SetupSummary, PipeWorkspaceCard, MeasurementChip, EditSetupSheet, AngleSelector
+- `@/shared/workspace`: BendCalculatorLayout, BendTrustStrip, MeasurementChip, EditSetupSheet, AngleSelector
 - `@/shared/diagrams`: PipeSegment, MarkLine, DimensionLine, DiagramLabel

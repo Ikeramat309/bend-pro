@@ -29,7 +29,7 @@ A generic calculator gives you a number. Bend Pro gives you a **layout**: a visu
 - **Six calculators:** Offset, Stub 90, 3-Point Saddle, 4-Point Saddle, Segment Bend, and Rolling Offset — all live with engine tests and diagrams.
 - **Stabilization over expansion:** Phase 4 is wrapped; new calculators wait for explicit tasks. Hardening existing calculators is the preferred next work.
 
-See [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) for what shipped, what is deferred, and known gaps.
+See [`archive/PHASE_4_WRAPUP.md`](archive/PHASE_4_WRAPUP.md) for the additional-calculators close-out and deferred items.
 
 ## Field-use priorities
 

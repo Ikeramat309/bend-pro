@@ -14,7 +14,9 @@ It is **not** a generic calculator app. It is a field tool. People will mark and
 
 ## Current phase
 
-**Phase 5.5 complete (acceptance review).** Phase 6 — future calculators — is next only when explicitly scoped. Phases 1–5 delivered the shared calculator workspace, hub/UI polish, imperial fraction keypad, guide walkthroughs, and bender database improvements. See [`KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md), [`PHASE_5_WRAPUP.md`](docs/PHASE_5_WRAPUP.md), [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), and [`docs/ROADMAP.md`](docs/ROADMAP.md).
+**Phase 5.8 complete (stability checkpoint).** Phases 1–5 delivered the shared workspace, hub UI, imperial length sheet, guide mode, and bender database. Phases 5.6–5.7 fixed input-strip layout, diagram visibility, and length-sheet UX. **Phase 6 — future calculators — is not started** unless explicitly scoped.
+
+See [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), [`docs/ROADMAP.md`](docs/ROADMAP.md), [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md), and [`docs/CLEANUP_REPORT.md`](docs/CLEANUP_REPORT.md).
 
 ## Read these docs first
 
@@ -34,6 +36,7 @@ In this order:
 - **Do not invent features.** Documentation and reports must clearly distinguish: existing features, incomplete work, planned future work, and ideas only. Never describe planned work as if it exists.
 - **Do not add new calculators or conduit types** (no RMC, IMC, PVC) unless explicitly asked. EMT only for now.
 - **Use the standard task report format** in `docs/AI_AGENT_WORKFLOW.md` after every task.
+- **Run `npm run check`** after substantive edits (typecheck + lint + tests).
 
 ## Expo version
 

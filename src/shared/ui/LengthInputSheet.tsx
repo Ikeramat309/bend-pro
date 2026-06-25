@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   rulerTicks: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.sm,

@@ -29,5 +29,5 @@ bend-stub90/
 ## Shared components used
 
 - `@/shared/ui`: AppHeader, AppScreen, FieldInput
-- `@/shared/workspace`: SetupSummary, PipeWorkspaceCard, MeasurementChip, EditSetupSheet
+- `@/shared/workspace`: BendCalculatorLayout, BendTrustStrip, MeasurementChip, EditSetupSheet
 - `@/shared/diagrams`: PipeSegment, MarkLine, DimensionLine, DiagramLabel

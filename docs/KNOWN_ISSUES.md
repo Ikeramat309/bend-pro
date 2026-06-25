@@ -2,7 +2,13 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Practical limitations as of the Phase 5.7 diagram recovery and input refinement pass. These are **not necessarily bugs** — many are intentional scope boundaries.
+Practical limitations as of the Phase 5.8 stability checkpoint. These are **not necessarily bugs** — many are intentional scope boundaries.
+
+## Tooling and generated files
+
+- **`.expo/` is gitignored** — local Expo cache, typed routes, and dev logs. Do not commit it.
+- **Corrupted typed routes:** if `npm run typecheck` fails on `.expo/types/router.d.ts` with invalid paths (e.g. `/../shared/...`), stop the dev server, delete `.expo/types`, and run `npx expo start -c` to regenerate. Do not hand-edit generated route types.
+- **`npm run lint`** uses ESLint directly with cache in `node_modules/.cache/eslint` and ignores `.expo/` so lint does not scan generated cache folders.
 
 ## Calculator workspace
 
@@ -51,4 +57,4 @@ Practical limitations as of the Phase 5.7 diagram recovery and input refinement 
 - Trust-strip tap → bender profile detail
 - Animations and motion design pass
 
-See also [`CURRENT_STATE.md`](CURRENT_STATE.md) and phase wrap-ups in [`PHASE_2_WRAPUP.md`](PHASE_2_WRAPUP.md) through [`PHASE_5_WRAPUP.md`](PHASE_5_WRAPUP.md).
+See also [`CURRENT_STATE.md`](CURRENT_STATE.md), [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md), and historical notes in [`archive/`](archive/).

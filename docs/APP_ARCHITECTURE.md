@@ -57,11 +57,11 @@ Universal calculator chrome (Phase 1 foundation):
 - **`BendHeader`** — compact back + title + EMT subtitle
 - **`BendTrustStrip`** — bender name, meta, trust note, edit setup
 - **`BendInputStrip`** — declarative `BendInputConfig[]` or custom children
-- **`BendPipeWorkspace`** — hero diagram area + optional floating primary/secondary results
+- **`BendPipeWorkspace`** — hero diagram + compact result strip below (primary + up to two secondary chips)
 - **`BendActionDock`** — adaptive left actions + Guide (right)
 - **`workspaceTypes.ts`** — prop contracts
 
-Supporting pieces still used by layout or sheets: `EditSetupSheet`, `AngleSelector`, `OptionalFieldButton`, `MeasurementChip`, `WarningList`. Legacy `SetupSummary` / `PipeWorkspaceResult` remain exported but calculators should use the new shell.
+Supporting pieces still used by layout or sheets: `EditSetupSheet`, `AngleSelector`, `OptionalFieldButton`, `OptionalInputSummary`, `MeasurementChip`, `WarningList`. Legacy `SetupSummary` / `PipeWorkspaceResult` remain exported but calculators should use the new shell.
 
 See [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md) for result priority and dock rules.
 

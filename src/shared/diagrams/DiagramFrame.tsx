@@ -15,7 +15,9 @@ export function DiagramFrame({ children }: DiagramFrameProps) {
 const styles = StyleSheet.create({
   frame: {
     flex: 1,
-    minHeight: 240,
+    width: '100%',
+    minHeight: 220,
+    justifyContent: 'center',
     overflow: 'hidden',
     backgroundColor: diagramTheme.canvas,
   },

@@ -5,10 +5,11 @@ import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
-import { OptionChipGroup, Sheet } from '@/shared/ui';
+import { LengthInputSheet, OptionChipGroup, Sheet } from '@/shared/ui';
 import {
   BendCalculatorLayout,
   EditSetupSheet,
+  OptionalInputSummary,
   type SetupValues,
 } from '@/shared/workspace';
 import { getRoundingLabel } from '@/utils/rounding';
@@ -31,7 +32,7 @@ export default function Saddle4Screen() {
   const [saddleWidthText, setSaddleWidthText] = useState('');
   const [showSaddleWidthInput, setShowSaddleWidthInput] = useState(false);
   const [distanceToCenterText, setDistanceToCenterText] = useState('');
-  const [showDistanceInput, setShowDistanceInput] = useState(false);
+  const [distanceSheetVisible, setDistanceSheetVisible] = useState(false);
   const [bendAngle, setBendAngle] = useState<Saddle4Angle>(SADDLE4_CONFIG.defaultAngle);
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
@@ -108,20 +109,8 @@ export default function Saddle4Screen() {
           { label: saddle4Copy.results.betweenBends, value: betweenBendsValue },
           { label: saddle4Copy.results.shrink, value: shrinkValue },
         ]
-      : [
-          {
-            label: saddle4Copy.results.centerMark,
-            value: centerMarkValue,
-            onPress: !showDistanceInput ? () => setShowDistanceInput(true) : undefined,
-          },
-          { label: saddle4Copy.results.shrink, value: shrinkValue },
-        ]
+      : [{ label: saddle4Copy.results.shrink, value: shrinkValue }]
     : undefined;
-
-  const distanceError =
-    distanceToCenterText.trim() !== '' && distanceToCenter === undefined
-      ? saddle4Copy.fields.distanceToCenter.errorInvalid
-      : undefined;
 
   const inputsStarted = obstructionHeightText.trim() !== '';
   const visibleWarnings = inputsStarted ? result.warnings : [];
@@ -162,7 +151,7 @@ export default function Saddle4Screen() {
     setSaddleWidthText('');
     setShowSaddleWidthInput(false);
     setDistanceToCenterText('');
-    setShowDistanceInput(false);
+    setDistanceSheetVisible(false);
   }
 
   return (
@@ -227,25 +216,22 @@ export default function Saddle4Screen() {
           value: angleData.label,
           onPress: () => setAngleSheetVisible(true),
         },
-        {
-          type: 'optional',
-          key: 'distance',
-          addLabel: saddle4Copy.fields.distanceToCenter.addButton,
-          onAdd: () => setShowDistanceInput(true),
-          visible: showDistanceInput,
-          field: {
-            type: 'field',
-            key: 'distanceField',
-            label: saddle4Copy.fields.distanceToCenter.label,
-            value: distanceToCenterText,
-            onChangeText: setDistanceToCenterText,
-            placeholder: saddle4Copy.fields.distanceToCenter.placeholder,
-            unit: unitLabel,
-            variant: 'compact',
-            lengthInput,
-            error: distanceError,
-          },
-        },
+        ...(distanceToCenterText.trim()
+          ? [
+              {
+                type: 'custom' as const,
+                key: 'distanceSummary',
+                node: (
+                  <OptionalInputSummary
+                    label={saddle4Copy.fields.distanceToCenter.label}
+                    value={distanceToCenterText}
+                    unit={unitLabel}
+                    onPress={() => setDistanceSheetVisible(true)}
+                  />
+                ),
+              },
+            ]
+          : []),
       ]}
       workspace={
         <Saddle4Diagram
@@ -261,13 +247,25 @@ export default function Saddle4Screen() {
       dock={{
         left: [
           { key: 'reset', label: 'Reset', onPress: resetInputs },
-          { key: 'set-center', label: 'Set Center', onPress: () => setShowDistanceInput(true) },
+          { key: 'set-center', label: 'Set Center', onPress: () => setDistanceSheetVisible(true) },
         ],
         guide: { onPress: () => router.push(guideRoute('saddle4')) },
       }}
       warnings={visibleWarnings}
       footer={
         <>
+          <LengthInputSheet
+            visible={distanceSheetVisible}
+            label={saddle4Copy.fields.distanceToCenter.label}
+            value={distanceToCenterText}
+            unit={unitLabel}
+            placeholder={saddle4Copy.fields.distanceToCenter.placeholder}
+            onCommit={(text) => {
+              setDistanceToCenterText(text);
+              setDistanceSheetVisible(false);
+            }}
+            onCancel={() => setDistanceSheetVisible(false)}
+          />
           <Sheet
             visible={angleSheetVisible}
             title={saddle4Copy.angleSheetTitle}

@@ -79,7 +79,7 @@ Feature `*Diagram.tsx` files compose these primitives; they do not fork low-leve
 
 Shell components for hubs and modals: `AppHeader`, `AppScreen`, `BottomNav`, `Sheet`, `FieldInput`, `FractionKeypad`, `OptionChipGroup`, hub building blocks (`HubNavCard`, `HubListRow`, `HubSearchField`, `HubSettingsCard`, `HubStatusBadge`, etc.), **`BenderProfileCard`**, **`SetupOverridesCard`**, **`GuideSectionCard`**. Sheet helpers: `SheetFormGroup`, `SheetDangerAction`. Styling tokens live in `src/theme/uiTheme.ts`.
 
-Imperial length fields use `FieldInput.lengthInput="imperial"` to show the inline fraction keypad (`FractionKeypad` + `applyFractionKey` in `src/utils/fractionKeypad.ts`).
+Imperial length fields use `FieldInput.lengthInput="imperial"` to open **`LengthInputSheet`** (bottom sheet with tape-measure step controls, optional tape ruler, `FractionKeypad` + `applyFractionKey` in `src/utils/fractionKeypad.ts`, and `lengthAdjustment.ts` helpers). Metric fields keep inline decimal entry. Optional mark/center fields on Offset and Saddles open from dock actions via the same sheet.
 
 ## Bender / profile data
 

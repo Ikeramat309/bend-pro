@@ -56,6 +56,7 @@ export const offsetCopy = {
     mark2: 'Mark 2',
     emptyMessage: 'Enter offset height to calculate distance between bends.',
     invalidMessage: 'Offset height must be greater than 0.',
+    unavailableMessage: 'Diagram unavailable — results are still shown below.',
   },
   workspaceTitle: 'Pipe layout',
   angleSheetTitle: 'Bend Angle',

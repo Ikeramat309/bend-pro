@@ -2,12 +2,13 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Practical limitations as of the Phase 5.5 acceptance review. These are **not necessarily bugs** — many are intentional scope boundaries.
+Practical limitations as of the Phase 5.7 diagram recovery and input refinement pass. These are **not necessarily bugs** — many are intentional scope boundaries.
 
 ## Calculator workspace
 
-- **Dock center actions** (`Set Mark`, `Set First Mark`, `Set Center`, `Set Arc`, etc.) are workflow hints. They reveal optional inputs or toggle UI state; they do **not** capture field measurements or focus a specific mark on the diagram.
+- **Dock center actions** (`Set Mark`, `Set First Mark`, `Set Center`, `Set Arc`, etc.) are workflow hints. They reveal optional inputs or open length sheets; they do **not** capture field measurements or focus a specific mark on the diagram.
 - **Bottom nav is hidden** on calculator screens to preserve pipe workspace height. Hub navigation requires back or system navigation.
+- **Warnings** appear in a compact strip below the pipe workspace. They must not replace or hide the diagram.
 
 ## Overrides and bender data
 
@@ -20,8 +21,10 @@ Practical limitations as of the Phase 5.5 acceptance review. These are **not nec
 ## Fraction keypad (imperial)
 
 - The trade keypad builds **whole numbers, fractions, and mixed numbers** (e.g. `12 3/8`). There is **no decimal point key** on the fraction keypad — use fraction keys or quick fractions instead.
-- Metric fields use the system **decimal pad**; imperial fields hide the system keyboard and show the inline fraction keypad when focused.
-- The keypad does not auto-scroll the input strip on small screens when focused (may be partially obscured on very short viewports).
+- Metric fields use the system **decimal pad** inline on the field.
+- Imperial fields open **`LengthInputSheet`** (bottom sheet) with **`FractionKeypad`**, tape-measure step buttons, and an optional tape ruler — the keypad is **not** rendered inside the input strip, so the pipe workspace stays visible while editing.
+- **Cancel** reverts to the committed value; **Done** commits and closes. Only one Done action (sheet footer — not on the keypad grid).
+- Optional Mark 1 / distance-to-center inputs open from dock actions; existing values show as compact summary chips in the input strip.
 
 ## Guide mode
 

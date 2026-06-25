@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Honest snapshot of where the app stands. **Phases 1–5 are complete; Phase 5.5 acceptance review passed.** Six calculators ship on the shared workspace shell with hub UI polish, imperial fraction keypad, guide walkthroughs, and an improved bender database. See [`PHASE_5_WRAPUP.md`](PHASE_5_WRAPUP.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), [`ROADMAP.md`](ROADMAP.md), and [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md).
+Honest snapshot of where the app stands. **Phases 1–5 are complete; Phase 5.7 recovered diagram visibility and refined imperial length editing.** Six calculators ship on the shared workspace shell with hub UI polish, imperial fraction keypad, guide walkthroughs, and an improved bender database. See [`PHASE_5_WRAPUP.md`](PHASE_5_WRAPUP.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), [`ROADMAP.md`](ROADMAP.md), and [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md).
 
 ## What currently exists
 
@@ -10,7 +10,7 @@ Honest snapshot of where the app stands. **Phases 1–5 are complete; Phase 5.5 
 
 All six use the **shared `BendCalculatorLayout`** shell (`src/shared/workspace/`). Math is unchanged in feature `engine/` folders.
 
-- **Offset** (`/offset`) — offset height + bend angle → distance between bends, shrink, optional Mark 1 / Mark 2. Primary floating result: distance between bends. Secondary: shrink + multiplier (tappable overrides). Dock: Reset · Set First Mark · Guide.
+- **Offset** (`/offset`) — offset height + bend angle → distance between bends, shrink, optional Mark 1 / Mark 2. Mark 1 opens from **Set First Mark** dock action (compact chip when set). Primary floating result: distance between bends. Secondary: shrink + multiplier (tappable overrides). Dock: Reset · Set First Mark · Guide.
 - **Stub 90** (`/stub90`) — stub length − deduct → deduct mark, optional leg. Primary: deduct mark. Secondary: deduct (tappable override). Dock: Reset · Set Mark · Guide.
 - **3-Point Saddle** (`/saddle3`) — obstruction height + angle preset → between-bends spacing, shrink, layout marks. Primary swaps to center mark when distance-to-center is entered. Dock: Reset · Set Center · Guide.
 - **4-Point Saddle** (`/saddle4`) — obstruction height (required), optional saddle width + distance to center, equal bend angle. Two-offset diagram. Dock: Reset · Set Center · Guide.
@@ -33,10 +33,12 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 - **`guideRoute(id)`** — calculator Guide dock opens contextual section; bottom nav Guide opens index
 - **`GuideSectionCard`** — shared content block for guide sections
 
-### Field input (Phase 3)
+### Field input (Phase 3 + 5.6)
 
 - **`FractionKeypad`** + **`applyFractionKey`** — trade fraction entry for imperial measurements
-- **`FieldInput.lengthInput`** — `'imperial'` shows inline keypad; `'decimal'` keeps system decimal pad
+- **`LengthInputSheet`** — bottom-sheet imperial editor (label, value, unit, quick step buttons, tape ruler, keypad, Cancel/Done); keeps keypad off the input strip
+- **`OptionalInputSummary`** — compact chip for optional marks/center distance when a value is set
+- **`FieldInput.lengthInput`** — `'imperial'` opens the length sheet on tap; `'decimal'` keeps system decimal pad inline
 - All calculator length fields and bender deduct/shrink overrides wired through `getLengthInputMode()`
 
 ### Shared calculator workspace
@@ -45,7 +47,7 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 - **`BendHeader`**, **`BendTrustStrip`**, **`BendInputStrip`**, **`BendPipeWorkspace`**, **`BendActionDock`**
 - **`workspaceTypes.ts`** + **`src/theme/workspaceTheme.ts`** — layout prop contracts and polish tokens
 - **`DiagramFrame`**, **`DiagramGhostMessage`** (callout-backed empty prompts), **`diagramTheme.ghost`** tokens
-- Compact calculator header; workflow action emphasis in dock; result bar on pipe workspace card
+- Compact calculator header; workflow action emphasis in dock; **compact result strip** below diagram (diagram remains hero; warnings stay compact below workspace)
 - **Guide** in the bottom dock opens the full guide index; each calculator’s Guide action opens that bend’s walkthrough
 
 ### Bender profiles
@@ -73,7 +75,7 @@ See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full list. Summary:
 - **Segment bend** — geometric model only; no spring-back
 - **Rolling offset** — no 3D bender-head rotation model
 - **Bender charts** — generic field-reference values only; manufacturer shoe charts deferred until sourced data exists
-- **Fraction keypad** — no decimal point key; mixed-number and quick-fraction entry only
+- **Fraction keypad** — no decimal point key; mixed-number and quick-fraction entry only; imperial editing uses a bottom sheet so the pipe workspace stays visible
 - **Calculator registry** — not implemented; availability via `bendLibrary.ts` + `routes.ts`
 
 ## Next development priorities

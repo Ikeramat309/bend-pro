@@ -5,10 +5,11 @@ import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
-import { OptionChipGroup, Sheet } from '@/shared/ui';
+import { LengthInputSheet, OptionChipGroup, Sheet } from '@/shared/ui';
 import {
   BendCalculatorLayout,
   EditSetupSheet,
+  OptionalInputSummary,
   type SetupValues,
 } from '@/shared/workspace';
 import { getRoundingLabel } from '@/utils/rounding';
@@ -34,7 +35,7 @@ export default function Saddle3Screen() {
 
   const [obstructionHeightText, setObstructionHeightText] = useState('');
   const [distanceToCenterText, setDistanceToCenterText] = useState('');
-  const [showDistanceInput, setShowDistanceInput] = useState(false);
+  const [distanceSheetVisible, setDistanceSheetVisible] = useState(false);
   const [anglePreset, setAnglePreset] = useState<Saddle3AnglePreset>(SADDLE3_CONFIG.defaultPreset);
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
@@ -105,20 +106,8 @@ export default function Saddle3Screen() {
           { label: saddle3Copy.results.betweenBends, value: betweenBendsValue },
           { label: saddle3Copy.results.shrink, value: shrinkValue },
         ]
-      : [
-          {
-            label: saddle3Copy.results.centerMark,
-            value: centerMarkValue,
-            onPress: !showDistanceInput ? () => setShowDistanceInput(true) : undefined,
-          },
-          { label: saddle3Copy.results.shrink, value: shrinkValue },
-        ]
+      : [{ label: saddle3Copy.results.shrink, value: shrinkValue }]
     : undefined;
-
-  const distanceError =
-    distanceToCenterText.trim() !== '' && distanceToCenter === undefined
-      ? saddle3Copy.fields.distanceToCenter.errorInvalid
-      : undefined;
 
   const visibleWarnings = obstructionHeightText.trim() !== '' ? result.warnings : [];
 
@@ -156,7 +145,7 @@ export default function Saddle3Screen() {
   function resetInputs() {
     setObstructionHeightText('');
     setDistanceToCenterText('');
-    setShowDistanceInput(false);
+    setDistanceSheetVisible(false);
   }
 
   return (
@@ -199,25 +188,22 @@ export default function Saddle3Screen() {
             },
           ],
         },
-        {
-          type: 'optional',
-          key: 'distance',
-          addLabel: saddle3Copy.fields.distanceToCenter.addButton,
-          onAdd: () => setShowDistanceInput(true),
-          visible: showDistanceInput,
-          field: {
-            type: 'field',
-            key: 'distanceField',
-            label: saddle3Copy.fields.distanceToCenter.label,
-            value: distanceToCenterText,
-            onChangeText: setDistanceToCenterText,
-            placeholder: saddle3Copy.fields.distanceToCenter.placeholder,
-            unit: unitLabel,
-            variant: 'compact',
-            lengthInput,
-            error: distanceError,
-          },
-        },
+        ...(distanceToCenterText.trim()
+          ? [
+              {
+                type: 'custom' as const,
+                key: 'distanceSummary',
+                node: (
+                  <OptionalInputSummary
+                    label={saddle3Copy.fields.distanceToCenter.label}
+                    value={distanceToCenterText}
+                    unit={unitLabel}
+                    onPress={() => setDistanceSheetVisible(true)}
+                  />
+                ),
+              },
+            ]
+          : []),
       ]}
       workspace={
         <Saddle3Diagram
@@ -233,13 +219,25 @@ export default function Saddle3Screen() {
       dock={{
         left: [
           { key: 'reset', label: 'Reset', onPress: resetInputs },
-          { key: 'set-center', label: 'Set Center', onPress: () => setShowDistanceInput(true) },
+          { key: 'set-center', label: 'Set Center', onPress: () => setDistanceSheetVisible(true) },
         ],
         guide: { onPress: () => router.push(guideRoute('saddle3')) },
       }}
       warnings={visibleWarnings}
       footer={
         <>
+          <LengthInputSheet
+            visible={distanceSheetVisible}
+            label={saddle3Copy.fields.distanceToCenter.label}
+            value={distanceToCenterText}
+            unit={unitLabel}
+            placeholder={saddle3Copy.fields.distanceToCenter.placeholder}
+            onCommit={(text) => {
+              setDistanceToCenterText(text);
+              setDistanceSheetVisible(false);
+            }}
+            onCancel={() => setDistanceSheetVisible(false)}
+          />
           <Sheet
             visible={angleSheetVisible}
             title={saddle3Copy.angleSheetTitle}

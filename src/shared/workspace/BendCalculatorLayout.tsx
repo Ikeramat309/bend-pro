@@ -81,8 +81,10 @@ const styles = StyleSheet.create({
   workspace: {
     flex: 1,
     minHeight: workspaceTheme.workspace.minHeight,
+    flexShrink: 1,
   },
   warnings: {
+    flexShrink: 0,
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xs,
   },

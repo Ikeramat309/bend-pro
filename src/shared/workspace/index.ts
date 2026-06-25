@@ -14,6 +14,7 @@ export {
 } from './EditSetupSheet';
 export { MeasurementChip, type MeasurementChipProps, type MeasurementChipTone } from './MeasurementChip';
 export { OptionalFieldButton, type OptionalFieldButtonProps } from './OptionalFieldButton';
+export { OptionalInputSummary, type OptionalInputSummaryProps } from './OptionalInputSummary';
 export { PipeWorkspaceCard, type PipeWorkspaceCardProps } from './PipeWorkspaceCard';
 export {
     PipeWorkspaceResult,

@@ -52,13 +52,15 @@ export function OffsetDiagram({ data, isEmpty = false, isInvalid = false }: Offs
   const message = isInvalid
     ? offsetCopy.diagram.invalidMessage
     : offsetCopy.diagram.emptyMessage;
+  const showLive = Boolean(data) && !isEmpty && !isInvalid;
+  const fallbackMessage = !isEmpty && !isInvalid ? offsetCopy.diagram.unavailableMessage : message;
 
   return (
     <DiagramFrame>
-      {!data || isEmpty || isInvalid ? (
-        <OffsetGhostDiagram message={message} invalid={isInvalid} />
+      {showLive ? (
+        <OffsetLiveDiagram data={data!} />
       ) : (
-        <OffsetLiveDiagram data={data} />
+        <OffsetGhostDiagram message={fallbackMessage} invalid={isInvalid} />
       )}
     </DiagramFrame>
   );
@@ -66,7 +68,11 @@ export function OffsetDiagram({ data, isEmpty = false, isInvalid = false }: Offs
 
 function OffsetGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
-    <Svg viewBox={OFFSET_CONFIG.diagramViewBox} width="100%" height={OFFSET_CONFIG.diagramHeight}>
+    <Svg
+      viewBox={OFFSET_CONFIG.diagramViewBox}
+      width="100%"
+      height="100%"
+      preserveAspectRatio="xMidYMid meet">
       <DiagramDefs gradientId="offsetGhostGradient" ghost />
       <DiagramCanvas />
       <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={ghost.pipeShadowOpacity} />
@@ -129,7 +135,11 @@ function OffsetLiveDiagram({ data }: { data: OffsetDiagramData }) {
   const offsetMidY = (BOTTOM_Y + topY) / 2;
 
   return (
-    <Svg viewBox={OFFSET_CONFIG.diagramViewBox} width="100%" height={OFFSET_CONFIG.diagramHeight}>
+    <Svg
+      viewBox={OFFSET_CONFIG.diagramViewBox}
+      width="100%"
+      height="100%"
+      preserveAspectRatio="xMidYMid meet">
       <DiagramDefs gradientId="offsetPipeGradient" />
       <DiagramCanvas />
 

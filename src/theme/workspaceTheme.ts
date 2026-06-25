@@ -20,14 +20,17 @@ export const workspaceTheme = {
   },
   workspace: {
     minHeight: 288,
-    diagramMinHeight: 248,
+    diagramMinHeight: 220,
     cardBorderColor: 'rgba(59, 189, 248, 0.22)',
     resultBarBackground: colors.surface2,
+    resultStripMaxHeight: 56,
+    resultStripPaddingHorizontal: spacing.md,
+    resultStripPaddingVertical: spacing.xs,
   },
   primaryResult: {
     label: typography.tabLabel,
-    valueSize: fontSize.xxl + 4,
-    valueLineHeight: 34,
+    valueSize: fontSize.xl,
+    valueLineHeight: 28,
   },
   dock: {
     minTopBarHeight: layout.topBarHeight - 8,

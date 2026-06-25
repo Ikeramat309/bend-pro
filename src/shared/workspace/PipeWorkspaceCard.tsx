@@ -57,6 +57,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   cardWorkspace: {
+    flex: 1,
+    minHeight: 0,
     padding: 0,
     gap: 0,
     borderColor: workspaceTheme.workspace.cardBorderColor,

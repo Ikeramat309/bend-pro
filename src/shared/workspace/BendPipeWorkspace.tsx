@@ -13,7 +13,7 @@ export type BendPipeWorkspaceProps = {
   secondaryResults?: BendResultConfig[];
 };
 
-/** Hero pipe workspace — large diagram with limited floating result cards. */
+/** Hero pipe workspace — diagram-first with a compact result strip below. */
 export function BendPipeWorkspace({ diagram, primaryResult, secondaryResults }: BendPipeWorkspaceProps) {
   const secondary = (secondaryResults ?? []).slice(0, 2);
   const hasResults = Boolean(primaryResult || secondary.length > 0);
@@ -21,32 +21,40 @@ export function BendPipeWorkspace({ diagram, primaryResult, secondaryResults }: 
   return (
     <View style={styles.wrap}>
       <PipeWorkspaceCard variant="highlight">
-        <View style={[styles.diagramWell, !hasResults && styles.diagramWellSolo]}>{diagram}</View>
+        <View style={styles.cardInner}>
+          <View style={[styles.diagramWell, !hasResults && styles.diagramWellSolo]}>{diagram}</View>
 
-        {hasResults ? (
-          <View style={styles.floatRow}>
-            {primaryResult ? (
-              <View style={[styles.primaryCard, secondary.length > 0 && styles.primaryCardCompact]}>
-                <Text style={styles.primaryLabel}>{primaryResult.label}</Text>
-                <Text style={styles.primaryValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75}>
-                  {primaryResult.value}
-                </Text>
-              </View>
-            ) : null}
+          {hasResults ? (
+            <View style={styles.resultStrip}>
+              {primaryResult ? (
+                <View style={styles.primarySlot}>
+                  <Text style={styles.primaryLabel} numberOfLines={1}>
+                    {primaryResult.label}
+                  </Text>
+                  <Text
+                    style={styles.primaryValue}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.8}>
+                    {primaryResult.value}
+                  </Text>
+                </View>
+              ) : null}
 
-            {secondary.map((result) => (
-              <View key={result.label} style={styles.secondarySlot}>
-                <MeasurementChip
-                  label={result.label}
-                  value={result.value}
-                  tone={result.tone}
-                  size="compact"
-                  onPress={result.onPress}
-                />
-              </View>
-            ))}
-          </View>
-        ) : null}
+              {secondary.map((result) => (
+                <View key={result.label} style={styles.secondarySlot}>
+                  <MeasurementChip
+                    label={result.label}
+                    value={result.value}
+                    tone={result.tone}
+                    size="compact"
+                    onPress={result.onPress}
+                  />
+                </View>
+              ))}
+            </View>
+          ) : null}
+        </View>
       </PipeWorkspaceCard>
     </View>
   );
@@ -60,32 +68,36 @@ const styles = StyleSheet.create({
     paddingTop: spacing.xs,
     paddingBottom: spacing.sm,
   },
+  cardInner: {
+    flex: 1,
+    minHeight: workspaceTheme.workspace.diagramMinHeight + workspaceTheme.workspace.resultStripMaxHeight,
+  },
   diagramWell: {
+    flex: 1,
     minHeight: workspaceTheme.workspace.diagramMinHeight,
+    width: '100%',
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   diagramWellSolo: {
     borderBottomWidth: 0,
   },
-  floatRow: {
+  resultStrip: {
+    flexShrink: 0,
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-end',
+    flexWrap: 'nowrap',
+    alignItems: 'center',
     gap: spacing.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
+    maxHeight: workspaceTheme.workspace.resultStripMaxHeight,
+    paddingHorizontal: workspaceTheme.workspace.resultStripPaddingHorizontal,
+    paddingVertical: workspaceTheme.workspace.resultStripPaddingVertical,
     backgroundColor: workspaceTheme.workspace.resultBarBackground,
   },
-  primaryCard: {
-    flexGrow: 1,
-    flexShrink: 1,
-    minWidth: 132,
-    gap: 2,
-    paddingRight: spacing.sm,
-  },
-  primaryCardCompact: {
-    minWidth: 108,
+  primarySlot: {
+    flex: 1,
+    minWidth: 0,
+    gap: 1,
+    paddingRight: spacing.xs,
   },
   primaryLabel: {
     ...workspaceTheme.primaryResult.label,
@@ -103,6 +115,6 @@ const styles = StyleSheet.create({
   },
   secondarySlot: {
     flexShrink: 0,
-    maxWidth: '46%',
+    maxWidth: '42%',
   },
 });

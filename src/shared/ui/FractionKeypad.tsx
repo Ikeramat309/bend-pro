@@ -10,7 +10,8 @@ import {
 export type FractionKeypadProps = {
   value: string;
   onChangeText: (text: string) => void;
-  onDone?: () => void;
+  /** When false, hides the internal Done key — use sheet-level Done instead. */
+  showDone?: boolean;
 };
 
 type KeyDef = {
@@ -19,39 +20,47 @@ type KeyDef = {
   wide?: boolean;
 };
 
-const ROWS: KeyDef[][] = [
-  [
-    { key: '7', label: '7' },
-    { key: '8', label: '8' },
-    { key: '9', label: '9' },
-    { key: 'backspace', label: '⌫' },
-  ],
-  [
-    { key: '4', label: '4' },
-    { key: '5', label: '5' },
-    { key: '6', label: '6' },
-    { key: 'space', label: 'Sp' },
-  ],
-  [
-    { key: '1', label: '1' },
-    { key: '2', label: '2' },
-    { key: '3', label: '3' },
-    { key: 'slash', label: '/' },
-  ],
-  [
-    { key: '0', label: '0', wide: true },
-    { key: 'clear', label: 'Clr' },
-    { key: 'done', label: 'Done' },
-  ],
-];
+function buildRows(showDone: boolean): KeyDef[][] {
+  const bottomRow: KeyDef[] = showDone
+    ? [
+        { key: '0', label: '0', wide: true },
+        { key: 'clear', label: 'Clr' },
+        { key: 'done', label: 'Done' },
+      ]
+    : [
+        { key: '0', label: '0', wide: true },
+        { key: 'clear', label: 'Clr' },
+      ];
+
+  return [
+    [
+      { key: '7', label: '7' },
+      { key: '8', label: '8' },
+      { key: '9', label: '9' },
+      { key: 'backspace', label: '⌫' },
+    ],
+    [
+      { key: '4', label: '4' },
+      { key: '5', label: '5' },
+      { key: '6', label: '6' },
+      { key: 'space', label: 'Space' },
+    ],
+    [
+      { key: '1', label: '1' },
+      { key: '2', label: '2' },
+      { key: '3', label: '3' },
+      { key: 'slash', label: '/' },
+    ],
+    bottomRow,
+  ];
+}
 
 /** Trade fraction keypad for imperial length fields — glove-friendly tap targets. */
-export function FractionKeypad({ value, onChangeText, onDone }: FractionKeypadProps) {
+export function FractionKeypad({ value, onChangeText, showDone = true }: FractionKeypadProps) {
+  const rows = buildRows(showDone);
+
   function handleKey(key: KeyDef) {
-    if (key.key === 'done') {
-      onDone?.();
-      return;
-    }
+    if (key.key === 'done') return;
     onChangeText(applyFractionKey(value, key.key));
   }
 
@@ -70,7 +79,7 @@ export function FractionKeypad({ value, onChangeText, onDone }: FractionKeypadPr
         ))}
       </View>
 
-      {ROWS.map((row, rowIndex) => (
+      {rows.map((row, rowIndex) => (
         <View key={`row-${rowIndex}`} style={styles.row}>
           {row.map((keyDef) => (
             <Pressable

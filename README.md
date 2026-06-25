@@ -6,7 +6,7 @@ EMT conduit bending calculator for the field. Built with **Expo**, **React Nativ
 
 Six working calculators on a shared diagram-first workspace: Offset, Stub 90, 3-Point Saddle, 4-Point Saddle, Segment Bend, and Rolling Offset. Imperial lengths use a bottom-sheet editor with fraction keypad and tape-measure step controls. Guide walkthroughs and a bender profile database are included.
 
-**Status (Phase 5.8):** Phases 1–5 complete; usability passes 5.6–5.7 done; project checks passing. Phase 6 calculators are not started.
+**Status (Phase 5.9):** Phases 1–5 complete; calculator UI polish pass done; project checks passing. Phase 6 calculators are not started.
 
 ## Quick start
 

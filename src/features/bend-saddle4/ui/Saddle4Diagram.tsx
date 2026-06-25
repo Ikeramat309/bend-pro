@@ -1,4 +1,4 @@
-import Svg, { Rect } from 'react-native-svg';
+import { Rect } from 'react-native-svg';
 
 import {
   BendRadiusZone,
@@ -8,6 +8,7 @@ import {
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
+  DiagramSvg,
   DimensionLine,
   MarkLine,
   PipeSegment,
@@ -189,7 +190,7 @@ function Saddle4GhostDiagram({ message, invalid }: { message: string; invalid?: 
   const geo = buildSaddle4Geometry(2, 2 * 2.6, 4, 22.5);
 
   return (
-    <Svg viewBox={SADDLE4_CONFIG.diagramViewBox} width="100%" height={SADDLE4_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={SADDLE4_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="saddle4GhostGradient" ghost />
       <DiagramCanvas />
       <ObstructionBlock
@@ -206,7 +207,7 @@ function Saddle4GhostDiagram({ message, invalid }: { message: string; invalid?: 
       <MarkLine x1={geo.xIR} y1={geo.topY - 11} x2={geo.xIR} y2={geo.topY + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
       <MarkLine x1={geo.xOR} y1={BASE_Y - 11} x2={geo.xOR} y2={BASE_Y + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
       <DiagramGhostMessage text={message} invalid={invalid} />
-    </Svg>
+    </DiagramSvg>
   );
 }
 
@@ -297,7 +298,7 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
   const widthDimY = topY - 18;
 
   return (
-    <Svg viewBox={SADDLE4_CONFIG.diagramViewBox} width="100%" height={SADDLE4_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={SADDLE4_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="saddle4PipeGradient" />
       <DiagramCanvas />
 
@@ -442,6 +443,6 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
           textAnchor="start"
         />
       </DiagramCallout>
-    </Svg>
+    </DiagramSvg>
   );
 }

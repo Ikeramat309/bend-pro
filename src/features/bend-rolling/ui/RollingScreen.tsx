@@ -9,11 +9,12 @@ import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
-import { Sheet } from '@/shared/ui';
+import { LengthInputSheet, Sheet } from '@/shared/ui';
 import {
   AngleSelector,
   BendCalculatorLayout,
   EditSetupSheet,
+  OptionalInputSummary,
   type BendAngleOption,
   type SetupValues,
 } from '@/shared/workspace';
@@ -36,7 +37,7 @@ export default function RollingScreen() {
   const [offsetHeightText, setOffsetHeightText] = useState('');
   const [offsetRollText, setOffsetRollText] = useState('');
   const [mark1Text, setMark1Text] = useState('');
-  const [showMark1Input, setShowMark1Input] = useState(false);
+  const [mark1SheetVisible, setMark1SheetVisible] = useState(false);
   const [bendAngle, setBendAngle] = useState<BendAngle>(ROLLING_CONFIG.defaultAngle);
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
@@ -109,10 +110,11 @@ export default function RollingScreen() {
   const inputsStarted = offsetHeightText.trim() !== '' || offsetRollText.trim() !== '';
   const visibleWarnings = inputsStarted ? result.warnings : [];
 
-  const mark1Error =
-    mark1Text.trim() !== '' && mark1Number === undefined
-      ? rollingCopy.fields.mark1.errorInvalid
-      : undefined;
+
+  function handleMark1Commit(text: string) {
+    setMark1Text(text);
+    setMark1SheetVisible(false);
+  }
 
   function handleBackPress() {
     const safeRouter = router as typeof router & { canGoBack?: () => boolean };
@@ -175,10 +177,8 @@ export default function RollingScreen() {
     setOffsetHeightText('');
     setOffsetRollText('');
     setMark1Text('');
-    setShowMark1Input(false);
+    setMark1SheetVisible(false);
   }
-
-  const setMarkLabel = hasMark1 || showMark1Input ? 'Set First Mark' : 'Set Roll';
 
   return (
     <BendCalculatorLayout
@@ -235,25 +235,22 @@ export default function RollingScreen() {
           value: `${bendAngle}°`,
           onPress: () => setAngleSheetVisible(true),
         },
-        {
-          type: 'optional',
-          key: 'mark1',
-          addLabel: rollingCopy.fields.mark1.addButton,
-          onAdd: () => setShowMark1Input(true),
-          visible: showMark1Input,
-          field: {
-            type: 'field',
-            key: 'mark1Field',
-            label: rollingCopy.fields.mark1.label,
-            value: mark1Text,
-            onChangeText: setMark1Text,
-            placeholder: rollingCopy.fields.mark1.placeholder,
-            unit: unitLabel,
-            variant: 'compact',
-            lengthInput,
-            error: mark1Error,
-          },
-        },
+        ...(mark1Text.trim()
+          ? [
+              {
+                type: 'custom' as const,
+                key: 'mark1Summary',
+                node: (
+                  <OptionalInputSummary
+                    label={rollingCopy.fields.mark1.label}
+                    value={mark1Text}
+                    unit={unitLabel}
+                    onPress={() => setMark1SheetVisible(true)}
+                  />
+                ),
+              },
+            ]
+          : []),
       ]}
       workspace={
         <RollingDiagram
@@ -290,8 +287,8 @@ export default function RollingScreen() {
           { key: 'reset', label: 'Reset', onPress: resetInputs },
           {
             key: 'set-mark',
-            label: setMarkLabel,
-            onPress: () => setShowMark1Input(true),
+            label: 'Set First Mark',
+            onPress: () => setMark1SheetVisible(true),
           },
         ],
         guide: { onPress: () => router.push(guideRoute('rolling')) },
@@ -299,6 +296,15 @@ export default function RollingScreen() {
       warnings={visibleWarnings}
       footer={
         <>
+          <LengthInputSheet
+            visible={mark1SheetVisible}
+            label={rollingCopy.fields.mark1.label}
+            value={mark1Text}
+            unit={unitLabel}
+            placeholder={rollingCopy.fields.mark1.placeholder}
+            onCommit={handleMark1Commit}
+            onCancel={() => setMark1SheetVisible(false)}
+          />
           <Sheet
             visible={angleSheetVisible}
             title={rollingCopy.angleSheetTitle}

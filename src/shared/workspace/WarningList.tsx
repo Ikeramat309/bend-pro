@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, spacing } from '@/theme';
+import { colors, radius, spacing, workspaceTheme } from '@/theme';
 
 export type WarningListProps = {
   warnings: string[];
@@ -15,7 +15,10 @@ export function WarningList({ warnings }: WarningListProps) {
   return (
     <View style={styles.card}>
       {warnings.map((warning) => (
-        <Text key={warning} style={styles.text} numberOfLines={3}>
+        <Text
+          key={warning}
+          style={styles.text}
+          numberOfLines={workspaceTheme.warningStrip.maxLines}>
           {warning}
         </Text>
       ))}
@@ -25,17 +28,17 @@ export function WarningList({ warnings }: WarningListProps) {
 
 const styles = StyleSheet.create({
   card: {
-    gap: spacing.xs,
-    borderRadius: radius.md,
+    gap: 2,
+    borderRadius: radius.sm,
     borderWidth: 1,
-    borderColor: colors.warning,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    borderColor: 'rgba(255, 210, 46, 0.35)',
+    backgroundColor: 'rgba(255, 210, 46, 0.06)',
+    paddingHorizontal: spacing.sm + 2,
+    paddingVertical: spacing.xs,
   },
   text: {
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 11,
+    lineHeight: 15,
     fontWeight: '500',
     color: colors.warning,
   },

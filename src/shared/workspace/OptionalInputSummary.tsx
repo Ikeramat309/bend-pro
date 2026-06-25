@@ -15,7 +15,7 @@ export function OptionalInputSummary({ label, value, unit, onPress }: OptionalIn
 
   return (
     <View style={styles.wrap}>
-      <MeasurementChip label={label} value={displayValue} size="compact" onPress={onPress} />
+      <MeasurementChip label={label} value={displayValue} tone="primary" size="compact" onPress={onPress} />
     </View>
   );
 }

@@ -1,5 +1,3 @@
-import Svg from 'react-native-svg';
-
 import {
   BendRadiusZone,
   DiagramCallout,
@@ -8,6 +6,7 @@ import {
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
+  DiagramSvg,
   DimensionLine,
   MarkLine,
   PipeSegment,
@@ -68,11 +67,7 @@ export function OffsetDiagram({ data, isEmpty = false, isInvalid = false }: Offs
 
 function OffsetGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
-    <Svg
-      viewBox={OFFSET_CONFIG.diagramViewBox}
-      width="100%"
-      height="100%"
-      preserveAspectRatio="xMidYMid meet">
+    <DiagramSvg viewBox={OFFSET_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="offsetGhostGradient" ghost />
       <DiagramCanvas />
       <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={ghost.pipeShadowOpacity} />
@@ -81,7 +76,7 @@ function OffsetGhostDiagram({ message, invalid }: { message: string; invalid?: b
       <MarkLine x1={192} y1={114} x2={192} y2={138} opacity={ghost.markOpacity} />
       <DimensionLine x1={88} y1={268} x2={192} y2={268} showArrows={false} opacity={ghost.dimensionOpacity} />
       <DiagramGhostMessage text={message} invalid={invalid} />
-    </Svg>
+    </DiagramSvg>
   );
 }
 
@@ -135,11 +130,7 @@ function OffsetLiveDiagram({ data }: { data: OffsetDiagramData }) {
   const offsetMidY = (BOTTOM_Y + topY) / 2;
 
   return (
-    <Svg
-      viewBox={OFFSET_CONFIG.diagramViewBox}
-      width="100%"
-      height="100%"
-      preserveAspectRatio="xMidYMid meet">
+    <DiagramSvg viewBox={OFFSET_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="offsetPipeGradient" />
       <DiagramCanvas />
 
@@ -257,6 +248,6 @@ function OffsetLiveDiagram({ data }: { data: OffsetDiagramData }) {
         fontWeight="600"
         textAnchor="end"
       />
-    </Svg>
+    </DiagramSvg>
   );
 }

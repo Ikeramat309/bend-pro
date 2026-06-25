@@ -86,6 +86,6 @@ const styles = StyleSheet.create({
   warnings: {
     flexShrink: 0,
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xs,
+    paddingVertical: workspaceTheme.warningStrip.paddingVertical,
   },
 });

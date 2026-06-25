@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { workspaceTheme } from '@/theme';
+
 import { diagramTheme } from './diagramTheme';
 
 export type DiagramFrameProps = {
@@ -16,8 +18,9 @@ const styles = StyleSheet.create({
   frame: {
     flex: 1,
     width: '100%',
-    minHeight: 220,
+    minHeight: workspaceTheme.workspace.diagramMinHeight,
     justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'hidden',
     backgroundColor: diagramTheme.canvas,
   },

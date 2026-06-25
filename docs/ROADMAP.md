@@ -60,6 +60,12 @@ Profile chart kinds, detail sheet, override hub, grouped database.
 - ESLint ignores `.expo/`; lint cache moved out of Expo cache dir
 - Docs audit; phase wrap-ups archived; [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md)
 
+## Phase 5.9 — Calculator UI polish ✅ complete
+
+See [`PHASE_5_9_POLISH.md`](PHASE_5_9_POLISH.md).
+
+**Delivered:** tighter workspace tokens; consistent diagram scaling via `DiagramSvg`; compact warnings/results/dock; LengthInputSheet layout polish; Rolling Mark 1 optional input aligned with Offset/Saddles.
+
 ## Phase 6 — Future calculators (not started)
 
 Kick, parallel offset, box offset, back-to-back 90, hydraulic layout — placeholders in `bendLibrary.ts` only.

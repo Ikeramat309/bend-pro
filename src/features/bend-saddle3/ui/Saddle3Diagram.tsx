@@ -1,4 +1,4 @@
-import Svg, { Circle } from 'react-native-svg';
+import { Circle } from 'react-native-svg';
 
 import {
   BendRadiusZone,
@@ -8,6 +8,7 @@ import {
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
+  DiagramSvg,
   DimensionLine,
   MarkLine,
   PipeSegment,
@@ -175,7 +176,7 @@ function Saddle3GhostDiagram({ message, invalid }: { message: string; invalid?: 
   const geo = buildSaddleGeometry(2, 5.23, 22.5);
 
   return (
-    <Svg viewBox={SADDLE3_CONFIG.diagramViewBox} width="100%" height={SADDLE3_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={SADDLE3_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="saddle3GhostGradient" ghost />
       <DiagramCanvas />
       <ObstructionCircle centerX={CENTER_X} baselineY={BASE_Y} radius={geo.obsRadius} ghost />
@@ -185,7 +186,7 @@ function Saddle3GhostDiagram({ message, invalid }: { message: string; invalid?: 
       <MarkLine x1={CENTER_X} y1={geo.peakY - 12} x2={CENTER_X} y2={geo.peakY + 7} opacity={diagramTheme.ghost.markOpacity} />
       <MarkLine x1={geo.x2} y1={BASE_Y - 11} x2={geo.x2} y2={BASE_Y + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
       <DiagramGhostMessage text={message} invalid={invalid} />
-    </Svg>
+    </DiagramSvg>
   );
 }
 
@@ -263,7 +264,7 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
   const bbLabelY = dbb1.y + (dbb2.y - dbb1.y) * bbLabelT + ny * 24;
 
   return (
-    <Svg viewBox={SADDLE3_CONFIG.diagramViewBox} width="100%" height={SADDLE3_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={SADDLE3_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="saddle3PipeGradient" />
       <DiagramCanvas />
 
@@ -358,6 +359,6 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
           textAnchor="start"
         />
       </DiagramCallout>
-    </Svg>
+    </DiagramSvg>
   );
 }

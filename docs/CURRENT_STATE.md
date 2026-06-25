@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Honest snapshot of where the app stands. **Phases 1–5 complete; Phases 5.6–5.8 delivered usability fixes, diagram recovery, and a stability checkpoint.** Six calculators ship on the shared workspace shell. See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), [`ROADMAP.md`](ROADMAP.md), [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md), and [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md).
+Honest snapshot of where the app stands. **Phases 1–5 complete; Phases 5.6–5.9 delivered usability, diagram recovery, cleanup, and final calculator UI polish.** Six calculators ship on the shared workspace shell. See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), [`ROADMAP.md`](ROADMAP.md), [`PHASE_5_9_POLISH.md`](PHASE_5_9_POLISH.md), and [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md).
 
 ## What currently exists
 

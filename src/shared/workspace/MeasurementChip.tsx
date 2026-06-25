@@ -55,18 +55,20 @@ export function MeasurementChip({ label, value, tone = 'default', size = 'defaul
     </View>
   );
 
+  const wrapperStyle = compact ? styles.wrapperCompact : styles.wrapper;
+
   if (onPress) {
     return (
       <Pressable
         onPress={onPress}
         accessibilityRole="button"
-        style={({ pressed }) => [styles.wrapper, pressed && styles.pressed]}>
+        style={({ pressed }) => [wrapperStyle, pressed && styles.pressed]}>
         {readout}
       </Pressable>
     );
   }
 
-  return <View style={styles.wrapper}>{readout}</View>;
+  return <View style={wrapperStyle}>{readout}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -77,10 +79,17 @@ const styles = StyleSheet.create({
     minWidth: 112,
     maxWidth: '100%',
   },
+  wrapperCompact: {
+    flexGrow: 0,
+    flexShrink: 1,
+    flexBasis: 'auto',
+    minWidth: 0,
+    maxWidth: '100%',
+  },
   readoutCompact: {
-    minWidth: 96,
+    minWidth: 88,
     paddingHorizontal: spacing.sm,
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   readout: {
     width: '100%',
@@ -109,8 +118,8 @@ const styles = StyleSheet.create({
     fontVariant: ['tabular-nums'],
   },
   valueCompact: {
-    fontSize: 15,
-    lineHeight: 18,
+    fontSize: 14,
+    lineHeight: 17,
   },
   pressed: {
     opacity: 0.88,

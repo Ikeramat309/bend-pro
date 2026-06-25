@@ -86,7 +86,7 @@ export function BendInputStrip({ inputs, children }: BendInputStripProps) {
 
 const styles = StyleSheet.create({
   wrap: {
-    gap: spacing.sm,
+    gap: workspaceTheme.inputStrip.rowGap,
     paddingHorizontal: spacing.lg,
     paddingVertical: workspaceTheme.inputStrip.paddingVertical,
     borderBottomWidth: 1,

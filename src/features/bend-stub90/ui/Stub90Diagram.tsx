@@ -1,4 +1,4 @@
-import Svg, { Circle } from 'react-native-svg';
+import { Circle } from 'react-native-svg';
 
 import {
     BendRadiusZone,
@@ -9,6 +9,7 @@ import {
     DiagramGhostMessage,
     DiagramLabel,
     DiagramLeaderLine,
+    DiagramSvg,
     DimensionLine,
     MarkLine,
     PipeSegment,
@@ -66,7 +67,7 @@ export function Stub90Diagram({ data, isEmpty = false, isInvalid = false }: Stub
 
 function Stub90GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
-    <Svg viewBox={STUB90_CONFIG.diagramViewBox} width="100%" height={STUB90_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={STUB90_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="ghostPipeGradient" ghost />
       <DiagramCanvas />
       <PipeSegment d={GHOST_PIPE_PATH} variant="shadow" opacity={ghost.pipeShadowOpacity} />
@@ -75,7 +76,7 @@ function Stub90GhostDiagram({ message, invalid }: { message: string; invalid?: b
       <DimensionLine x1={324} y1={218} x2={324} y2={34} showArrows={false} opacity={ghost.dimensionOpacity} />
       <DimensionLine x1={18} y1={268} x2={304} y2={268} showArrows={false} opacity={ghost.dimensionOpacity} />
       <DiagramGhostMessage text={message} invalid={invalid} />
-    </Svg>
+    </DiagramSvg>
   );
 }
 
@@ -127,7 +128,7 @@ function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
   const legMidX = (START_X + legEndX) / 2;
 
   return (
-    <Svg viewBox={STUB90_CONFIG.diagramViewBox} width="100%" height={STUB90_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={STUB90_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="pipeGradient" />
       <DiagramCanvas />
 
@@ -266,6 +267,6 @@ function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
         fontWeight="600"
         textAnchor="end"
       />
-    </Svg>
+    </DiagramSvg>
   );
 }

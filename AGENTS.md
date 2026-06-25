@@ -14,9 +14,9 @@ It is **not** a generic calculator app. It is a field tool. People will mark and
 
 ## Current phase
 
-**Phase 5.8 complete (stability checkpoint).** Phases 1–5 delivered the shared workspace, hub UI, imperial length sheet, guide mode, and bender database. Phases 5.6–5.7 fixed input-strip layout, diagram visibility, and length-sheet UX. **Phase 6 — future calculators — is not started** unless explicitly scoped.
+**Phase 5.9 complete (calculator UI polish).** Phases 1–5 delivered the shared workspace, hub UI, imperial length sheet, guide mode, and bender database. Phases 5.6–5.9 tightened layout, diagram visibility, tooling, and field-readiness. **Phase 6 — future calculators — is not started** unless explicitly scoped.
 
-See [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), [`docs/ROADMAP.md`](docs/ROADMAP.md), [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md), and [`docs/CLEANUP_REPORT.md`](docs/CLEANUP_REPORT.md).
+See [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), [`docs/ROADMAP.md`](docs/ROADMAP.md), [`docs/PHASE_5_9_POLISH.md`](docs/PHASE_5_9_POLISH.md), and [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md).
 
 ## Read these docs first
 

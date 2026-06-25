@@ -134,4 +134,19 @@ export const uiTheme = {
   fractionKeypad: {
     keyRadius: radius.md,
   },
+  lengthInputSheet: {
+    sectionGap: spacing.md,
+    valueSize: fontSize.xxl,
+    stepMinHeight: 40,
+    stepColumns: 3,
+    rulerHeight: 32,
+    sectionLabel: {
+      fontSize: fontSize.xs,
+      lineHeight: 14,
+      fontWeight: '600' as const,
+      letterSpacing: 0.55,
+      textTransform: 'uppercase' as const,
+      color: colors.muted,
+    },
+  },
 } as const;

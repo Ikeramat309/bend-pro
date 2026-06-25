@@ -1,4 +1,4 @@
-import Svg, { Circle } from 'react-native-svg';
+import { Circle } from 'react-native-svg';
 
 import {
   DiagramCallout,
@@ -8,6 +8,7 @@ import {
   DiagramGhostMessage,
   DiagramLabel,
   DiagramLeaderLine,
+  DiagramSvg,
   MarkLine,
   PipeSegment,
   diagramTheme,
@@ -55,13 +56,13 @@ export function SegmentDiagram({ data, isEmpty = false, isInvalid = false }: Seg
 
 function SegmentGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
-    <Svg viewBox={SEGMENT_CONFIG.diagramViewBox} width="100%" height={SEGMENT_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={SEGMENT_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="segmentGhostGradient" ghost />
       <DiagramCanvas />
       <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={diagramTheme.ghost.pipeShadowOpacity} />
       <PipeSegment d={GHOST_PIPE} variant="pipe" gradientId="segmentGhostGradient" />
       <DiagramGhostMessage text={message} invalid={invalid} y={SEGMENT_CONFIG.diagramHeight - 14} />
-    </Svg>
+    </DiagramSvg>
   );
 }
 
@@ -109,7 +110,7 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
   };
 
   return (
-    <Svg viewBox={SEGMENT_CONFIG.diagramViewBox} width="100%" height={SEGMENT_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={SEGMENT_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="segmentPipeGradient" />
       <DiagramCanvas />
 
@@ -170,6 +171,6 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
           textAnchor="start"
         />
       </DiagramCallout>
-    </Svg>
+    </DiagramSvg>
   );
 }

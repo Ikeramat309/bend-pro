@@ -1,4 +1,4 @@
-import Svg, { Circle, Line, Path } from 'react-native-svg';
+import { Circle, Line, Path } from 'react-native-svg';
 
 import {
   BendRadiusZone,
@@ -9,6 +9,7 @@ import {
   DiagramGhostMessage,
   DiagramLabel,
   DiagramLeaderLine,
+  DiagramSvg,
   DimensionLine,
   MarkLine,
   PipeSegment,
@@ -66,7 +67,7 @@ export function RollingDiagram({ data, isEmpty = false, isInvalid = false }: Rol
 
 function RollingGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
-    <Svg viewBox={ROLLING_CONFIG.diagramViewBox} width="100%" height={ROLLING_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={ROLLING_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="rollingGhostGradient" ghost />
       <DiagramCanvas />
       <RollInsetGhost />
@@ -75,7 +76,7 @@ function RollingGhostDiagram({ message, invalid }: { message: string; invalid?: 
       <MarkLine x1={88} y1={218} x2={88} y2={242} opacity={ghost.markOpacity} />
       <MarkLine x1={192} y1={114} x2={192} y2={138} opacity={ghost.markOpacity} />
       <DiagramGhostMessage text={message} invalid={invalid} />
-    </Svg>
+    </DiagramSvg>
   );
 }
 
@@ -302,7 +303,7 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
   const dbbLabelY = (dbb1.y + dbb2.y) / 2 + 18;
 
   return (
-    <Svg viewBox={ROLLING_CONFIG.diagramViewBox} width="100%" height={ROLLING_CONFIG.diagramHeight}>
+    <DiagramSvg viewBox={ROLLING_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="rollingPipeGradient" />
       <DiagramCanvas />
 
@@ -392,6 +393,6 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
         heightLabel={data.display.offsetHeight}
         rollLabel={data.display.advance}
       />
-    </Svg>
+    </DiagramSvg>
   );
 }

@@ -1,4 +1,5 @@
 export { DiagramFrame, type DiagramFrameProps } from './DiagramFrame';
+export { DiagramSvg, type DiagramSvgProps } from './DiagramSvg';
 export { DiagramGhostMessage, type DiagramGhostMessageProps } from './DiagramGhostMessage';
 export { diagramMetrics, diagramTheme } from './diagramTheme';
 export { BendRadiusZone, type BendRadiusZoneProps } from './BendRadiusZone';

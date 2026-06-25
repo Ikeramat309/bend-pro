@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing, touchTarget, typography } from '@/theme';
+import { colors, spacing, typography, uiTheme } from '@/theme';
 import {
   adjustLengthInputByInches,
   LENGTH_STEP_DELTAS_INCHES,
@@ -33,6 +33,8 @@ const STEP_BUTTONS = [
   { key: 'plusQuarter', label: '+1/4"', delta: LENGTH_STEP_DELTAS_INCHES.plusQuarter },
   { key: 'plusOne', label: '+1"', delta: LENGTH_STEP_DELTAS_INCHES.plusOne },
 ] as const;
+
+const { lengthInputSheet: sheetTheme } = uiTheme;
 
 /** Bottom-sheet imperial length editor — exact keypad plus tape-measure step controls. */
 export function LengthInputSheet({
@@ -77,6 +79,11 @@ export function LengthInputSheet({
     onCancel();
   }
 
+  const stepRows = [
+    STEP_BUTTONS.slice(0, sheetTheme.stepColumns),
+    STEP_BUTTONS.slice(sheetTheme.stepColumns),
+  ];
+
   return (
     <Sheet
       visible={visible}
@@ -86,41 +93,45 @@ export function LengthInputSheet({
       onSecondaryPress={handleCancel}
       onPrimaryPress={handleDone}
       primaryLabel="Done">
-      <View style={styles.valueRow}>
-        <Text
-          style={[styles.value, draft.trim() === '' && styles.valuePlaceholder]}
-          numberOfLines={1}
-          adjustsFontSizeToFit
-          minimumFontScale={0.75}>
-          {displayValue}
-        </Text>
-        {unit ? <Text style={styles.unit}>{unit}</Text> : null}
-      </View>
+      <View style={styles.body}>
+        <View style={styles.valueRow}>
+          <Text
+            style={[styles.value, draft.trim() === '' && styles.valuePlaceholder]}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.75}>
+            {displayValue}
+          </Text>
+          {unit ? <Text style={styles.unit}>{unit}</Text> : null}
+        </View>
 
-      <View style={styles.stepSection}>
-        <Text style={styles.stepLabel}>Quick adjust</Text>
-        <View style={styles.stepRow}>
-          {STEP_BUTTONS.map((step) => (
-            <Pressable
-              key={step.key}
-              onPress={() => applyStep(step.delta)}
-              style={({ pressed }) => [styles.stepButton, pressed && styles.stepPressed]}
-              accessibilityRole="button"
-              accessibilityLabel={step.label}>
-              <Text style={styles.stepButtonText}>{step.label}</Text>
-            </Pressable>
+        <View style={styles.stepSection}>
+          <Text style={styles.sectionLabel}>Quick adjust</Text>
+          {stepRows.map((row, rowIndex) => (
+            <View key={`step-row-${rowIndex}`} style={styles.stepRow}>
+              {row.map((step) => (
+                <Pressable
+                  key={step.key}
+                  onPress={() => applyStep(step.delta)}
+                  style={({ pressed }) => [styles.stepButton, pressed && styles.stepPressed]}
+                  accessibilityRole="button"
+                  accessibilityLabel={step.label}>
+                  <Text style={styles.stepButtonText}>{step.label}</Text>
+                </Pressable>
+              ))}
+            </View>
           ))}
         </View>
+
+        <TapeRulerControl
+          inches={sliderInches}
+          minInches={minInches}
+          maxInches={Math.max(maxInches, minInches + 1)}
+          onChange={applySliderInches}
+        />
+
+        <FractionKeypad value={draft} onChangeText={setEditDraft} showDone={false} />
       </View>
-
-      <TapeRulerControl
-        inches={sliderInches}
-        minInches={minInches}
-        maxInches={Math.max(maxInches, minInches + 1)}
-        onChange={applySliderInches}
-      />
-
-      <FractionKeypad value={draft} onChangeText={setEditDraft} showDone={false} />
     </Sheet>
   );
 }
@@ -151,7 +162,8 @@ function TapeRulerControl({ inches, minInches, maxInches, onChange }: TapeRulerC
 
   return (
     <View style={styles.rulerSection}>
-      <Text style={styles.stepLabel}>Tape ruler</Text>
+      <Text style={styles.sectionLabel}>Tape ruler</Text>
+      <Text style={styles.rulerHint}>Tap the bar to set length</Text>
       <Pressable
         onLayout={handleLayout}
         onPress={(event) => handlePress(event.nativeEvent.locationX)}
@@ -170,6 +182,10 @@ function TapeRulerControl({ inches, minInches, maxInches, onChange }: TapeRulerC
 }
 
 const styles = StyleSheet.create({
+  body: {
+    gap: sheetTheme.sectionGap,
+  },
+  sectionLabel: sheetTheme.sectionLabel,
   valueRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
@@ -182,8 +198,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface2,
   },
   value: {
-    fontSize: 28,
-    lineHeight: 34,
+    fontSize: sheetTheme.valueSize,
+    lineHeight: 30,
     fontWeight: '700',
     color: colors.text,
     fontVariant: ['tabular-nums'],
@@ -193,30 +209,21 @@ const styles = StyleSheet.create({
   },
   unit: {
     ...typography.subtitle,
-    fontSize: 18,
-    lineHeight: 22,
+    fontSize: 17,
+    lineHeight: 21,
     fontWeight: '600',
     color: colors.primary,
   },
   stepSection: {
     gap: spacing.xs,
   },
-  stepLabel: {
-    fontSize: 11,
-    lineHeight: 14,
-    fontWeight: '600',
-    letterSpacing: 0.55,
-    textTransform: 'uppercase',
-    color: colors.muted,
-  },
   stepRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: spacing.xs,
   },
   stepButton: {
-    minHeight: touchTarget - 10,
-    paddingHorizontal: spacing.sm,
+    flex: 1,
+    minHeight: sheetTheme.stepMinHeight,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
@@ -228,17 +235,22 @@ const styles = StyleSheet.create({
     opacity: 0.88,
   },
   stepButtonText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     color: colors.text,
     fontVariant: ['tabular-nums'],
   },
   rulerSection: {
-    gap: spacing.xs,
+    gap: 2,
+  },
+  rulerHint: {
+    fontSize: 11,
+    lineHeight: 14,
+    color: colors.muted,
   },
   rulerTrack: {
     position: 'relative',
-    height: 36,
+    height: sheetTheme.rulerHeight,
     justifyContent: 'center',
     borderRadius: 10,
     borderWidth: 1,
@@ -255,14 +267,14 @@ const styles = StyleSheet.create({
   },
   rulerTick: {
     width: 1,
-    height: 14,
+    height: 12,
     backgroundColor: colors.border,
   },
   rulerThumb: {
     position: 'absolute',
-    top: 6,
+    top: 5,
     width: 4,
-    height: 24,
+    height: sheetTheme.rulerHeight - 10,
     marginLeft: -2,
     borderRadius: 2,
     backgroundColor: colors.primary,

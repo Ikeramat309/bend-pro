@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: workspaceTheme.workspace.minHeight,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xs,
-    paddingBottom: spacing.sm,
+    paddingTop: workspaceTheme.workspace.wrapPaddingTop,
+    paddingBottom: workspaceTheme.workspace.wrapPaddingBottom,
   },
   cardInner: {
     flex: 1,

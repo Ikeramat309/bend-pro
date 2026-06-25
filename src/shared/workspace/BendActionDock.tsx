@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, spacing, touchTarget, typography, workspaceTheme } from '@/theme';
+import { colors, spacing, typography, workspaceTheme } from '@/theme';
 
 import type { BendActionDockConfig } from './workspaceTypes';
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: spacing.md,
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.sm,
+    paddingTop: workspaceTheme.dock.paddingTop,
     borderTopWidth: 1,
     borderTopColor: colors.border,
     backgroundColor: colors.screen,
@@ -75,9 +75,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   action: {
-    minHeight: touchTarget - 10,
+    minHeight: workspaceTheme.dock.actionMinHeight,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.xs + 2,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.border,
@@ -108,10 +108,10 @@ const styles = StyleSheet.create({
     color: colors.muted,
   },
   guide: {
-    minHeight: touchTarget - 10,
-    minWidth: 76,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
+    minHeight: workspaceTheme.dock.actionMinHeight,
+    minWidth: 72,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs + 2,
     borderRadius: 8,
     backgroundColor: colors.surface2,
     borderWidth: 1,

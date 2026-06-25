@@ -18,3 +18,5 @@ export {
   type CalculatorId,
   type GuideCalculatorId,
 } from './calculatorRegistry';
+
+export { CALCULATOR_ROUTE_PATHS, type CalculatorRouteKey } from './calculatorRoutes';

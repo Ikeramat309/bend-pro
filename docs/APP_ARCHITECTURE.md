@@ -108,13 +108,28 @@ Trust strip on calculator screens reads active profile from setup; Edit Setup sh
 
 **All new calculators and field tools must be added to the registry first** — then wire routes, guides, and feature folders from that entry. Do not hand-maintain parallel lists in `bendLibrary.ts` or screen-level title maps.
 
-Helpers: `getCalculatorRoute(id)`, `getBendsScreenFamilies()`, `getHomeContinueCalculator()`. Tests in `calculatorRegistry.test.ts` guard duplicate ids, missing routes, and guide consistency.
+Helpers: `getCalculatorRoute(id)`, `getBendsScreenFamilies()`, `getHomeContinueCalculator()`. Route path strings: `calculatorRoutes.ts` (`CALCULATOR_ROUTE_PATHS`) — navigation spreads these into `Routes`; core must not import navigation. Tests in `calculatorRegistry.test.ts` and `architectureGuardrails.test.ts` guard duplicate ids, missing routes, guide consistency, feature isolation, and import cycles.
 
 `src/data/bendLibrary.ts` re-exports Bends hub groups from the registry for backward compatibility.
+
+## Calculation result contract
+
+**`src/core/calculations/`** defines the shared result envelope (`CalculationResult`) for saved layouts, export, field steps, and future tooling. Engines keep their native result types; feature adapters map engine output into the contract:
+
+- `toOffsetCalculationResult()` — `src/features/bend-offset/engine/offsetCalculationResult.ts`
+- `toStub90CalculationResult()` — `src/features/bend-stub90/engine/stub90CalculationResult.ts`
+
+Other calculators can add adapters incrementally without changing engine math. Screens are not wired to this contract yet.
+
+## Sessions and recent layouts
+
+**`src/core/sessions/`** stores calculator sessions and recent layouts (AsyncStorage-compatible service, schema-versioned JSON). See `src/core/sessions/README.md` for integration TODOs. Home Continue Layout is not wired to recents yet.
 
 ## Verification
 
 ```bash
-npm run check    # tsc + lint + jest
-npx expo start   # route compilation
+npm run check        # tsc + lint + import cycles + jest
+npx expo start       # route compilation
 ```
+
+Import-cycle scan: `npm run check:cycles` (`scripts/check-import-cycles.mjs`). Architecture guardrail tests: `src/core/architecture/architectureGuardrails.test.ts`. Full rules: [`ARCHITECTURE_GUARDRAILS.md`](ARCHITECTURE_GUARDRAILS.md).

@@ -13,8 +13,9 @@ Before touching any file:
 3. If the task involves a calculator, read [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md) and the feature's README (`src/features/bend-*/README.md`).
 4. If the task involves wording or labels, read [`GLOSSARY.md`](GLOSSARY.md) and [`NAMING_RULES.md`](NAMING_RULES.md).
 5. If the task involves diagrams, read [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md).
-6. Check imports before deleting or moving any file (search the repo with ripgrep). A file with no importers may still be a route entry or asset reference.
-7. Check Expo docs at the pinned version (https://docs.expo.dev/versions/v56.0.0/) before writing Expo-related code.
+6. If the task touches imports, shared modules, or adds a calculator/bender entry, read [`ARCHITECTURE_GUARDRAILS.md`](ARCHITECTURE_GUARDRAILS.md).
+7. Check imports before deleting or moving any file (search the repo with ripgrep). A file with no importers may still be a route entry or asset reference.
+8. Check Expo docs at the pinned version (https://docs.expo.dev/versions/v56.0.0/) before writing Expo-related code.
 
 ## During-edit rules
 
@@ -34,6 +35,9 @@ Before touching any file:
 - Do not delete working screens during cleanup passes.
 - Do not add new calculators or conduit types (no RMC, IMC, PVC, or multi-material flows) unless the task explicitly asks.
 - Features must not import types from other features. Shared contracts live in `src/core/` or a dedicated shared module.
+- **`src/core/calculators/`** is the only place for calculator ids, routes, and hub visibility — see [`ARCHITECTURE_GUARDRAILS.md`](ARCHITECTURE_GUARDRAILS.md).
+- **`src/core/` must not import `@/navigation`** — route path strings live in `calculatorRoutes.ts`.
+- Run **`npm run check`** (includes import-cycle scan) after substantive edits.
 
 ## Calculator math safety rules
 
@@ -63,6 +67,8 @@ Math is field-safety-critical — people mark real conduit from these numbers.
 | Calculator workspace pieces | `src/shared/workspace/` |
 | Diagram primitives | `src/shared/diagrams/` |
 | Global types | `src/core/` |
+| Calculator registry + route paths | `src/core/calculators/` |
+| Unit conversion / strict parsing | `src/core/measurements/`, `src/core/validation/` |
 | Routes (thin, export screens only) | `src/app/` |
 | Non-calculator screens | `src/screens/` |
 | Data (EMT sizes, benders, library) | `src/data/` |

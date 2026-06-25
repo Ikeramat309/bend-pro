@@ -1,5 +1,6 @@
 import { CALCULATOR_GUIDES } from '@/data/guide/calculatorGuides';
 
+import { CALCULATOR_ROUTE_PATHS } from './calculatorRoutes';
 import {
   CALCULATOR_IDS,
   CALCULATOR_REGISTRY,
@@ -60,6 +61,17 @@ describe('calculatorRegistry', () => {
     active.forEach((entry) => {
       expect(isCalculatorId(entry.id)).toBe(true);
       expect(getCalculatorRoute(entry.id as CalculatorId)).toBe(entry.route);
+    });
+  });
+
+  test('active calculator routes use centralized path constants', () => {
+    const active = CALCULATOR_REGISTRY.filter((entry) => entry.status === 'active');
+
+    active.forEach((entry) => {
+      expect(entry.route).toBeDefined();
+      expect(CALCULATOR_ROUTE_PATHS[entry.id as keyof typeof CALCULATOR_ROUTE_PATHS]).toBe(
+        entry.route,
+      );
     });
   });
 

@@ -23,6 +23,7 @@ The single entry point for the repo is the root [`AGENTS.md`](../AGENTS.md). Sta
 | [`ROADMAP.md`](ROADMAP.md) | Completed phases and Phase 6 (not started) |
 | [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md) | Latest stability/cleanup checkpoint |
 | [`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md) | Layering and folder responsibilities |
+| [`ARCHITECTURE_GUARDRAILS.md`](ARCHITECTURE_GUARDRAILS.md) | Import rules, metadata ownership, automated checks |
 | [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md) | Calculator shell, input sheet, dock, results |
 | [`PROJECT_MAP.md`](PROJECT_MAP.md) | Where code lives |
 | [`AI_AGENT_WORKFLOW.md`](AI_AGENT_WORKFLOW.md) | Edit rules, safety, task report format |

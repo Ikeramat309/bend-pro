@@ -1,6 +1,7 @@
 import type { Href } from 'expo-router';
 
-import type { GuideCalculatorId } from '@/data/guide';
+import { CALCULATOR_ROUTE_PATHS } from '@/core/calculators/calculatorRoutes';
+import type { GuideCalculatorId } from '@/core/calculators/calculatorRegistry';
 
 /** Central app URLs for Expo Router — use Routes.offset instead of raw strings. */
 export const Routes = {
@@ -9,12 +10,7 @@ export const Routes = {
   settings: '/settings' as Href,
   benderDatabase: '/bender-database' as Href,
   guide: '/guide' as Href,
-  offset: '/offset' as Href,
-  stub90: '/stub90' as Href,
-  saddle3: '/saddle3' as Href,
-  saddle4: '/saddle4' as Href,
-  segment: '/segment' as Href,
-  rolling: '/rolling' as Href,
+  ...CALCULATOR_ROUTE_PATHS,
 } as const;
 
 /** Guide tab with optional calculator context from a bend screen dock. */

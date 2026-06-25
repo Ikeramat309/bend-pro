@@ -1,8 +1,8 @@
 import type { Href } from 'expo-router';
 
 import type { ConduitType } from '@/core/types';
-import { Routes } from '@/navigation';
 
+import { CALCULATOR_ROUTE_PATHS } from './calculatorRoutes';
 import type {
   BendsScreenFamily,
   BendsScreenItem,
@@ -26,7 +26,7 @@ const REGISTRY_SOURCE = [
     shortTitle: 'Offset',
     description: 'Clear obstruction. Stay parallel.',
     category: 'Offset',
-    route: Routes.offset,
+    route: CALCULATOR_ROUTE_PATHS.offset,
     guideId: 'offset',
     status: 'active',
     supportedConduitTypes: EMT_ONLY,
@@ -55,7 +55,7 @@ const REGISTRY_SOURCE = [
     shortTitle: 'Rolling',
     description: 'Offset in two directions — height and advance.',
     category: 'Offset',
-    route: Routes.rolling,
+    route: CALCULATOR_ROUTE_PATHS.rolling,
     guideId: 'rolling',
     status: 'active',
     supportedConduitTypes: EMT_ONLY,
@@ -82,7 +82,7 @@ const REGISTRY_SOURCE = [
     shortTitle: 'Stub 90',
     description: 'Find the deduct mark from stub length and deduct.',
     category: '90s',
-    route: Routes.stub90,
+    route: CALCULATOR_ROUTE_PATHS.stub90,
     guideId: 'stub90',
     status: 'active',
     supportedConduitTypes: EMT_ONLY,
@@ -121,7 +121,7 @@ const REGISTRY_SOURCE = [
     shortTitle: '3-Point Saddle',
     description: 'Route over an obstruction with three bends.',
     category: 'Saddles',
-    route: Routes.saddle3,
+    route: CALCULATOR_ROUTE_PATHS.saddle3,
     guideId: 'saddle3',
     status: 'active',
     supportedConduitTypes: EMT_ONLY,
@@ -136,7 +136,7 @@ const REGISTRY_SOURCE = [
     shortTitle: '4-Point Saddle',
     description: 'Route over a wide obstruction with a flat top.',
     category: 'Saddles',
-    route: Routes.saddle4,
+    route: CALCULATOR_ROUTE_PATHS.saddle4,
     guideId: 'saddle4',
     status: 'active',
     supportedConduitTypes: EMT_ONLY,
@@ -151,7 +151,7 @@ const REGISTRY_SOURCE = [
     shortTitle: 'Segment',
     description: 'Large-radius bend from a series of equal shots.',
     category: 'Large / Advanced',
-    route: Routes.segment,
+    route: CALCULATOR_ROUTE_PATHS.segment,
     guideId: 'segment',
     status: 'active',
     supportedConduitTypes: EMT_ONLY,

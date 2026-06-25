@@ -18,6 +18,9 @@ const continueRoute =
     ? getCalculatorRoute(continueCalculator.id)
     : undefined;
 
+// TODO(sessions): hydrate recent layouts via `loadRecentLayouts` + `resolveContinueLayoutCandidate`
+// from `@/core/sessions` when Continue Layout should resume the last calculation.
+
 const NAV_ITEMS = [
   ...(continueCalculator && continueRoute
     ? [

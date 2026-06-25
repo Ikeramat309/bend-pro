@@ -48,7 +48,8 @@
     "web": "expo start --web",
     "lint": "eslint . --cache --cache-location node_modules/.cache/eslint",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run lint && npm test -- --runInBand",
+    "check:cycles": "node scripts/check-import-cycles.mjs",
+    "check": "npm run typecheck && npm run lint && npm run check:cycles && npm test -- --runInBand",
     "test": "jest",
     "test:watch": "jest --watch"
   },

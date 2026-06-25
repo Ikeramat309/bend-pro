@@ -18,6 +18,7 @@ export type {
   BenderChartKind,
   BenderProfile,
   BenderProfileId,
+  BenderSourceType,
   BuiltInBenderProfileId,
   EmtStub90TakeUpByTradeSize,
 } from './types';
@@ -43,12 +44,10 @@ export {
   type CustomBenderProfileStored,
 } from './customBenders';
 
+export { DEFAULT_EMT_STUB90_TAKE_UP_INCHES } from './benderDefaults';
 export { GENERIC_HAND_BENDER } from './genericHandBender';
 export { HAND_BENDER_ALT_CHART } from './handBenderAltChart';
 export { HAND_BENDER_COMPACT } from './handBenderCompact';
-
-/** Fallback take-up when a trade size is not listed on the active profile. */
-export const DEFAULT_EMT_STUB90_TAKE_UP_INCHES = 5;
 
 /** EMT sizes shown in profile summaries (profiles only list these today). */
 export const PROFILE_SUMMARY_TRADE_SIZES: readonly TradeSize[] = ['1/2', '3/4', '1'];
@@ -114,6 +113,11 @@ export {
   type Stub90DeductContext,
   type Stub90DeductSource,
 } from './profileContext';
+export {
+  getBenderSourceType,
+  resolveEffectiveStub90DeductInches,
+  type EffectiveStub90Deduct,
+} from './benderResolution';
 export {
   buildProfileDeductRows,
   formatChartKindLabel,

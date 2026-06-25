@@ -68,7 +68,7 @@ See [`PHASE_5_9_POLISH.md`](PHASE_5_9_POLISH.md).
 
 ## Phase 6 — Future calculators (not started)
 
-Kick, parallel offset, box offset, back-to-back 90, hydraulic layout — placeholders in `bendLibrary.ts` only.
+Kick, parallel offset, box offset, back-to-back 90, hydraulic layout — registered as `planned` in `src/core/calculators/` (visible on Bends hub as Coming Soon).
 
 Follow [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md). EMT only unless product direction changes. **Do not start without explicit scope.**
 

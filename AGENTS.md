@@ -34,7 +34,7 @@ In this order:
 - **Do not make broad changes without instruction.** Do the task you were given, in the smallest safe change set. No drive-by refactors, no rewriting the app for a small fix.
 - **Do not change calculator math unless the task explicitly asks for it.** Math lives in feature `engine/` folders and is isolated from UI on purpose.
 - **Do not invent features.** Documentation and reports must clearly distinguish: existing features, incomplete work, planned future work, and ideas only. Never describe planned work as if it exists.
-- **Do not add new calculators or conduit types** (no RMC, IMC, PVC) unless explicitly asked. EMT only for now.
+- **Do not add new calculators or conduit types** (no RMC, IMC, PVC) unless explicitly asked. EMT only for now. **Register every new calculator in `src/core/calculators/` first** — then add routes, guides, and feature folders from that entry.
 - **Use the standard task report format** in `docs/AI_AGENT_WORKFLOW.md` after every task.
 - **Run `npm run check`** after substantive edits (typecheck + lint + tests).
 

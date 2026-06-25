@@ -1,5 +1,14 @@
 import type { TradeSize } from '@/core/types';
 
+/**
+ * Where bender chart values originate in the product model.
+ *
+ * - generic — built-in field-reference charts (not manufacturer-specific)
+ * - custom — user-measured profiles stored on device
+ * - verified — future manufacturer-sourced charts (requires sourceNote)
+ */
+export type BenderSourceType = 'generic' | 'custom' | 'verified';
+
 export type BenderCategory = 'hand' | 'mechanical' | 'hydraulic' | 'custom';
 
 /**

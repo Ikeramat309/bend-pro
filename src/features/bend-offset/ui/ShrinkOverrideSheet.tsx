@@ -8,17 +8,18 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import {
+  formatCanonicalLengthForDisplay,
+  parsePositiveLengthToCanonicalInches,
+} from '@/core/measurements';
 import { MAX_OFFSET_SHRINK_PER_INCH } from '@/core/settings';
 import type { BendAngle, UnitSystem } from '@/core/types';
 import { FieldInput } from '@/shared/ui';
 import { Sheet } from '@/shared/ui/Sheet';
 import { colors, spacing, typography } from '@/theme';
-import { parseLengthInput } from '@/utils/parseLengthInput';
 import { getLengthUnitLabel, getLengthInputMode } from '@/utils/units';
 
 import { offsetCopy } from '../offset.copy';
-
-const MM_PER_INCH = 25.4;
 
 export type ShrinkOverrideSheetProps = {
   visible: boolean;
@@ -59,17 +60,13 @@ function ShrinkOverrideSheetOpen({
   onApply,
 }: ShrinkOverrideSheetProps) {
   const [text, setText] = useState(() =>
-    currentOverrideInches !== undefined ? toDisplayValue(currentOverrideInches, unitSystem) : '',
+    currentOverrideInches !== undefined
+      ? formatCanonicalLengthForDisplay(currentOverrideInches, unitSystem)
+      : '',
   );
 
   const isBlank = text.trim() === '';
-  const parsed = parseLengthInput(text);
-  const parsedInches =
-    parsed !== undefined && parsed > 0
-      ? unitSystem === 'metric'
-        ? parsed / MM_PER_INCH
-        : parsed
-      : undefined;
+  const parsedInches = parsePositiveLengthToCanonicalInches(text, unitSystem);
   const isValid =
     isBlank || (parsedInches !== undefined && parsedInches <= MAX_OFFSET_SHRINK_PER_INCH);
 
@@ -108,11 +105,6 @@ function ShrinkOverrideSheetOpen({
       </View>
     </Sheet>
   );
-}
-
-function toDisplayValue(inches: number, unitSystem: UnitSystem): string {
-  const value = unitSystem === 'metric' ? inches * MM_PER_INCH : inches;
-  return String(Math.round(value * 1000) / 1000);
 }
 
 const styles = StyleSheet.create({

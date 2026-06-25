@@ -213,6 +213,11 @@ export function patchCalculatorSetup(
   return next;
 }
 
+/** Replaces the full setup while enforcing EMT-only and unit-appropriate rounding. */
+export function replaceCalculatorSetup(next: CalculatorSetup): CalculatorSetup {
+  return patchCalculatorSetup(next, {});
+}
+
 export type SetupOverrideHintContext =
   | { calculator: 'stub90' }
   | { calculator: 'offset'; bendAngle: BendAngle };

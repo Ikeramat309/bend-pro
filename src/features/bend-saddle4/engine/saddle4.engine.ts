@@ -16,19 +16,13 @@
  *
  * Angles come from the preset table — not bender-specific.
  */
-import type { UnitSystem } from '@/core/types';
+import { toCanonicalInches } from '@/core/measurements';
 import { getBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { Saddle4EngineInput, Saddle4EngineResult } from './saddle4.types';
 import { getSaddle4AngleData, isSaddle4Angle } from './saddle4AngleData';
 import { SADDLE4_CONFIG } from '../saddle4.config';
-
-const MM_PER_INCH = 25.4;
-
-function toInches(value: number, unitSystem: UnitSystem): number {
-  return unitSystem === 'metric' ? value / MM_PER_INCH : value;
-}
 
 function collectWarnings(input: Saddle4EngineInput, outerMark1Inches?: number): string[] {
   const warnings: string[] = [];
@@ -79,13 +73,13 @@ export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult
   const angle = isSaddle4Angle(input.bendAngle) ? input.bendAngle : SADDLE4_CONFIG.defaultAngle;
   const angleData = getSaddle4AngleData(angle);
 
-  const obstructionHeightInches = toInches(input.obstructionHeight || 0, input.unitSystem);
+  const obstructionHeightInches = toCanonicalInches(input.obstructionHeight || 0, input.unitSystem);
   const hasSaddleWidth =
     input.saddleWidth !== undefined &&
     Number.isFinite(input.saddleWidth) &&
     input.saddleWidth > 0;
   const saddleWidthInches = hasSaddleWidth
-    ? toInches(input.saddleWidth!, input.unitSystem)
+    ? toCanonicalInches(input.saddleWidth!, input.unitSystem)
     : undefined;
 
   const betweenBendsInches = obstructionHeightInches * angleData.multiplier;
@@ -94,7 +88,7 @@ export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult
 
   const distanceToCenterInches =
     input.distanceToCenter !== undefined
-      ? toInches(input.distanceToCenter, input.unitSystem)
+      ? toCanonicalInches(input.distanceToCenter, input.unitSystem)
       : undefined;
 
   const halfWidthInches =

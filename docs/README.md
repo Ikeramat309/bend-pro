@@ -27,6 +27,7 @@ The single entry point for the repo is the root [`AGENTS.md`](../AGENTS.md). Sta
 | [`PROJECT_MAP.md`](PROJECT_MAP.md) | Where code lives |
 | [`AI_AGENT_WORKFLOW.md`](AI_AGENT_WORKFLOW.md) | Edit rules, safety, task report format |
 | [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md) | Engine/UI separation, math safety |
+| [`TESTING.md`](TESTING.md) | Where tests live and how to add them |
 | [`GLOSSARY.md`](GLOSSARY.md) | Trade terminology |
 | [`NAMING_RULES.md`](NAMING_RULES.md) | Canonical UI labels |
 | [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md) | Diagram-first principles |

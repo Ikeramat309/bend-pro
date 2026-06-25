@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { getCalculatorRoute, getHomeContinueCalculator, isCalculatorId } from '@/core/calculators';
 import { Routes } from '@/navigation';
 import {
   AppHeader,
@@ -11,8 +12,22 @@ import {
 } from '@/shared/ui';
 import { colors, uiTheme } from '@/theme';
 
+const continueCalculator = getHomeContinueCalculator();
+const continueRoute =
+  continueCalculator && isCalculatorId(continueCalculator.id)
+    ? getCalculatorRoute(continueCalculator.id)
+    : undefined;
+
 const NAV_ITEMS = [
-  { label: 'Continue Layout', description: 'Open Basic Offset', route: Routes.offset },
+  ...(continueCalculator && continueRoute
+    ? [
+        {
+          label: continueCalculator.homeLabel ?? continueCalculator.title,
+          description: continueCalculator.homeDescription ?? continueCalculator.description ?? '',
+          route: continueRoute,
+        },
+      ]
+    : []),
   { label: 'Bend Library', description: 'Choose a conduit layout', route: Routes.bends },
   { label: 'Bender Database', description: 'Manage benders and shoes', route: Routes.benderDatabase },
 ] as const;

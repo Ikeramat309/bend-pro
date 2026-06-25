@@ -16,18 +16,13 @@
  * This is geometric — radius and angle only. It does not depend on the bender
  * shoe, so no deduct/take-up is applied.
  */
-import type { UnitSystem } from '@/core/types';
+import { toCanonicalInches } from '@/core/measurements';
 import { getBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { SegmentEngineInput, SegmentEngineResult } from './segment.types';
 
-const MM_PER_INCH = 25.4;
 const DEG_TO_RAD = Math.PI / 180;
-
-function toInches(value: number, unitSystem: UnitSystem): number {
-  return unitSystem === 'metric' ? value / MM_PER_INCH : value;
-}
 
 /** Trim trailing zeros from a degree value for display (e.g. 10, 12.5, 7.5). */
 function formatDegrees(value: number): string {
@@ -93,7 +88,7 @@ function collectWarnings(
 export function calculateSegment(input: SegmentEngineInput): SegmentEngineResult {
   const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
 
-  const radiusInches = toInches(input.radius || 0, input.unitSystem);
+  const radiusInches = toCanonicalInches(input.radius || 0, input.unitSystem);
   const totalAngle = input.totalAngle || 0;
   const requestedDegreesPerBend = input.degreesPerBend || 0;
 
@@ -109,7 +104,7 @@ export function calculateSegment(input: SegmentEngineInput): SegmentEngineResult
   const developedLengthInches = radiusInches * totalAngle * DEG_TO_RAD;
 
   const startOffsetInches =
-    input.startOffset !== undefined ? toInches(input.startOffset, input.unitSystem) : undefined;
+    input.startOffset !== undefined ? toCanonicalInches(input.startOffset, input.unitSystem) : undefined;
 
   const marksInches =
     inputsPositive && startOffsetInches !== undefined

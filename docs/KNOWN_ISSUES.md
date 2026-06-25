@@ -46,7 +46,7 @@ Practical limitations as of the Phase 5.8 stability checkpoint. These are **not 
 
 ## Architecture and product
 
-- **Calculator registry** is not implemented. Bend availability is hand-maintained in `bendLibrary.ts` and `routes.ts`.
+- **Calculator registry** lives in `src/core/calculators/`. Add new calculators there first before wiring routes or hub UI.
 - **Phase 6 calculators** (Kick, parallel offset, box offset, back-to-back 90, hydraulic layout) are placeholders only — not built.
 - **EMT only** — no RMC, IMC, or PVC support.
 

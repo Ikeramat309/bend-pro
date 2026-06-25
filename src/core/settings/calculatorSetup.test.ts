@@ -6,6 +6,7 @@ import {
   DEFAULT_CALCULATOR_SETUP,
   getSetupOverrideHint,
   patchCalculatorSetup,
+  replaceCalculatorSetup,
   sanitizeStoredSetup,
 } from './calculatorSetup';
 
@@ -188,6 +189,22 @@ describe('sanitizeStoredSetup', () => {
 
       expect(result.benderProfileId).toBe(DEFAULT_CALCULATOR_SETUP.benderProfileId);
     });
+  });
+});
+
+describe('replaceCalculatorSetup', () => {
+  test('normalizes rounding and keeps provided fields', () => {
+    const next = replaceCalculatorSetup({
+      ...DEFAULT_CALCULATOR_SETUP,
+      unit: 'metric',
+      rounding: '1/16',
+      conduitSize: '1',
+    });
+
+    expect(next.unit).toBe('metric');
+    expect(next.conduitSize).toBe('1');
+    expect(next.rounding).toBe('1mm');
+    expect(next.conduitType).toBe('EMT');
   });
 });
 

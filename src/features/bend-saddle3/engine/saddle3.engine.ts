@@ -11,19 +11,13 @@
  * Bend order: center at centerAngle toward obstruction, each side at sideAngle
  * back to level. Angles come from the preset table — not bender-specific.
  */
-import type { UnitSystem } from '@/core/types';
+import { toCanonicalInches } from '@/core/measurements';
 import { getBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { Saddle3EngineInput, Saddle3EngineResult } from './saddle3.types';
 import { getSaddle3AngleData, isSaddle3AnglePreset } from './saddle3AngleData';
 import { SADDLE3_CONFIG } from '../saddle3.config';
-
-const MM_PER_INCH = 25.4;
-
-function toInches(value: number, unitSystem: UnitSystem): number {
-  return unitSystem === 'metric' ? value / MM_PER_INCH : value;
-}
 
 function collectWarnings(input: Saddle3EngineInput): string[] {
   const warnings: string[] = [];
@@ -66,13 +60,13 @@ export function calculateSaddle3(input: Saddle3EngineInput): Saddle3EngineResult
     : SADDLE3_CONFIG.defaultPreset;
   const angleData = getSaddle3AngleData(preset);
 
-  const obstructionHeightInches = toInches(input.obstructionHeight || 0, input.unitSystem);
+  const obstructionHeightInches = toCanonicalInches(input.obstructionHeight || 0, input.unitSystem);
   const centerToSideInches = obstructionHeightInches * angleData.centerToSideMultiplier;
   const shrinkInches = obstructionHeightInches * angleData.shrinkPerInch;
 
   const distanceToCenterInches =
     input.distanceToCenter !== undefined
-      ? toInches(input.distanceToCenter, input.unitSystem)
+      ? toCanonicalInches(input.distanceToCenter, input.unitSystem)
       : undefined;
 
   const centerMarkInches =

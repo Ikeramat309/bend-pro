@@ -1,15 +1,9 @@
 import type { Href } from 'expo-router';
 
-export const GUIDE_CALCULATOR_IDS = [
-  'offset',
-  'stub90',
-  'saddle3',
-  'saddle4',
-  'segment',
-  'rolling',
-] as const;
+import type { GuideCalculatorId } from '@/core/calculators';
 
-export type GuideCalculatorId = (typeof GUIDE_CALCULATOR_IDS)[number];
+export type { GuideCalculatorId } from '@/core/calculators';
+export { GUIDE_CALCULATOR_IDS } from '@/core/calculators';
 
 export type GuideSection = {
   title?: string;

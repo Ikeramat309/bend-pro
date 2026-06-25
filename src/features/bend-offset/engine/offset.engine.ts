@@ -5,19 +5,13 @@
  * distanceBetweenBends = offsetHeight × multiplier
  * shrink = offsetHeight × shrinkPerInch
  */
-import type { UnitSystem } from '@/core/types';
+import { toCanonicalInches } from '@/core/measurements';
 import { getBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { OffsetEngineInput, OffsetEngineResult } from './offset.types';
 import { getOffsetAngleData } from './offsetAngleData';
 import { OFFSET_CONFIG } from '../offset.config';
-
-const MM_PER_INCH = 25.4;
-
-function toInches(value: number, unitSystem: UnitSystem): number {
-  return unitSystem === 'metric' ? value / MM_PER_INCH : value;
-}
 
 function collectWarnings(input: OffsetEngineInput): string[] {
   const warnings: string[] = [];
@@ -81,12 +75,12 @@ export function calculateOffset(input: OffsetEngineInput): OffsetEngineResult {
   const isShrinkOverridden = overrideShrinkPerInch !== undefined;
   const effectiveShrinkPerInch = overrideShrinkPerInch ?? chartShrinkPerInch;
 
-  const offsetHeightInches = toInches(input.offsetHeight || 0, input.unitSystem);
+  const offsetHeightInches = toCanonicalInches(input.offsetHeight || 0, input.unitSystem);
   const spacingInches = offsetHeightInches * effectiveMultiplier;
   const shrinkInches = offsetHeightInches * effectiveShrinkPerInch;
 
   const mark1Inches =
-    input.mark1 !== undefined ? toInches(input.mark1, input.unitSystem) : undefined;
+    input.mark1 !== undefined ? toCanonicalInches(input.mark1, input.unitSystem) : undefined;
   const mark2Inches = mark1Inches !== undefined ? mark1Inches + spacingInches : undefined;
 
   const isValid =

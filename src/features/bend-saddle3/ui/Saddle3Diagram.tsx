@@ -17,136 +17,16 @@ import {
 import type { Saddle3DiagramData } from '../engine/saddle3.types';
 import { SADDLE3_CONFIG } from '../saddle3.config';
 import { saddle3Copy } from '../saddle3.copy';
+import {
+  SADDLE3_DIAGRAM_LAYOUT,
+  buildSaddle3DiagramGeometry,
+  capSaddle3DiagramInputs,
+} from '../diagram/saddle3DiagramGeometry';
 
-/** Left/right ends of the conduit run. */
-const START_X = 24;
-const END_X = 336;
-const CENTER_X = 180;
-/** Baseline (centerline of the flat runs). */
-const BASE_Y = 228;
-
-/** Shared px-per-inch scale — obstruction, rise, and between-bends track inputs. */
-const PX_PER_INCH = 16;
-const OBS_HEIGHT_MIN = 22;
-/** Diagram geometry stops scaling above this obstruction height (inches). */
-const DIAGRAM_OBS_MAX_IN = 4;
-const PEAK_MIN_Y = 72;
-const PIPE_HALF = 6;
-const CLEARANCE_PX = 14;
-const MAX_HALF_SPAN = 128;
-const MIN_FLAT = 36;
-const CORNER_R = 10;
-const DIAG_MIN = 40;
-const DIAG_MAX = 128;
-
-const MAX_RISE = BASE_Y - PEAK_MIN_Y;
+const { centerX: CENTER_X, baseY: BASE_Y } = SADDLE3_DIAGRAM_LAYOUT;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
-}
-
-/** Cap diagram inputs so large field values do not break layout or cross the pipe. */
-function visualDiagramInputs(
-  obstructionHeightInches: number,
-  centerToSideInches: number,
-): { visualObsIn: number; visualCenterToSide: number } {
-  const visualObsIn = Math.min(obstructionHeightInches, DIAGRAM_OBS_MAX_IN);
-  const centerToSideRatio =
-    obstructionHeightInches > 0 ? centerToSideInches / obstructionHeightInches : 0;
-  return {
-    visualObsIn,
-    visualCenterToSide: visualObsIn * centerToSideRatio,
-  };
-}
-
-type SaddleGeometry = {
-  rise: number;
-  dx: number;
-  peakY: number;
-  x1: number;
-  x2: number;
-  obsRadius: number;
-  pipePath: string;
-  bendLeft: string;
-  bendRight: string;
-};
-
-function buildSaddleGeometry(
-  visualObsIn: number,
-  visualCenterToSide: number,
-  sideAngleDeg: number,
-): SaddleGeometry {
-  const radians = (sideAngleDeg * Math.PI) / 180;
-  const tan = Math.tan(radians);
-  const cosA = Math.cos(radians);
-  const sinA = Math.sin(radians);
-
-  const maxObsHeightPx = MAX_RISE - CLEARANCE_PX - PIPE_HALF - 10;
-  let obsHeightPx = clamp(visualObsIn * PX_PER_INCH, OBS_HEIGHT_MIN, maxObsHeightPx);
-  let obsRadius = obsHeightPx / 2;
-  let minRise = obsHeightPx + CLEARANCE_PX + PIPE_HALF;
-
-  // If clearance needs exceed the frame, shrink the drawn obstruction — geometry
-  // has already been capped by DIAGRAM_OBS_MAX_IN so this is a safety net only.
-  if (minRise > MAX_RISE) {
-    obsHeightPx = MAX_RISE - CLEARANCE_PX - PIPE_HALF - 10;
-    obsRadius = obsHeightPx / 2;
-    minRise = obsHeightPx + CLEARANCE_PX + PIPE_HALF;
-  }
-
-  let diagonalPx = clamp(visualCenterToSide * PX_PER_INCH, DIAG_MIN, DIAG_MAX);
-  let rise = diagonalPx * sinA;
-  rise = clamp(Math.max(rise, minRise), minRise, MAX_RISE);
-  let dx = rise / tan;
-
-  const maxDx = MAX_HALF_SPAN - MIN_FLAT;
-  if (dx > maxDx) {
-    dx = maxDx;
-    rise = clamp(dx * tan, minRise, MAX_RISE);
-  }
-
-  if (rise < minRise) {
-    rise = Math.min(minRise, MAX_RISE);
-    dx = Math.min(rise / tan, maxDx);
-  }
-
-  const peakY = BASE_Y - rise;
-  const x1 = CENTER_X - dx;
-  const x2 = CENTER_X + dx;
-
-  const cx = CORNER_R * cosA;
-  const cy = CORNER_R * sinA;
-  const a1x = x1 - CORNER_R;
-  const b1x = x1 + cx;
-  const b1y = BASE_Y - cy;
-  const c1x = CENTER_X - cx;
-  const c1y = peakY + cy;
-  const c2x = CENTER_X + cx;
-  const c2y = peakY + cy;
-  const d1x = x2 - cx;
-  const d1y = BASE_Y - cy;
-  const d2x = x2 + CORNER_R;
-
-  const pipePath =
-    `M ${START_X} ${BASE_Y} H ${a1x} ` +
-    `Q ${x1} ${BASE_Y} ${b1x} ${b1y} ` +
-    `L ${c1x} ${c1y} ` +
-    `Q ${CENTER_X} ${peakY} ${c2x} ${c2y} ` +
-    `L ${d1x} ${d1y} ` +
-    `Q ${x2} ${BASE_Y} ${d2x} ${BASE_Y} ` +
-    `H ${END_X}`;
-
-  return {
-    rise,
-    dx,
-    peakY,
-    x1,
-    x2,
-    obsRadius,
-    pipePath,
-    bendLeft: `M ${a1x} ${BASE_Y} Q ${x1} ${BASE_Y} ${b1x} ${b1y}`,
-    bendRight: `M ${d1x} ${d1y} Q ${x2} ${BASE_Y} ${d2x} ${BASE_Y}`,
-  };
 }
 
 export type Saddle3DiagramProps = {
@@ -173,7 +53,7 @@ export function Saddle3Diagram({ data, isEmpty = false, isInvalid = false }: Sad
 }
 
 function Saddle3GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
-  const geo = buildSaddleGeometry(2, 5.23, 22.5);
+  const geo = buildSaddle3DiagramGeometry(2, 5.23, 22.5);
 
   return (
     <DiagramSvg viewBox={SADDLE3_CONFIG.diagramViewBox}>
@@ -197,7 +77,6 @@ type ObstructionCircleProps = {
   ghost?: boolean;
 };
 
-/** Single circular obstruction on the baseline — pipe clears above it. */
 function ObstructionCircle({
   centerX,
   baselineY,
@@ -240,17 +119,15 @@ function ObstructionHeightLabel({
 }
 
 function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
-  const { visualObsIn, visualCenterToSide } = visualDiagramInputs(
+  const { visualObsIn, visualCenterToSide } = capSaddle3DiagramInputs(
     data.obstructionHeightInches,
     data.centerToSideInches,
   );
-  const geo = buildSaddleGeometry(visualObsIn, visualCenterToSide, data.sideAngle);
+  const geo = buildSaddle3DiagramGeometry(visualObsIn, visualCenterToSide, data.sideAngle);
   const { peakY, x1, x2, obsRadius, pipePath, bendLeft, bendRight } = geo;
 
   const hasMarks = data.centerMarkInches !== undefined;
 
-  // Between Bends — above the left diagonal; labels biased toward the side
-  // mark so they stay clear of the center mark (offset-style spacing).
   const segDx = CENTER_X - x1;
   const segRise = BASE_Y - peakY;
   const diagonalPx = Math.hypot(segDx, segRise);

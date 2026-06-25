@@ -10,6 +10,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { MAX_OFFSET_MULTIPLIER } from '@/core/settings';
 import type { BendAngle } from '@/core/types';
+import { parseStrictPositiveDecimal } from '@/core/validation';
 import { FieldInput } from '@/shared/ui';
 import { Sheet } from '@/shared/ui/Sheet';
 import { colors, spacing, typography } from '@/theme';
@@ -58,10 +59,8 @@ function MultiplierOverrideSheetOpen({
   );
 
   const isBlank = text.trim() === '';
-  const parsed = Number.parseFloat(text.trim());
-  const isValid =
-    isBlank ||
-    (Number.isFinite(parsed) && parsed > 0 && parsed <= MAX_OFFSET_MULTIPLIER);
+  const parsed = parseStrictPositiveDecimal(text);
+  const isValid = isBlank || (parsed !== undefined && parsed <= MAX_OFFSET_MULTIPLIER);
 
   function handleApply() {
     if (!isValid) return;

@@ -1,9 +1,8 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import type { Href } from 'expo-router';
 
-import { BEND_FAMILIES, type BendLibraryItem } from '@/data/bendLibrary';
+import { getBendsScreenFamilies, getCalculatorRoute, isCalculatorId, type BendsScreenItem } from '@/core/calculators';
 import { Routes } from '@/navigation';
 import {
   AppHeader,
@@ -18,15 +17,6 @@ import {
 } from '@/shared/ui';
 import { colors, uiTheme } from '@/theme';
 
-const ACTIVE_ROUTES: Record<string, Href> = {
-  'Basic Offset': Routes.offset,
-  'Stub-Up 90': Routes.stub90,
-  '3-Point Saddle': Routes.saddle3,
-  '4-Point Saddle': Routes.saddle4,
-  'Segment Bend': Routes.segment,
-  'Rolling Offset': Routes.rolling,
-};
-
 export function BendsScreen() {
   const router = useRouter();
   const [search, setSearch] = useState('');
@@ -35,11 +25,13 @@ export function BendsScreen() {
   const filteredFamilies = useMemo(() => {
     const normalized = search.trim().toLowerCase();
 
+    const families = getBendsScreenFamilies();
+
     if (!normalized) {
-      return BEND_FAMILIES;
+      return families;
     }
 
-    return BEND_FAMILIES.map((family) => ({
+    return families.map((family) => ({
       ...family,
       items: family.items.filter((item) =>
         `${family.title} ${item.title} ${item.description ?? ''}`.toLowerCase().includes(normalized),
@@ -54,8 +46,13 @@ export function BendsScreen() {
     if (tab === 'guide') router.push(Routes.guide);
   }
 
-  function handleBendPress(item: BendLibraryItem) {
-    const route = ACTIVE_ROUTES[item.title];
+  function handleBendPress(item: BendsScreenItem) {
+    if (!isCalculatorId(item.id)) {
+      setComingSoonVisible(true);
+      return;
+    }
+
+    const route = getCalculatorRoute(item.id);
     if (item.status === 'active' && route) {
       router.push(route);
       return;
@@ -88,7 +85,7 @@ export function BendsScreen() {
             <HubListGroup>
               {family.items.map((item, index) => (
                 <HubListRow
-                  key={item.title}
+                  key={item.id}
                   title={item.title}
                   description={item.description}
                   badge={item.status === 'coming-soon' ? 'Coming Soon' : undefined}

@@ -83,12 +83,13 @@ Imperial length fields use `FieldInput.lengthInput="imperial"` to open **`Length
 
 ## Bender / profile data
 
-- **`src/data/benders/`** — built-in hand-bender profiles, stub 90 deduct tables, `getBenderProfile`, custom profile helpers, **`profileChart.ts`** (chart rows, capabilities), **`BenderChartKind`** (manufacturer reserved for sourced data)
+- **`src/data/benders/`** — built-in hand-bender profiles, stub 90 deduct tables, `getBenderProfile`, custom profile helpers, **`benderResolution.ts`** (`BenderSourceType`, override precedence), **`profileChart.ts`** (chart rows, capabilities), **`BenderChartKind`** (manufacturer reserved for sourced verified data)
 - **`src/screens/BenderProfileDetailSheet.tsx`** — full deduct table and profile capabilities
 - **`src/core/settings/setupOverrides.ts`** — list/clear manual deduct, multiplier, and shrink overrides
 - **`src/data/conduit/`**, **`src/data/emt/`** — EMT trade sizes (EMT only for now)
-- **`src/data/bendLibrary.ts`** — bend hub navigation metadata (titles, routes, availability)
-- **`src/core/settings/`** — persisted setup (unit, rounding, size, active bender, overrides, custom profiles)
+- **`src/data/bendLibrary.ts`** — thin re-export of Bends hub groups from the calculator registry
+- **`src/core/calculators/`** — **calculator registry** (source of truth for ids, routes, status, guide links, hub visibility)
+- **`src/core/settings/`** — persisted setup (unit, rounding, size, active bender, overrides, custom profiles); hydration via `SettingsProvider` (`isHydrated`, `patchSetup`, `replaceSetup`)
 
 Trust strip on calculator screens reads active profile from setup; Edit Setup sheet writes back via `patchCalculatorSetup`. Edit Setup and Settings link to the bender database; **`SetupOverridesCard`** surfaces active overrides on Benders and Settings.
 
@@ -99,7 +100,17 @@ Trust strip on calculator screens reads active profile from setup; Edit Setup sh
 
 ## Calculator registry
 
-Not implemented. Availability is defined by `bendLibrary.ts` and `src/navigation/routes.ts`.
+**`src/core/calculators/`** is the source of truth for calculator identity and navigation metadata:
+
+- Stable ids (`offset`, `stub90`, `saddle3`, …)
+- Title, category, route, guide id, status (`active` | `planned` | `hidden`)
+- Conduit support, tags, sort order, Bends/Home visibility
+
+**All new calculators and field tools must be added to the registry first** — then wire routes, guides, and feature folders from that entry. Do not hand-maintain parallel lists in `bendLibrary.ts` or screen-level title maps.
+
+Helpers: `getCalculatorRoute(id)`, `getBendsScreenFamilies()`, `getHomeContinueCalculator()`. Tests in `calculatorRegistry.test.ts` guard duplicate ids, missing routes, and guide consistency.
+
+`src/data/bendLibrary.ts` re-exports Bends hub groups from the registry for backward compatibility.
 
 ## Verification
 

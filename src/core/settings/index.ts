@@ -6,6 +6,7 @@ export {
   MAX_OFFSET_SHRINK_PER_INCH,
   METRIC_ROUNDING_OPTIONS,
   patchCalculatorSetup,
+  replaceCalculatorSetup,
   sanitizeStoredSetup,
   getSetupOverrideHint,
   type CalculatorSetup,
@@ -14,6 +15,13 @@ export {
   type SetupOverrideHintContext,
   type Stub90DeductOverrides,
 } from './calculatorSetup';
+export {
+  CALCULATOR_SETUP_STORAGE_KEY,
+  parseStoredSetupJson,
+  persistCalculatorSetup,
+  type SetupStorage,
+} from './settingsPersistence';
+export { resolveHydratedSetup } from './settingsHydration';
 export {
   listSetupOverrides,
   patchClearAllSetupOverrides,

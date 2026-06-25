@@ -5,12 +5,7 @@
  * Metric: millimetres with the selected rounding step.
  */
 import type { RoundingOption, UnitSystem } from '@/core/types';
-
-const MM_PER_INCH = 25.4;
-
-function fromInches(valueInches: number, unitSystem: UnitSystem): number {
-  return unitSystem === 'metric' ? valueInches * MM_PER_INCH : valueInches;
-}
+import { fromCanonicalInches } from '@/core/measurements';
 
 function roundToStep(value: number, step: number): number {
   return Math.round(value / step) * step;
@@ -56,7 +51,7 @@ export function formatLength(
   rounding: RoundingOption,
 ): string {
   if (unitSystem === 'metric') {
-    const mmValue = fromInches(valueInches, unitSystem);
+    const mmValue = fromCanonicalInches(valueInches, unitSystem);
     const step = getMetricStep(rounding);
     const displayValue = step ? roundToStep(mmValue, step) : Number(mmValue.toFixed(2));
 

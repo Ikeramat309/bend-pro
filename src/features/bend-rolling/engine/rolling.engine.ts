@@ -12,18 +12,12 @@
  *
  * Multiplier and shrink use the standard offset angle table — not bender-specific.
  */
-import type { UnitSystem } from '@/core/types';
+import { toCanonicalInches } from '@/core/measurements';
 import { getBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { RollingEngineInput, RollingEngineResult } from './rolling.types';
 import { getRollingAngleData } from './rollingAngleData';
-
-const MM_PER_INCH = 25.4;
-
-function toInches(value: number, unitSystem: UnitSystem): number {
-  return unitSystem === 'metric' ? value / MM_PER_INCH : value;
-}
 
 function collectWarnings(input: RollingEngineInput, trueOffsetInches: number): string[] {
   const warnings: string[] = [];
@@ -98,15 +92,15 @@ export function calculateRolling(input: RollingEngineInput): RollingEngineResult
   const isShrinkOverridden = overrideShrinkPerInch !== undefined;
   const effectiveShrinkPerInch = overrideShrinkPerInch ?? chartShrinkPerInch;
 
-  const offsetHeightInches = toInches(input.offsetHeight || 0, input.unitSystem);
-  const advanceInches = toInches(input.advance || 0, input.unitSystem);
+  const offsetHeightInches = toCanonicalInches(input.offsetHeight || 0, input.unitSystem);
+  const advanceInches = toCanonicalInches(input.advance || 0, input.unitSystem);
   const trueOffsetInches = Math.hypot(offsetHeightInches, advanceInches);
 
   const spacingInches = trueOffsetInches * effectiveMultiplier;
   const shrinkInches = trueOffsetInches * effectiveShrinkPerInch;
 
   const mark1Inches =
-    input.mark1 !== undefined ? toInches(input.mark1, input.unitSystem) : undefined;
+    input.mark1 !== undefined ? toCanonicalInches(input.mark1, input.unitSystem) : undefined;
   const mark2Inches = mark1Inches !== undefined ? mark1Inches + spacingInches : undefined;
 
   const isValid =

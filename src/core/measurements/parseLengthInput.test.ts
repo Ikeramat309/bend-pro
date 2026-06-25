@@ -2,7 +2,7 @@
  * parseLengthInput tests — tape-measure input is field-critical:
  * electricians measure in fractions, not decimals.
  */
-import { hasPositiveLengthInput, parseLengthInput } from './parseLengthInput';
+import { hasPositiveLengthInput, parseLengthInput } from '@/core/measurements';
 
 describe('parseLengthInput', () => {
   describe('decimals', () => {
@@ -55,6 +55,8 @@ describe('parseLengthInput', () => {
   describe('rejected input', () => {
     test.each([
       'abc',
+      '2abc',
+      'abc2',
       '12 3', // incomplete mixed number
       '3/0', // zero denominator
       '12 3/0',
@@ -76,6 +78,7 @@ describe('hasPositiveLengthInput', () => {
     ['0', false],
     ['', false],
     ['abc', false],
+    ['2abc', false],
   ])('%j → %j', (text, expected) => {
     expect(hasPositiveLengthInput(text as string)).toBe(expected);
   });

@@ -1,78 +1,8 @@
 /**
- * FILE: src/data/bendLibrary.ts
- *
- * PURPOSE:
- * Shared bend-library metadata for navigation and quick switching.
- * This is UI/navigation data only — no calculator logic lives here.
+ * Bend-library metadata for navigation and quick switching.
+ * Derived from the central calculator registry — do not edit titles or routes here.
  */
 
-export type BendStatus = 'active' | 'coming-soon';
+export type { BendsScreenItem as BendLibraryItem, BendsScreenFamily as BendFamily } from '@/core/calculators';
 
-export type BendLibraryItem = {
-  title: string;
-  description?: string;
-  status: BendStatus;
-};
-
-export type BendFamily = {
-  title: string;
-  items: BendLibraryItem[];
-};
-
-export const BEND_FAMILIES: BendFamily[] = [
-  {
-    title: 'Offset',
-    items: [
-      {
-        title: 'Basic Offset',
-        description: 'Clear obstruction. Stay parallel.',
-        status: 'active',
-      },
-      { title: 'Parallel Offset', status: 'coming-soon' },
-      {
-        title: 'Rolling Offset',
-        description: 'Offset in two directions — height and advance.',
-        status: 'active',
-      },
-      { title: 'Box Offset', status: 'coming-soon' },
-    ],
-  },
-  {
-    title: '90s',
-    items: [
-      {
-        title: 'Stub-Up 90',
-        description: 'Find the deduct mark from stub length and deduct.',
-        status: 'active',
-      },
-      { title: 'Back-to-Back 90', status: 'coming-soon' },
-      { title: 'Kick 90', status: 'coming-soon' },
-    ],
-  },
-  {
-    title: 'Saddles',
-    items: [
-      {
-        title: '3-Point Saddle',
-        description: 'Route over an obstruction with three bends.',
-        status: 'active',
-      },
-      {
-        title: '4-Point Saddle',
-        description: 'Route over a wide obstruction with a flat top.',
-        status: 'active',
-      },
-    ],
-  },
-  {
-    title: 'Large / Advanced',
-    items: [
-      {
-        title: 'Segment Bend',
-        description: 'Large-radius bend from a series of equal shots.',
-        status: 'active',
-      },
-      { title: 'Hydraulic Layout', status: 'coming-soon' },
-    ],
-  },
-];
+export { getBendsScreenFamilies } from '@/core/calculators';

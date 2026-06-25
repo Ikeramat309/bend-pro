@@ -76,7 +76,7 @@ See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full list. Summary:
 - **Rolling offset** — no 3D bender-head rotation model
 - **Bender charts** — generic field-reference values only; manufacturer shoe charts deferred until sourced data exists
 - **Fraction keypad** — no decimal point key; mixed-number and quick-fraction entry only; imperial editing uses a bottom sheet so the pipe workspace stays visible
-- **Calculator registry** — not implemented; availability via `bendLibrary.ts` + `routes.ts`
+- **Calculator registry** — implemented in `src/core/calculators/`; Bends/Home navigation reads from registry helpers
 
 ## Next development priorities
 

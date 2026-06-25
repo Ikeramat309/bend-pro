@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { parseStrictPositiveDecimal } from '@/core/validation';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
@@ -21,8 +22,7 @@ import { SegmentDiagram } from './SegmentDiagram';
 
 /** Plain positive-number parse for angle fields (degrees, no unit conversion). */
 function parseAngleInput(text: string): number | undefined {
-  const value = Number(text.trim());
-  return Number.isFinite(value) && value > 0 ? value : undefined;
+  return parseStrictPositiveDecimal(text);
 }
 
 export default function SegmentScreen() {

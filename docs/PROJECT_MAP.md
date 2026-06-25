@@ -73,13 +73,15 @@ bend-rolling/
 | EMT sizes | `src/data/emt/` |
 | Conduit types (EMT only) | `src/data/conduit/` |
 | Bender profiles (3 generic + custom, persisted in setup) | `src/data/benders/`, `src/screens/BenderDatabaseScreen.tsx`, `src/screens/CustomBenderSheet.tsx` |
-| Bend library nav | `src/data/bendLibrary.ts` |
+| Calculator registry (ids, routes, status, hub visibility) | `src/core/calculators/` |
+| Bend library nav (re-export) | `src/data/bendLibrary.ts` |
 
 ## Core & Utils
 
 | Layer | Path |
 |-------|------|
 | Shared types | `src/core/types.ts` |
+| Calculator registry | `src/core/calculators/` |
 | Persisted calculator setup (unit, rounding, size, bender, manual overrides) | `src/core/settings/` |
 | Theme tokens | `src/theme/` |
 | Formatting/parsing helpers | `src/utils/rounding.ts`, `units.ts`, `formatLength.ts`, `parseLengthInput.ts` |

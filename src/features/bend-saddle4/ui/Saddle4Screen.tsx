@@ -40,6 +40,7 @@ export default function Saddle4Screen() {
 
   const [obstructionHeightText, setObstructionHeightText] = useState('');
   const [saddleWidthText, setSaddleWidthText] = useState('');
+  const [showSaddleWidthInput, setShowSaddleWidthInput] = useState(false);
   const [distanceToCenterText, setDistanceToCenterText] = useState('');
   const [showDistanceInput, setShowDistanceInput] = useState(false);
   const [bendAngle, setBendAngle] = useState<Saddle4Angle>(SADDLE4_CONFIG.defaultAngle);
@@ -60,7 +61,7 @@ export default function Saddle4Screen() {
   const setupSubtitle = `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`;
   const hasValidHeight = obstructionHeight !== undefined && obstructionHeight > 0;
   const hasValidWidth = saddleWidth !== undefined && saddleWidth > 0;
-  const hasValidInputs = hasValidHeight && hasValidWidth;
+  const hasValidInputs = hasValidHeight;
   const profileContextMessage = saddle4Copy.profileContext(angleData.label);
   const lengthKeyboard = unit === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
 
@@ -68,7 +69,7 @@ export default function Saddle4Screen() {
     () =>
       calculateSaddle4({
         obstructionHeight: obstructionHeight ?? Number.NaN,
-        saddleWidth: saddleWidth ?? Number.NaN,
+        saddleWidth: hasValidWidth ? saddleWidth : undefined,
         distanceToCenter: hasDistance ? distanceToCenter : undefined,
         bendAngle,
         benderProfileId,
@@ -89,6 +90,7 @@ export default function Saddle4Screen() {
       obstructionHeight,
       rounding,
       saddleWidth,
+      hasValidWidth,
       unit,
     ],
   );
@@ -126,6 +128,7 @@ export default function Saddle4Screen() {
 
   const marksNote = hasValidInputs
     ? hasDistance &&
+      hasValidWidth &&
       result.outerMark1Formatted &&
       result.innerMark1Formatted &&
       result.innerMark2Formatted &&
@@ -144,7 +147,7 @@ export default function Saddle4Screen() {
       ? saddle4Copy.fields.distanceToCenter.errorInvalid
       : undefined;
 
-  const inputsStarted = obstructionHeightText.trim() !== '' || saddleWidthText.trim() !== '';
+  const inputsStarted = obstructionHeightText.trim() !== '';
   const visibleWarnings = inputsStarted ? result.warnings : [];
 
   function handleBackPress() {
@@ -211,21 +214,30 @@ export default function Saddle4Screen() {
                 : undefined
             }
           />
+        </View>
 
-          <FieldInput
-            variant="compact"
-            label={saddle4Copy.fields.saddleWidth.label}
-            value={saddleWidthText}
-            onChangeText={setSaddleWidthText}
-            placeholder={saddle4Copy.fields.saddleWidth.placeholder}
-            unit={unitLabel}
-            inputProps={{ keyboardType: lengthKeyboard }}
-            error={
-              saddleWidthText !== '' && !hasValidWidth
-                ? saddle4Copy.fields.saddleWidth.errorRequired
-                : undefined
-            }
-          />
+        <View style={styles.optionalPanel}>
+          {showSaddleWidthInput ? (
+            <FieldInput
+              variant="compact"
+              label={saddle4Copy.fields.saddleWidth.label}
+              value={saddleWidthText}
+              onChangeText={setSaddleWidthText}
+              placeholder={saddle4Copy.fields.saddleWidth.placeholder}
+              unit={unitLabel}
+              inputProps={{ keyboardType: lengthKeyboard }}
+              error={
+                saddleWidthText !== '' && !hasValidWidth
+                  ? saddle4Copy.fields.saddleWidth.errorRequired
+                  : undefined
+              }
+            />
+          ) : (
+            <OptionalFieldButton
+              label={saddle4Copy.fields.saddleWidth.addButton}
+              onPress={() => setShowSaddleWidthInput(true)}
+            />
+          )}
         </View>
 
         <FieldInput
@@ -262,7 +274,7 @@ export default function Saddle4Screen() {
             <Saddle4Diagram
               data={result.diagramData}
               isEmpty={!hasValidInputs}
-              isInvalid={inputsStarted && !hasValidInputs}
+              isInvalid={obstructionHeightText !== '' && !hasValidHeight}
             />
           }
           primaryLabel={primaryLabel}
@@ -318,6 +330,9 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   distancePanel: {
+    marginTop: -spacing.xs,
+  },
+  optionalPanel: {
     marginTop: -spacing.xs,
   },
 });

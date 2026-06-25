@@ -37,7 +37,10 @@ function collectWarnings(input: Saddle4EngineInput, outerMark1Inches?: number): 
     warnings.push('Obstruction height must be greater than 0.');
   }
 
-  if (!Number.isFinite(input.saddleWidth) || input.saddleWidth <= 0) {
+  if (
+    input.saddleWidth !== undefined &&
+    (!Number.isFinite(input.saddleWidth) || input.saddleWidth <= 0)
+  ) {
     warnings.push('Saddle width must be greater than 0.');
   }
 
@@ -77,7 +80,13 @@ export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult
   const angleData = getSaddle4AngleData(angle);
 
   const obstructionHeightInches = toInches(input.obstructionHeight || 0, input.unitSystem);
-  const saddleWidthInches = toInches(input.saddleWidth || 0, input.unitSystem);
+  const hasSaddleWidth =
+    input.saddleWidth !== undefined &&
+    Number.isFinite(input.saddleWidth) &&
+    input.saddleWidth > 0;
+  const saddleWidthInches = hasSaddleWidth
+    ? toInches(input.saddleWidth!, input.unitSystem)
+    : undefined;
 
   const betweenBendsInches = obstructionHeightInches * angleData.multiplier;
   const shrinkToCenterInches = obstructionHeightInches * angleData.shrinkPerInch;
@@ -88,13 +97,18 @@ export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult
       ? toInches(input.distanceToCenter, input.unitSystem)
       : undefined;
 
-  const halfWidthInches = saddleWidthInches / 2;
+  const halfWidthInches =
+    saddleWidthInches !== undefined ? saddleWidthInches / 2 : undefined;
   const centerMarkInches =
     distanceToCenterInches !== undefined ? distanceToCenterInches + shrinkToCenterInches : undefined;
   const innerMark1Inches =
-    centerMarkInches !== undefined ? centerMarkInches - halfWidthInches : undefined;
+    centerMarkInches !== undefined && halfWidthInches !== undefined
+      ? centerMarkInches - halfWidthInches
+      : undefined;
   const innerMark2Inches =
-    centerMarkInches !== undefined ? centerMarkInches + halfWidthInches : undefined;
+    centerMarkInches !== undefined && halfWidthInches !== undefined
+      ? centerMarkInches + halfWidthInches
+      : undefined;
   const outerMark1Inches =
     innerMark1Inches !== undefined ? innerMark1Inches - betweenBendsInches : undefined;
   const outerMark2Inches =
@@ -102,17 +116,13 @@ export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult
 
   const warnings = collectWarnings(input, outerMark1Inches);
 
-  const isValid =
-    Number.isFinite(input.obstructionHeight) &&
-    input.obstructionHeight > 0 &&
-    Number.isFinite(input.saddleWidth) &&
-    input.saddleWidth > 0;
+  const isValid = Number.isFinite(input.obstructionHeight) && input.obstructionHeight > 0;
 
   const fmt = (value: number) => formatLength(value, input.unitSystem, input.roundingPrecision);
   const fmtOpt = (value?: number) => (value !== undefined ? fmt(value) : undefined);
 
   const obstructionHeightFormatted = fmt(obstructionHeightInches);
-  const saddleWidthFormatted = fmt(saddleWidthInches);
+  const saddleWidthFormatted = saddleWidthInches !== undefined ? fmt(saddleWidthInches) : undefined;
   const betweenBendsFormatted = fmt(betweenBendsInches);
   const shrinkFormatted = fmt(shrinkInches);
   const centerMarkFormatted = fmtOpt(centerMarkInches);
@@ -157,7 +167,7 @@ export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult
           bendAngle: angle,
           display: {
             obstructionHeight: obstructionHeightFormatted,
-            saddleWidth: saddleWidthFormatted,
+            ...(saddleWidthFormatted ? { saddleWidth: saddleWidthFormatted } : {}),
             betweenBends: betweenBendsFormatted,
             shrink: shrinkFormatted,
             centerMark: centerMarkFormatted,

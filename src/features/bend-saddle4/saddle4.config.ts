@@ -4,6 +4,6 @@ import type { Saddle4Angle } from './engine/saddle4.types';
 export const SADDLE4_CONFIG = {
   defaultAngle: 22.5 as Saddle4Angle,
   validAngles: [22.5, 30, 45] as const,
-  diagramHeight: 248,
-  diagramViewBox: '0 0 360 248',
+  diagramHeight: 300,
+  diagramViewBox: '0 0 360 300',
 } as const;

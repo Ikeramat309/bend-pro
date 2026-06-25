@@ -9,7 +9,8 @@ export const saddle4Copy = {
     },
     saddleWidth: {
       label: 'Saddle Width',
-      placeholder: '0',
+      placeholder: 'Optional',
+      addButton: 'Add Saddle Width',
       errorRequired: 'Enter a saddle width greater than 0.',
     },
     bendAngle: {
@@ -30,7 +31,7 @@ export const saddle4Copy = {
     marksAbsolute: (outer1: string, inner1: string, inner2: string, outer2: string) =>
       `Marks  ${outer1} · ${inner1} · ${inner2} · ${outer2}`,
     marksRelative:
-      'Top bends sit ± half the saddle width from center; outer bends fall Between Bends past them.',
+      'Outer bends fall Between Bends past the top bends. Add saddle width for top mark spacing.',
   },
   diagram: {
     obstructionHeight: 'Obstruction',
@@ -39,8 +40,8 @@ export const saddle4Copy = {
     shrink: 'Shrink',
     outer: 'Outer',
     top: 'Top',
-    emptyMessage: 'Enter obstruction height and saddle width to lay out the saddle.',
-    invalidMessage: 'Obstruction height and saddle width must be greater than 0.',
+    emptyMessage: 'Enter obstruction height to lay out the saddle.',
+    invalidMessage: 'Obstruction height must be greater than 0.',
   },
   profileContext: (angleLabel: string) =>
     `Saddle spacing and shrink use the standard ${angleLabel} offset table — not bender-specific.`,

@@ -14,8 +14,8 @@ export type Saddle4Angle = 22.5 | 30 | 45;
 export type Saddle4EngineInput = {
   /** Vertical clearance needed over the obstruction (inches internally). */
   obstructionHeight: number;
-  /** Flat-top length — distance between the two top (inner) bends. */
-  saddleWidth: number;
+  /** Flat-top length — distance between the two top (inner) bends. Optional. */
+  saddleWidth?: number;
   /** Equal bend angle for all four bends. */
   bendAngle: Saddle4Angle;
   /** Optional distance from the pipe start to the obstruction center. */
@@ -31,7 +31,7 @@ export type Saddle4EngineInput = {
 export type Saddle4DiagramData = {
   calculatorType: 'saddle4';
   obstructionHeightInches: number;
-  saddleWidthInches: number;
+  saddleWidthInches?: number;
   /** Conduit distance between each outer and inner bend pair (height × multiplier). */
   betweenBendsInches: number;
   /** Total run shrink (both offsets). */
@@ -44,7 +44,7 @@ export type Saddle4DiagramData = {
   bendAngle: number;
   display: {
     obstructionHeight: string;
-    saddleWidth: string;
+    saddleWidth?: string;
     betweenBends: string;
     shrink: string;
     centerMark?: string;
@@ -63,7 +63,7 @@ export type Saddle4BenderProfileUsed = {
 
 export type Saddle4EngineResult = {
   obstructionHeight: number;
-  saddleWidth: number;
+  saddleWidth?: number;
   betweenBends: number;
   /** Total run shrink (both offsets). */
   shrink: number;
@@ -83,7 +83,7 @@ export type Saddle4EngineResult = {
   diagramData?: Saddle4DiagramData;
 
   obstructionHeightFormatted: string;
-  saddleWidthFormatted: string;
+  saddleWidthFormatted?: string;
   betweenBendsFormatted: string;
   shrinkFormatted: string;
   centerMarkFormatted?: string;

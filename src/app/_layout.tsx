@@ -21,6 +21,10 @@ export default function RootLayout() {
           <Stack.Screen name="guide" />
           <Stack.Screen name="offset" />
           <Stack.Screen name="stub90" />
+          <Stack.Screen name="saddle3" />
+          <Stack.Screen name="saddle4" />
+          <Stack.Screen name="segment" />
+          <Stack.Screen name="rolling" />
         </Stack>
       </SettingsProvider>
     </ThemeProvider>

@@ -8,6 +8,7 @@ export const HAND_BENDER_COMPACT: BenderProfile = {
   id: 'hand-bender-compact',
   name: 'Hand Bender (Compact Shoe)',
   category: 'hand',
+  chartKind: 'generic-field-reference',
   description: 'Generic compact-shoe reference — tighter take-up than a standard hand bender.',
   emtStub90TakeUpInches: {
     '1/2': 4.5,

@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, layout, spacing, touchTarget, typography } from '@/theme';
+import { colors, layout, spacing, touchTarget, typography, uiTheme } from '@/theme';
 
 export type BendTabId = 'layout' | 'bends' | 'benders' | 'guide';
 
@@ -10,11 +10,11 @@ export type BottomNavProps = {
   onTabChange: (tab: BendTabId) => void;
 };
 
-const TABS: { id: BendTabId; label: string; icon: string }[] = [
-  { id: 'layout', label: 'Layout', icon: '▦' },
-  { id: 'bends', label: 'Bends', icon: '⚡' },
-  { id: 'benders', label: 'Benders', icon: '🔧' },
-  { id: 'guide', label: 'Guide', icon: '📖' },
+const TABS: { id: BendTabId; label: string }[] = [
+  { id: 'layout', label: 'Layout' },
+  { id: 'bends', label: 'Bends' },
+  { id: 'benders', label: 'Benders' },
+  { id: 'guide', label: 'Guide' },
 ];
 
 /** Main hub bottom navigation. */
@@ -45,12 +45,7 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
               style={[styles.tab, active && styles.tabActive]}
               accessibilityRole="button"
               accessibilityState={{ selected: active }}>
-              <Text style={[styles.tabIcon, { color: active ? colors.primary : colors.muted }]}>
-                {tab.icon}
-              </Text>
-              <Text style={[styles.tabLabel, { color: active ? colors.primary : colors.muted }]}>
-                {tab.label}
-              </Text>
+              <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>{tab.label}</Text>
             </Pressable>
           );
         })}
@@ -70,20 +65,25 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    minHeight: touchTarget,
+    minHeight: touchTarget - 4,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.xs,
-    paddingVertical: spacing.md,
-    borderRadius: 12,
+    paddingVertical: spacing.sm,
+    borderRadius: 8,
+    marginHorizontal: 2,
   },
   tabActive: {
-    backgroundColor: colors.primaryMuted,
-  },
-  tabIcon: {
-    fontSize: 20,
+    backgroundColor: uiTheme.bottomNav.activeBackground,
   },
   tabLabel: {
     ...typography.tabLabel,
+    color: colors.muted,
+    fontWeight: '600',
+    fontSize: 11,
+    letterSpacing: 0.3,
+  },
+  tabLabelActive: {
+    color: colors.primary,
+    fontWeight: '700',
   },
 });

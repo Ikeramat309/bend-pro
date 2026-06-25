@@ -1,4 +1,3 @@
-import { StyleSheet, View } from 'react-native';
 import Svg from 'react-native-svg';
 
 import {
@@ -6,6 +5,8 @@ import {
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFrame,
+  DiagramGhostMessage,
   DiagramLabel,
   DimensionLine,
   MarkLine,
@@ -17,8 +18,7 @@ import { OFFSET_CONFIG } from '../offset.config';
 import { offsetCopy } from '../offset.copy';
 
 const GHOST_PIPE = 'M 24 230 H 88 L 192 126 H 336';
-const GHOST_MARK_OPACITY = 0.38;
-const GHOST_DIM_OPACITY = 0.34;
+const { ghost } = diagramTheme;
 
 /** Left end of the pipe. */
 const START_X = 24;
@@ -54,34 +54,27 @@ export function OffsetDiagram({ data, isEmpty = false, isInvalid = false }: Offs
     : offsetCopy.diagram.emptyMessage;
 
   return (
-    <View style={styles.frame}>
+    <DiagramFrame>
       {!data || isEmpty || isInvalid ? (
-        <OffsetGhostDiagram message={message} />
+        <OffsetGhostDiagram message={message} invalid={isInvalid} />
       ) : (
         <OffsetLiveDiagram data={data} />
       )}
-    </View>
+    </DiagramFrame>
   );
 }
 
-function OffsetGhostDiagram({ message }: { message: string }) {
+function OffsetGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
     <Svg viewBox={OFFSET_CONFIG.diagramViewBox} width="100%" height={OFFSET_CONFIG.diagramHeight}>
       <DiagramDefs gradientId="offsetGhostGradient" ghost />
       <DiagramCanvas />
-      <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={0.55} />
+      <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={ghost.pipeShadowOpacity} />
       <PipeSegment d={GHOST_PIPE} variant="pipe" gradientId="offsetGhostGradient" />
-      <MarkLine x1={88} y1={218} x2={88} y2={242} opacity={GHOST_MARK_OPACITY} />
-      <MarkLine x1={192} y1={114} x2={192} y2={138} opacity={GHOST_MARK_OPACITY} />
-      <DimensionLine x1={88} y1={268} x2={192} y2={268} showArrows={false} opacity={GHOST_DIM_OPACITY} />
-      <DiagramLabel
-        x={180}
-        y={286}
-        text={message}
-        variant="muted"
-        fontSize={11}
-        fontWeight="500"
-      />
+      <MarkLine x1={88} y1={218} x2={88} y2={242} opacity={ghost.markOpacity} />
+      <MarkLine x1={192} y1={114} x2={192} y2={138} opacity={ghost.markOpacity} />
+      <DimensionLine x1={88} y1={268} x2={192} y2={268} showArrows={false} opacity={ghost.dimensionOpacity} />
+      <DiagramGhostMessage text={message} invalid={invalid} />
     </Svg>
   );
 }
@@ -257,10 +250,3 @@ function OffsetLiveDiagram({ data }: { data: OffsetDiagramData }) {
     </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  frame: {
-    overflow: 'hidden',
-    backgroundColor: diagramTheme.canvas,
-  },
-});

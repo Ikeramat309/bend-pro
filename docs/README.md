@@ -22,8 +22,13 @@ The single entry point for the repo is the root [`AGENTS.md`](../AGENTS.md). Sta
 | [`../README.md`](../README.md) | Human-facing repo readme: dev commands, folder overview. |
 | [`PRODUCT_BRIEF.md`](PRODUCT_BRIEF.md) | Who Bend Pro is for, product philosophy, scope, current and planned calculators, non-goals. |
 | [`CURRENT_STATE.md`](CURRENT_STATE.md) | Honest snapshot: working, incomplete, needs cleanup, risk areas. |
+| [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) | Practical limitations, deferred scope, and acceptance-review notes. |
 | [`ROADMAP.md`](ROADMAP.md) | Phased plan from stabilization through release prep. |
-| [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) | Phase 4 close-out: delivered, deferred, gaps, verification. |
+| [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) | Historical: additional calculators close-out (saddles, segment, rolling). |
+| [`PHASE_2_WRAPUP.md`](PHASE_2_WRAPUP.md) | Phase 2 close-out: UI polish, hub components, diagram ghost chrome. |
+| [`PHASE_3_WRAPUP.md`](PHASE_3_WRAPUP.md) | Phase 3 close-out: imperial fraction keypad. |
+| [`PHASE_4_GUIDE_WRAPUP.md`](PHASE_4_GUIDE_WRAPUP.md) | Phase 4 close-out: guide mode content. |
+| [`PHASE_5_WRAPUP.md`](PHASE_5_WRAPUP.md) | Phase 5 close-out: bender database improvements. |
 
 ### Rules for agents
 
@@ -40,7 +45,9 @@ The single entry point for the repo is the root [`AGENTS.md`](../AGENTS.md). Sta
 | File | Purpose |
 |------|---------|
 | [`PROJECT_MAP.md`](PROJECT_MAP.md) | Where code lives today: routes, features, shared layers, data. |
-| [`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md) | Layering: thin routes, feature modules, shared UI/diagrams, data. |
+| [`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md) | Layering: thin routes, feature modules, shared workspace/UI/diagrams, data. |
+| [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md) | Universal calculator screen shell, result priority, dock rules, per-calculator mapping. |
+| Hub UI | Shared `Hub*` components in `src/shared/ui/` — see `uiTheme.ts`. |
 | [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) | Visual direction: dark field-tool UI, pipe workspace card, theme tokens. |
 | [`FEATURE_TEMPLATE.md`](FEATURE_TEMPLATE.md) | Folder structure template for future calculator modules. |
 

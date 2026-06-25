@@ -39,7 +39,7 @@ Terminology is part of the product. Electricians use these words on real job sit
 |------|------------|
 | **Bender profile** | A data record describing a bender (or generic class of bender) and its take-up/deduct values per trade size. Lives in `src/data/benders/`. Three generic hand-bender profiles ship built-in; users can also save **custom profiles** with their own measured stub 90 deducts. Manufacturer shoe charts are not included. |
 | **Manual override** | Lets the user replace chart/table values when their bender or sticker differs. **Stub 90:** manual deduct override per EMT size (tap the Deduct chip). **Offset:** manual multiplier override and manual shrink-per-inch override per bend angle (tap the Multiplier or Shrink chips). All persist in calculator setup. |
-| **Guide mode** | *(Planned — Phase 5, placeholder screen only.)* Teaching/walkthrough content for apprentices: formulas, bend steps, common mistakes. |
+| **Guide mode** | Apprentice walkthroughs on the Guide tab: formulas, field steps, common mistakes. Opened from the calculator dock (contextual) or bottom nav (index). Separate from calculator results. |
 | **Diagram primitive** | A small reusable SVG building block in `src/shared/diagrams/` (pipe segment, mark line, dimension line, label, callout). Calculators compose primitives instead of drawing one-off graphics. |
 | **Pipe segment** | The diagram primitive that draws a straight run of conduit (`PipeSegment`). |
 | **Vector / dimension line** | A diagram line with arrowheads/extents that shows a measurement on the diagram (`DimensionLine`) — e.g. stub length, distance between bends. Explains the layout visually instead of forcing users to read text. |

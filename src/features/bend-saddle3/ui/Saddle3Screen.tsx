@@ -1,29 +1,18 @@
-/**
- * 3-Point Saddle calculator — diagram-first layout over an obstruction.
- *
- * Input state lives here; math lives in engine/saddle3.engine.ts.
- */
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
-import { Routes } from '@/navigation';
-import { AppHeader, AppScreen, FieldInput, OptionChipGroup, Sheet } from '@/shared/ui';
+import { Routes, guideRoute } from '@/navigation';
+import { OptionChipGroup, Sheet } from '@/shared/ui';
 import {
-  BenderProfileContext,
+  BendCalculatorLayout,
   EditSetupSheet,
-  OptionalFieldButton,
-  PipeWorkspaceResult,
-  SetupSummary,
-  WarningList,
   type SetupValues,
 } from '@/shared/workspace';
-import { colors, spacing } from '@/theme';
 import { getRoundingLabel } from '@/utils/rounding';
-import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
+import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/utils/units';
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateSaddle3 } from '../engine/saddle3.engine';
@@ -63,7 +52,7 @@ export default function Saddle3Screen() {
   const setupSubtitle = `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`;
   const hasValidHeight = obstructionHeight !== undefined && obstructionHeight > 0;
   const profileContextMessage = saddle3Copy.profileContext(angleData.label);
-  const lengthKeyboard = unit === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
+  const lengthInput = getLengthInputMode(unit);
 
   const result = useMemo(
     () =>
@@ -109,27 +98,21 @@ export default function Saddle3Screen() {
     ? saddle3Copy.results.centerMark
     : saddle3Copy.results.betweenBends;
   const primaryValue = showCenterAsHero ? centerMarkValue : betweenBendsValue;
-  const resultChips = showCenterAsHero
-    ? [
-        { label: saddle3Copy.results.betweenBends, value: betweenBendsValue, tone: 'primary' as const },
-        { label: saddle3Copy.results.shrink, value: shrinkValue },
-      ]
-    : [
-        {
-          label: saddle3Copy.results.centerMark,
-          value: centerMarkValue,
-          onPress: hasValidHeight && !showDistanceInput ? () => setShowDistanceInput(true) : undefined,
-        },
-        { label: saddle3Copy.results.shrink, value: shrinkValue },
-      ];
 
-  const sideMarksNote = hasValidHeight
-    ? hasDistance && result.sideMark1Formatted && result.sideMark2Formatted
-      ? saddle3Copy.results.sideMarksAbsolute(
-          result.sideMark1Formatted,
-          result.sideMark2Formatted,
-        )
-      : saddle3Copy.results.sideMarksRelative
+  const secondaryResults = hasValidHeight
+    ? showCenterAsHero
+      ? [
+          { label: saddle3Copy.results.betweenBends, value: betweenBendsValue },
+          { label: saddle3Copy.results.shrink, value: shrinkValue },
+        ]
+      : [
+          {
+            label: saddle3Copy.results.centerMark,
+            value: centerMarkValue,
+            onPress: !showDistanceInput ? () => setShowDistanceInput(true) : undefined,
+          },
+          { label: saddle3Copy.results.shrink, value: shrinkValue },
+        ]
     : undefined;
 
   const distanceError =
@@ -170,131 +153,123 @@ export default function Saddle3Screen() {
     if (match) setAnglePreset(match);
   }
 
+  function resetInputs() {
+    setObstructionHeightText('');
+    setDistanceToCenterText('');
+    setShowDistanceInput(false);
+  }
+
   return (
-    <View style={styles.screen}>
-      <AppHeader
-        showBack
-        title={saddle3Copy.screenTitle}
-        subtitle={setupSummary}
-        onBackPress={handleBackPress}
-      />
-
-      <AppScreen scroll>
-        <SetupSummary
-          title={benderProfile.name}
-          subtitle={setupSubtitle}
-          onEdit={() => setSetupVisible(true)}
+    <BendCalculatorLayout
+      title={saddle3Copy.screenTitle}
+      subtitle={setupSummary}
+      onBackPress={handleBackPress}
+      trust={{
+        benderName: benderProfile.name,
+        meta: setupSubtitle,
+        note: profileContextMessage,
+        onEdit: () => setSetupVisible(true),
+      }}
+      inputs={[
+        {
+          type: 'row',
+          key: 'main',
+          inputs: [
+            {
+              type: 'field',
+              key: 'obstructionHeight',
+              label: saddle3Copy.fields.obstructionHeight.label,
+              value: obstructionHeightText,
+              onChangeText: setObstructionHeightText,
+              placeholder: saddle3Copy.fields.obstructionHeight.placeholder,
+              unit: unitLabel,
+              variant: 'compact',
+              lengthInput,
+              error:
+                obstructionHeightText !== '' && !hasValidHeight
+                  ? saddle3Copy.fields.obstructionHeight.errorRequired
+                  : undefined,
+            },
+            {
+              type: 'picker',
+              key: 'preset',
+              label: saddle3Copy.fields.anglePreset.label,
+              value: angleData.label,
+              onPress: () => setAngleSheetVisible(true),
+            },
+          ],
+        },
+        {
+          type: 'optional',
+          key: 'distance',
+          addLabel: saddle3Copy.fields.distanceToCenter.addButton,
+          onAdd: () => setShowDistanceInput(true),
+          visible: showDistanceInput,
+          field: {
+            type: 'field',
+            key: 'distanceField',
+            label: saddle3Copy.fields.distanceToCenter.label,
+            value: distanceToCenterText,
+            onChangeText: setDistanceToCenterText,
+            placeholder: saddle3Copy.fields.distanceToCenter.placeholder,
+            unit: unitLabel,
+            variant: 'compact',
+            lengthInput,
+            error: distanceError,
+          },
+        },
+      ]}
+      workspace={
+        <Saddle3Diagram
+          data={result.diagramData}
+          isEmpty={!hasValidHeight}
+          isInvalid={obstructionHeightText !== '' && !hasValidHeight}
         />
-
-        <BenderProfileContext message={profileContextMessage} tone="info" />
-
-        <View style={styles.inputRow}>
-          <FieldInput
-            variant="compact"
-            label={saddle3Copy.fields.obstructionHeight.label}
-            value={obstructionHeightText}
-            onChangeText={setObstructionHeightText}
-            placeholder={saddle3Copy.fields.obstructionHeight.placeholder}
-            unit={unitLabel}
-            inputProps={{ keyboardType: lengthKeyboard }}
-            error={
-              obstructionHeightText !== '' && !hasValidHeight
-                ? saddle3Copy.fields.obstructionHeight.errorRequired
-                : undefined
-            }
+      }
+      primaryResult={
+        hasValidHeight ? { label: primaryLabel, value: primaryValue } : undefined
+      }
+      secondaryResults={secondaryResults}
+      dock={{
+        left: [
+          { key: 'reset', label: 'Reset', onPress: resetInputs },
+          { key: 'set-center', label: 'Set Center', onPress: () => setShowDistanceInput(true) },
+        ],
+        guide: { onPress: () => router.push(guideRoute('saddle3')) },
+      }}
+      warnings={visibleWarnings}
+      footer={
+        <>
+          <Sheet
+            visible={angleSheetVisible}
+            title={saddle3Copy.angleSheetTitle}
+            subtitle={saddle3Copy.angleSheetSubtitle}
+            onClose={() => setAngleSheetVisible(false)}
+            onSecondaryPress={() => setAngleSheetVisible(false)}
+            primaryLabel="Done"
+            onPrimaryPress={() => setAngleSheetVisible(false)}>
+            <OptionChipGroup
+              title={saddle3Copy.fields.anglePreset.label}
+              options={PRESET_LABELS}
+              selected={angleData.label}
+              onSelect={selectPresetByLabel}
+            />
+          </Sheet>
+          <EditSetupSheet
+            visible={setupVisible}
+            values={{
+              conduitType,
+              conduitSize,
+              benderProfileId,
+              unit,
+              rounding,
+              bendAngle: 45,
+            }}
+            onCancel={() => setSetupVisible(false)}
+            onApply={applySetup}
           />
-
-          <FieldInput
-            variant="picker"
-            label={saddle3Copy.fields.anglePreset.label}
-            value={angleData.label}
-            onChangeText={() => {}}
-            onPress={() => setAngleSheetVisible(true)}
-          />
-        </View>
-
-        <View style={styles.distancePanel}>
-          {showDistanceInput ? (
-            <FieldInput
-              label={saddle3Copy.fields.distanceToCenter.label}
-              value={distanceToCenterText}
-              onChangeText={setDistanceToCenterText}
-              placeholder={saddle3Copy.fields.distanceToCenter.placeholder}
-              unit={unitLabel}
-              variant="compact"
-              inputProps={{ keyboardType: lengthKeyboard }}
-              error={distanceError}
-            />
-          ) : (
-            <OptionalFieldButton
-              label={saddle3Copy.fields.distanceToCenter.addButton}
-              onPress={() => setShowDistanceInput(true)}
-            />
-          )}
-        </View>
-
-        <PipeWorkspaceResult
-          title={saddle3Copy.workspaceTitle}
-          diagram={
-            <Saddle3Diagram
-              data={result.diagramData}
-              isEmpty={!hasValidHeight}
-              isInvalid={obstructionHeightText !== '' && !hasValidHeight}
-            />
-          }
-          primaryLabel={primaryLabel}
-          primaryValue={primaryValue}
-          chips={resultChips}
-          note={sideMarksNote}
-        />
-
-        <WarningList warnings={visibleWarnings} />
-      </AppScreen>
-
-      <Sheet
-        visible={angleSheetVisible}
-        title={saddle3Copy.angleSheetTitle}
-        subtitle={saddle3Copy.angleSheetSubtitle}
-        onClose={() => setAngleSheetVisible(false)}
-        onSecondaryPress={() => setAngleSheetVisible(false)}
-        primaryLabel="Done"
-        onPrimaryPress={() => setAngleSheetVisible(false)}>
-        <OptionChipGroup
-          title={saddle3Copy.fields.anglePreset.label}
-          options={PRESET_LABELS}
-          selected={angleData.label}
-          onSelect={selectPresetByLabel}
-        />
-      </Sheet>
-
-      <EditSetupSheet
-        visible={setupVisible}
-        values={{
-          conduitType,
-          conduitSize,
-          benderProfileId,
-          unit,
-          rounding,
-          bendAngle: 45,
-        }}
-        onCancel={() => setSetupVisible(false)}
-        onApply={applySetup}
-      />
-    </View>
+        </>
+      }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    alignItems: 'stretch',
-  },
-  distancePanel: {
-    marginTop: -spacing.xs,
-  },
-});

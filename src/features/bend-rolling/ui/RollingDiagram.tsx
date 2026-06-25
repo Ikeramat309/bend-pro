@@ -1,4 +1,3 @@
-import { StyleSheet, View } from 'react-native';
 import Svg, { Circle, Line, Path } from 'react-native-svg';
 
 import {
@@ -6,6 +5,8 @@ import {
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFrame,
+  DiagramGhostMessage,
   DiagramLabel,
   DiagramLeaderLine,
   DimensionLine,
@@ -18,7 +19,7 @@ import { ROLLING_CONFIG } from '../rolling.config';
 import { rollingCopy } from '../rolling.copy';
 
 const GHOST_PIPE = 'M 24 230 H 88 L 192 126 H 336';
-const GHOST_MARK_OPACITY = 0.38;
+const { ghost } = diagramTheme;
 
 const START_X = 24;
 const END_X = 336;
@@ -53,27 +54,27 @@ export function RollingDiagram({ data, isEmpty = false, isInvalid = false }: Rol
   const message = isInvalid ? rollingCopy.diagram.invalidMessage : rollingCopy.diagram.emptyMessage;
 
   return (
-    <View style={styles.frame}>
+    <DiagramFrame>
       {!data || isEmpty || isInvalid ? (
-        <RollingGhostDiagram message={message} />
+        <RollingGhostDiagram message={message} invalid={isInvalid} />
       ) : (
         <RollingLiveDiagram data={data} />
       )}
-    </View>
+    </DiagramFrame>
   );
 }
 
-function RollingGhostDiagram({ message }: { message: string }) {
+function RollingGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
     <Svg viewBox={ROLLING_CONFIG.diagramViewBox} width="100%" height={ROLLING_CONFIG.diagramHeight}>
       <DiagramDefs gradientId="rollingGhostGradient" ghost />
       <DiagramCanvas />
       <RollInsetGhost />
-      <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={0.55} />
+      <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={ghost.pipeShadowOpacity} />
       <PipeSegment d={GHOST_PIPE} variant="pipe" gradientId="rollingGhostGradient" />
-      <MarkLine x1={88} y1={218} x2={88} y2={242} opacity={GHOST_MARK_OPACITY} />
-      <MarkLine x1={192} y1={114} x2={192} y2={138} opacity={GHOST_MARK_OPACITY} />
-      <DiagramLabel x={180} y={286} text={message} variant="muted" fontSize={11} fontWeight="500" />
+      <MarkLine x1={88} y1={218} x2={88} y2={242} opacity={ghost.markOpacity} />
+      <MarkLine x1={192} y1={114} x2={192} y2={138} opacity={ghost.markOpacity} />
+      <DiagramGhostMessage text={message} invalid={invalid} />
     </Svg>
   );
 }
@@ -394,10 +395,3 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
     </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  frame: {
-    overflow: 'hidden',
-    backgroundColor: diagramTheme.canvas,
-  },
-});

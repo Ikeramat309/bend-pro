@@ -2,84 +2,66 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Phased plan for the regroup/refactor era. Phases are ordered by dependency: stabilization and the diagram system come **before** any new calculators. Everything below the current phase is **planned future work** — do not build it unless a task explicitly asks for it, and do not document it as if it exists.
+Phased plan after the initial calculator build-out. **Do not expand scope** into a later phase unless a task explicitly asks for it.
 
-## Phase 1 — Stabilize Offset and Stub 90 ✅ complete
+Historical phases (calculator stabilization, diagram system, bender profiles, additional calculators) are **complete** — see [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md). The roadmap below is the **current product sequence** for foundation, polish, and growth.
 
-- Lock down engine math, validation, and warnings for both calculators
-- Add engine tests with documented example cases (see `CALCULATOR_RULES.md`)
-- Clean terminology drift between engine keys and UI labels (`NAMING_RULES.md`, `GLOSSARY.md`)
-- Fraction-native input, persisted calculator setup, functional Settings screen
-- Keep both screens working at all times — small, safe change sets only
+## Phase 1 — Calculator workspace foundation ✅ complete
 
-**Exit criteria met:** both calculators have tested engines, consistent terminology, persisted setup, and no known math or labeling bugs.
+- Shared layout shell: `src/shared/workspace/BendCalculatorLayout.tsx` and siblings
+- Universal structure: Header · Trust strip · Input strip · Pipe workspace · Action dock · optional nav
+- All six calculators on the shared contract; Guide replaces Summary in the dock
+- Document layout rules in [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md)
+- `npm run check` script (typecheck + lint + tests)
 
-## Phase 2 — Reusable pipe diagram system ✅ complete
+## Phase 2 — Visual UI polish / design system ✅ complete
 
-- Shared diagram primitives in `src/shared/diagrams/` (`PipeSegment`, `MarkLine`, `DimensionLine`, `DiagramLabel`, `DiagramCallout`, `BendRadiusZone`, `DiagramLeaderLine`, `resolveProportionalSpans`, `diagramTheme`)
-- Unified `diagramData` contract from engines — numeric values + formatted display strings
-- Semi-proportional live diagrams for Stub 90 and Offset (geometry from `diagramData`, clamped for readability)
-- Field-accurate diagram semantics (stub mark on the stub, offset diagonal at real bend angle, dimensions along the pipe)
-- Manual chart overrides surfaced on calculator screens (deduct, multiplier, shrink) with setup-row hints
+See [`PHASE_2_WRAPUP.md`](PHASE_2_WRAPUP.md) for the close-out snapshot.
 
-**Exit criteria met:** both calculators render from shared primitives; new calculator diagrams should compose primitives rather than fork drawing code.
+**Delivered:** workspace + UI theme tokens; hub components and screen refactors; FieldInput/Sheet/OptionChipGroup polish; BenderProfileCard + CustomBenderSheet; shared diagram ghost chrome (`diagramTheme.ghost`, callout empty messages); label-only bottom nav.
 
-**Deferred (not blocking later phases):** `primitives/` subfolder organization, richer empty-preview states, additional anchored callout patterns beyond the current leader line.
+**Exit criteria met:** visual polish flows through shared tokens/components; calculator math unchanged; `npm run check` passes.
 
-## Phase 3 — Bender profiles and manual override ✅ complete
+**Deferred:** bespoke ghost illustrations, full legacy-style purge, animations.
 
-**Delivered:**
+## Phase 3 — Field-native fraction keypad ✅ complete
 
-- Manual deduct override (Stub 90, per EMT size)
-- Manual multiplier and shrink-per-inch overrides (Offset, per bend angle)
-- Override hints on setup rows; tappable result chips with override sheets
-- Three generic hand-bender profiles (field-reference charts, not manufacturer data)
-- Bender database — browse, search, select active profile
-- Custom bender profiles — create, edit, delete, select (measured stub 90 deducts)
-- Profile context banners on Stub 90 and Offset (`BenderProfileContext`)
-- Fraction input for custom bender deducts; scrollable bender chip lists when many profiles exist
+See [`PHASE_3_WRAPUP.md`](PHASE_3_WRAPUP.md) for the close-out snapshot.
 
-**Exit criteria met:** a user with any hand bender can get correct marks from a profile or a manual override, and can **select** their bender — not only override a generic table.
+**Delivered:** `fractionKeypad` utility + tests; `FractionKeypad` UI; `FieldInput.lengthInput`; all six calculators + override/custom bender sheets on imperial fraction entry.
 
-**Deferred to future (requires real data, not invented values):**
+**Exit criteria met:** imperial fields use trade keypad; metric unchanged; parse/format utilities unchanged; `npm run check` passes.
 
-- Manufacturer / model-specific shoe charts
+## Phase 4 — Guide mode expansion ✅ complete
 
-## Phase 4 — More calculators ✅ wrapped (paused)
+See [`PHASE_4_GUIDE_WRAPUP.md`](PHASE_4_GUIDE_WRAPUP.md) for the close-out snapshot.
 
-See [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) for the full close-out snapshot.
+**Delivered:** guide content module for all six calculators; Guide index + detail screens; contextual `guideRoute()` from calculator docks.
 
-**Delivered:**
+**Exit criteria met:** real apprentice content; guide separate from calculator results; per-calculator entry from dock; `npm run check` passes.
 
-- **3-Point Saddle** (`/saddle3`) — obstruction height, angle presets (22.5°/45°, 30°/60°, 45°/90°), optional distance to center, diagram + engine tests
-- **4-Point Saddle** (`/saddle4`) — obstruction height, saddle width, equal bend angle (22.5°/30°/45°), optional distance to center; two-offset (plateau) diagram + engine tests
-- **Segment Bend** (`/segment`) — radius, total angle, degrees-per-bend → shot count, between-bends spacing, developed length, optional start marks; arc diagram + engine tests
-- **Rolling Offset** (`/rolling`) — offset height + offset roll → distance between bends, shrink, optional marks; pipe-first diagram + engine tests
+## Phase 5 — Bender database improvement ✅ complete
 
-**Exit criteria met (for Phase 4 scope):** four new calculators follow the feature template, have tested engines, documented example cases, and ship in the bend library.
+See [`PHASE_5_WRAPUP.md`](PHASE_5_WRAPUP.md) for the close-out snapshot.
 
-**Deferred (future hardening or later phases):**
+**Delivered:** `BenderChartKind` profile model; profile chart helpers; detail sheet with full deduct table; override list/clear hub; grouped bender database; Edit Setup and Settings links.
 
-- Kick / 90 with kick and other bend-library placeholders (parallel offset, box offset, back-to-back 90, hydraulic layout)
-- Saddle manual multiplier/shrink overrides (Offset parity)
-- Richer diagram empty states
-- Per-calculator visual polish pass
+**Exit criteria met:** chart inspection and override discoverability improved; no invented manufacturer data; `npm run check` passes.
 
-## Phase 5 — Guide mode (next product focus)
+## Phase 5.5 — QA, hardening, and documentation alignment ✅ complete
 
-- Turn the placeholder Guide screen into real learning content: formulas, bend steps, common mistakes, apprentice walkthroughs
-- Guided mode stays separate from the main calculator result (see `DESIGN_SYSTEM.md`)
+- **`npm run check`** verified (214 tests)
+- Route files confirmed for all hub and calculator screens; `_layout.tsx` registers all stack routes
+- Docs aligned: `APP_ARCHITECTURE`, `UI_WORKSPACE_LAYOUT`, `CURRENT_STATE`, phase wrap-ups
+- **`KNOWN_ISSUES.md`** created — practical limitations and deferred scope
 
-**Optional parallel track:** calculator hardening (close gaps listed in `PHASE_4_WRAPUP.md`) — recommended before adding more calculators.
+## Phase 6 — Future calculators (next)
 
-## Phase 6 — Polish, testing, and release preparation
-
-- Visual polish pass across calculators using the design system
-- Broader test coverage (engines, formatting, validation)
-- Performance and accessibility review
-- Store/release preparation
+- Kick, parallel offset, box offset, back-to-back 90, hydraulic layout — placeholders in `bendLibrary.ts`
+- Follow [`FEATURE_TEMPLATE.md`](../FEATURE_TEMPLATE.md) and compose `BendCalculatorLayout` + engine + diagram
+- Only when explicitly scoped; EMT only unless product direction changes
 
 ## How to use this roadmap
 
-- Agents: confirm which phase a task belongs to before starting. If a task pulls in work from a later phase, flag it instead of expanding scope.
-- Keep this doc updated when a phase completes or priorities shift — and update [`CURRENT_STATE.md`](CURRENT_STATE.md) to match.
+- Confirm phase before starting work. Update [`CURRENT_STATE.md`](CURRENT_STATE.md) when a phase completes or priorities shift.
+- Layout and architecture changes belong in Phase 1 docs ([`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md), [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md)).

@@ -1,9 +1,11 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 
-import { colors, radius, spacing } from '@/theme';
+import { FractionKeypad } from '@/shared/ui/FractionKeypad';
+import { colors, spacing, uiTheme } from '@/theme';
 
 export type FieldInputVariant = 'default' | 'compact' | 'picker';
+export type LengthInputMode = 'decimal' | 'imperial';
 
 export type FieldInputProps = {
   label: string;
@@ -15,17 +17,24 @@ export type FieldInputProps = {
   onChangeText: (text: string) => void;
   onPress?: () => void;
   error?: string;
+  /** Decimal pad for metric; fraction keypad for imperial tape-measure entry. */
+  lengthInput?: LengthInputMode;
   inputProps?: Omit<TextInputProps, 'value' | 'onChangeText' | 'placeholder'>;
 };
 
-const fieldLabelStyle = {
-  fontSize: 10,
-  lineHeight: 13,
-  fontWeight: '600' as const,
-  letterSpacing: 0.65,
-  textTransform: 'uppercase' as const,
-  color: colors.muted,
-};
+function shellBorder(error?: string, focused?: boolean) {
+  if (error) return colors.error;
+  if (focused) return uiTheme.field.shell.focusBorderColor;
+  return uiTheme.field.shell.borderColor;
+}
+
+function resolveKeyboardType(
+  lengthInput: LengthInputMode | undefined,
+  inputProps?: FieldInputProps['inputProps'],
+): TextInputProps['keyboardType'] {
+  if (lengthInput === 'imperial') return 'decimal-pad';
+  return inputProps?.keyboardType ?? 'decimal-pad';
+}
 
 /** Primary measurement field — default, compact row, or picker row. */
 export function FieldInput({
@@ -38,10 +47,43 @@ export function FieldInput({
   onChangeText,
   onPress,
   error,
+  lengthInput,
   inputProps,
 }: FieldInputProps) {
   const inputRef = useRef<TextInput>(null);
-  const borderColor = error ? colors.error : colors.border;
+  const [focused, setFocused] = useState(false);
+  const borderColor = shellBorder(error, focused);
+  const shellBackground = focused ? uiTheme.field.shell.focusBackground : uiTheme.field.shell.backgroundColor;
+  const useFractionKeypad = lengthInput === 'imperial';
+  const keyboardType = resolveKeyboardType(lengthInput, inputProps);
+
+  const sharedInputProps: TextInputProps = {
+    ...inputProps,
+    value,
+    onChangeText,
+    placeholder,
+    placeholderTextColor: colors.muted,
+    keyboardType,
+    returnKeyType: 'done',
+    showSoftInputOnFocus: !useFractionKeypad,
+    onFocus: (event) => {
+      setFocused(true);
+      inputProps?.onFocus?.(event);
+    },
+    onBlur: (event) => {
+      setFocused(false);
+      inputProps?.onBlur?.(event);
+    },
+  };
+
+  const fractionKeypad =
+    useFractionKeypad && focused ? (
+      <FractionKeypad
+        value={value}
+        onChangeText={onChangeText}
+        onDone={() => inputRef.current?.blur()}
+      />
+    ) : null;
 
   if (variant === 'picker') {
     return (
@@ -51,7 +93,7 @@ export function FieldInput({
           style={({ pressed }) => [
             styles.fieldShell,
             styles.fieldShellCompact,
-            { borderColor },
+            { borderColor, backgroundColor: shellBackground },
             pressed && styles.fieldShellPressed,
           ]}
           accessibilityRole="button"
@@ -72,12 +114,7 @@ export function FieldInput({
       <View style={styles.wrapCompact}>
         <Pressable
           onPress={() => inputRef.current?.focus()}
-          style={({ pressed }) => [
-            styles.fieldShell,
-            styles.fieldShellCompact,
-            { borderColor },
-            pressed && styles.fieldShellPressed,
-          ]}
+          style={[styles.fieldShell, styles.fieldShellCompact, { borderColor, backgroundColor: shellBackground }]}
           accessibilityRole="none">
           <View style={styles.compactLabelBlock}>
             <Text style={styles.fieldLabel}>{label}</Text>
@@ -87,17 +124,12 @@ export function FieldInput({
             <TextInput
               ref={inputRef}
               style={styles.inputCompact}
-              value={value}
-              onChangeText={onChangeText}
-              placeholder={placeholder}
-              placeholderTextColor={colors.muted}
-              keyboardType="decimal-pad"
-              returnKeyType="done"
-              {...inputProps}
+              {...sharedInputProps}
             />
             {unit ? <Text style={styles.unitCompact}>{unit}</Text> : null}
           </View>
         </Pressable>
+        {fractionKeypad}
         {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
     );
@@ -107,19 +139,15 @@ export function FieldInput({
     <View style={styles.wrap}>
       <Text style={styles.fieldLabel}>{label}</Text>
       {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
-      <View style={[styles.fieldShell, styles.fieldShellDefault, { borderColor }]}>
+      <View style={[styles.fieldShell, styles.fieldShellDefault, { borderColor, backgroundColor: shellBackground }]}>
         <TextInput
+          ref={inputRef}
           style={styles.inputDefault}
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={colors.muted}
-          keyboardType="decimal-pad"
-          returnKeyType="done"
-          {...inputProps}
+          {...sharedInputProps}
         />
         {unit ? <Text style={styles.unitDefault}>{unit}</Text> : null}
       </View>
+      {fractionKeypad}
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
@@ -136,19 +164,19 @@ const styles = StyleSheet.create({
   },
   fieldShell: {
     borderWidth: 1,
-    borderRadius: radius.sm,
-    backgroundColor: colors.surface2,
-    paddingHorizontal: spacing.md,
+    borderRadius: uiTheme.field.shell.borderRadius,
   },
   fieldShellDefault: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 56,
+    minHeight: uiTheme.field.defaultMinHeight,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     gap: spacing.sm,
   },
   fieldShellCompact: {
-    minHeight: 72,
+    minHeight: uiTheme.field.compactMinHeight,
+    paddingHorizontal: spacing.md,
     paddingVertical: 10,
     justifyContent: 'space-between',
     gap: 3,
@@ -156,7 +184,7 @@ const styles = StyleSheet.create({
   fieldShellPressed: {
     opacity: 0.88,
   },
-  fieldLabel: fieldLabelStyle,
+  fieldLabel: uiTheme.field.label,
   compactLabelBlock: {
     gap: 1,
   },
@@ -179,7 +207,7 @@ const styles = StyleSheet.create({
   inputDefault: {
     flex: 1,
     minWidth: 0,
-    fontSize: 28,
+    fontSize: uiTheme.field.defaultValueSize,
     lineHeight: 32,
     fontWeight: '600',
     color: colors.text,
@@ -190,7 +218,7 @@ const styles = StyleSheet.create({
   inputCompact: {
     flex: 1,
     minWidth: 48,
-    fontSize: 24,
+    fontSize: uiTheme.field.compactValueSize,
     lineHeight: 28,
     fontWeight: '600',
     color: colors.text,
@@ -216,7 +244,7 @@ const styles = StyleSheet.create({
   pickerValue: {
     flex: 1,
     minWidth: 0,
-    fontSize: 24,
+    fontSize: uiTheme.field.compactValueSize,
     lineHeight: 28,
     fontWeight: '600',
     color: colors.text,

@@ -1,8 +1,5 @@
-/**
- * Create / edit custom bender profile — name plus measured stub 90 deducts.
- */
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import {
   buildCustomBenderProfileFromDraft,
@@ -10,9 +7,13 @@ import {
   type CustomBenderProfileDraft,
   type CustomBenderProfileStored,
 } from '@/data/benders';
-import { FieldInput } from '@/shared/ui';
-import { Sheet } from '@/shared/ui/Sheet';
-import { colors, spacing, typography } from '@/theme';
+import {
+  FieldInput,
+  Sheet,
+  SheetDangerAction,
+  SheetFormGroup,
+} from '@/shared/ui';
+import { uiTheme } from '@/theme';
 
 export type CustomBenderSheetProps = {
   visible: boolean;
@@ -79,9 +80,9 @@ function CustomBenderSheetOpen({
       onSecondaryPress={onCancel}
       onPrimaryPress={handleSave}
       primaryLabel={mode === 'create' ? 'Save' : 'Update'}>
-      <Text style={styles.description}>
-        Generic charts are field references — not manufacturer shoe charts. Save your own
-        measured values here when your bender differs.
+      <Text style={styles.intro}>
+        Generic charts are field references — not manufacturer shoe charts. Save your own measured
+        values here when your bender differs.
       </Text>
 
       <FieldInput
@@ -92,38 +93,38 @@ function CustomBenderSheetOpen({
         error={displayError}
       />
 
-      <View style={styles.deductGroup}>
-        <Text style={styles.groupLabel}>Stub 90 deduct (inches)</Text>
-        <Text style={styles.groupHint}>
-          Enter at least one size. Fractions OK (e.g. 5 1/4). Leave blank if unknown.
-        </Text>
-        <FieldInput
-          label='1/2" EMT'
-          value={draft.deductHalf}
-          onChangeText={(deductHalf) => updateDraft({ deductHalf })}
-          placeholder="e.g. 5 or 5 1/4"
-          inputProps={{ keyboardType: 'numbers-and-punctuation' }}
-        />
-        <FieldInput
-          label='3/4" EMT'
-          value={draft.deductThreeQuarter}
-          onChangeText={(deductThreeQuarter) => updateDraft({ deductThreeQuarter })}
-          placeholder="e.g. 6 or 6 1/8"
-          inputProps={{ keyboardType: 'numbers-and-punctuation' }}
-        />
+      <SheetFormGroup
+        title="Stub 90 deduct (inches)"
+        hint="Enter at least one size. Fractions OK (e.g. 5 1/4). Leave blank if unknown.">
+        <View style={styles.deductRow}>
+          <FieldInput
+            variant="compact"
+            label='1/2" EMT'
+            value={draft.deductHalf}
+            onChangeText={(deductHalf) => updateDraft({ deductHalf })}
+            placeholder="5 1/4"
+            lengthInput="imperial"
+          />
+          <FieldInput
+            variant="compact"
+            label='3/4" EMT'
+            value={draft.deductThreeQuarter}
+            onChangeText={(deductThreeQuarter) => updateDraft({ deductThreeQuarter })}
+            placeholder="6 1/8"
+            lengthInput="imperial"
+          />
+        </View>
         <FieldInput
           label='1" EMT'
           value={draft.deductOne}
           onChangeText={(deductOne) => updateDraft({ deductOne })}
           placeholder="e.g. 8 or 8 1/2"
-          inputProps={{ keyboardType: 'numbers-and-punctuation' }}
+          lengthInput="imperial"
         />
-      </View>
+      </SheetFormGroup>
 
       {mode === 'edit' && onDelete ? (
-        <Pressable onPress={onDelete} style={styles.deleteButton} accessibilityRole="button">
-          <Text style={styles.deleteText}>Delete custom bender</Text>
-        </Pressable>
+        <SheetDangerAction label="Delete custom bender" onPress={onDelete} />
       ) : null}
     </Sheet>
   );
@@ -134,29 +135,10 @@ function emptyDraft(): CustomBenderProfileDraft {
 }
 
 const styles = StyleSheet.create({
-  description: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-  deductGroup: {
-    gap: spacing.sm,
-  },
-  groupLabel: {
-    ...typography.label,
-    color: colors.text,
-  },
-  groupHint: {
-    ...typography.subtitle,
-    color: colors.muted,
-    marginBottom: spacing.xs,
-  },
-  deleteButton: {
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-  },
-  deleteText: {
-    ...typography.subtitle,
-    color: colors.error,
-    fontWeight: '600',
+  intro: uiTheme.sheet.intro,
+  deductRow: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'stretch',
   },
 });

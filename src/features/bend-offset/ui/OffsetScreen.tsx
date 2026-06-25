@@ -1,33 +1,22 @@
-/**
- * Offset calculator — diagram-first layout using shared UI chunks.
- *
- * Input state lives here; math lives in engine/offset.engine.ts.
- */
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 
 import type { BendAngle } from '@/core/types';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile, formatOffsetProfileContextLine } from '@/data/benders';
-import { Routes } from '@/navigation';
-import { AppHeader, AppScreen, FieldInput, Sheet } from '@/shared/ui';
+import { Routes, guideRoute } from '@/navigation';
+import { Sheet } from '@/shared/ui';
 import {
   AngleSelector,
-  BenderProfileContext,
+  BendCalculatorLayout,
   EditSetupSheet,
-  OptionalFieldButton,
-  PipeWorkspaceResult,
-  SetupSummary,
-  WarningList,
   type BendAngleOption,
   type SetupValues,
 } from '@/shared/workspace';
-import { colors, spacing } from '@/theme';
 import { formatLength } from '@/utils/formatLength';
 import { getRoundingLabel } from '@/utils/rounding';
-import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
+import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/utils/units';
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateOffset } from '../engine/offset.engine';
@@ -50,7 +39,6 @@ export default function OffsetScreen() {
   const [multiplierSheetVisible, setMultiplierSheetVisible] = useState(false);
   const [shrinkSheetVisible, setShrinkSheetVisible] = useState(false);
 
-  // Shared, persisted setup — follows the user across calculators and restarts.
   const { setup, setSetup } = useCalculatorSetup();
   const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
   const multiplierOverride = setup.offsetMultiplierOverrides[bendAngle];
@@ -66,17 +54,12 @@ export default function OffsetScreen() {
   const unitLabel = getLengthUnitLabel(unit);
   const setupSummary = `${conduitType} ${conduitSize}"`;
   const overrideHint = getSetupOverrideHint(setup, { calculator: 'offset', bendAngle });
-  const setupSubtitle = [
-    `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`,
-    overrideHint,
-  ]
+  const setupMeta = [`${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`, overrideHint]
     .filter(Boolean)
     .join(' • ');
   const hasValidOffset = offsetHeight !== undefined && offsetHeight > 0;
   const profileContextMessage = formatOffsetProfileContextLine(benderProfile.name, bendAngle);
-  // Imperial users type tape-measure fractions ("12 3/8") — needs a keyboard
-  // with space and slash. Falls back to the default keyboard on Android.
-  const lengthKeyboard = unit === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
+  const lengthInput = getLengthInputMode(unit);
 
   const result = useMemo(
     () =>
@@ -110,31 +93,22 @@ export default function OffsetScreen() {
   );
 
   const distanceValue = hasValidOffset ? result.distanceBetweenBendsFormatted : '—';
-  const mark1Value = hasValidOffset
-    ? hasMark1
-      ? result.mark1Formatted ?? '—'
-      : offsetCopy.results.mark1Optional
-    : '—';
-  const mark2Value = hasValidOffset
-    ? hasMark1
-      ? result.mark2Formatted ?? '—'
-      : `+ ${result.distanceBetweenBendsFormatted}`
-    : '—';
   const visibleWarnings = offsetHeightText.trim() !== '' ? result.warnings : [];
 
-  const mark1Error =
-    mark1Text.trim() !== '' && mark1Number === undefined
-      ? offsetCopy.fields.mark1.errorInvalid
-      : undefined;
+  const multiplierChipLabel = result.isMultiplierOverridden
+    ? offsetCopy.results.multiplierCustom
+    : offsetCopy.results.multiplier;
+
+  const shrinkChipLabel = result.isShrinkOverridden
+    ? offsetCopy.results.shrinkCustom
+    : offsetCopy.results.shrink;
 
   function handleBackPress() {
     const safeRouter = router as typeof router & { canGoBack?: () => boolean };
-
     if (typeof safeRouter.canGoBack === 'function' && safeRouter.canGoBack()) {
       router.back();
       return;
     }
-
     router.replace(Routes.home);
   }
 
@@ -176,177 +150,163 @@ export default function OffsetScreen() {
     setShrinkSheetVisible(false);
   }
 
-  const multiplierChipLabel = result.isMultiplierOverridden
-    ? `${offsetCopy.results.multiplierCustom} (${bendAngle}°)`
-    : `${offsetCopy.results.multiplier} (${bendAngle}°)`;
-
-  const shrinkChipLabel = result.isShrinkOverridden
-    ? `${offsetCopy.results.shrinkCustom} (${bendAngle}°)`
-    : `${offsetCopy.results.shrink} (${bendAngle}°)`;
+  function resetInputs() {
+    setOffsetHeightText('');
+    setMark1Text('');
+    setShowMark1Input(false);
+  }
 
   return (
-    <View style={styles.screen}>
-      <AppHeader
-        showBack
-        title={offsetCopy.screenTitle}
-        subtitle={setupSummary}
-        onBackPress={handleBackPress}
-      />
-
-      <AppScreen scroll>
-        <SetupSummary
-          title={benderProfile.name}
-          subtitle={setupSubtitle}
-          onEdit={() => setSetupVisible(true)}
+    <BendCalculatorLayout
+      title={offsetCopy.screenTitle}
+      subtitle={setupSummary}
+      onBackPress={handleBackPress}
+      trust={{
+        benderName: benderProfile.name,
+        meta: setupMeta,
+        note: profileContextMessage,
+        onEdit: () => setSetupVisible(true),
+      }}
+      inputs={[
+        {
+          type: 'row',
+          key: 'main',
+          inputs: [
+            {
+              type: 'field',
+              key: 'offsetHeight',
+              label: offsetCopy.fields.offsetHeight.label,
+              value: offsetHeightText,
+              onChangeText: setOffsetHeightText,
+              placeholder: offsetCopy.fields.offsetHeight.placeholder,
+              unit: unitLabel,
+              variant: 'compact',
+              lengthInput,
+              error:
+                offsetHeightText !== '' && !hasValidOffset
+                  ? offsetCopy.fields.offsetHeight.errorRequired
+                  : undefined,
+            },
+            {
+              type: 'picker',
+              key: 'angle',
+              label: offsetCopy.fields.bendAngle.label,
+              value: `${bendAngle}°`,
+              onPress: () => setAngleSheetVisible(true),
+            },
+          ],
+        },
+        {
+          type: 'optional',
+          key: 'mark1',
+          addLabel: offsetCopy.fields.mark1.addButton,
+          onAdd: () => setShowMark1Input(true),
+          visible: showMark1Input,
+          field: {
+            type: 'field',
+            key: 'mark1Field',
+            label: offsetCopy.fields.mark1.label,
+            value: mark1Text,
+            onChangeText: setMark1Text,
+            placeholder: offsetCopy.fields.mark1.placeholder,
+            unit: unitLabel,
+            variant: 'compact',
+            lengthInput,
+            error:
+              mark1Text.trim() !== '' && mark1Number === undefined
+                ? offsetCopy.fields.mark1.errorInvalid
+                : undefined,
+          },
+        },
+      ]}
+      workspace={
+        <OffsetDiagram
+          data={result.diagramData}
+          isEmpty={!hasValidOffset}
+          isInvalid={offsetHeightText !== '' && !hasValidOffset}
         />
-
-        <BenderProfileContext message={profileContextMessage} tone="info" />
-
-        <View style={styles.inputRow}>
-          <FieldInput
-            variant="compact"
-            label={offsetCopy.fields.offsetHeight.label}
-            value={offsetHeightText}
-            onChangeText={setOffsetHeightText}
-            placeholder={offsetCopy.fields.offsetHeight.placeholder}
-            unit={unitLabel}
-            inputProps={{ keyboardType: lengthKeyboard }}
-            error={
-              offsetHeightText !== '' && !hasValidOffset
-                ? offsetCopy.fields.offsetHeight.errorRequired
-                : undefined
-            }
+      }
+      primaryResult={
+        hasValidOffset
+          ? { label: offsetCopy.results.distanceBetweenBends, value: distanceValue }
+          : undefined
+      }
+      secondaryResults={
+        hasValidOffset
+          ? [
+              {
+                label: shrinkChipLabel,
+                value: result.shrinkFormatted,
+                tone: result.isShrinkOverridden ? 'primary' : undefined,
+                onPress: () => setShrinkSheetVisible(true),
+              },
+              {
+                label: `${multiplierChipLabel} (${bendAngle}°)`,
+                value: formatMultiplier(result.multiplier),
+                tone: result.isMultiplierOverridden ? 'primary' : undefined,
+                onPress: () => setMultiplierSheetVisible(true),
+              },
+            ]
+          : undefined
+      }
+      dock={{
+        left: [
+          { key: 'reset', label: 'Reset', onPress: resetInputs },
+          { key: 'set-mark', label: 'Set First Mark', onPress: () => setShowMark1Input(true) },
+        ],
+        guide: { onPress: () => router.push(guideRoute('offset')) },
+      }}
+      warnings={visibleWarnings}
+      footer={
+        <>
+          <Sheet
+            visible={angleSheetVisible}
+            title={offsetCopy.angleSheetTitle}
+            subtitle={offsetCopy.angleSheetSubtitle}
+            onClose={() => setAngleSheetVisible(false)}
+            onSecondaryPress={() => setAngleSheetVisible(false)}
+            primaryLabel="Done"
+            onPrimaryPress={() => setAngleSheetVisible(false)}>
+            <AngleSelector
+              label={offsetCopy.fields.bendAngle.label}
+              selectedAngle={bendAngle as BendAngleOption}
+              onSelect={(angle) => setBendAngle(angle as BendAngle)}
+            />
+          </Sheet>
+          <EditSetupSheet
+            visible={setupVisible}
+            values={{
+              conduitType,
+              conduitSize,
+              benderProfileId,
+              unit,
+              rounding,
+              bendAngle,
+            }}
+            onCancel={() => setSetupVisible(false)}
+            onApply={applySetup}
           />
-
-          <FieldInput
-            variant="picker"
-            label={offsetCopy.fields.bendAngle.label}
-            value={`${bendAngle}°`}
-            onChangeText={() => {}}
-            onPress={() => setAngleSheetVisible(true)}
+          <MultiplierOverrideSheet
+            visible={multiplierSheetVisible}
+            bendAngle={bendAngle}
+            benderName={benderProfile.name}
+            chartMultiplierFormatted={formatMultiplier(chartMultiplier)}
+            currentOverride={multiplierOverride}
+            onCancel={() => setMultiplierSheetVisible(false)}
+            onApply={applyMultiplierOverride}
           />
-        </View>
-
-        <View style={styles.markPanel}>
-          {showMark1Input ? (
-            <FieldInput
-              label={offsetCopy.fields.mark1.label}
-              value={mark1Text}
-              onChangeText={setMark1Text}
-              placeholder={offsetCopy.fields.mark1.placeholder}
-              unit={unitLabel}
-              variant="compact"
-              inputProps={{ keyboardType: lengthKeyboard }}
-              error={mark1Error}
-            />
-          ) : (
-            <OptionalFieldButton
-              label={offsetCopy.fields.mark1.addButton}
-              onPress={() => setShowMark1Input(true)}
-            />
-          )}
-        </View>
-
-        <PipeWorkspaceResult
-          title={offsetCopy.workspaceTitle}
-          diagram={
-            <OffsetDiagram
-              data={result.diagramData}
-              isEmpty={!hasValidOffset}
-              isInvalid={offsetHeightText !== '' && !hasValidOffset}
-            />
-          }
-          primaryLabel={offsetCopy.results.distanceBetweenBends}
-          primaryValue={distanceValue}
-          chips={[
-            {
-              label: multiplierChipLabel,
-              value: formatMultiplier(result.multiplier),
-              tone: result.isMultiplierOverridden ? 'primary' : undefined,
-              onPress: () => setMultiplierSheetVisible(true),
-            },
-            {
-              label: shrinkChipLabel,
-              value: result.shrinkFormatted,
-              tone: result.isShrinkOverridden ? 'primary' : undefined,
-              onPress: () => setShrinkSheetVisible(true),
-            },
-            {
-              label: offsetCopy.results.mark1,
-              value: mark1Value,
-              tone: hasMark1 ? 'primary' : 'default',
-            },
-            { label: offsetCopy.results.mark2, value: mark2Value },
-          ]}
-        />
-
-        <WarningList warnings={visibleWarnings} />
-      </AppScreen>
-
-      <Sheet
-        visible={angleSheetVisible}
-        title={offsetCopy.angleSheetTitle}
-        subtitle={offsetCopy.angleSheetSubtitle}
-        onClose={() => setAngleSheetVisible(false)}
-        onSecondaryPress={() => setAngleSheetVisible(false)}
-        primaryLabel="Done"
-        onPrimaryPress={() => setAngleSheetVisible(false)}>
-        <AngleSelector
-          label={offsetCopy.fields.bendAngle.label}
-          selectedAngle={bendAngle as BendAngleOption}
-          onSelect={(angle) => setBendAngle(angle as BendAngle)}
-        />
-      </Sheet>
-
-      <EditSetupSheet
-        visible={setupVisible}
-        values={{
-          conduitType,
-          conduitSize,
-          benderProfileId,
-          unit,
-          rounding,
-          bendAngle,
-        }}
-        onCancel={() => setSetupVisible(false)}
-        onApply={applySetup}
-      />
-
-      <MultiplierOverrideSheet
-        visible={multiplierSheetVisible}
-        bendAngle={bendAngle}
-        benderName={benderProfile.name}
-        chartMultiplierFormatted={formatMultiplier(chartMultiplier)}
-        currentOverride={multiplierOverride}
-        onCancel={() => setMultiplierSheetVisible(false)}
-        onApply={applyMultiplierOverride}
-      />
-
-      <ShrinkOverrideSheet
-        visible={shrinkSheetVisible}
-        bendAngle={bendAngle}
-        benderName={benderProfile.name}
-        unitSystem={unit}
-        chartShrinkPerInchFormatted={formatLength(chartShrinkPerInch, unit, rounding)}
-        currentOverrideInches={shrinkPerInchOverride}
-        onCancel={() => setShrinkSheetVisible(false)}
-        onApply={applyShrinkOverride}
-      />
-    </View>
+          <ShrinkOverrideSheet
+            visible={shrinkSheetVisible}
+            bendAngle={bendAngle}
+            benderName={benderProfile.name}
+            unitSystem={unit}
+            chartShrinkPerInchFormatted={formatLength(chartShrinkPerInch, unit, rounding)}
+            currentOverrideInches={shrinkPerInchOverride}
+            onCancel={() => setShrinkSheetVisible(false)}
+            onApply={applyShrinkOverride}
+          />
+        </>
+      }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    alignItems: 'stretch',
-  },
-  markPanel: {
-    marginTop: -spacing.xs,
-  },
-});

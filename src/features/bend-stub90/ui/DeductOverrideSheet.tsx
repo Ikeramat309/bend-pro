@@ -14,7 +14,7 @@ import { FieldInput } from '@/shared/ui';
 import { Sheet } from '@/shared/ui/Sheet';
 import { colors, spacing, typography } from '@/theme';
 import { parseLengthInput } from '@/utils/parseLengthInput';
-import { getLengthUnitLabel } from '@/utils/units';
+import { getLengthUnitLabel, getLengthInputMode } from '@/utils/units';
 
 import { stub90Copy } from '../stub90.copy';
 
@@ -73,8 +73,7 @@ function DeductOverrideSheetOpen({
   const isValid =
     isBlank || (parsedInches !== undefined && parsedInches <= MAX_DEDUCT_OVERRIDE_INCHES);
 
-  const lengthKeyboard =
-    unitSystem === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
+  const lengthInput = getLengthInputMode(unitSystem);
 
   function handleApply() {
     if (!isValid) return;
@@ -97,7 +96,7 @@ function DeductOverrideSheetOpen({
         onChangeText={setText}
         placeholder={stub90Copy.deductOverride.placeholder}
         unit={getLengthUnitLabel(unitSystem)}
-        inputProps={{ keyboardType: lengthKeyboard }}
+        lengthInput={lengthInput}
         error={!isValid ? stub90Copy.deductOverride.errorInvalid : undefined}
       />
 

@@ -1,3 +1,5 @@
+export { DiagramFrame, type DiagramFrameProps } from './DiagramFrame';
+export { DiagramGhostMessage, type DiagramGhostMessageProps } from './DiagramGhostMessage';
 export { diagramMetrics, diagramTheme } from './diagramTheme';
 export { BendRadiusZone, type BendRadiusZoneProps } from './BendRadiusZone';
 export { DiagramCallout, type DiagramCalloutProps } from './DiagramCallout';

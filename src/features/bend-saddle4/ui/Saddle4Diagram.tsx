@@ -1,4 +1,3 @@
-import { StyleSheet, View } from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
 
 import {
@@ -6,6 +5,8 @@ import {
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFrame,
+  DiagramGhostMessage,
   DiagramLabel,
   DimensionLine,
   MarkLine,
@@ -174,17 +175,17 @@ export function Saddle4Diagram({ data, isEmpty = false, isInvalid = false }: Sad
   const message = isInvalid ? saddle4Copy.diagram.invalidMessage : saddle4Copy.diagram.emptyMessage;
 
   return (
-    <View style={styles.frame}>
+    <DiagramFrame>
       {!data || isEmpty || isInvalid ? (
-        <Saddle4GhostDiagram message={message} />
+        <Saddle4GhostDiagram message={message} invalid={isInvalid} />
       ) : (
         <Saddle4LiveDiagram data={data} />
       )}
-    </View>
+    </DiagramFrame>
   );
 }
 
-function Saddle4GhostDiagram({ message }: { message: string }) {
+function Saddle4GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   const geo = buildSaddle4Geometry(2, 2 * 2.6, 4, 22.5);
 
   return (
@@ -198,13 +199,13 @@ function Saddle4GhostDiagram({ message }: { message: string }) {
         height={geo.obsHeightPx}
         ghost
       />
-      <PipeSegment d={geo.pipePath} variant="shadow" opacity={0.5} />
+      <PipeSegment d={geo.pipePath} variant="shadow" opacity={diagramTheme.ghost.pipeShadowOpacity} />
       <PipeSegment d={geo.pipePath} variant="pipe" gradientId="saddle4GhostGradient" />
-      <MarkLine x1={geo.xOL} y1={BASE_Y - 11} x2={geo.xOL} y2={BASE_Y + 11} opacity={0.34} />
-      <MarkLine x1={geo.xIL} y1={geo.topY - 11} x2={geo.xIL} y2={geo.topY + 11} opacity={0.34} />
-      <MarkLine x1={geo.xIR} y1={geo.topY - 11} x2={geo.xIR} y2={geo.topY + 11} opacity={0.34} />
-      <MarkLine x1={geo.xOR} y1={BASE_Y - 11} x2={geo.xOR} y2={BASE_Y + 11} opacity={0.34} />
-      <DiagramLabel x={180} y={286} text={message} variant="muted" fontSize={11} fontWeight="500" />
+      <MarkLine x1={geo.xOL} y1={BASE_Y - 11} x2={geo.xOL} y2={BASE_Y + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
+      <MarkLine x1={geo.xIL} y1={geo.topY - 11} x2={geo.xIL} y2={geo.topY + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
+      <MarkLine x1={geo.xIR} y1={geo.topY - 11} x2={geo.xIR} y2={geo.topY + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
+      <MarkLine x1={geo.xOR} y1={BASE_Y - 11} x2={geo.xOR} y2={BASE_Y + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
+      <DiagramGhostMessage text={message} invalid={invalid} />
     </Svg>
   );
 }
@@ -222,8 +223,8 @@ function ObstructionBlock({
   height: number;
   ghost?: boolean;
 }) {
-  const fill = ghost ? 'rgba(143, 155, 173, 0.1)' : 'rgba(143, 155, 173, 0.16)';
-  const stroke = ghost ? 'rgba(143, 155, 173, 0.32)' : 'rgba(143, 155, 173, 0.58)';
+  const fill = ghost ? diagramTheme.ghost.obstructionFill : 'rgba(143, 155, 173, 0.16)';
+  const stroke = ghost ? diagramTheme.ghost.obstructionStroke : 'rgba(143, 155, 173, 0.58)';
 
   return (
     <Rect
@@ -444,10 +445,3 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
     </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  frame: {
-    overflow: 'hidden',
-    backgroundColor: diagramTheme.canvas,
-  },
-});

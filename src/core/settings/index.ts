@@ -14,4 +14,10 @@ export {
   type SetupOverrideHintContext,
   type Stub90DeductOverrides,
 } from './calculatorSetup';
+export {
+  listSetupOverrides,
+  patchClearAllSetupOverrides,
+  patchClearSetupOverride,
+  type SetupOverrideEntry,
+} from './setupOverrides';
 export { SettingsProvider, useCalculatorSetup } from './SettingsContext';

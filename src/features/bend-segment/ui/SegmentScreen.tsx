@@ -1,29 +1,17 @@
-/**
- * Segment Bend calculator — large-radius bend laid out as equal shots.
- *
- * Input state lives here; math lives in engine/segment.engine.ts.
- */
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
-import { Routes } from '@/navigation';
-import { AppHeader, AppScreen, FieldInput } from '@/shared/ui';
+import { Routes, guideRoute } from '@/navigation';
 import {
-  BenderProfileContext,
+  BendCalculatorLayout,
   EditSetupSheet,
-  OptionalFieldButton,
-  PipeWorkspaceResult,
-  SetupSummary,
-  WarningList,
   type SetupValues,
 } from '@/shared/workspace';
-import { colors, spacing } from '@/theme';
 import { getRoundingLabel } from '@/utils/rounding';
-import { getLengthUnitLabel, getUnitSystemLabel } from '@/utils/units';
+import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/utils/units';
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateSegment } from '../engine/segment.engine';
@@ -64,7 +52,7 @@ export default function SegmentScreen() {
   const hasValidRadius = radius !== undefined && radius > 0;
   const hasValidAngles = totalAngle !== undefined && degreesPerBend !== undefined;
   const hasValidInputs = hasValidRadius && hasValidAngles;
-  const lengthKeyboard = unit === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
+  const lengthInput = getLengthInputMode(unit);
 
   const result = useMemo(
     () =>
@@ -98,22 +86,12 @@ export default function SegmentScreen() {
   const spacingValue = hasValidInputs ? result.spacingFormatted : '—';
   const perBendValue = hasValidInputs ? result.degreesPerBendFormatted : '—';
   const bendsValue = hasValidInputs ? result.numberOfBendsFormatted : '—';
-  const developedLengthValue = hasValidInputs ? result.developedLengthFormatted : '—';
 
-  const resultChips = [
-    { label: segmentCopy.results.perBend, value: perBendValue },
-    { label: segmentCopy.results.bends, value: bendsValue },
-    { label: segmentCopy.results.developedLength, value: developedLengthValue },
-  ];
-
-  const marksNote = hasValidInputs
-    ? hasStart && result.firstMarkFormatted && result.lastMarkFormatted
-      ? segmentCopy.results.marksAbsolute(
-          result.radiusFormatted,
-          result.firstMarkFormatted,
-          result.lastMarkFormatted,
-        )
-      : segmentCopy.results.marksRelative(result.radiusFormatted)
+  const secondaryResults = hasValidInputs
+    ? [
+        { label: segmentCopy.results.perBend, value: perBendValue },
+        { label: segmentCopy.results.bends, value: bendsValue },
+      ]
     : undefined;
 
   const startError =
@@ -148,140 +126,143 @@ export default function SegmentScreen() {
     setSetupVisible(false);
   }
 
+  function resetInputs() {
+    setRadiusText('');
+    setTotalAngleText(String(SEGMENT_CONFIG.defaultTotalAngle));
+    setDegreesPerBendText(String(SEGMENT_CONFIG.defaultDegreesPerBend));
+    setStartOffsetText('');
+    setShowStartInput(false);
+  }
+
   return (
-    <View style={styles.screen}>
-      <AppHeader
-        showBack
-        title={segmentCopy.screenTitle}
-        subtitle={setupSummary}
-        onBackPress={handleBackPress}
-      />
-
-      <AppScreen scroll>
-        <SetupSummary
-          title={benderProfile.name}
-          subtitle={setupSubtitle}
-          onEdit={() => setSetupVisible(true)}
+    <BendCalculatorLayout
+      title={segmentCopy.screenTitle}
+      subtitle={setupSummary}
+      onBackPress={handleBackPress}
+      trust={{
+        benderName: benderProfile.name,
+        meta: setupSubtitle,
+        note: segmentCopy.profileContext,
+        onEdit: () => setSetupVisible(true),
+      }}
+      inputs={[
+        {
+          type: 'row',
+          key: 'radius-angle',
+          inputs: [
+            {
+              type: 'field',
+              key: 'radius',
+              label: segmentCopy.fields.radius.label,
+              value: radiusText,
+              onChangeText: setRadiusText,
+              placeholder: segmentCopy.fields.radius.placeholder,
+              unit: unitLabel,
+              variant: 'compact',
+              lengthInput,
+              error:
+                radiusText !== '' && !hasValidRadius
+                  ? segmentCopy.fields.radius.errorRequired
+                  : undefined,
+            },
+            {
+              type: 'field',
+              key: 'totalAngle',
+              label: segmentCopy.fields.totalAngle.label,
+              value: totalAngleText,
+              onChangeText: setTotalAngleText,
+              placeholder: segmentCopy.fields.totalAngle.placeholder,
+              unit: segmentCopy.degreeUnit,
+              variant: 'compact',
+              keyboardType: 'decimal-pad',
+              error:
+                totalAngleText !== '' && totalAngle === undefined
+                  ? segmentCopy.fields.totalAngle.errorRequired
+                  : undefined,
+            },
+          ],
+        },
+        {
+          type: 'row',
+          key: 'per-bend',
+          inputs: [
+            {
+              type: 'field',
+              key: 'degreesPerBend',
+              label: segmentCopy.fields.degreesPerBend.label,
+              value: degreesPerBendText,
+              onChangeText: setDegreesPerBendText,
+              placeholder: segmentCopy.fields.degreesPerBend.placeholder,
+              unit: segmentCopy.degreeUnit,
+              variant: 'compact',
+              keyboardType: 'decimal-pad',
+              error:
+                degreesPerBendText !== '' && degreesPerBend === undefined
+                  ? segmentCopy.fields.degreesPerBend.errorRequired
+                  : undefined,
+            },
+          ],
+        },
+        {
+          type: 'optional',
+          key: 'start',
+          addLabel: segmentCopy.fields.startOffset.addButton,
+          onAdd: () => setShowStartInput(true),
+          visible: showStartInput,
+          field: {
+            type: 'field',
+            key: 'startField',
+            label: segmentCopy.fields.startOffset.label,
+            value: startOffsetText,
+            onChangeText: setStartOffsetText,
+            placeholder: segmentCopy.fields.startOffset.placeholder,
+            unit: unitLabel,
+            variant: 'compact',
+            lengthInput,
+            error: startError,
+          },
+        },
+      ]}
+      workspace={
+        <SegmentDiagram
+          data={result.diagramData}
+          isEmpty={!hasValidInputs}
+          isInvalid={inputsStarted && !hasValidInputs}
         />
-
-        <BenderProfileContext message={segmentCopy.profileContext} tone="info" />
-
-        <View style={styles.inputRow}>
-          <FieldInput
-            variant="compact"
-            label={segmentCopy.fields.radius.label}
-            value={radiusText}
-            onChangeText={setRadiusText}
-            placeholder={segmentCopy.fields.radius.placeholder}
-            unit={unitLabel}
-            inputProps={{ keyboardType: lengthKeyboard }}
-            error={radiusText !== '' && !hasValidRadius ? segmentCopy.fields.radius.errorRequired : undefined}
-          />
-
-          <FieldInput
-            variant="compact"
-            label={segmentCopy.fields.totalAngle.label}
-            value={totalAngleText}
-            onChangeText={setTotalAngleText}
-            placeholder={segmentCopy.fields.totalAngle.placeholder}
-            unit={segmentCopy.degreeUnit}
-            inputProps={{ keyboardType: 'decimal-pad' }}
-            error={
-              totalAngleText !== '' && totalAngle === undefined
-                ? segmentCopy.fields.totalAngle.errorRequired
-                : undefined
-            }
-          />
-        </View>
-
-        <View style={styles.inputRow}>
-          <FieldInput
-            variant="compact"
-            label={segmentCopy.fields.degreesPerBend.label}
-            value={degreesPerBendText}
-            onChangeText={setDegreesPerBendText}
-            placeholder={segmentCopy.fields.degreesPerBend.placeholder}
-            unit={segmentCopy.degreeUnit}
-            inputProps={{ keyboardType: 'decimal-pad' }}
-            error={
-              degreesPerBendText !== '' && degreesPerBend === undefined
-                ? segmentCopy.fields.degreesPerBend.errorRequired
-                : undefined
-            }
-          />
-
-          <View style={styles.inputSpacer} />
-        </View>
-
-        <View style={styles.startPanel}>
-          {showStartInput ? (
-            <FieldInput
-              variant="compact"
-              label={segmentCopy.fields.startOffset.label}
-              value={startOffsetText}
-              onChangeText={setStartOffsetText}
-              placeholder={segmentCopy.fields.startOffset.placeholder}
-              unit={unitLabel}
-              inputProps={{ keyboardType: lengthKeyboard }}
-              error={startError}
-            />
-          ) : (
-            <OptionalFieldButton
-              label={segmentCopy.fields.startOffset.addButton}
-              onPress={() => setShowStartInput(true)}
-            />
-          )}
-        </View>
-
-        <PipeWorkspaceResult
-          title={segmentCopy.workspaceTitle}
-          diagram={
-            <SegmentDiagram
-              data={result.diagramData}
-              isEmpty={!hasValidInputs}
-              isInvalid={inputsStarted && !hasValidInputs}
-            />
-          }
-          primaryLabel={segmentCopy.results.spacing}
-          primaryValue={spacingValue}
-          chips={resultChips}
-          note={marksNote}
+      }
+      primaryResult={
+        hasValidInputs
+          ? { label: segmentCopy.results.spacing, value: spacingValue }
+          : undefined
+      }
+      secondaryResults={secondaryResults}
+      dock={{
+        left: [
+          { key: 'reset', label: 'Reset', onPress: resetInputs },
+          {
+            key: 'set-arc',
+            label: hasStart ? 'Next Segment' : 'Set Arc',
+            onPress: () => setShowStartInput(true),
+          },
+        ],
+        guide: { onPress: () => router.push(guideRoute('segment')) },
+      }}
+      warnings={visibleWarnings}
+      footer={
+        <EditSetupSheet
+          visible={setupVisible}
+          values={{
+            conduitType,
+            conduitSize,
+            benderProfileId,
+            unit,
+            rounding,
+            bendAngle: 45,
+          }}
+          onCancel={() => setSetupVisible(false)}
+          onApply={applySetup}
         />
-
-        <WarningList warnings={visibleWarnings} />
-      </AppScreen>
-
-      <EditSetupSheet
-        visible={setupVisible}
-        values={{
-          conduitType,
-          conduitSize,
-          benderProfileId,
-          unit,
-          rounding,
-          bendAngle: 45,
-        }}
-        onCancel={() => setSetupVisible(false)}
-        onApply={applySetup}
-      />
-    </View>
+      }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    alignItems: 'stretch',
-  },
-  inputSpacer: {
-    flex: 1,
-  },
-  startPanel: {
-    marginTop: -spacing.xs,
-  },
-});

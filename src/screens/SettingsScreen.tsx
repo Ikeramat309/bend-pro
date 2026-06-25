@@ -1,10 +1,6 @@
-/**
- * Settings — edits the shared, persisted calculator setup. Changes apply
- * immediately and show up in every calculator (same store as Edit Setup).
- */
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import {
   IMPERIAL_ROUNDING_OPTIONS,
@@ -15,8 +11,9 @@ import {
 } from '@/core/settings';
 import { getBenderProfile, getBenderProfileIdByName, mergeBenderProfiles } from '@/data/benders';
 import { EMT_TRADE_SIZES } from '@/data/emt';
-import { AppHeader, OptionChipGroup } from '@/shared/ui';
-import { colors, layout, radius, spacing, typography } from '@/theme';
+import { Routes } from '@/navigation';
+import { AppHeader, HubNavCard, HubSettingsCard, OptionChipGroup, SetupOverridesCard } from '@/shared/ui';
+import { colors, uiTheme } from '@/theme';
 
 const UNIT_LABELS = ['Imperial', 'Metric'] as const;
 
@@ -43,8 +40,7 @@ export function SettingsScreen() {
       />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Units</Text>
+        <HubSettingsCard title="Units">
           <OptionChipGroup
             title="Unit"
             options={UNIT_LABELS}
@@ -57,11 +53,9 @@ export function SettingsScreen() {
             selected={setup.rounding}
             onSelect={(rounding) => update({ rounding })}
           />
-        </View>
+        </HubSettingsCard>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Field Defaults</Text>
-          <Text style={styles.cardBody}>Used by every calculator. Editable per-bend too.</Text>
+        <HubSettingsCard title="Field Defaults" body="Used by every calculator. Editable per-bend too.">
           <OptionChipGroup
             title="EMT Size"
             options={EMT_TRADE_SIZES}
@@ -78,15 +72,19 @@ export function SettingsScreen() {
               })
             }
           />
-        </View>
+          <HubNavCard
+            label="Manage benders"
+            description="View charts, add custom profiles, and review overrides"
+            onPress={() => router.push(Routes.benderDatabase)}
+          />
+        </HubSettingsCard>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>About</Text>
-          <Text style={styles.cardBody}>
-            Bend Pro {Constants.expoConfig?.version ?? ''} — EMT bending calculators for the
-            field.
-          </Text>
-        </View>
+        <SetupOverridesCard />
+
+        <HubSettingsCard
+          title="About"
+          body={`Bend Pro ${Constants.expoConfig?.version ?? ''} — EMT bending calculators for the field.`}
+        />
       </ScrollView>
     </View>
   );
@@ -99,27 +97,10 @@ const styles = StyleSheet.create({
   },
   content: {
     width: '100%',
-    maxWidth: layout.maxContentWidth,
+    maxWidth: uiTheme.layout.maxContentWidth,
     alignSelf: 'center',
-    padding: spacing.lg,
-    paddingBottom: spacing.section,
-    gap: spacing.md,
-  },
-  card: {
-    gap: spacing.md,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-  },
-  cardTitle: {
-    ...typography.body,
-    color: colors.text,
-    fontWeight: '700',
-  },
-  cardBody: {
-    ...typography.subtitle,
-    color: colors.muted,
+    padding: uiTheme.layout.screenPadding,
+    paddingBottom: uiTheme.layout.sectionBottom,
+    gap: uiTheme.hub.sectionGap,
   },
 });

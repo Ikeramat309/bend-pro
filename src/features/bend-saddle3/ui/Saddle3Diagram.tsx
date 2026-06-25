@@ -1,4 +1,3 @@
-import { StyleSheet, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 import {
@@ -6,6 +5,8 @@ import {
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFrame,
+  DiagramGhostMessage,
   DiagramLabel,
   DimensionLine,
   MarkLine,
@@ -160,17 +161,17 @@ export function Saddle3Diagram({ data, isEmpty = false, isInvalid = false }: Sad
     : saddle3Copy.diagram.emptyMessage;
 
   return (
-    <View style={styles.frame}>
+    <DiagramFrame>
       {!data || isEmpty || isInvalid ? (
-        <Saddle3GhostDiagram message={message} />
+        <Saddle3GhostDiagram message={message} invalid={isInvalid} />
       ) : (
         <Saddle3LiveDiagram data={data} />
       )}
-    </View>
+    </DiagramFrame>
   );
 }
 
-function Saddle3GhostDiagram({ message }: { message: string }) {
+function Saddle3GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   const geo = buildSaddleGeometry(2, 5.23, 22.5);
 
   return (
@@ -178,12 +179,12 @@ function Saddle3GhostDiagram({ message }: { message: string }) {
       <DiagramDefs gradientId="saddle3GhostGradient" ghost />
       <DiagramCanvas />
       <ObstructionCircle centerX={CENTER_X} baselineY={BASE_Y} radius={geo.obsRadius} ghost />
-      <PipeSegment d={geo.pipePath} variant="shadow" opacity={0.5} />
+      <PipeSegment d={geo.pipePath} variant="shadow" opacity={diagramTheme.ghost.pipeShadowOpacity} />
       <PipeSegment d={geo.pipePath} variant="pipe" gradientId="saddle3GhostGradient" />
-      <MarkLine x1={geo.x1} y1={BASE_Y - 11} x2={geo.x1} y2={BASE_Y + 11} opacity={0.34} />
-      <MarkLine x1={CENTER_X} y1={geo.peakY - 12} x2={CENTER_X} y2={geo.peakY + 7} opacity={0.38} />
-      <MarkLine x1={geo.x2} y1={BASE_Y - 11} x2={geo.x2} y2={BASE_Y + 11} opacity={0.34} />
-      <DiagramLabel x={180} y={286} text={message} variant="muted" fontSize={11} fontWeight="500" />
+      <MarkLine x1={geo.x1} y1={BASE_Y - 11} x2={geo.x1} y2={BASE_Y + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
+      <MarkLine x1={CENTER_X} y1={geo.peakY - 12} x2={CENTER_X} y2={geo.peakY + 7} opacity={diagramTheme.ghost.markOpacity} />
+      <MarkLine x1={geo.x2} y1={BASE_Y - 11} x2={geo.x2} y2={BASE_Y + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
+      <DiagramGhostMessage text={message} invalid={invalid} />
     </Svg>
   );
 }
@@ -203,8 +204,8 @@ function ObstructionCircle({
   ghost = false,
 }: ObstructionCircleProps) {
   const cy = baselineY - radius;
-  const fill = ghost ? 'rgba(143, 155, 173, 0.1)' : 'rgba(143, 155, 173, 0.16)';
-  const stroke = ghost ? 'rgba(143, 155, 173, 0.32)' : 'rgba(143, 155, 173, 0.58)';
+  const fill = ghost ? diagramTheme.ghost.obstructionFill : 'rgba(143, 155, 173, 0.16)';
+  const stroke = ghost ? diagramTheme.ghost.obstructionStroke : 'rgba(143, 155, 173, 0.58)';
 
   return (
     <Circle cx={centerX} cy={cy} r={radius} fill={fill} stroke={stroke} strokeWidth={1.5} />
@@ -360,10 +361,3 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
     </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  frame: {
-    overflow: 'hidden',
-    backgroundColor: diagramTheme.canvas,
-  },
-});

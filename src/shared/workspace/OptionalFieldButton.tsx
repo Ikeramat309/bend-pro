@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text } from 'react-native';
 
-import { colors, radius, spacing } from '@/theme';
+import { colors, spacing, uiTheme } from '@/theme';
 
 export type OptionalFieldButtonProps = {
   label: string;
@@ -14,7 +14,7 @@ export function OptionalFieldButton({ label, onPress }: OptionalFieldButtonProps
       onPress={onPress}
       style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
       accessibilityRole="button">
-      <Text style={styles.icon}>＋</Text>
+      <Text style={styles.icon}>+</Text>
       <Text style={styles.label}>{label}</Text>
     </Pressable>
   );
@@ -27,10 +27,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.sm,
-    borderRadius: radius.sm,
+    borderRadius: uiTheme.field.shell.borderRadius,
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface2,
+    borderColor: colors.primaryBorder,
+    backgroundColor: colors.primaryMuted,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: colors.primary,
-    fontSize: 16,
+    fontSize: 15,
     lineHeight: 18,
     fontWeight: '700',
   },
@@ -48,6 +48,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontWeight: '600',
     color: colors.primary,
-    letterSpacing: 0.2,
+    letterSpacing: 0.15,
   },
 });

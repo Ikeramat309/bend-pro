@@ -1,8 +1,9 @@
 /**
  * Edit Setup bottom sheet — draft state while open; parent updates only on Apply.
  */
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
 import { IMPERIAL_ROUNDING_OPTIONS, METRIC_ROUNDING_OPTIONS, useCalculatorSetup } from '@/core/settings';
@@ -13,6 +14,7 @@ import {
 } from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { EMT_TRADE_SIZES } from '@/data/emt';
+import { Routes } from '@/navigation';
 import { OptionChipGroup } from '@/shared/ui/OptionChipGroup';
 import { Sheet } from '@/shared/ui/Sheet';
 import { colors, spacing, typography } from '@/theme';
@@ -64,6 +66,7 @@ function EditSetupSheetOpen({
   onCancel,
   onApply,
 }: Pick<EditSetupSheetProps, 'values' | 'onCancel' | 'onApply'>) {
+  const router = useRouter();
   const { setup } = useCalculatorSetup();
   const benderProfileNames = mergeBenderProfiles(setup.customBenderProfiles).map(
     (profile) => profile.name,
@@ -115,6 +118,16 @@ function EditSetupSheetOpen({
         }
       />
 
+      <Pressable
+        onPress={() => {
+          onCancel();
+          router.push(Routes.benderDatabase);
+        }}
+        style={({ pressed }) => [styles.browseLink, pressed && styles.browseLinkPressed]}
+        accessibilityRole="button">
+        <Text style={styles.browseLinkText}>Browse bender database ›</Text>
+      </Pressable>
+
       <OptionChipGroup
         title="Unit"
         options={UNITS.map((unit) => unit.label)}
@@ -148,6 +161,19 @@ function EditSetupSheetOpen({
 }
 
 const styles = StyleSheet.create({
+  browseLink: {
+    alignSelf: 'flex-start',
+    paddingVertical: spacing.xs,
+  },
+  browseLinkPressed: {
+    opacity: 0.88,
+  },
+  browseLinkText: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '700',
+    color: colors.primary,
+  },
   currentCard: {
     gap: spacing.xs,
     borderRadius: 12,

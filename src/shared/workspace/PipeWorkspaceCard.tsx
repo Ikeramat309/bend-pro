@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, radius, spacing, typography } from '@/theme';
+import { colors, radius, spacing, typography, workspaceTheme } from '@/theme';
 
 export type PipeWorkspaceCardProps = {
   children: ReactNode;
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   cardWorkspace: {
     padding: 0,
     gap: 0,
-    borderColor: 'rgba(59, 189, 248, 0.18)',
+    borderColor: workspaceTheme.workspace.cardBorderColor,
     backgroundColor: colors.surface,
   },
   pressed: {

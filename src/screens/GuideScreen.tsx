@@ -1,21 +1,34 @@
-/**
- * FILE: src/screens/GuideScreen.tsx
- *
- * PURPOSE:
- * Placeholder Guide tab destination for Phase 5 bottom navigation.
- */
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-// IMPORTS
-import { useRouter } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  CALCULATOR_GUIDES,
+  getCalculatorGuide,
+  GUIDE_BASICS,
+  GUIDE_INTRO,
+  isGuideCalculatorId,
+  type CalculatorGuide,
+  type GuideCalculatorId,
+} from '@/data/guide';
+import { Routes, guideRoute } from '@/navigation';
+import {
+  AppHeader,
+  BottomNav,
+  GuideSectionCard,
+  HubListGroup,
+  HubListRow,
+  HubSectionTitle,
+  HubSettingsCard,
+  type BendTabId,
+} from '@/shared/ui';
+import { colors, spacing, uiTheme } from '@/theme';
 
-import { AppHeader, BottomNav, type BendTabId } from '@/shared/ui';
-import { Routes } from '@/navigation';
-import { colors, layout, radius, spacing, typography } from '@/theme';
-
-// UI
 export function GuideScreen() {
   const router = useRouter();
+  const { calculator } = useLocalSearchParams<{ calculator?: string | string[] }>();
+  const calculatorId = Array.isArray(calculator) ? calculator[0] : calculator;
+  const guide =
+    calculatorId && isGuideCalculatorId(calculatorId) ? getCalculatorGuide(calculatorId) : undefined;
 
   function handleTabChange(tab: BendTabId) {
     if (tab === 'layout') router.push(Routes.home);
@@ -24,61 +37,169 @@ export function GuideScreen() {
     if (tab === 'guide') router.push(Routes.guide);
   }
 
+  function handleBackPress() {
+    const safeRouter = router as typeof router & { canGoBack?: () => boolean };
+    if (typeof safeRouter.canGoBack === 'function' && safeRouter.canGoBack()) {
+      router.back();
+      return;
+    }
+    router.replace(Routes.guide);
+  }
+
+  function openGuide(id: GuideCalculatorId) {
+    router.push(guideRoute(id));
+  }
+
   return (
     <View style={styles.screen}>
-      <AppHeader
-        title="Guide"
-        subtitle="Learning content coming soon"
-        rightIcon={<Text style={styles.topIcon}>⚙</Text>}
-        onRightPress={() => router.push(Routes.settings)}
-      />
-      <View style={styles.content}>
-        <View style={styles.card}>
-          <Text style={styles.title}>Guided learning is coming soon.</Text>
-          <Text style={styles.body}>
-            Formulas, bend steps, common mistakes, and apprentice-friendly walkthroughs will live here.
-          </Text>
-        </View>
-      </View>
+      {guide ? (
+        <GuideDetailView guide={guide} onBackPress={handleBackPress} />
+      ) : (
+        <GuideIndexView onOpenGuide={openGuide} />
+      )}
       <BottomNav activeTab="guide" onTabChange={handleTabChange} />
     </View>
   );
 }
 
-// STYLES
+type GuideIndexViewProps = {
+  onOpenGuide: (id: GuideCalculatorId) => void;
+};
+
+function GuideIndexView({ onOpenGuide }: GuideIndexViewProps) {
+  const router = useRouter();
+  const families = [...new Set(CALCULATOR_GUIDES.map((item) => item.family))];
+
+  return (
+    <>
+      <AppHeader
+        title="Guide"
+        subtitle="Formulas, steps, and common mistakes"
+        rightIcon={<Text style={styles.topIcon}>⚙</Text>}
+        onRightPress={() => router.push(Routes.settings)}
+      />
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <HubSettingsCard title={GUIDE_INTRO.title} body={GUIDE_INTRO.body} />
+
+        <View style={styles.section}>
+          <HubSectionTitle>{GUIDE_BASICS.title}</HubSectionTitle>
+          <GuideSectionCard section={{ title: '', lines: GUIDE_BASICS.lines }} />
+        </View>
+
+        {families.map((family) => {
+          const items = CALCULATOR_GUIDES.filter((guide) => guide.family === family);
+          return (
+            <View key={family} style={styles.section}>
+              <HubSectionTitle>{family}</HubSectionTitle>
+              <HubListGroup>
+                {items.map((guide, index) => (
+                  <HubListRow
+                    key={guide.id}
+                    title={guide.title}
+                    description={guide.summary}
+                    isLast={index === items.length - 1}
+                    onPress={() => onOpenGuide(guide.id)}
+                  />
+                ))}
+              </HubListGroup>
+            </View>
+          );
+        })}
+      </ScrollView>
+    </>
+  );
+}
+
+type GuideDetailViewProps = {
+  guide: CalculatorGuide;
+  onBackPress: () => void;
+};
+
+function GuideDetailView({ guide, onBackPress }: GuideDetailViewProps) {
+  const router = useRouter();
+
+  return (
+    <>
+      <AppHeader
+        showBack
+        title={guide.title}
+        subtitle={guide.family}
+        onBackPress={onBackPress}
+        rightIcon={<Text style={styles.topIcon}>⚙</Text>}
+        onRightPress={() => router.push(Routes.settings)}
+      />
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <Text style={styles.summary}>{guide.summary}</Text>
+
+        <GuideSectionCard section={guide.formula} />
+        <GuideSectionCard section={guide.steps} />
+        <GuideSectionCard section={guide.mistakes} />
+        <GuideSectionCard section={guide.example} />
+
+        <Pressable
+          onPress={() => router.push(guide.calculatorRoute)}
+          style={({ pressed }) => [styles.openCalculator, pressed && styles.openCalculatorPressed]}
+          accessibilityRole="button"
+          accessibilityLabel={`Open ${guide.title} calculator`}>
+          <Text style={styles.openCalculatorText}>Open {guide.title} calculator</Text>
+          <Text style={styles.openCalculatorChevron}>›</Text>
+        </Pressable>
+      </ScrollView>
+    </>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
   },
   content: {
-    flex: 1,
     width: '100%',
-    maxWidth: layout.maxContentWidth,
+    maxWidth: uiTheme.layout.maxContentWidth,
     alignSelf: 'center',
-    padding: spacing.lg,
+    padding: uiTheme.layout.screenPadding,
+    paddingBottom: spacing.xxxl,
+    gap: spacing.lg,
+  },
+  section: {
+    gap: spacing.sm,
+  },
+  summary: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: colors.text,
   },
   topIcon: {
     color: colors.text,
     fontSize: 20,
   },
-  card: {
-    gap: spacing.md,
-    borderRadius: radius.lg,
+  openCalculator: {
+    minHeight: uiTheme.hub.navCard.minHeight,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: uiTheme.hub.navCard.borderRadius,
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
+    borderColor: colors.primaryBorder,
+    backgroundColor: colors.primaryMuted,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
-  title: {
-    ...typography.body,
-    color: colors.text,
+  openCalculatorPressed: {
+    opacity: 0.88,
+  },
+  openCalculatorText: {
+    flex: 1,
+    fontSize: 16,
+    lineHeight: 22,
     fontWeight: '700',
+    color: colors.primary,
   },
-  body: {
-    ...typography.subtitle,
-    color: colors.muted,
+  openCalculatorChevron: {
+    fontSize: uiTheme.hub.chevronSize,
+    lineHeight: 30,
+    color: colors.primary,
+    fontWeight: '600',
   },
 });
-
-// EXPORTS — GuideScreen

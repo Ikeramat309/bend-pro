@@ -8,6 +8,7 @@ export const HAND_BENDER_ALT_CHART: BenderProfile = {
   id: 'hand-bender-alt-chart',
   name: 'Hand Bender (Alternate Chart)',
   category: 'hand',
+  chartKind: 'generic-field-reference',
   description: 'Alternate generic take-up chart — use when your sticker runs slightly high.',
   emtStub90TakeUpInches: {
     '1/2': 5.5,

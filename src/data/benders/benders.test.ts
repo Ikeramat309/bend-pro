@@ -19,9 +19,10 @@ describe('bender profiles', () => {
     ]);
   });
 
-  test('every profile has a description and stub-90 deducts for 1/2, 3/4, and 1', () => {
+  test('every profile has a description, chart kind, and stub-90 deducts for 1/2, 3/4, and 1', () => {
     for (const profile of BENDER_PROFILES) {
       expect(profile.description.length).toBeGreaterThan(0);
+      expect(profile.chartKind).toBe('generic-field-reference');
       expect(profile.emtStub90TakeUpInches['1/2']).toBeDefined();
       expect(profile.emtStub90TakeUpInches['3/4']).toBeDefined();
       expect(profile.emtStub90TakeUpInches['1']).toBeDefined();

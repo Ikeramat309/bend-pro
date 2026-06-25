@@ -1,10 +1,11 @@
-import { StyleSheet, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 import {
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFrame,
+  DiagramGhostMessage,
   DiagramLabel,
   DiagramLeaderLine,
   MarkLine,
@@ -42,24 +43,24 @@ export function SegmentDiagram({ data, isEmpty = false, isInvalid = false }: Seg
   const message = isInvalid ? segmentCopy.diagram.invalidMessage : segmentCopy.diagram.emptyMessage;
 
   return (
-    <View style={styles.frame}>
+    <DiagramFrame>
       {!data || isEmpty || isInvalid ? (
-        <SegmentGhostDiagram message={message} />
+        <SegmentGhostDiagram message={message} invalid={isInvalid} />
       ) : (
         <SegmentLiveDiagram data={data} />
       )}
-    </View>
+    </DiagramFrame>
   );
 }
 
-function SegmentGhostDiagram({ message }: { message: string }) {
+function SegmentGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
     <Svg viewBox={SEGMENT_CONFIG.diagramViewBox} width="100%" height={SEGMENT_CONFIG.diagramHeight}>
       <DiagramDefs gradientId="segmentGhostGradient" ghost />
       <DiagramCanvas />
-      <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={0.5} />
+      <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={diagramTheme.ghost.pipeShadowOpacity} />
       <PipeSegment d={GHOST_PIPE} variant="pipe" gradientId="segmentGhostGradient" />
-      <DiagramLabel x={180} y={206} text={message} variant="muted" fontSize={11} fontWeight="500" />
+      <DiagramGhostMessage text={message} invalid={invalid} y={SEGMENT_CONFIG.diagramHeight - 14} />
     </Svg>
   );
 }
@@ -172,10 +173,3 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
     </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  frame: {
-    overflow: 'hidden',
-    backgroundColor: diagramTheme.canvas,
-  },
-});

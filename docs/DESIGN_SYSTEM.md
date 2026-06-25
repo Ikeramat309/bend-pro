@@ -78,7 +78,7 @@ Avoid making every measurement a different bright color.
 
 Pipe workspace UI uses:
 
-- `src/theme/colors.ts`, `spacing.ts`, `typography.ts` — app-wide tokens
+- `src/theme/colors.ts`, `spacing.ts`, `typography.ts`, **`workspaceTheme.ts`**, **`uiTheme.ts`** — app-wide and UI tokens
 - `src/shared/diagrams/diagramTheme.ts` — SVG diagram colors and stroke sizes
 
 Shared components live under `src/shared/ui/`, `src/shared/workspace/`, and `src/shared/diagrams/`.

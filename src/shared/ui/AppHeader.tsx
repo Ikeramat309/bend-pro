@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, layout, spacing, touchTarget, typography } from '@/theme';
+import { colors, layout, spacing, touchTarget, typography, workspaceTheme } from '@/theme';
 
 export type AppHeaderProps = {
   title: string;
@@ -12,6 +12,8 @@ export type AppHeaderProps = {
   onBackPress?: () => void;
   rightIcon?: ReactNode;
   onRightPress?: () => void;
+  /** Compact bar for calculator screens — saves vertical space for the pipe workspace. */
+  density?: 'default' | 'compact';
 };
 
 /** Top app bar for calculator and hub screens. */
@@ -23,8 +25,10 @@ export function AppHeader({
   onBackPress,
   rightIcon,
   onRightPress,
+  density = 'default',
 }: AppHeaderProps) {
   const insets = useSafeAreaInsets();
+  const compact = density === 'compact';
 
   return (
     <View
@@ -36,7 +40,7 @@ export function AppHeader({
           borderBottomColor: colors.border,
         },
       ]}>
-      <View style={styles.row}>
+      <View style={[styles.row, compact && styles.rowCompact]}>
         <View style={styles.left}>
           {showBack ? (
             <Pressable
@@ -50,9 +54,9 @@ export function AppHeader({
             <View style={styles.logoDot} />
           )}
 
-          <View style={styles.titleBlock}>
+            <View style={styles.titleBlock}>
             <View style={styles.titleRow}>
-              <Text style={styles.title} numberOfLines={1}>
+              <Text style={[styles.title, compact && styles.titleCompact]} numberOfLines={1}>
                 {title}
               </Text>
               {badge ? (
@@ -62,7 +66,7 @@ export function AppHeader({
               ) : null}
             </View>
             {subtitle ? (
-              <Text style={styles.subtitle} numberOfLines={1}>
+              <Text style={[styles.subtitle, compact && styles.subtitleCompact]} numberOfLines={1}>
                 {subtitle}
               </Text>
             ) : null}
@@ -95,6 +99,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
   },
+  rowCompact: {
+    minHeight: workspaceTheme.header.minHeight,
+    paddingVertical: workspaceTheme.header.paddingVertical,
+  },
   left: {
     flex: 1,
     flexDirection: 'row',
@@ -120,9 +128,17 @@ const styles = StyleSheet.create({
     ...typography.screenTitle,
     color: colors.text,
   },
+  titleCompact: {
+    fontSize: workspaceTheme.header.titleSize,
+    lineHeight: 22,
+  },
   subtitle: {
     ...typography.subtitle,
     color: colors.muted,
+  },
+  subtitleCompact: {
+    fontSize: workspaceTheme.header.subtitleSize,
+    lineHeight: 16,
   },
   badge: {
     backgroundColor: colors.warning,

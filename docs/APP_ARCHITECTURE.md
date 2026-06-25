@@ -2,52 +2,108 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Bend Pro uses thin routes, self-contained calculator features, and shared UI/diagram layers. Related: [`PROJECT_MAP.md`](PROJECT_MAP.md) (folder layout), [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md) (engine rules), [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md) (diagram rules).
+Bend Pro uses thin routes, self-contained calculator features, and shared UI/diagram/workspace layers. Related: [`PROJECT_MAP.md`](PROJECT_MAP.md), [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md), [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md), [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md).
 
 ## Flow
 
 ```text
 App shell (src/app/)
   -> Hub screens (src/screens/) or calculator features (src/features/)
-  -> Shared UI (src/shared/ui/, src/shared/workspace/)
+  -> BendCalculatorLayout (src/shared/workspace/)
+  -> Shared UI (src/shared/ui/)
   -> Shared diagrams (src/shared/diagrams/)
-  -> Data (src/data/) + core types (src/core/)
+  -> Data (src/data/) + core (src/core/)
 ```
 
 ## Routes
 
 Route files in `src/app/` export screens only — no calculator math.
 
-- `/offset` → `src/features/bend-offset/ui/OffsetScreen.tsx`
-- `/stub90` → `src/features/bend-stub90/ui/Stub90Screen.tsx`
+| Route | Screen |
+|-------|--------|
+| `/offset` | `src/features/bend-offset/ui/OffsetScreen.tsx` |
+| `/stub90` | `src/features/bend-stub90/ui/Stub90Screen.tsx` |
+| `/saddle3` | `src/features/bend-saddle3/ui/Saddle3Screen.tsx` |
+| `/saddle4` | `src/features/bend-saddle4/ui/Saddle4Screen.tsx` |
+| `/segment` | `src/features/bend-segment/ui/SegmentScreen.tsx` |
+| `/rolling` | `src/features/bend-rolling/ui/RollingScreen.tsx` |
+| `/bends` | `src/screens/BendsScreen.tsx` |
+| `/settings` | Settings hub |
+| `/bender-database` | Bender profile management |
+| `/guide` | Guide index + per-calculator walkthroughs (`src/screens/GuideScreen.tsx`, `src/data/guide/`) |
 
-## Calculator Features
+## `src/features` — calculator modules
 
-Each feature owns:
+Each bend type is a **self-contained feature folder** (`bend-offset`, `bend-stub90`, etc.):
 
-- `*.config.ts` — defaults
-- `*.copy.ts` — user-facing strings
-- `engine/*.engine.ts` — pure math
-- `engine/*.types.ts` — contracts
-- `ui/*Screen.tsx` — layout and state
-- `ui/*Diagram.tsx` — feature diagram
+| Layer | Role |
+|-------|------|
+| `engine/*.engine.ts` | Pure math, validation, warnings, `diagramData` |
+| `engine/*.types.ts` | Input/output contracts |
+| `*.config.ts` | Defaults, valid angles/presets |
+| `*.copy.ts` | User-facing strings (terminology from glossary) |
+| `ui/*Screen.tsx` | Input state, setup hook, **`BendCalculatorLayout` composition** |
+| `ui/*Diagram.tsx` | SVG diagram from engine `diagramData` |
 
-Features must not import from other feature folders. Shared types come from `@/core/types`.
+**Rules:** features do not import from other features. Shared types from `@/core/types`. Screens call `useCalculatorSetup()` — they do not duplicate persisted setup state.
 
-Calculator setup (unit, rounding, trade size, bender profile) is shared app state: `@/core/settings` provides `SettingsProvider` (mounted in `src/app/_layout.tsx`, persisted via AsyncStorage) and the `useCalculatorSetup` hook. Screens must not keep their own copies of these values.
+**Engine vs UI:** all bend formulas, unit conversion to internal inches, and rounding for display strings live in **engine**. UI parses text input, passes numbers to engine, and maps results to layout props and diagram props. Never change math in UI files.
 
-## Shared UI
+## `src/shared/workspace` — calculator screen shell
 
-- **`src/shared/ui/`** — app shell (header, screen, nav, sheet, field input)
-- **`src/shared/workspace/`** — calculator workspace chunks (setup, pipe card, chips, setup sheet)
-- **`src/shared/diagrams/`** — reusable SVG primitives and diagram theme
+Universal calculator chrome (Phase 1 foundation):
 
-## Data
+- **`BendCalculatorLayout`** — orchestrates header, trust, inputs, workspace, dock, warnings
+- **`BendHeader`** — compact back + title + EMT subtitle
+- **`BendTrustStrip`** — bender name, meta, trust note, edit setup
+- **`BendInputStrip`** — declarative `BendInputConfig[]` or custom children
+- **`BendPipeWorkspace`** — hero diagram area + optional floating primary/secondary results
+- **`BendActionDock`** — adaptive left actions + Guide (right)
+- **`workspaceTypes.ts`** — prop contracts
 
-- **EMT only** — `src/data/emt/`, `src/data/conduit/`
-- **Benders** — `src/data/benders/` (one generic hand bender profile today)
-- **Bend library** — `src/data/bendLibrary.ts` (navigation metadata)
+Supporting pieces still used by layout or sheets: `EditSetupSheet`, `AngleSelector`, `OptionalFieldButton`, `MeasurementChip`, `WarningList`. Legacy `SetupSummary` / `PipeWorkspaceResult` remain exported but calculators should use the new shell.
 
-## Calculator Registry
+See [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md) for result priority and dock rules.
 
-Not implemented yet. Availability is defined by `bendLibrary.ts` and `src/navigation/routes.ts`.
+## `src/shared/diagrams` — reusable SVG primitives
+
+Shared drawing blocks for all calculator diagrams:
+
+- `DiagramCanvas`, `DiagramDefs`, `diagramTheme`
+- `PipeSegment`, `MarkLine`, `DimensionLine`, `DiagramLabel`, `DiagramCallout`, `BendRadiusZone`, `DiagramLeaderLine`
+- `resolveProportionalSpans` — semi-proportional scaling with readability clamps
+
+Feature `*Diagram.tsx` files compose these primitives; they do not fork low-level SVG helpers.
+
+## `src/shared/ui` — app-wide UI
+
+Shell components for hubs and modals: `AppHeader`, `AppScreen`, `BottomNav`, `Sheet`, `FieldInput`, `FractionKeypad`, `OptionChipGroup`, hub building blocks (`HubNavCard`, `HubListRow`, `HubSearchField`, `HubSettingsCard`, `HubStatusBadge`, etc.), **`BenderProfileCard`**, **`SetupOverridesCard`**, **`GuideSectionCard`**. Sheet helpers: `SheetFormGroup`, `SheetDangerAction`. Styling tokens live in `src/theme/uiTheme.ts`.
+
+Imperial length fields use `FieldInput.lengthInput="imperial"` to show the inline fraction keypad (`FractionKeypad` + `applyFractionKey` in `src/utils/fractionKeypad.ts`).
+
+## Bender / profile data
+
+- **`src/data/benders/`** — built-in hand-bender profiles, stub 90 deduct tables, `getBenderProfile`, custom profile helpers, **`profileChart.ts`** (chart rows, capabilities), **`BenderChartKind`** (manufacturer reserved for sourced data)
+- **`src/screens/BenderProfileDetailSheet.tsx`** — full deduct table and profile capabilities
+- **`src/core/settings/setupOverrides.ts`** — list/clear manual deduct, multiplier, and shrink overrides
+- **`src/data/conduit/`**, **`src/data/emt/`** — EMT trade sizes (EMT only for now)
+- **`src/data/bendLibrary.ts`** — bend hub navigation metadata (titles, routes, availability)
+- **`src/core/settings/`** — persisted setup (unit, rounding, size, active bender, overrides, custom profiles)
+
+Trust strip on calculator screens reads active profile from setup; Edit Setup sheet writes back via `patchCalculatorSetup`. Edit Setup and Settings link to the bender database; **`SetupOverridesCard`** surfaces active overrides on Benders and Settings.
+
+## Guide content
+
+- **`src/data/guide/`** — static walkthroughs (formula, steps, mistakes, example) for all six calculators
+- **`guideRoute(calculatorId)`** — calculator dock Guide opens contextual detail; bottom nav Guide opens index
+
+## Calculator registry
+
+Not implemented. Availability is defined by `bendLibrary.ts` and `src/navigation/routes.ts`.
+
+## Verification
+
+```bash
+npm run check    # tsc + lint + jest
+npx expo start   # route compilation
+```

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors, layout, spacing } from '@/theme';
+import { colors, uiTheme } from '@/theme';
 
 export type AppScreenProps = {
   children: ReactNode;
@@ -48,10 +48,10 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     width: '100%',
-    maxWidth: layout.maxContentWidth,
+    maxWidth: uiTheme.layout.maxContentWidth,
     alignSelf: 'center',
-    padding: spacing.lg,
-    paddingBottom: spacing.section,
-    gap: spacing.lg,
+    padding: uiTheme.layout.screenPadding,
+    paddingBottom: uiTheme.layout.sectionBottom,
+    gap: uiTheme.hub.contentGap,
   },
 });

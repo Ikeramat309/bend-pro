@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, layout, spacing, touchTarget, typography } from '@/theme';
+import { colors, spacing, touchTarget, typography, uiTheme } from '@/theme';
 
 export type SheetProps = {
   visible: boolean;
@@ -27,10 +28,12 @@ export function Sheet({
   secondaryLabel = 'Cancel',
   onSecondaryPress,
 }: SheetProps) {
+  const insets = useSafeAreaInsets();
+
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.backdrop}>
-        <View style={styles.sheet}>
+        <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, spacing.lg) }]}>
           <View style={styles.handle} />
 
           <View style={styles.header}>
@@ -45,12 +48,15 @@ export function Sheet({
           <View style={styles.actions}>
             <Pressable
               onPress={onSecondaryPress ?? onClose}
-              style={styles.secondaryButton}
+              style={({ pressed }) => [styles.secondaryButton, pressed && styles.buttonPressed]}
               accessibilityRole="button">
               <Text style={styles.secondaryText}>{secondaryLabel}</Text>
             </Pressable>
             {onPrimaryPress ? (
-              <Pressable onPress={onPrimaryPress} style={styles.primaryButton} accessibilityRole="button">
+              <Pressable
+                onPress={onPrimaryPress}
+                style={({ pressed }) => [styles.primaryButton, pressed && styles.buttonPressed]}
+                accessibilityRole="button">
                 <Text style={styles.primaryText}>{primaryLabel}</Text>
               </Pressable>
             ) : null}
@@ -65,27 +71,29 @@ const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(5, 7, 11, 0.82)',
+    backgroundColor: uiTheme.sheet.backdrop,
   },
   sheet: {
     width: '100%',
-    maxWidth: layout.maxContentWidth,
+    maxWidth: uiTheme.layout.maxContentWidth,
     alignSelf: 'center',
-    maxHeight: '88%',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    maxHeight: uiTheme.sheet.maxHeight,
+    borderTopLeftRadius: uiTheme.sheet.borderRadius,
+    borderTopRightRadius: uiTheme.sheet.borderRadius,
     borderWidth: 1,
+    borderBottomWidth: 0,
     borderColor: colors.border,
     backgroundColor: colors.screen,
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.md,
     gap: spacing.lg,
   },
   handle: {
-    width: 48,
+    width: 40,
     height: 4,
     alignSelf: 'center',
     borderRadius: 999,
-    backgroundColor: colors.border,
+    backgroundColor: uiTheme.sheet.handleColor,
   },
   header: {
     gap: spacing.xs,
@@ -94,14 +102,16 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 18,
     fontWeight: '700',
+    lineHeight: 24,
   },
   subtitle: {
     ...typography.subtitle,
     color: colors.muted,
+    fontSize: 14,
   },
   content: {
     gap: spacing.lg,
-    paddingBottom: spacing.sm,
+    paddingBottom: spacing.xs,
   },
   actions: {
     flexDirection: 'row',
@@ -109,28 +119,33 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     flex: 1,
-    minHeight: touchTarget,
+    minHeight: touchTarget - 4,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
+    borderRadius: uiTheme.chip.borderRadius,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: uiTheme.sheet.secondaryBackground,
   },
   primaryButton: {
     flex: 1,
-    minHeight: touchTarget,
+    minHeight: touchTarget - 4,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
-    backgroundColor: colors.primary,
+    borderRadius: uiTheme.chip.borderRadius,
+    backgroundColor: uiTheme.sheet.primaryBackground,
+  },
+  buttonPressed: {
+    opacity: 0.88,
   },
   secondaryText: {
     ...typography.chip,
     color: colors.text,
+    fontWeight: '600',
   },
   primaryText: {
     ...typography.chip,
     color: colors.background,
+    fontWeight: '700',
   },
 });

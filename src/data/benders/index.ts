@@ -15,6 +15,7 @@ import type { BenderProfile, BenderProfileId } from './types';
 
 export type {
   BenderCategory,
+  BenderChartKind,
   BenderProfile,
   BenderProfileId,
   BuiltInBenderProfileId,
@@ -113,3 +114,11 @@ export {
   type Stub90DeductContext,
   type Stub90DeductSource,
 } from './profileContext';
+export {
+  buildProfileDeductRows,
+  formatChartKindLabel,
+  formatProfileDeductCell,
+  getProfileCapabilities,
+  splitProfilesByOrigin,
+  type ProfileDeductRow,
+} from './profileChart';

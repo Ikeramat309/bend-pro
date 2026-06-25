@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing, touchTarget, typography } from '@/theme';
+import { colors, spacing, typography, uiTheme } from '@/theme';
 
 export type OptionChipGroupProps<T extends string> = {
   title: string;
@@ -22,7 +22,7 @@ export function OptionChipGroup<T extends string>({
       <Pressable
         key={option}
         onPress={() => onSelect(option)}
-        style={[styles.chip, active && styles.chipActive]}
+        style={({ pressed }) => [styles.chip, active && styles.chipActive, pressed && styles.chipPressed]}
         accessibilityRole="button"
         accessibilityState={{ selected: active }}>
         <Text style={[styles.chipText, active && styles.chipTextActive]}>{option}</Text>
@@ -55,10 +55,7 @@ const styles = StyleSheet.create({
   group: {
     gap: spacing.sm,
   },
-  groupTitle: {
-    ...typography.label,
-    color: colors.muted,
-  },
+  groupTitle: uiTheme.chip.groupTitle,
   chipWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -68,24 +65,29 @@ const styles = StyleSheet.create({
     maxHeight: 168,
   },
   chip: {
-    minHeight: touchTarget,
+    minHeight: uiTheme.chip.minHeight,
     justifyContent: 'center',
-    borderRadius: 12,
+    borderRadius: uiTheme.chip.borderRadius,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.lg,
+    backgroundColor: colors.surface2,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },
   chipActive: {
-    borderColor: colors.primary,
+    borderColor: colors.primaryBorder,
     backgroundColor: colors.primaryMuted,
+  },
+  chipPressed: {
+    opacity: 0.88,
   },
   chipText: {
     ...typography.chip,
     color: colors.text,
+    fontSize: 13,
   },
   chipTextActive: {
     color: colors.primary,
+    fontWeight: '700',
   },
 });

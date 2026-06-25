@@ -2,72 +2,88 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Honest snapshot of where the app stands. **Phases 1–4 are complete or wrapped.** The app ships **six calculators**. Phase 4 is **paused** — Kick and several polish items are deferred. See [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) for the close-out detail.
+Honest snapshot of where the app stands. **Phases 1–5 are complete; Phase 5.5 acceptance review passed.** Six calculators ship on the shared workspace shell with hub UI polish, imperial fraction keypad, guide walkthroughs, and an improved bender database. See [`PHASE_5_WRAPUP.md`](PHASE_5_WRAPUP.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), [`ROADMAP.md`](ROADMAP.md), and [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md).
 
 ## What currently exists
 
 ### Working calculators
 
-- **Offset** (`/offset`, `src/features/bend-offset/`) — offset height + bend angle → distance between bends, shrink, optional Mark 1 / Mark 2. Semi-proportional diagram at the real bend angle. **Multiplier** and **shrink rate** chips are tappable; per-angle manual overrides persist in setup. Setup row shows a hint when overrides are active (e.g. `Custom multiplier at 30°`).
-- **Stub 90** (`/stub90`, `src/features/bend-stub90/`) — stub length − deduct (take-up) → deduct mark, with optional leg length. Semi-proportional diagram with field-accurate mark placement. **Deduct** chip is tappable for manual override per EMT size. Setup row shows a hint when a custom deduct is active.
-- **3-Point Saddle** (`/saddle3`, `src/features/bend-saddle3/`) — obstruction height + angle preset → center-to-side spacing, shrink, and three layout marks (optional distance to center for absolute mark positions). Semi-proportional saddle diagram with center and side marks.
-- **4-Point Saddle** (`/saddle4`, `src/features/bend-saddle4/`) — obstruction height + saddle width + equal bend angle → between-bends spacing, total shrink, and four layout marks (optional distance to center for absolute mark positions). Two-offset (flat-topped plateau) diagram. Reuses the standard offset multiplier/shrink constants.
-- **Segment Bend** (`/segment`, `src/features/bend-segment/`) — radius + total angle + degrees-per-bend → shot count, between-bends spacing, developed length, and staggered marks (optional start of bend for absolute positions). Arc diagram with evenly spaced shot ticks and a radius leader. Purely geometric (radius/angle), conduit-size independent.
-- **Rolling Offset** (`/rolling`, `src/features/bend-rolling/`) — offset height + offset roll → distance between bends, shrink, and optional Mark 1 / Mark 2. Pipe-first diagram with compact roll inset. Shares offset multiplier/shrink overrides from setup.
+All six use the **shared `BendCalculatorLayout`** shell (`src/shared/workspace/`). Math is unchanged in feature `engine/` folders.
 
-All six follow the same feature pattern: `*.config.ts`, `*.copy.ts`, `engine/` (pure math + types), `ui/` (screen + diagram). Offset, Rolling Offset, and Stub 90 show a **bender profile context** banner; the saddles use the standard angle table and the segment bend is geometric — none use bender-specific multiplier charts. All produce warnings for invalid or impractical inputs and format results via shared `formatLength`.
+- **Offset** (`/offset`) — offset height + bend angle → distance between bends, shrink, optional Mark 1 / Mark 2. Primary floating result: distance between bends. Secondary: shrink + multiplier (tappable overrides). Dock: Reset · Set First Mark · Guide.
+- **Stub 90** (`/stub90`) — stub length − deduct → deduct mark, optional leg. Primary: deduct mark. Secondary: deduct (tappable override). Dock: Reset · Set Mark · Guide.
+- **3-Point Saddle** (`/saddle3`) — obstruction height + angle preset → between-bends spacing, shrink, layout marks. Primary swaps to center mark when distance-to-center is entered. Dock: Reset · Set Center · Guide.
+- **4-Point Saddle** (`/saddle4`) — obstruction height (required), optional saddle width + distance to center, equal bend angle. Two-offset diagram. Dock: Reset · Set Center · Guide.
+- **Segment Bend** (`/segment`) — radius + total angle + degrees-per-bend → shot spacing, bend count (developed length on diagram). Dock: Reset · Set Arc / Next Segment · Guide.
+- **Rolling Offset** (`/rolling`) — offset height + roll → distance between bends, shrink. Shares offset multiplier/shrink overrides. Dock: Reset · Set First Mark / Set Roll · Guide.
 
-### Bender profiles (Phase 3 complete)
+Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). Semi-proportional diagrams use shared primitives in `src/shared/diagrams/`.
 
-- **Three generic hand-bender profiles** — field-reference stub 90 deducts for 1/2", 3/4", and 1" EMT. Not manufacturer shoe charts.
-- **Custom bender profiles** — users save name + measured stub 90 deducts (fraction input supported). Up to 10 profiles on device.
-- **Bender database** (`/bender-database`) — search, select active profile, add/edit/delete custom benders.
-- **Manual overrides** — deduct (Stub 90, per size); multiplier and shrink (Offset and Rolling Offset, per angle). All persist in calculator setup.
-- **Settings / Edit Setup** — list built-in and custom profiles; chip list scrolls when more than six profiles.
+### Hub UI (Phase 2)
+
+- **`src/theme/uiTheme.ts`** — hub cards, search, field shells, sheet, chip tokens
+- **Hub components** (`src/shared/ui/Hub*.tsx`) — nav cards, list rows, search, settings cards, status badges
+- **`BenderProfileCard`**, **`SheetFormGroup`**, **`SheetDangerAction`** — bender database and custom bender sheet
+- Hub screens use shared components; bottom nav is label-only (no emoji icons)
+
+### Guide mode (Phase 4)
+
+- **`src/data/guide/`** — per-calculator walkthroughs (formula, field steps, common mistakes, worked example)
+- **`GuideScreen`** — index grouped by bend family + detail view via `?calculator=` param
+- **`guideRoute(id)`** — calculator Guide dock opens contextual section; bottom nav Guide opens index
+- **`GuideSectionCard`** — shared content block for guide sections
+
+### Field input (Phase 3)
+
+- **`FractionKeypad`** + **`applyFractionKey`** — trade fraction entry for imperial measurements
+- **`FieldInput.lengthInput`** — `'imperial'` shows inline keypad; `'decimal'` keeps system decimal pad
+- All calculator length fields and bender deduct/shrink overrides wired through `getLengthInputMode()`
+
+### Shared calculator workspace
+
+- **`BendCalculatorLayout`** — universal shell: header, trust strip, input strip, hero pipe workspace, action dock
+- **`BendHeader`**, **`BendTrustStrip`**, **`BendInputStrip`**, **`BendPipeWorkspace`**, **`BendActionDock`**
+- **`workspaceTypes.ts`** + **`src/theme/workspaceTheme.ts`** — layout prop contracts and polish tokens
+- **`DiagramFrame`**, **`DiagramGhostMessage`** (callout-backed empty prompts), **`diagramTheme.ghost`** tokens
+- Compact calculator header; workflow action emphasis in dock; result bar on pipe workspace card
+- **Guide** in the bottom dock opens the full guide index; each calculator’s Guide action opens that bend’s walkthrough
+
+### Bender profiles
+
+- Three generic hand-bender profiles + custom profiles (stub 90 deducts); **`BenderChartKind`** tags chart source (manufacturer reserved for sourced data)
+- **`BenderProfileDetailSheet`** — full stub 90 deduct table with override highlighting; **Chart ›** on profile cards
+- **`SetupOverridesCard`** — lists and clears manual deduct / multiplier / shrink overrides (Benders hub + Settings)
+- Bender database grouped **Built-in charts** / **Your benders**; Edit Setup and Settings link to manage benders
+- Persisted overrides (deduct, multiplier, shrink); profile context in calculator trust strip **note**
 
 ### Working app shell
 
-- Expo Router routes in `src/app/` (thin, export screens only): `/`, `/bends`, `/offset`, `/stub90`, `/saddle3`, `/saddle4`, `/segment`, `/rolling`, `/settings`, `/bender-database`, `/guide`
-- Hub screens in `src/screens/`: Home, Bends library, Settings (functional — unit, rounding, EMT size, bender)
-- Shared UI in `src/shared/ui/` (AppHeader, AppScreen, BottomNav, Sheet, FieldInput, OptionChipGroup)
-- Workspace components in `src/shared/workspace/` (SetupSummary, BenderProfileContext, PipeWorkspaceCard, PipeWorkspaceResult, MeasurementChip, EditSetupSheet, AngleSelector, OptionalFieldButton, WarningList)
-- Persisted calculator setup in `src/core/settings/` (AsyncStorage — unit, rounding, conduit size, bender, custom profiles, manual overrides)
-- Shared diagram primitives in `src/shared/diagrams/` (DiagramCanvas, DiagramDefs, PipeSegment, MarkLine, DimensionLine, DiagramLabel, DiagramCallout, BendRadiusZone, DiagramLeaderLine, `resolveProportionalSpans`, diagramTheme)
-- Theme tokens in `src/theme/` (colors, spacing, typography)
-- Data in `src/data/`: EMT sizes, conduit types (EMT only), bender profiles, bend library navigation metadata
-- Jest test suite (`npm test`) — 191 tests at Phase 4 wrap-up (engines, parsing, formatting, settings, diagram proportions, bender profiles)
+- Routes: `/`, `/bends`, `/offset`, `/stub90`, `/saddle3`, `/saddle4`, `/segment`, `/rolling`, `/settings`, `/bender-database`, `/guide`
+- Hub screens: `src/screens/` (Home, Bends, Settings)
+- Persisted setup: `src/core/settings/`
+- Theme: `src/theme/`
+- **`npm run check`** — typecheck + lint + tests (`package.json`); **214 tests** passing at Phase 5.5 review
 
-## What is incomplete (honest gaps)
+## Known limitations
 
-These are **not blockers** for using the app in the field, but they are real follow-ups:
+See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full list. Summary:
 
-### Deferred calculators (not started)
+- **Dock “Set Mark” actions** — workflow hints; no field focus/measurement capture
+- **Saddles** — no manual multiplier/shrink overrides (Offset has them)
+- **Segment bend** — geometric model only; no spring-back
+- **Rolling offset** — no 3D bender-head rotation model
+- **Bender charts** — generic field-reference values only; manufacturer shoe charts deferred until sourced data exists
+- **Fraction keypad** — no decimal point key; mixed-number and quick-fraction entry only
+- **Calculator registry** — not implemented; availability via `bendLibrary.ts` + `routes.ts`
 
-- Kick / 90 with kick, parallel offset, box offset, back-to-back 90, hydraulic layout — listed as coming-soon in `bendLibrary.ts`
+## Next development priorities
 
-### Per-calculator maturity gaps
-
-- **Saddles (3- and 4-point):** no manual multiplier/shrink overrides (Offset has them)
-- **Segment bend:** geometric model only — no spring-back compensation
-- **Rolling offset:** does not model 3D bender-head rotation; true offset stays internal
-- **Offset / Stub 90:** multiplier/shrink and deduct tables are generic, not manufacturer shoe charts
-
-### Product gaps (later phases)
-
-- **Guide screen** (`/guide`) — placeholder only. No learning content or guided mode (Phase 5).
-- **Calculator registry** — not implemented. Calculator availability is defined by `src/data/bendLibrary.ts` and `src/navigation/routes.ts`.
-
-## What needs cleanup (low priority)
-
-- **Leftover boilerplate comments** in some screens — remove when touching those files, per workflow rules.
-- **`src/shared/diagrams/primitives/` subfolder** — optional organization deferred from Phase 2; flat `diagrams/` folder is fine for now.
-- **Richer diagram empty states** — ghost diagrams exist but could be improved.
+1. **Phase 6** — additional calculators (Kick, etc.) only when explicitly scoped
 
 ## Known risk areas
 
-- **Calculator terminology** — the highest-confusion area. Always check [`GLOSSARY.md`](GLOSSARY.md) and [`NAMING_RULES.md`](NAMING_RULES.md) before changing any label or key.
-- **Bender profile gaps** — offset multipliers/shrink are angle-table based, not bender-specific. For stub 90, unlisted EMT sizes on a profile fall back to a default deduct; the profile context banner explains when that happens.
-- **Math changes** — any change to engine formulas, multipliers, or shrink constants is a field-safety risk. See [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md).
-- **Unit handling** — engines convert metric input to inches internally (`MM_PER_INCH`); formatting back out is handled by `formatLength`. Keep conversions in the engine, not the UI.
+- **Terminology** — [`GLOSSARY.md`](GLOSSARY.md), [`NAMING_RULES.md`](NAMING_RULES.md)
+- **Math changes** — [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md); engines only
+- **Layout changes** — keep pipe workspace hero large; respect floating result limits in [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md)
 
-See [`ROADMAP.md`](ROADMAP.md) for the phased order and [`PHASE_4_WRAPUP.md`](PHASE_4_WRAPUP.md) for Phase 4 close-out.
+See [`ROADMAP.md`](ROADMAP.md) and [`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md).

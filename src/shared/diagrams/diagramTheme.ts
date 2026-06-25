@@ -21,6 +21,17 @@ export const diagramTheme = {
   calloutStroke: 'rgba(38, 49, 66, 0.9)',
   ghostMessage: colors.muted,
   arrowFill: colors.muted,
+  /** Empty / preview diagram chrome — shared across all calculators. */
+  ghost: {
+    pipeShadowOpacity: 0.55,
+    markOpacity: 0.38,
+    dimensionOpacity: 0.34,
+    obstructionFill: 'rgba(143, 155, 173, 0.1)',
+    obstructionStroke: 'rgba(143, 155, 173, 0.32)',
+    calloutFill: 'rgba(8, 14, 22, 0.82)',
+    calloutStroke: 'rgba(38, 49, 66, 0.75)',
+    calloutInvalidStroke: 'rgba(255, 122, 47, 0.45)',
+  },
 } as const;
 
 export const diagramMetrics = {

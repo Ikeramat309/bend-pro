@@ -1,4 +1,10 @@
 export { AngleSelector, BEND_ANGLE_OPTIONS, type BendAngleOption, type BendAngleSelectorProps } from './AngleSelector';
+export { BendActionDock, type BendActionDockProps } from './BendActionDock';
+export { BendCalculatorLayout } from './BendCalculatorLayout';
+export { BendHeader, type BendHeaderProps } from './BendHeader';
+export { BendInputStrip, type BendInputStripProps } from './BendInputStrip';
+export { BendPipeWorkspace, type BendPipeWorkspaceProps } from './BendPipeWorkspace';
+export { BendTrustStrip, type BendTrustStripProps } from './BendTrustStrip';
 export {
     EditSetupSheet,
     type EditSetupSheetProps,
@@ -17,4 +23,17 @@ export {
 export { SetupSummary, type SetupSummaryProps } from './SetupSummary';
 export { WarningList, type WarningListProps } from './WarningList';
 export { BenderProfileContext, type BenderProfileContextProps, type BenderProfileContextTone } from './BenderProfileContext';
+export type {
+  BendActionDockConfig,
+  BendCalculatorLayoutProps,
+  BendCustomInputConfig,
+  BendDockAction,
+  BendFieldInputConfig,
+  BendInputConfig,
+  BendInputRowConfig,
+  BendOptionalInputConfig,
+  BendPickerInputConfig,
+  BendResultConfig,
+  BendTrustConfig,
+} from './workspaceTypes';
 

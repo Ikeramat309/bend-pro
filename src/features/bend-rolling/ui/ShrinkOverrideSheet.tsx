@@ -10,7 +10,7 @@ import { FieldInput } from '@/shared/ui';
 import { Sheet } from '@/shared/ui/Sheet';
 import { colors, spacing, typography } from '@/theme';
 import { parseLengthInput } from '@/utils/parseLengthInput';
-import { getLengthUnitLabel } from '@/utils/units';
+import { getLengthUnitLabel, getLengthInputMode } from '@/utils/units';
 
 import { rollingCopy } from '../rolling.copy';
 
@@ -66,8 +66,7 @@ function ShrinkOverrideSheetOpen({
   const isValid =
     isBlank || (parsedInches !== undefined && parsedInches <= MAX_OFFSET_SHRINK_PER_INCH);
 
-  const lengthKeyboard =
-    unitSystem === 'imperial' ? ('numbers-and-punctuation' as const) : ('decimal-pad' as const);
+  const lengthInput = getLengthInputMode(unitSystem);
 
   function handleApply() {
     if (!isValid) return;
@@ -90,7 +89,7 @@ function ShrinkOverrideSheetOpen({
         onChangeText={setText}
         placeholder={rollingCopy.shrinkOverride.placeholder}
         unit={getLengthUnitLabel(unitSystem)}
-        inputProps={{ keyboardType: lengthKeyboard }}
+        lengthInput={lengthInput}
         error={!isValid ? rollingCopy.shrinkOverride.errorInvalid : undefined}
       />
 

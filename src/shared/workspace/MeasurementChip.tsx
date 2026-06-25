@@ -8,6 +8,7 @@ export type MeasurementChipProps = {
   label: string;
   value: string;
   tone?: MeasurementChipTone;
+  size?: 'default' | 'compact';
   onPress?: () => void;
 };
 
@@ -36,15 +37,16 @@ const toneStyles: Record<
 };
 
 /** Compact field readout for marks, distances, and secondary results. */
-export function MeasurementChip({ label, value, tone = 'default', onPress }: MeasurementChipProps) {
+export function MeasurementChip({ label, value, tone = 'default', size = 'default', onPress }: MeasurementChipProps) {
   const palette = toneStyles[tone];
+  const compact = size === 'compact';
   const readout = (
-    <View style={[styles.readout, { borderColor: palette.border, backgroundColor: palette.bg }]}>
-      <Text style={[styles.label, { color: palette.label }]} numberOfLines={2}>
+    <View style={[styles.readout, compact && styles.readoutCompact, { borderColor: palette.border, backgroundColor: palette.bg }]}>
+      <Text style={[styles.label, compact && styles.labelCompact, { color: palette.label }]} numberOfLines={2}>
         {label}
       </Text>
       <Text
-        style={[styles.value, { color: palette.value }]}
+        style={[styles.value, compact && styles.valueCompact, { color: palette.value }]}
         numberOfLines={1}
         adjustsFontSizeToFit
         minimumFontScale={0.85}>
@@ -75,6 +77,11 @@ const styles = StyleSheet.create({
     minWidth: 112,
     maxWidth: '100%',
   },
+  readoutCompact: {
+    minWidth: 96,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 8,
+  },
   readout: {
     width: '100%',
     gap: 3,
@@ -90,11 +97,20 @@ const styles = StyleSheet.create({
     letterSpacing: 0.65,
     textTransform: 'uppercase',
   },
+  labelCompact: {
+    fontSize: 9,
+    lineHeight: 12,
+    letterSpacing: 0.5,
+  },
   value: {
     fontSize: 16,
     lineHeight: 20,
     fontWeight: '600',
     fontVariant: ['tabular-nums'],
+  },
+  valueCompact: {
+    fontSize: 15,
+    lineHeight: 18,
   },
   pressed: {
     opacity: 0.88,

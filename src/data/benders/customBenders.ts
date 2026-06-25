@@ -41,6 +41,7 @@ export function toBenderProfile(stored: CustomBenderProfileStored): BenderProfil
     id: stored.id,
     name: stored.name,
     category: 'custom',
+    chartKind: 'custom-measured',
     description: 'Your measured stub 90 deducts — saved on this device.',
     emtStub90TakeUpInches: stored.emtStub90TakeUpInches,
   };

@@ -14,7 +14,7 @@ It is **not** a generic calculator app. It is a field tool. People will mark and
 
 ## Current phase
 
-**Phase 4 wrapped (paused).** Phases 1–3 are complete; six calculators ship (Offset, Stub 90, 3-Point Saddle, 4-Point Saddle, Segment Bend, Rolling Offset). Do not add new calculators unless a task explicitly asks for one — follow `FEATURE_TEMPLATE.md` when you do. Next focus is calculator hardening and/or Phase 5 (Guide mode). See `docs/PHASE_4_WRAPUP.md`, `docs/CURRENT_STATE.md`, and `docs/ROADMAP.md`.
+**Phase 5.5 complete (acceptance review).** Phase 6 — future calculators — is next only when explicitly scoped. Phases 1–5 delivered the shared calculator workspace, hub/UI polish, imperial fraction keypad, guide walkthroughs, and bender database improvements. See [`KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md), [`PHASE_5_WRAPUP.md`](docs/PHASE_5_WRAPUP.md), [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), and [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Read these docs first
 
@@ -25,7 +25,7 @@ In this order:
 3. `docs/CURRENT_STATE.md` — what exists, what works, what's incomplete
 4. `docs/AI_AGENT_WORKFLOW.md` — **required rules for editing code** (before-edit checklist, safety rules, report format)
 5. `docs/GLOSSARY.md` — required terminology
-6. Then, as the task demands: `docs/ROADMAP.md`, `docs/CALCULATOR_RULES.md`, `docs/DIAGRAM_SYSTEM.md`, `docs/PROJECT_MAP.md`, `docs/APP_ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/NAMING_RULES.md`
+6. Then, as the task demands: `docs/ROADMAP.md`, `docs/KNOWN_ISSUES.md`, `docs/UI_WORKSPACE_LAYOUT.md`, `docs/CALCULATOR_RULES.md`, `docs/DIAGRAM_SYSTEM.md`, `docs/PROJECT_MAP.md`, `docs/APP_ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/NAMING_RULES.md`
 
 ## Core rules (non-negotiable)
 

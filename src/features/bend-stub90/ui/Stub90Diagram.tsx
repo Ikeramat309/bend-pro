@@ -1,4 +1,3 @@
-import { StyleSheet, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 
 import {
@@ -6,6 +5,8 @@ import {
     DiagramCallout,
     DiagramCanvas,
     DiagramDefs,
+    DiagramFrame,
+    DiagramGhostMessage,
     DiagramLabel,
     DiagramLeaderLine,
     DimensionLine,
@@ -19,8 +20,7 @@ import { STUB90_CONFIG } from '../stub90.config';
 import { stub90Copy } from '../stub90.copy';
 
 const GHOST_PIPE_PATH = 'M 18 218 H 252 Q 298 218 298 172 V 34';
-const GHOST_MARK_OPACITY = 0.38;
-const GHOST_DIM_OPACITY = 0.34;
+const { ghost } = diagramTheme;
 
 /** Free end of the leg (left edge of the horizontal run). */
 const START_X = 18;
@@ -54,34 +54,27 @@ export function Stub90Diagram({ data, isEmpty = false, isInvalid = false }: Stub
     : stub90Copy.diagram.emptyMessage;
 
   return (
-    <View style={styles.frame}>
+    <DiagramFrame>
       {!data || isEmpty || isInvalid ? (
-        <Stub90GhostDiagram message={message} />
+        <Stub90GhostDiagram message={message} invalid={isInvalid} />
       ) : (
         <Stub90LiveDiagram data={data} />
       )}
-    </View>
+    </DiagramFrame>
   );
 }
 
-function Stub90GhostDiagram({ message }: { message: string }) {
+function Stub90GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   return (
     <Svg viewBox={STUB90_CONFIG.diagramViewBox} width="100%" height={STUB90_CONFIG.diagramHeight}>
       <DiagramDefs gradientId="ghostPipeGradient" ghost />
       <DiagramCanvas />
-      <PipeSegment d={GHOST_PIPE_PATH} variant="shadow" opacity={0.55} />
+      <PipeSegment d={GHOST_PIPE_PATH} variant="shadow" opacity={ghost.pipeShadowOpacity} />
       <PipeSegment d={GHOST_PIPE_PATH} variant="pipe" gradientId="ghostPipeGradient" />
-      <MarkLine x1={284} y1={88} x2={312} y2={88} opacity={GHOST_MARK_OPACITY} />
-      <DimensionLine x1={324} y1={218} x2={324} y2={34} showArrows={false} opacity={GHOST_DIM_OPACITY} />
-      <DimensionLine x1={18} y1={268} x2={304} y2={268} showArrows={false} opacity={GHOST_DIM_OPACITY} />
-      <DiagramLabel
-        x={180}
-        y={286}
-        text={message}
-        variant="muted"
-        fontSize={11}
-        fontWeight="500"
-      />
+      <MarkLine x1={284} y1={88} x2={312} y2={88} opacity={ghost.markOpacity} />
+      <DimensionLine x1={324} y1={218} x2={324} y2={34} showArrows={false} opacity={ghost.dimensionOpacity} />
+      <DimensionLine x1={18} y1={268} x2={304} y2={268} showArrows={false} opacity={ghost.dimensionOpacity} />
+      <DiagramGhostMessage text={message} invalid={invalid} />
     </Svg>
   );
 }
@@ -276,10 +269,3 @@ function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
     </Svg>
   );
 }
-
-const styles = StyleSheet.create({
-  frame: {
-    overflow: 'hidden',
-    backgroundColor: diagramTheme.canvas,
-  },
-});

@@ -2,7 +2,10 @@ import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 
 import type { BendAngle } from '@/core/types';
+import { snapshotSetupFromInput } from '@/core/calculations';
+import { getCalculatorById } from '@/core/calculators';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { usePersistRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile, formatOffsetProfileContextLine } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
@@ -22,6 +25,11 @@ import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateOffset } from '../engine/offset.engine';
 import { formatMultiplier, getOffsetAngleData } from '../engine/offsetAngleData';
+import { toOffsetCalculationResult } from '../engine/offsetCalculationResult';
+import {
+  createOffsetInputSnapshot,
+  toStoredInputSnapshot,
+} from '../engine/offsetInputSnapshot';
 import { OFFSET_CONFIG } from '../offset.config';
 import { offsetCopy } from '../offset.copy';
 import { MultiplierOverrideSheet } from './MultiplierOverrideSheet';
@@ -62,21 +70,20 @@ export default function OffsetScreen() {
   const profileContextMessage = formatOffsetProfileContextLine(benderProfile.name, bendAngle);
   const lengthInput = getLengthInputMode(unit);
 
-  const result = useMemo(
-    () =>
-      calculateOffset({
-        offsetHeight: offsetHeight ?? Number.NaN,
-        mark1: hasMark1 ? mark1Number : undefined,
-        bendAngle,
-        benderProfileId,
-        conduitType,
-        tradeSize: conduitSize,
-        unitSystem: unit,
-        roundingPrecision: rounding,
-        multiplierOverride,
-        shrinkPerInchOverride,
-        customBenderProfiles,
-      }),
+  const engineInput = useMemo(
+    () => ({
+      offsetHeight: offsetHeight ?? Number.NaN,
+      mark1: hasMark1 ? mark1Number : undefined,
+      bendAngle,
+      benderProfileId,
+      conduitType,
+      tradeSize: conduitSize,
+      unitSystem: unit,
+      roundingPrecision: rounding,
+      multiplierOverride,
+      shrinkPerInchOverride,
+      customBenderProfiles,
+    }),
     [
       benderProfileId,
       customBenderProfiles,
@@ -92,6 +99,22 @@ export default function OffsetScreen() {
       unit,
     ],
   );
+
+  const result = useMemo(() => calculateOffset(engineInput), [engineInput]);
+
+  const calculationResult = useMemo(
+    () => toOffsetCalculationResult(engineInput, result),
+    [engineInput, result],
+  );
+
+  usePersistRecentLayout({
+    calculatorId: 'offset',
+    calculatorTitle: getCalculatorById('offset')?.title ?? 'Basic Offset',
+    inputSnapshot: toStoredInputSnapshot(createOffsetInputSnapshot(engineInput)),
+    setupSnapshot: snapshotSetupFromInput(engineInput),
+    calculationResult,
+    enabled: offsetHeightText.trim() !== '',
+  });
 
   const distanceValue = hasValidOffset ? result.distanceBetweenBendsFormatted : '—';
   const visibleWarnings = offsetHeightText.trim() !== '' ? result.warnings : [];

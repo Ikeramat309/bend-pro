@@ -45,5 +45,16 @@ export {
   trimRecentLayouts,
   updateRecentLayout,
   upsertRecentLayout,
+  upsertRecentLayoutForCalculator,
   type ContinueLayoutCandidate,
 } from './recentLayoutsService';
+
+export {
+  DEFAULT_PERSIST_DEBOUNCE_MS,
+  buildRecentLayoutPersistSignature,
+  persistRecentLayoutFromCalculation,
+  shouldPersistRecentLayout,
+  type PersistRecentLayoutInput,
+} from './persistRecentLayout';
+
+export { usePersistRecentLayout, type UsePersistRecentLayoutParams } from './usePersistRecentLayout';

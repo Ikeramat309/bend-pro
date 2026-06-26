@@ -5,7 +5,10 @@ import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 
 import type { BendAngle } from '@/core/types';
+import { snapshotSetupFromInput } from '@/core/calculations';
+import { getCalculatorById } from '@/core/calculators';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { usePersistRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
@@ -25,6 +28,11 @@ import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateRolling } from '../engine/rolling.engine';
 import { formatRollingMultiplier, getRollingAngleData } from '../engine/rollingAngleData';
+import { toRollingCalculationResult } from '../engine/rollingCalculationResult';
+import {
+  createRollingInputSnapshot,
+  toStoredInputSnapshot,
+} from '../engine/rollingInputSnapshot';
 import { ROLLING_CONFIG } from '../rolling.config';
 import { rollingCopy } from '../rolling.copy';
 import { MultiplierOverrideSheet } from './MultiplierOverrideSheet';
@@ -72,22 +80,21 @@ export default function RollingScreen() {
   const profileContextMessage = rollingCopy.profileContext(benderProfile.name, bendAngle);
   const lengthInput = getLengthInputMode(unit);
 
-  const result = useMemo(
-    () =>
-      calculateRolling({
-        offsetHeight: offsetHeight ?? Number.NaN,
-        advance: offsetRoll ?? Number.NaN,
-        mark1: hasMark1 ? mark1Number : undefined,
-        bendAngle,
-        benderProfileId,
-        conduitType,
-        tradeSize: conduitSize,
-        unitSystem: unit,
-        roundingPrecision: rounding,
-        multiplierOverride,
-        shrinkPerInchOverride,
-        customBenderProfiles,
-      }),
+  const engineInput = useMemo(
+    () => ({
+      offsetHeight: offsetHeight ?? Number.NaN,
+      advance: offsetRoll ?? Number.NaN,
+      mark1: hasMark1 ? mark1Number : undefined,
+      bendAngle,
+      benderProfileId,
+      conduitType,
+      tradeSize: conduitSize,
+      unitSystem: unit,
+      roundingPrecision: rounding,
+      multiplierOverride,
+      shrinkPerInchOverride,
+      customBenderProfiles,
+    }),
     [
       offsetRoll,
       benderProfileId,
@@ -104,6 +111,22 @@ export default function RollingScreen() {
       unit,
     ],
   );
+
+  const result = useMemo(() => calculateRolling(engineInput), [engineInput]);
+
+  const calculationResult = useMemo(
+    () => toRollingCalculationResult(engineInput, result),
+    [engineInput, result],
+  );
+
+  usePersistRecentLayout({
+    calculatorId: 'rolling',
+    calculatorTitle: getCalculatorById('rolling')?.title ?? 'Rolling Offset',
+    inputSnapshot: toStoredInputSnapshot(createRollingInputSnapshot(engineInput)),
+    setupSnapshot: snapshotSetupFromInput(engineInput),
+    calculationResult,
+    enabled: offsetHeightText.trim() !== '' || offsetRollText.trim() !== '',
+  });
 
   const distanceValue = hasValidInputs ? result.distanceBetweenBendsFormatted : '—';
 

@@ -116,14 +116,34 @@ Helpers: `getCalculatorRoute(id)`, `getBendsScreenFamilies()`, `getHomeContinueC
 
 **`src/core/calculations/`** defines the shared result envelope (`CalculationResult`) for saved layouts, export, field steps, and future tooling. Engines keep their native result types; feature adapters map engine output into the contract:
 
-- `toOffsetCalculationResult()` — `src/features/bend-offset/engine/offsetCalculationResult.ts`
-- `toStub90CalculationResult()` — `src/features/bend-stub90/engine/stub90CalculationResult.ts`
+| Calculator | Adapter |
+|------------|---------|
+| Offset | `toOffsetCalculationResult()` |
+| Stub 90 | `toStub90CalculationResult()` |
+| Rolling Offset | `toRollingCalculationResult()` |
+| 3-Point Saddle | `toSaddle3CalculationResult()` |
+| 4-Point Saddle | `toSaddle4CalculationResult()` |
+| Segment Bend | `toSegmentCalculationResult()` |
 
-Other calculators can add adapters incrementally without changing engine math. Screens are not wired to this contract yet.
+All adapters live under `src/features/bend-*/engine/*CalculationResult.ts`. Calculator screens call adapters for recent-layout persistence; UI layout is unchanged.
+
+## Input snapshots
+
+Each active calculator has typed JSON-safe input snapshot helpers under `src/features/bend-*/engine/*InputSnapshot.ts`:
+
+- `create*InputSnapshot()` — from engine input (calculator fields only; setup lives in `setupSnapshot`)
+- `sanitize*InputSnapshot()` — safe restore from storage
+- `toStoredInputSnapshot()` — converts to `CalculatorInputSnapshot` for sessions
 
 ## Sessions and recent layouts
 
-**`src/core/sessions/`** stores calculator sessions and recent layouts (AsyncStorage-compatible service, schema-versioned JSON). See `src/core/sessions/README.md` for integration TODOs. Home Continue Layout is not wired to recents yet.
+**`src/core/sessions/`** stores calculator sessions and recent layouts (AsyncStorage, schema-versioned JSON).
+
+- `usePersistRecentLayout()` — debounced save on valid/warning results (wired on all active calculator screens)
+- `upsertRecentLayoutForCalculator()` — one recent entry per calculator id
+- `resolveContinueLayoutCandidate()` — for future Home Continue hydration
+
+Home Continue Layout still uses registry fallback — see TODO in `HomeScreen.tsx`.
 
 ## Verification
 

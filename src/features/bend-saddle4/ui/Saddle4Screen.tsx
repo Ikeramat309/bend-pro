@@ -1,7 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 
+import { snapshotSetupFromInput } from '@/core/calculations';
+import { getCalculatorById } from '@/core/calculators';
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { usePersistRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
@@ -17,6 +20,11 @@ import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/ut
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateSaddle4 } from '../engine/saddle4.engine';
+import { toSaddle4CalculationResult } from '../engine/saddle4CalculationResult';
+import {
+  createSaddle4InputSnapshot,
+  toStoredInputSnapshot,
+} from '../engine/saddle4InputSnapshot';
 import { getSaddle4AngleData, SADDLE4_ANGLE_DATA } from '../engine/saddle4AngleData';
 import type { Saddle4Angle } from '../engine/saddle4.types';
 import { SADDLE4_CONFIG } from '../saddle4.config';
@@ -55,20 +63,19 @@ export default function Saddle4Screen() {
   const profileContextMessage = saddle4Copy.profileContext(angleData.label);
   const lengthInput = getLengthInputMode(unit);
 
-  const result = useMemo(
-    () =>
-      calculateSaddle4({
-        obstructionHeight: obstructionHeight ?? Number.NaN,
-        saddleWidth: hasValidWidth ? saddleWidth : undefined,
-        distanceToCenter: hasDistance ? distanceToCenter : undefined,
-        bendAngle,
-        benderProfileId,
-        conduitType,
-        tradeSize: conduitSize,
-        unitSystem: unit,
-        roundingPrecision: rounding,
-        customBenderProfiles,
-      }),
+  const engineInput = useMemo(
+    () => ({
+      obstructionHeight: obstructionHeight ?? Number.NaN,
+      saddleWidth: hasValidWidth ? saddleWidth : undefined,
+      distanceToCenter: hasDistance ? distanceToCenter : undefined,
+      bendAngle,
+      benderProfileId,
+      conduitType,
+      tradeSize: conduitSize,
+      unitSystem: unit,
+      roundingPrecision: rounding,
+      customBenderProfiles,
+    }),
     [
       bendAngle,
       benderProfileId,
@@ -84,6 +91,22 @@ export default function Saddle4Screen() {
       unit,
     ],
   );
+
+  const result = useMemo(() => calculateSaddle4(engineInput), [engineInput]);
+
+  const calculationResult = useMemo(
+    () => toSaddle4CalculationResult(engineInput, result),
+    [engineInput, result],
+  );
+
+  usePersistRecentLayout({
+    calculatorId: 'saddle4',
+    calculatorTitle: getCalculatorById('saddle4')?.title ?? '4-Point Saddle',
+    inputSnapshot: toStoredInputSnapshot(createSaddle4InputSnapshot(engineInput)),
+    setupSnapshot: snapshotSetupFromInput(engineInput),
+    calculationResult,
+    enabled: obstructionHeightText.trim() !== '',
+  });
 
   const centerMarkValue = hasValidInputs
     ? hasDistance

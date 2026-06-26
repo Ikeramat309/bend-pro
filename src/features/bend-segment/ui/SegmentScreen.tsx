@@ -1,7 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 
+import { snapshotSetupFromInput } from '@/core/calculations';
+import { getCalculatorById } from '@/core/calculators';
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { usePersistRecentLayout } from '@/core/sessions';
 import { parseStrictPositiveDecimal } from '@/core/validation';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
@@ -16,6 +19,11 @@ import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/ut
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateSegment } from '../engine/segment.engine';
+import { toSegmentCalculationResult } from '../engine/segmentCalculationResult';
+import {
+  createSegmentInputSnapshot,
+  toStoredInputSnapshot,
+} from '../engine/segmentInputSnapshot';
 import { SEGMENT_CONFIG } from '../segment.config';
 import { segmentCopy } from '../segment.copy';
 import { SegmentDiagram } from './SegmentDiagram';
@@ -54,20 +62,19 @@ export default function SegmentScreen() {
   const hasValidInputs = hasValidRadius && hasValidAngles;
   const lengthInput = getLengthInputMode(unit);
 
-  const result = useMemo(
-    () =>
-      calculateSegment({
-        radius: radius ?? Number.NaN,
-        totalAngle: totalAngle ?? Number.NaN,
-        degreesPerBend: degreesPerBend ?? Number.NaN,
-        startOffset: hasStart ? startOffset : undefined,
-        benderProfileId,
-        conduitType,
-        tradeSize: conduitSize,
-        unitSystem: unit,
-        roundingPrecision: rounding,
-        customBenderProfiles,
-      }),
+  const engineInput = useMemo(
+    () => ({
+      radius: radius ?? Number.NaN,
+      totalAngle: totalAngle ?? Number.NaN,
+      degreesPerBend: degreesPerBend ?? Number.NaN,
+      startOffset: hasStart ? startOffset : undefined,
+      benderProfileId,
+      conduitType,
+      tradeSize: conduitSize,
+      unitSystem: unit,
+      roundingPrecision: rounding,
+      customBenderProfiles,
+    }),
     [
       benderProfileId,
       conduitSize,
@@ -82,6 +89,22 @@ export default function SegmentScreen() {
       unit,
     ],
   );
+
+  const result = useMemo(() => calculateSegment(engineInput), [engineInput]);
+
+  const calculationResult = useMemo(
+    () => toSegmentCalculationResult(engineInput, result),
+    [engineInput, result],
+  );
+
+  usePersistRecentLayout({
+    calculatorId: 'segment',
+    calculatorTitle: getCalculatorById('segment')?.title ?? 'Segment Bend',
+    inputSnapshot: toStoredInputSnapshot(createSegmentInputSnapshot(engineInput)),
+    setupSnapshot: snapshotSetupFromInput(engineInput),
+    calculationResult,
+    enabled: radiusText.trim() !== '' || totalAngleText.trim() !== '',
+  });
 
   const spacingValue = hasValidInputs ? result.spacingFormatted : '—';
   const perBendValue = hasValidInputs ? result.degreesPerBendFormatted : '—';

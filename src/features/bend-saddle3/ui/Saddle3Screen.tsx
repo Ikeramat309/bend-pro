@@ -1,7 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 
+import { snapshotSetupFromInput } from '@/core/calculations';
+import { getCalculatorById } from '@/core/calculators';
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { usePersistRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { getBenderProfile } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
@@ -17,6 +20,11 @@ import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/ut
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateSaddle3 } from '../engine/saddle3.engine';
+import { toSaddle3CalculationResult } from '../engine/saddle3CalculationResult';
+import {
+  createSaddle3InputSnapshot,
+  toStoredInputSnapshot,
+} from '../engine/saddle3InputSnapshot';
 import {
   getSaddle3AngleData,
   SADDLE3_ANGLE_DATA,
@@ -55,19 +63,18 @@ export default function Saddle3Screen() {
   const profileContextMessage = saddle3Copy.profileContext(angleData.label);
   const lengthInput = getLengthInputMode(unit);
 
-  const result = useMemo(
-    () =>
-      calculateSaddle3({
-        obstructionHeight: obstructionHeight ?? Number.NaN,
-        distanceToCenter: hasDistance ? distanceToCenter : undefined,
-        anglePreset,
-        benderProfileId,
-        conduitType,
-        tradeSize: conduitSize,
-        unitSystem: unit,
-        roundingPrecision: rounding,
-        customBenderProfiles,
-      }),
+  const engineInput = useMemo(
+    () => ({
+      obstructionHeight: obstructionHeight ?? Number.NaN,
+      distanceToCenter: hasDistance ? distanceToCenter : undefined,
+      anglePreset,
+      benderProfileId,
+      conduitType,
+      tradeSize: conduitSize,
+      unitSystem: unit,
+      roundingPrecision: rounding,
+      customBenderProfiles,
+    }),
     [
       anglePreset,
       benderProfileId,
@@ -81,6 +88,22 @@ export default function Saddle3Screen() {
       unit,
     ],
   );
+
+  const result = useMemo(() => calculateSaddle3(engineInput), [engineInput]);
+
+  const calculationResult = useMemo(
+    () => toSaddle3CalculationResult(engineInput, result),
+    [engineInput, result],
+  );
+
+  usePersistRecentLayout({
+    calculatorId: 'saddle3',
+    calculatorTitle: getCalculatorById('saddle3')?.title ?? '3-Point Saddle',
+    inputSnapshot: toStoredInputSnapshot(createSaddle3InputSnapshot(engineInput)),
+    setupSnapshot: snapshotSetupFromInput(engineInput),
+    calculationResult,
+    enabled: obstructionHeightText.trim() !== '',
+  });
 
   const centerMarkValue = hasValidHeight
     ? hasDistance

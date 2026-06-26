@@ -8,13 +8,12 @@ import {
   loadRecentLayouts,
   resolveContinueLayoutCandidate,
   saveRecentLayout,
-  SESSION_SCHEMA_VERSION,
   updateRecentLayout,
   upsertRecentLayout,
-  type RecentLayoutsStorage,
-} from './index';
-import { parseStoredRecentLayoutsJson, RECENT_LAYOUTS_STORAGE_KEY } from './sessionPersistence';
+} from './recentLayoutsService';
+import { parseStoredRecentLayoutsJson, RECENT_LAYOUTS_STORAGE_KEY, type RecentLayoutsStorage } from './sessionPersistence';
 import { sanitizeRecentLayoutsEnvelope } from './sessionSanitize';
+import { SESSION_SCHEMA_VERSION } from './sessionTypes';
 
 function createMemoryStorage(initial: Record<string, string> = {}): RecentLayoutsStorage {
   const map = new Map(Object.entries(initial));

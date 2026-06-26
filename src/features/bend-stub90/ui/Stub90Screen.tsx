@@ -1,7 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 
+import { snapshotSetupFromInput } from '@/core/calculations';
+import { getCalculatorById } from '@/core/calculators';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
+import { usePersistRecentLayout } from '@/core/sessions';
 import {
   DEFAULT_EMT_STUB90_TAKE_UP_INCHES,
   formatStub90DeductContextAction,
@@ -23,6 +26,11 @@ import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/ut
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateStub90 } from '../engine/stub90.engine';
+import { toStub90CalculationResult } from '../engine/stub90CalculationResult';
+import {
+  createStub90InputSnapshot,
+  toStoredInputSnapshot,
+} from '../engine/stub90InputSnapshot';
 import { STUB90_CONFIG } from '../stub90.config';
 import { stub90Copy } from '../stub90.copy';
 import { DeductOverrideSheet } from './DeductOverrideSheet';
@@ -56,19 +64,18 @@ export default function Stub90Screen() {
   const hasValidStubLength = stubLength !== undefined && stubLength > 0;
   const lengthInput = getLengthInputMode(unit);
 
-  const result = useMemo(
-    () =>
-      calculateStub90({
-        stubHeight: stubLength ?? Number.NaN,
-        legLength: hasValidLegLength ? legLength : undefined,
-        benderProfileId,
-        conduitType,
-        tradeSize: conduitSize,
-        unitSystem: unit,
-        roundingPrecision: rounding,
-        deductOverrideInches,
-        customBenderProfiles,
-      }),
+  const engineInput = useMemo(
+    () => ({
+      stubHeight: stubLength ?? Number.NaN,
+      legLength: hasValidLegLength ? legLength : undefined,
+      benderProfileId,
+      conduitType,
+      tradeSize: conduitSize,
+      unitSystem: unit,
+      roundingPrecision: rounding,
+      deductOverrideInches,
+      customBenderProfiles,
+    }),
     [
       benderProfileId,
       customBenderProfiles,
@@ -82,6 +89,22 @@ export default function Stub90Screen() {
       unit,
     ],
   );
+
+  const result = useMemo(() => calculateStub90(engineInput), [engineInput]);
+
+  const calculationResult = useMemo(
+    () => toStub90CalculationResult(engineInput, result),
+    [engineInput, result],
+  );
+
+  usePersistRecentLayout({
+    calculatorId: 'stub90',
+    calculatorTitle: getCalculatorById('stub90')?.title ?? '90° Stub',
+    inputSnapshot: toStoredInputSnapshot(createStub90InputSnapshot(engineInput)),
+    setupSnapshot: snapshotSetupFromInput(engineInput),
+    calculationResult,
+    enabled: stubLengthText.trim() !== '',
+  });
 
   const hasValidDeductMark = hasValidStubLength && result.isValidDeductMark;
   const deductMarkValue = hasValidDeductMark ? result.deductMarkFormatted ?? '—' : '—';

@@ -198,6 +198,35 @@ export async function upsertRecentLayout(
   return saveRecentLayout(storage, params, options);
 }
 
+/** Updates the most recent entry for a calculator id, or creates one. */
+export async function upsertRecentLayoutForCalculator(
+  storage: RecentLayoutsStorage,
+  params: CreateRecentLayoutParams,
+  options?: { maxCount?: number; now?: string },
+): Promise<RecentLayout[]> {
+  const envelope = await loadRecentLayoutsEnvelope(storage);
+  const existing = envelope.layouts.find((entry) => entry.calculatorId === params.calculatorId);
+
+  if (existing) {
+    return updateRecentLayout(
+      storage,
+      existing.id,
+      {
+        calculatorTitle: params.calculatorTitle,
+        inputSnapshot: params.inputSnapshot,
+        setupSnapshot: params.setupSnapshot,
+        resultSnapshot: params.resultSnapshot,
+        warnings: params.warnings,
+        label: params.label,
+        projectId: params.projectId,
+      },
+      options,
+    );
+  }
+
+  return saveRecentLayout(storage, params, options);
+}
+
 export async function removeRecentLayout(
   storage: RecentLayoutsStorage,
   id: string,

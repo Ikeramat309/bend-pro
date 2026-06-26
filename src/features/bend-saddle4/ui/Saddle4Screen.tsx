@@ -4,9 +4,9 @@ import { useMemo, useState } from 'react';
 import { snapshotSetupFromInput } from '@/core/calculations';
 import { getCalculatorById } from '@/core/calculators';
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
-import { usePersistRecentLayout } from '@/core/sessions';
+import { usePersistRecentLayout, useRestoreRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
-import { getBenderProfile } from '@/data/benders';
+import { getBenderProfile, formatSetupOnlyBenderMeta, formatStandardSaddleTableTrustTitle } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
 import { LengthInputSheet, OptionChipGroup, Sheet } from '@/shared/ui';
 import {
@@ -23,6 +23,7 @@ import { calculateSaddle4 } from '../engine/saddle4.engine';
 import { toSaddle4CalculationResult } from '../engine/saddle4CalculationResult';
 import {
   createSaddle4InputSnapshot,
+  restoreSaddle4FromLayout,
   toStoredInputSnapshot,
 } from '../engine/saddle4InputSnapshot';
 import { getSaddle4AngleData, SADDLE4_ANGLE_DATA } from '../engine/saddle4AngleData';
@@ -45,6 +46,14 @@ export default function Saddle4Screen() {
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
 
+  useRestoreRecentLayout('saddle4', restoreSaddle4FromLayout, (fields) => {
+    setObstructionHeightText(fields.obstructionHeightText);
+    setSaddleWidthText(fields.saddleWidthText);
+    setShowSaddleWidthInput(fields.showSaddleWidthInput);
+    setDistanceToCenterText(fields.distanceToCenterText);
+    setBendAngle(fields.bendAngle);
+  });
+
   const { setup, setSetup } = useCalculatorSetup();
   const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
 
@@ -60,7 +69,7 @@ export default function Saddle4Screen() {
   const hasValidHeight = obstructionHeight !== undefined && obstructionHeight > 0;
   const hasValidWidth = saddleWidth !== undefined && saddleWidth > 0;
   const hasValidInputs = hasValidHeight;
-  const profileContextMessage = saddle4Copy.profileContext(angleData.label);
+  const setupOnlyMeta = formatSetupOnlyBenderMeta(benderProfile.name);
   const lengthInput = getLengthInputMode(unit);
 
   const engineInput = useMemo(
@@ -183,9 +192,8 @@ export default function Saddle4Screen() {
       subtitle={setupSummary}
       onBackPress={handleBackPress}
       trust={{
-        benderName: benderProfile.name,
-        meta: setupSubtitle,
-        note: profileContextMessage,
+        benderName: formatStandardSaddleTableTrustTitle(angleData.label),
+        meta: [setupSummary, setupSubtitle, setupOnlyMeta].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[
@@ -270,7 +278,7 @@ export default function Saddle4Screen() {
       dock={{
         left: [
           { key: 'reset', label: 'Reset', onPress: resetInputs },
-          { key: 'set-center', label: 'Set Center', onPress: () => setDistanceSheetVisible(true) },
+          { key: 'set-center', label: saddle4Copy.fields.distanceToCenter.addButton, onPress: () => setDistanceSheetVisible(true) },
         ],
         guide: { onPress: () => router.push(guideRoute('saddle4')) },
       }}

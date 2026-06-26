@@ -1,11 +1,16 @@
 import type { BendAngle } from '@/core/types';
-import type { CalculatorInputSnapshot } from '@/core/sessions/sessionTypes';
+import type { CalculatorSetup } from '@/core/settings/calculatorSetup';
 import {
+  baseSetupPatchFromLayout,
+  formatStoredLengthText,
   isRecord,
+  mergeOffsetAngleOverrides,
   optionalFiniteNumber,
   pickJsonLeaves,
   requiredFiniteNumber,
 } from '@/core/sessions/inputSnapshotUtils';
+import { sanitizeSetupSnapshot } from '@/core/sessions/sessionSanitize';
+import type { CalculatorInputSnapshot, RecentLayout } from '@/core/sessions/sessionTypes';
 
 import type { RollingEngineInput } from './rolling.types';
 import { ROLLING_CONFIG } from '../rolling.config';
@@ -85,5 +90,49 @@ export function sanitizeRollingInputSnapshot(raw: unknown): RollingInputSnapshot
     mark1: optionalFiniteNumber(raw.mark1),
     multiplierOverride: optionalFiniteNumber(raw.multiplierOverride),
     shrinkPerInchOverride: optionalFiniteNumber(raw.shrinkPerInchOverride),
+  };
+}
+
+export type RollingRestoredFields = {
+  offsetHeightText: string;
+  offsetRollText: string;
+  mark1Text: string;
+  bendAngle: BendAngle;
+};
+
+export function restoreRollingFromLayout(
+  layout: RecentLayout,
+  currentSetup: CalculatorSetup,
+): { setupPatch: Partial<CalculatorSetup>; fields: RollingRestoredFields } | null {
+  const snap = sanitizeRollingInputSnapshot(layout.inputSnapshot);
+  if (!snap) {
+    return null;
+  }
+
+  const setupSnapshot = sanitizeSetupSnapshot(layout.setupSnapshot);
+  return {
+    setupPatch: {
+      ...baseSetupPatchFromLayout(layout),
+      ...mergeOffsetAngleOverrides(
+        currentSetup,
+        snap.bendAngle,
+        snap.multiplierOverride,
+        snap.shrinkPerInchOverride,
+      ),
+    },
+    fields: {
+      offsetHeightText: formatStoredLengthText(
+        snap.offsetHeight,
+        setupSnapshot.unitSystem,
+        setupSnapshot.roundingPrecision,
+      ),
+      offsetRollText: formatStoredLengthText(
+        snap.advance,
+        setupSnapshot.unitSystem,
+        setupSnapshot.roundingPrecision,
+      ),
+      mark1Text: formatStoredLengthText(snap.mark1, setupSnapshot.unitSystem, setupSnapshot.roundingPrecision),
+      bendAngle: snap.bendAngle,
+    },
   };
 }

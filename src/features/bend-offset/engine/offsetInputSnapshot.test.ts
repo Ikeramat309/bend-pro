@@ -1,8 +1,12 @@
 import { snapshotSetupFromInput } from '@/core/calculations';
+import { DEFAULT_CALCULATOR_SETUP, patchCalculatorSetup } from '@/core/settings/calculatorSetup';
+import { parseLengthInput } from '@/core/measurements';
+import { createRecentLayout } from '@/core/sessions/recentLayoutsService';
 
 import { calculateOffset } from './offset.engine';
 import {
   createOffsetInputSnapshot,
+  restoreOffsetFromLayout,
   sanitizeOffsetInputSnapshot,
   toStoredInputSnapshot,
 } from './offsetInputSnapshot';
@@ -87,5 +91,55 @@ describe('offset snapshot with engine', () => {
 
     expect(snapshot.calculatorId).toBe('offset');
     expect(setup.benderProfileId).toBe('generic-hand-bender');
+  });
+});
+
+describe('offset restore round-trip', () => {
+  test('restoreOffsetFromLayout reproduces the stored input snapshot', () => {
+    const engineInput = {
+      offsetHeight: 6,
+      mark1: 24,
+      bendAngle: 30 as const,
+      benderProfileId: 'generic-hand-bender',
+      conduitType: 'EMT' as const,
+      tradeSize: '1/2' as const,
+      unitSystem: 'imperial' as const,
+      roundingPrecision: '1/16' as const,
+      multiplierOverride: 2.1,
+      shrinkPerInchOverride: 0.125,
+      customBenderProfiles: [],
+    };
+
+    const original = createOffsetInputSnapshot(engineInput);
+    const layout = createRecentLayout({
+      calculatorId: 'offset',
+      calculatorTitle: 'Basic Offset',
+      inputSnapshot: toStoredInputSnapshot(original),
+      setupSnapshot: snapshotSetupFromInput(engineInput),
+    });
+
+    const restored = restoreOffsetFromLayout(layout, DEFAULT_CALCULATOR_SETUP);
+    expect(restored).not.toBeNull();
+
+    const patchedSetup = patchCalculatorSetup(DEFAULT_CALCULATOR_SETUP, restored!.setupPatch);
+    const mark1Parsed = restored!.fields.mark1Text
+      ? parseLengthInput(restored!.fields.mark1Text)
+      : undefined;
+
+    const roundTrip = createOffsetInputSnapshot({
+      offsetHeight: parseLengthInput(restored!.fields.offsetHeightText) ?? Number.NaN,
+      mark1: mark1Parsed,
+      bendAngle: restored!.fields.bendAngle,
+      benderProfileId: patchedSetup.benderProfileId,
+      conduitType: 'EMT',
+      tradeSize: patchedSetup.conduitSize,
+      unitSystem: patchedSetup.unit,
+      roundingPrecision: patchedSetup.rounding,
+      multiplierOverride: patchedSetup.offsetMultiplierOverrides[30],
+      shrinkPerInchOverride: patchedSetup.offsetShrinkPerInchOverrides[30],
+      customBenderProfiles: [],
+    });
+
+    expect(roundTrip).toEqual(original);
   });
 });

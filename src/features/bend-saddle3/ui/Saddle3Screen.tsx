@@ -4,9 +4,9 @@ import { useMemo, useState } from 'react';
 import { snapshotSetupFromInput } from '@/core/calculations';
 import { getCalculatorById } from '@/core/calculators';
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
-import { usePersistRecentLayout } from '@/core/sessions';
+import { usePersistRecentLayout, useRestoreRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
-import { getBenderProfile } from '@/data/benders';
+import { getBenderProfile, formatSetupOnlyBenderMeta, formatStandardSaddleTableTrustTitle } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
 import { LengthInputSheet, OptionChipGroup, Sheet } from '@/shared/ui';
 import {
@@ -23,6 +23,7 @@ import { calculateSaddle3 } from '../engine/saddle3.engine';
 import { toSaddle3CalculationResult } from '../engine/saddle3CalculationResult';
 import {
   createSaddle3InputSnapshot,
+  restoreSaddle3FromLayout,
   toStoredInputSnapshot,
 } from '../engine/saddle3InputSnapshot';
 import {
@@ -48,6 +49,12 @@ export default function Saddle3Screen() {
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
 
+  useRestoreRecentLayout('saddle3', restoreSaddle3FromLayout, (fields) => {
+    setObstructionHeightText(fields.obstructionHeightText);
+    setDistanceToCenterText(fields.distanceToCenterText);
+    setAnglePreset(fields.anglePreset);
+  });
+
   const { setup, setSetup } = useCalculatorSetup();
   const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
 
@@ -60,7 +67,7 @@ export default function Saddle3Screen() {
   const setupSummary = `${conduitType} ${conduitSize}"`;
   const setupSubtitle = `${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`;
   const hasValidHeight = obstructionHeight !== undefined && obstructionHeight > 0;
-  const profileContextMessage = saddle3Copy.profileContext(angleData.label);
+  const setupOnlyMeta = formatSetupOnlyBenderMeta(benderProfile.name);
   const lengthInput = getLengthInputMode(unit);
 
   const engineInput = useMemo(
@@ -177,9 +184,8 @@ export default function Saddle3Screen() {
       subtitle={setupSummary}
       onBackPress={handleBackPress}
       trust={{
-        benderName: benderProfile.name,
-        meta: setupSubtitle,
-        note: profileContextMessage,
+        benderName: formatStandardSaddleTableTrustTitle(angleData.label),
+        meta: [setupSummary, setupSubtitle, setupOnlyMeta].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[
@@ -242,7 +248,7 @@ export default function Saddle3Screen() {
       dock={{
         left: [
           { key: 'reset', label: 'Reset', onPress: resetInputs },
-          { key: 'set-center', label: 'Set Center', onPress: () => setDistanceSheetVisible(true) },
+          { key: 'set-center', label: saddle3Copy.fields.distanceToCenter.addButton, onPress: () => setDistanceSheetVisible(true) },
         ],
         guide: { onPress: () => router.push(guideRoute('saddle3')) },
       }}

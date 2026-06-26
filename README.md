@@ -13,7 +13,7 @@ Six working calculators on a shared diagram-first workspace: Offset, Stub 90, 3-
 ```bash
 npm install
 npm start          # Expo dev server
-npm run check      # typecheck + lint + tests (220 tests)
+npm run check      # typecheck + lint + tests (395 tests)
 ```
 
 Platform targets: `npm run android`, `npm run ios`, `npm run web`.

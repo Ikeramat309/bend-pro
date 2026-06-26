@@ -29,13 +29,13 @@ Typed helpers in `src/features/bend-*/engine/*InputSnapshot.ts` — see `APP_ARC
 
 Storage key: `bend-pro/recent-layouts/v1`.
 
-## Wired (behind the scenes)
+## Wired
 
 All six active calculator screens call `usePersistRecentLayout` when the user has entered inputs and the result is **valid** or **warning**. Invalid runs are not saved. Writes are debounced (~600ms) and deduplicated by content signature.
 
+**Home Continue Layout** hydrates recents on focus and navigates with `layoutId`. Calculator screens restore via `useRestoreRecentLayout` and per-calculator `restore*FromLayout` helpers in `*InputSnapshot.ts`.
+
 ## TODO
 
-1. **Home Continue Layout** — hydrate `loadRecentLayouts` + `resolveContinueLayoutCandidate` in `HomeScreen.tsx`.
-2. **Resume inputs** — restore `inputSnapshot` into screen state when opening from recents.
-3. **Saved layouts** — separate envelope using `SavedLayout`.
-4. **User labels / project id** — UI for optional `label` and `projectId` fields.
+1. **Saved layouts** — separate envelope using `SavedLayout`.
+2. **User labels / project id** — UI for optional `label` and `projectId` fields.

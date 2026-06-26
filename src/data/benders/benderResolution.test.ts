@@ -1,52 +1,22 @@
-import { DEFAULT_EMT_STUB90_TAKE_UP_INCHES } from './benderDefaults';
 import { GENERIC_HAND_BENDER } from './genericHandBender';
-import {
-  getBenderSourceType,
-  resolveEffectiveStub90DeductInches,
-} from './benderResolution';
-import { toBenderProfile, type CustomBenderProfileStored } from './customBenders';
-
-describe('getBenderSourceType', () => {
-  test('generic built-in profiles', () => {
-    expect(getBenderSourceType(GENERIC_HAND_BENDER)).toBe('generic');
-  });
-
-  test('custom measured profiles', () => {
-    const stored: CustomBenderProfileStored = {
-      id: 'custom-test',
-      name: 'My Bender',
-      emtStub90TakeUpInches: { '1/2': 5.5 },
-    };
-    expect(getBenderSourceType(toBenderProfile(stored))).toBe('custom');
-  });
-
-  test('manufacturer profiles map to verified', () => {
-    expect(
-      getBenderSourceType({
-        ...GENERIC_HAND_BENDER,
-        chartKind: 'manufacturer',
-        sourceNote: 'Example Mfg 2024 chart',
-      }),
-    ).toBe('verified');
-  });
-});
+import { resolveEffectiveStub90DeductInches } from './benderResolution';
 
 describe('resolveEffectiveStub90DeductInches', () => {
   test('uses profile chart for listed sizes', () => {
     const result = resolveEffectiveStub90DeductInches(GENERIC_HAND_BENDER, '1/2');
     expect(result.deductInches).toBe(5);
     expect(result.source).toBe('profile-chart');
-    expect(result.sourceType).toBe('generic');
+    expect(result.chartDeductInches).toBe(5);
   });
 
-  test('falls back for unsupported trade sizes', () => {
+  test('returns missing chart for unsupported trade sizes without inventing a deduct', () => {
     const result = resolveEffectiveStub90DeductInches(GENERIC_HAND_BENDER, '1-1/4');
-    expect(result.deductInches).toBe(DEFAULT_EMT_STUB90_TAKE_UP_INCHES);
-    expect(result.source).toBe('default-fallback');
+    expect(result.deductInches).toBeUndefined();
+    expect(result.source).toBe('missing-chart');
     expect(result.chartDeductInches).toBeUndefined();
   });
 
-  test('manual override wins over chart and fallback', () => {
+  test('manual override wins over chart and missing chart', () => {
     const result = resolveEffectiveStub90DeductInches(GENERIC_HAND_BENDER, '1/2', 5.75);
     expect(result.deductInches).toBe(5.75);
     expect(result.source).toBe('override');

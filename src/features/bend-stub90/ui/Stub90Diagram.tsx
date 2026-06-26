@@ -2,9 +2,12 @@ import { Circle } from 'react-native-svg';
 
 import {
     BendRadiusZone,
+    DiagramBendBadge,
     DiagramCallout,
     DiagramCanvas,
     DiagramDefs,
+    DiagramFieldCue,
+    DiagramFlowArrow,
     DiagramFrame,
     DiagramGhostMessage,
     DiagramLabel,
@@ -138,6 +141,9 @@ function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
 
       <BendRadiusZone d={bendZonePath} />
 
+      <DiagramBendBadge x={cornerX - 18} y={arcTopY + 4} order={1} primary />
+      <DiagramFlowArrow x={cornerX} y={topY + 16} angleDeg={90} scale={0.85} />
+
       {/* Free ends: leg end (left) and stub tip (top) — the stub tip is the
           end the deduct mark is measured from. */}
       <Circle cx={START_X} cy={BOTTOM_Y} r={5.5} fill={diagramTheme.pipeCore} />
@@ -267,6 +273,7 @@ function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
         fontWeight="600"
         textAnchor="end"
       />
+      <DiagramFieldCue text={stub90Copy.diagram.fieldCue} />
     </DiagramSvg>
   );
 }

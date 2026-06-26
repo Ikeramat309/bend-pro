@@ -23,7 +23,7 @@ export type Stub90CalculationSpecific = {
 const DEDUCT_SOURCE_LABEL: Record<Stub90EngineResult['deductSource'], string> = {
   'profile-chart': 'bender profile chart',
   override: 'manual deduct override',
-  'default-fallback': 'generic default deduct',
+  'missing-chart': 'missing chart value',
 };
 
 export function toStub90CalculationResult(
@@ -44,7 +44,10 @@ export function toStub90CalculationResult(
     : [];
 
   const secondaryResults =
-    Number.isFinite(input.stubHeight) && input.stubHeight > 0
+    Number.isFinite(input.stubHeight) &&
+    input.stubHeight > 0 &&
+    result.deductSource !== 'missing-chart' &&
+    Number.isFinite(result.deduct)
       ? [
           {
             key: 'deduct',
@@ -85,12 +88,15 @@ export function toStub90CalculationResult(
       kind: 'bender',
       message: `Bender: ${result.benderProfileUsed.name}`,
     },
-    {
+  ];
+
+  if (result.deductSource !== 'missing-chart' && Number.isFinite(result.deduct)) {
+    sourceNotes.push({
       key: 'deduct',
       kind: result.isDeductOverridden ? 'override' : result.deductSource === 'profile-chart' ? 'table' : 'assumption',
       message: `Deduct from ${DEDUCT_SOURCE_LABEL[result.deductSource]} (${result.deductFormatted})`,
-    },
-  ];
+    });
+  }
 
   const assumptions: string[] = [];
   if (!result.isDeductOverridden && result.deductSource !== 'override') {

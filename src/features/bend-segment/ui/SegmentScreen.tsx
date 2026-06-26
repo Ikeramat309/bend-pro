@@ -4,10 +4,10 @@ import { useMemo, useState } from 'react';
 import { snapshotSetupFromInput } from '@/core/calculations';
 import { getCalculatorById } from '@/core/calculators';
 import { patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
-import { usePersistRecentLayout } from '@/core/sessions';
+import { usePersistRecentLayout, useRestoreRecentLayout } from '@/core/sessions';
 import { parseStrictPositiveDecimal } from '@/core/validation';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
-import { getBenderProfile } from '@/data/benders';
+import { getBenderProfile, formatSegmentTrustTitle, formatSetupOnlyBenderMeta } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
 import {
   BendCalculatorLayout,
@@ -22,6 +22,7 @@ import { calculateSegment } from '../engine/segment.engine';
 import { toSegmentCalculationResult } from '../engine/segmentCalculationResult';
 import {
   createSegmentInputSnapshot,
+  restoreSegmentFromLayout,
   toStoredInputSnapshot,
 } from '../engine/segmentInputSnapshot';
 import { SEGMENT_CONFIG } from '../segment.config';
@@ -44,6 +45,14 @@ export default function SegmentScreen() {
   const [startOffsetText, setStartOffsetText] = useState('');
   const [showStartInput, setShowStartInput] = useState(false);
   const [setupVisible, setSetupVisible] = useState(false);
+
+  useRestoreRecentLayout('segment', restoreSegmentFromLayout, (fields) => {
+    setRadiusText(fields.radiusText);
+    setTotalAngleText(fields.totalAngleText);
+    setDegreesPerBendText(fields.degreesPerBendText);
+    setStartOffsetText(fields.startOffsetText);
+    setShowStartInput(fields.showStartInput);
+  });
 
   const { setup, setSetup } = useCalculatorSetup();
   const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
@@ -163,9 +172,8 @@ export default function SegmentScreen() {
       subtitle={setupSummary}
       onBackPress={handleBackPress}
       trust={{
-        benderName: benderProfile.name,
-        meta: setupSubtitle,
-        note: segmentCopy.profileContext,
+        benderName: formatSegmentTrustTitle(),
+        meta: [setupSummary, setupSubtitle, formatSetupOnlyBenderMeta(benderProfile.name)].join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[
@@ -264,7 +272,7 @@ export default function SegmentScreen() {
           { key: 'reset', label: 'Reset', onPress: resetInputs },
           {
             key: 'set-arc',
-            label: hasStart ? 'Next Segment' : 'Set Arc',
+            label: segmentCopy.fields.startOffset.addButton,
             onPress: () => setShowStartInput(true),
           },
         ],

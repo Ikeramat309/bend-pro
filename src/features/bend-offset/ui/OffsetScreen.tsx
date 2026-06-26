@@ -5,9 +5,9 @@ import type { BendAngle } from '@/core/types';
 import { snapshotSetupFromInput } from '@/core/calculations';
 import { getCalculatorById } from '@/core/calculators';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
-import { usePersistRecentLayout } from '@/core/sessions';
+import { usePersistRecentLayout, useRestoreRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
-import { getBenderProfile, formatOffsetProfileContextLine } from '@/data/benders';
+import { getBenderProfile, formatSetupOnlyBenderMeta, formatStandardOffsetTableTrustTitle } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
 import { LengthInputSheet, Sheet } from '@/shared/ui';
 import {
@@ -28,6 +28,7 @@ import { formatMultiplier, getOffsetAngleData } from '../engine/offsetAngleData'
 import { toOffsetCalculationResult } from '../engine/offsetCalculationResult';
 import {
   createOffsetInputSnapshot,
+  restoreOffsetFromLayout,
   toStoredInputSnapshot,
 } from '../engine/offsetInputSnapshot';
 import { OFFSET_CONFIG } from '../offset.config';
@@ -48,6 +49,12 @@ export default function OffsetScreen() {
   const [multiplierSheetVisible, setMultiplierSheetVisible] = useState(false);
   const [shrinkSheetVisible, setShrinkSheetVisible] = useState(false);
 
+  useRestoreRecentLayout('offset', restoreOffsetFromLayout, (fields) => {
+    setOffsetHeightText(fields.offsetHeightText);
+    setMark1Text(fields.mark1Text);
+    setBendAngle(fields.bendAngle);
+  });
+
   const { setup, setSetup } = useCalculatorSetup();
   const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
   const multiplierOverride = setup.offsetMultiplierOverrides[bendAngle];
@@ -67,7 +74,7 @@ export default function OffsetScreen() {
     .filter(Boolean)
     .join(' • ');
   const hasValidOffset = offsetHeight !== undefined && offsetHeight > 0;
-  const profileContextMessage = formatOffsetProfileContextLine(benderProfile.name, bendAngle);
+  const profileContextMessage = formatSetupOnlyBenderMeta(benderProfile.name);
   const lengthInput = getLengthInputMode(unit);
 
   const engineInput = useMemo(
@@ -186,9 +193,8 @@ export default function OffsetScreen() {
       subtitle={setupSummary}
       onBackPress={handleBackPress}
       trust={{
-        benderName: benderProfile.name,
-        meta: setupMeta,
-        note: profileContextMessage,
+        benderName: formatStandardOffsetTableTrustTitle(bendAngle),
+        meta: [setupSummary, setupMeta, profileContextMessage].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[
@@ -270,7 +276,7 @@ export default function OffsetScreen() {
       dock={{
         left: [
           { key: 'reset', label: 'Reset', onPress: resetInputs },
-          { key: 'set-mark', label: 'Set First Mark', onPress: () => setMark1SheetVisible(true) },
+          { key: 'set-mark', label: offsetCopy.fields.mark1.addButton, onPress: () => setMark1SheetVisible(true) },
         ],
         guide: { onPress: () => router.push(guideRoute('offset')) },
       }}

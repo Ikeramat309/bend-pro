@@ -50,6 +50,18 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 - Compact calculator header; workflow action emphasis in dock; **compact result strip** below diagram (diagram remains hero; warnings stay compact below workspace)
 - **Guide** in the bottom dock opens the full guide index; each calculator’s Guide action opens that bend’s walkthrough
 
+### Calculator registry
+
+- **`src/core/calculators/`** — single source of truth for calculator ids, routes, Bends hub grouping, and home metadata
+- **`getBendsScreenFamilies()`**, **`getCalculatorRoute()`**, **`getCalculatorById()`** — Bends hub and navigation consume registry helpers
+- Planned calculators (Kick, parallel offset, etc.) registered with `status: 'planned'`; they appear on Bends as Coming Soon but have no routes
+
+### Recent layouts
+
+- **`src/core/sessions/`** — AsyncStorage-backed recent-layout service with unit tests
+- **All six calculator screens** persist via `usePersistRecentLayout` and restore via `useRestoreRecentLayout` when opened with `?layoutId=`
+- **Home Continue Layout** hydrates recents on focus (`loadRecentLayouts` + `resolveContinueLayoutCandidate`) and navigates to the stored calculator with layout id
+
 ### Bender profiles
 
 - Three generic hand-bender profiles + custom profiles (stub 90 deducts); **`BenderChartKind`** tags chart source (manufacturer reserved for sourced data)
@@ -64,7 +76,13 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 - Hub screens: `src/screens/` (Home, Bends, Settings)
 - Persisted setup: `src/core/settings/`
 - Theme: `src/theme/`
-- **`npm run check`** — typecheck + lint + tests; **220 tests** passing at Phase 5.8 checkpoint
+- **`npm run check`** — typecheck + lint + import-cycle scan + tests; **396 tests** passing (38 suites)
+
+### Field validation prep (Phase 6 docs)
+
+- [`FIELD_VALIDATION.md`](FIELD_VALIDATION.md) — matrix, **field validated** definition, offline + restart persistence steps
+- [`FIELD_VALIDATION_TEST_SHEET.md`](FIELD_VALIDATION_TEST_SHEET.md) — printable cases for electricians
+- **Not done yet:** physical field sessions; matrix rows remain **App-verified** until testers sign off
 
 ## Known limitations
 
@@ -76,11 +94,13 @@ See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full list. Summary:
 - **Rolling offset** — no 3D bender-head rotation model
 - **Bender charts** — generic field-reference values only; manufacturer shoe charts deferred until sourced data exists
 - **Fraction keypad** — no decimal point key; mixed-number and quick-fraction entry only; imperial editing uses a bottom sheet so the pipe workspace stays visible
-- **Calculator registry** — implemented in `src/core/calculators/`; Bends/Home navigation reads from registry helpers
+- **Home Continue Layout** — hidden until a recent layout exists; opens the last saved calculation with inputs restored
+- **Bender profile vs math** — profile selection changes Stub 90 deduct only; other calculators show the profile in the trust strip but use generic angle tables (see [`TRUST_MODEL.md`](TRUST_MODEL.md))
 
 ## Next development priorities
 
-1. **Phase 6** — additional calculators (Kick, etc.) only when explicitly scoped
+1. **Field validation sessions** — use [`FIELD_VALIDATION.md`](FIELD_VALIDATION.md) and the [test sheet](FIELD_VALIDATION_TEST_SHEET.md); record pass/fail on reference cases
+2. **Phase 7** — additional calculators (Kick, etc.) only when explicitly scoped
 
 ## Known risk areas
 

@@ -2,9 +2,12 @@ import { Circle, Line, Path } from 'react-native-svg';
 
 import {
   BendRadiusZone,
+  DiagramBendBadge,
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFieldCue,
+  DiagramFlowArrow,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
@@ -314,6 +317,10 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
       <BendRadiusZone d={bendZone1} glowWidth={18} />
       <BendRadiusZone d={bendZone2} glowWidth={18} />
 
+      <DiagramBendBadge x={x1} y={BOTTOM_Y - 22} order={1} />
+      <DiagramBendBadge x={x2} y={topY - 22} order={2} />
+      <DiagramFlowArrow x={START_X - 6} y={BOTTOM_Y} />
+
       <MarkLine x1={x1} y1={BOTTOM_Y - 12} x2={x1} y2={BOTTOM_Y + 12} />
       <DiagramLabel
         x={x1}
@@ -386,6 +393,7 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
         fontWeight="600"
         textAnchor="end"
       />
+      <DiagramFieldCue text={rollingCopy.diagram.fieldCue} />
 
       <RollInset
         offsetHeightInches={data.offsetHeightInches}

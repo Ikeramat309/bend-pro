@@ -4,9 +4,8 @@ import { useMemo, useState } from 'react';
 import { snapshotSetupFromInput } from '@/core/calculations';
 import { getCalculatorById } from '@/core/calculators';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
-import { usePersistRecentLayout } from '@/core/sessions';
+import { usePersistRecentLayout, useRestoreRecentLayout } from '@/core/sessions';
 import {
-  DEFAULT_EMT_STUB90_TAKE_UP_INCHES,
   formatStub90DeductContextAction,
   formatStub90DeductContextLine,
   getBenderProfile,
@@ -29,6 +28,7 @@ import { calculateStub90 } from '../engine/stub90.engine';
 import { toStub90CalculationResult } from '../engine/stub90CalculationResult';
 import {
   createStub90InputSnapshot,
+  restoreStub90FromLayout,
   toStoredInputSnapshot,
 } from '../engine/stub90InputSnapshot';
 import { STUB90_CONFIG } from '../stub90.config';
@@ -45,13 +45,18 @@ export default function Stub90Screen() {
   const [setupVisible, setSetupVisible] = useState(false);
   const [deductSheetVisible, setDeductSheetVisible] = useState(false);
 
+  useRestoreRecentLayout('stub90', restoreStub90FromLayout, (fields) => {
+    setStubLengthText(fields.stubLengthText);
+    setLegLengthText(fields.legLengthText);
+    setShowLegInput(fields.showLegInput);
+  });
+
   const { setup, setSetup } = useCalculatorSetup();
   const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
   const deductOverrideInches = setup.stub90DeductOverridesInches[conduitSize];
 
   const benderProfile = getBenderProfile(benderProfileId, customBenderProfiles);
-  const benderChartDeductInches =
-    getEmtStub90TakeUpInches(benderProfile, conduitSize) ?? DEFAULT_EMT_STUB90_TAKE_UP_INCHES;
+  const chartDeductInches = getEmtStub90TakeUpInches(benderProfile, conduitSize);
   const stubLength = parseLengthInput(stubLengthText);
   const legLength = parseLengthInput(legLengthText);
   const hasValidLegLength = legLength !== undefined && legLength > 0;
@@ -111,12 +116,12 @@ export default function Stub90Screen() {
   const deductContext = resolveStub90DeductContext(
     benderProfile,
     conduitSize,
-    result.deduct,
+    result.deductSource === 'missing-chart' ? undefined : result.deduct,
     deductOverrideInches,
   );
   const profileContextMessage = formatStub90DeductContextLine(deductContext, unit, rounding);
   const profileContextAction = formatStub90DeductContextAction(deductContext);
-  const profileContextTone = deductContext.source === 'default-fallback' ? 'warning' : 'info';
+  const profileContextTone = deductContext.source === 'missing-chart' ? 'warning' : 'info';
   const visibleWarnings = stubLengthText.trim() !== '' ? result.warnings : [];
 
   function handleBackPress() {
@@ -223,7 +228,7 @@ export default function Stub90Screen() {
           : undefined
       }
       secondaryResults={
-        hasValidStubLength
+        hasValidStubLength && result.deductSource !== 'missing-chart'
           ? [
               {
                 label: result.isDeductOverridden
@@ -237,15 +242,7 @@ export default function Stub90Screen() {
           : undefined
       }
       dock={{
-        left: [
-          { key: 'reset', label: 'Reset', onPress: resetInputs },
-          {
-            key: 'set-mark',
-            label: 'Set Mark',
-            onPress: () => setShowLegInput(false),
-            disabled: !hasValidDeductMark,
-          },
-        ],
+        left: [{ key: 'reset', label: 'Reset', onPress: resetInputs }],
         guide: { onPress: () => router.push(guideRoute('stub90')) },
       }}
       warnings={visibleWarnings}
@@ -269,7 +266,11 @@ export default function Stub90Screen() {
             tradeSize={conduitSize}
             unitSystem={unit}
             benderName={benderProfile.name}
-            benderDeductFormatted={formatLength(benderChartDeductInches, unit, rounding)}
+            benderDeductFormatted={
+              chartDeductInches !== undefined
+                ? formatLength(chartDeductInches, unit, rounding)
+                : 'No chart for this size'
+            }
             currentOverrideInches={deductOverrideInches}
             onCancel={() => setDeductSheetVisible(false)}
             onApply={applyDeductOverride}

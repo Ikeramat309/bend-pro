@@ -1,7 +1,14 @@
+import { useFocusEffect } from "expo-router/react-navigation";
 import { useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { getCalculatorRoute, getHomeContinueCalculator, isCalculatorId } from '@/core/calculators';
+import {
+  continueLayoutRoute,
+  loadRecentLayouts,
+  resolveContinueLayoutCandidate,
+  type ContinueLayoutCandidate,
+} from '@/core/sessions';
 import { Routes } from '@/navigation';
 import {
   AppHeader,
@@ -12,31 +19,45 @@ import {
 } from '@/shared/ui';
 import { colors, uiTheme } from '@/theme';
 
-const continueCalculator = getHomeContinueCalculator();
-const continueRoute =
-  continueCalculator && isCalculatorId(continueCalculator.id)
-    ? getCalculatorRoute(continueCalculator.id)
-    : undefined;
-
-// TODO(sessions): hydrate recent layouts via `loadRecentLayouts` + `resolveContinueLayoutCandidate`
-// from `@/core/sessions` when Continue Layout should resume the last calculation.
-
-const NAV_ITEMS = [
-  ...(continueCalculator && continueRoute
-    ? [
-        {
-          label: continueCalculator.homeLabel ?? continueCalculator.title,
-          description: continueCalculator.homeDescription ?? continueCalculator.description ?? '',
-          route: continueRoute,
-        },
-      ]
-    : []),
-  { label: 'Bend Library', description: 'Choose a conduit layout', route: Routes.bends },
-  { label: 'Bender Database', description: 'Manage benders and shoes', route: Routes.benderDatabase },
-] as const;
+async function loadContinueCandidate(): Promise<ContinueLayoutCandidate | undefined> {
+  const { default: AsyncStorage } = await import('@react-native-async-storage/async-storage');
+  const layouts = await loadRecentLayouts(AsyncStorage);
+  return resolveContinueLayoutCandidate(layouts);
+}
 
 export function HomeScreen() {
   const router = useRouter();
+  const [continueCandidate, setContinueCandidate] = useState<ContinueLayoutCandidate | undefined>();
+
+  useFocusEffect(
+    useCallback(() => {
+      let cancelled = false;
+
+      void loadContinueCandidate().then((candidate) => {
+        if (!cancelled) {
+          setContinueCandidate(candidate);
+        }
+      });
+
+      return () => {
+        cancelled = true;
+      };
+    }, []),
+  );
+
+  const navItems = [
+    ...(continueCandidate
+      ? [
+          {
+            label: continueCandidate.label,
+            description: continueCandidate.description,
+            route: continueLayoutRoute(continueCandidate),
+          },
+        ]
+      : []),
+    { label: 'Bend Library', description: 'Choose a conduit layout', route: Routes.bends },
+    { label: 'Bender Database', description: 'Manage benders and shoes', route: Routes.benderDatabase },
+  ] as const;
 
   function handleTabChange(tab: BendTabId) {
     if (tab === 'layout') router.push(Routes.home);
@@ -58,7 +79,7 @@ export function HomeScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.navSection}>
           <HubSectionTitle>Start</HubSectionTitle>
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <HubNavCard
               key={item.label}
               label={item.label}

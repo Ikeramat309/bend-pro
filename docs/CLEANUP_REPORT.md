@@ -12,7 +12,7 @@ Commands run at end of pass:
 |---------|--------|
 | `npm run typecheck` | ✅ pass |
 | `npm run lint` | ✅ pass |
-| `npm test -- --runInBand` | ✅ pass (220 tests) |
+| `npm test -- --runInBand` | ✅ pass (395 tests) |
 | `npm run check` | ✅ pass |
 
 ## Fixes applied
@@ -57,7 +57,7 @@ Added `docs/archive/README.md` index.
 | `README.md` | Current status, routes, `npm run check`, layout |
 | `AGENTS.md` | Phase 5.8, `npm run check` rule |
 | `docs/README.md` | Compact index; archive section |
-| `docs/CURRENT_STATE.md` | Phase 5.8, 220 tests |
+| `docs/CURRENT_STATE.md` | Phase 5.8, test count |
 | `docs/ROADMAP.md` | Phases 5.6–5.8; archive links |
 | `docs/KNOWN_ISSUES.md` | Tooling section; archive links |
 | `docs/PRODUCT_BRIEF.md` | Archive link for Phase 4 wrap-up |
@@ -96,7 +96,7 @@ See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md). Highlights:
 
 - Phase 6 calculators not built
 - No manufacturer shoe charts
-- Calculator registry not implemented
+- Home Continue Layout not hydrated from recent-layout storage (service exists; see `HomeScreen.tsx` TODO)
 - Dock actions are workflow hints only
 
 ## Recommended next phase

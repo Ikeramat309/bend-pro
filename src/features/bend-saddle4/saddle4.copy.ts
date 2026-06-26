@@ -40,6 +40,7 @@ export const saddle4Copy = {
     shrink: 'Shrink',
     outer: 'Outer',
     top: 'Top',
+    fieldCue: 'Bend inner pair up · then outers to level',
     emptyMessage: 'Enter obstruction height to lay out the saddle.',
     invalidMessage: 'Obstruction height must be greater than 0.',
   },

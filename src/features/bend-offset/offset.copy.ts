@@ -54,6 +54,7 @@ export const offsetCopy = {
     shrink: 'Shrink',
     mark1: 'Mark 1',
     mark2: 'Mark 2',
+    fieldCue: 'Mark from free end → bend 1 then 2',
     emptyMessage: 'Enter offset height to calculate distance between bends.',
     invalidMessage: 'Offset height must be greater than 0.',
     unavailableMessage: 'Diagram unavailable — results are still shown below.',

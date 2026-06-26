@@ -1,6 +1,9 @@
 import { GENERIC_HAND_BENDER } from './genericHandBender';
 import {
-  formatOffsetProfileContextLine,
+  formatSegmentTrustTitle,
+  formatSetupOnlyBenderMeta,
+  formatStandardOffsetTableTrustTitle,
+  formatStandardSaddleTableTrustTitle,
   formatStub90DeductContextAction,
   formatStub90DeductContextLine,
   resolveStub90DeductContext,
@@ -12,8 +15,8 @@ describe('resolveStub90DeductSource', () => {
     expect(resolveStub90DeductSource(GENERIC_HAND_BENDER, '1/2')).toBe('profile-chart');
   });
 
-  test('default fallback when size is not on the profile', () => {
-    expect(resolveStub90DeductSource(GENERIC_HAND_BENDER, '1-1/4')).toBe('default-fallback');
+  test('missing chart when size is not on the profile', () => {
+    expect(resolveStub90DeductSource(GENERIC_HAND_BENDER, '1-1/4')).toBe('missing-chart');
   });
 
   test('override takes precedence', () => {
@@ -29,10 +32,10 @@ describe('formatStub90DeductContextLine', () => {
     );
   });
 
-  test('describes default fallback for an unlisted size', () => {
-    const context = resolveStub90DeductContext(GENERIC_HAND_BENDER, '1-1/4', 5);
+  test('describes missing chart without inventing a deduct value', () => {
+    const context = resolveStub90DeductContext(GENERIC_HAND_BENDER, '1-1/4', undefined);
     expect(formatStub90DeductContextLine(context, 'imperial', '1/16')).toBe(
-      'Generic Hand Bender has no chart for 1-1/4" EMT — using default 5" deduct',
+      'Generic Hand Bender has no stub 90 deduct chart for 1-1/4" EMT — set a custom deduct to calculate the mark.',
     );
   });
 
@@ -45,8 +48,8 @@ describe('formatStub90DeductContextLine', () => {
 });
 
 describe('formatStub90DeductContextAction', () => {
-  test('suggests override when falling back to default', () => {
-    const context = resolveStub90DeductContext(GENERIC_HAND_BENDER, '2', 5);
+  test('suggests override when chart is missing', () => {
+    const context = resolveStub90DeductContext(GENERIC_HAND_BENDER, '2', undefined);
     expect(formatStub90DeductContextAction(context)).toBe('Tap Deduct to set your bender value.');
   });
 
@@ -56,10 +59,22 @@ describe('formatStub90DeductContextAction', () => {
   });
 });
 
-describe('formatOffsetProfileContextLine', () => {
-  test('names profile and clarifies angle tables', () => {
-    expect(formatOffsetProfileContextLine('Generic Hand Bender', 30)).toBe(
-      'Generic Hand Bender — offset uses standard 30° multiplier and shrink tables (not bender-specific charts).',
+describe('trust strip helpers', () => {
+  test('standard offset table title', () => {
+    expect(formatStandardOffsetTableTrustTitle(30)).toBe('Standard 30° offset table');
+  });
+
+  test('standard saddle table title', () => {
+    expect(formatStandardSaddleTableTrustTitle('22.5° / 45°')).toBe('Standard 22.5° / 45° table');
+  });
+
+  test('segment trust title', () => {
+    expect(formatSegmentTrustTitle()).toBe('Geometric model');
+  });
+
+  test('setup-only bender meta', () => {
+    expect(formatSetupOnlyBenderMeta('Generic Hand Bender')).toBe(
+      'Generic Hand Bender (setup only)',
     );
   });
 });

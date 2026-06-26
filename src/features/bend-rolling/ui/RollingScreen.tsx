@@ -8,9 +8,9 @@ import type { BendAngle } from '@/core/types';
 import { snapshotSetupFromInput } from '@/core/calculations';
 import { getCalculatorById } from '@/core/calculators';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
-import { usePersistRecentLayout } from '@/core/sessions';
+import { usePersistRecentLayout, useRestoreRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
-import { getBenderProfile } from '@/data/benders';
+import { getBenderProfile, formatSetupOnlyBenderMeta, formatStandardOffsetTableTrustTitle } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
 import { LengthInputSheet, Sheet } from '@/shared/ui';
 import {
@@ -31,6 +31,7 @@ import { formatRollingMultiplier, getRollingAngleData } from '../engine/rollingA
 import { toRollingCalculationResult } from '../engine/rollingCalculationResult';
 import {
   createRollingInputSnapshot,
+  restoreRollingFromLayout,
   toStoredInputSnapshot,
 } from '../engine/rollingInputSnapshot';
 import { ROLLING_CONFIG } from '../rolling.config';
@@ -51,6 +52,13 @@ export default function RollingScreen() {
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
   const [multiplierSheetVisible, setMultiplierSheetVisible] = useState(false);
   const [shrinkSheetVisible, setShrinkSheetVisible] = useState(false);
+
+  useRestoreRecentLayout('rolling', restoreRollingFromLayout, (fields) => {
+    setOffsetHeightText(fields.offsetHeightText);
+    setOffsetRollText(fields.offsetRollText);
+    setMark1Text(fields.mark1Text);
+    setBendAngle(fields.bendAngle);
+  });
 
   const { setup, setSetup } = useCalculatorSetup();
   const { unit, rounding, conduitType, conduitSize, benderProfileId, customBenderProfiles } = setup;
@@ -77,7 +85,7 @@ export default function RollingScreen() {
   const hasValidOffset = offsetHeight !== undefined && offsetHeight > 0;
   const hasValidRoll = offsetRoll !== undefined && offsetRoll > 0;
   const hasValidInputs = hasValidOffset && hasValidRoll;
-  const profileContextMessage = rollingCopy.profileContext(benderProfile.name, bendAngle);
+  const setupOnlyMeta = formatSetupOnlyBenderMeta(benderProfile.name);
   const lengthInput = getLengthInputMode(unit);
 
   const engineInput = useMemo(
@@ -209,9 +217,8 @@ export default function RollingScreen() {
       subtitle={setupSummary}
       onBackPress={handleBackPress}
       trust={{
-        benderName: benderProfile.name,
-        meta: setupSubtitle,
-        note: profileContextMessage,
+        benderName: formatStandardOffsetTableTrustTitle(bendAngle),
+        meta: [setupSummary, setupSubtitle, setupOnlyMeta].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[
@@ -310,7 +317,7 @@ export default function RollingScreen() {
           { key: 'reset', label: 'Reset', onPress: resetInputs },
           {
             key: 'set-mark',
-            label: 'Set First Mark',
+            label: rollingCopy.fields.mark1.addButton,
             onPress: () => setMark1SheetVisible(true),
           },
         ],

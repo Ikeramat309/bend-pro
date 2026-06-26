@@ -1,21 +1,21 @@
 import type { TradeSize } from '@/core/types';
 
-/**
- * Where bender chart values originate in the product model.
- *
- * - generic — built-in field-reference charts (not manufacturer-specific)
- * - custom — user-measured profiles stored on device
- * - verified — future manufacturer-sourced charts (requires sourceNote)
- */
-export type BenderSourceType = 'generic' | 'custom' | 'verified';
-
 export type BenderCategory = 'hand' | 'mechanical' | 'hydraulic' | 'custom';
 
 /**
- * Where stub-90 chart values come from. Manufacturer profiles require a
- * `sourceNote` with real attribution — do not ship invented shoe charts.
+ * Canonical source for bender chart values in the product model.
+ *
+ * - generic-field-reference — built-in field-reference charts (not manufacturer-specific)
+ * - custom-measured — user-measured profiles stored on device
+ * - manufacturer — verified manufacturer charts (requires sourceNote; do not ship invented values)
  */
-export type BenderChartKind = 'generic-field-reference' | 'custom-measured' | 'manufacturer';
+export type BenderChartKind =
+  | 'generic-field-reference'
+  | 'custom-measured'
+  | 'manufacturer';
+
+/** @deprecated Use {@link BenderChartKind} — kept as alias during migration. */
+export type BenderChartSource = BenderChartKind;
 
 /** Built-in generic hand-bender chart ids. */
 export type BuiltInBenderProfileId =
@@ -28,7 +28,7 @@ export type BenderProfileId = BuiltInBenderProfileId | `custom-${string}`;
 
 /**
  * EMT stub 90° take-up / deduct by trade size (inches).
- * Generic field values — not manufacturer shoe charts.
+ * Only listed sizes may be used — never invent values for missing sizes.
  */
 export type EmtStub90TakeUpByTradeSize = Partial<Record<TradeSize, number>>;
 

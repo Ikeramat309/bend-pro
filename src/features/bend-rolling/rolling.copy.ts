@@ -63,6 +63,7 @@ export const rollingCopy = {
     shrink: 'Shrink',
     mark1: 'Mark 1',
     mark2: 'Mark 2',
+    fieldCue: 'Same as offset · roll on last bend',
     emptyMessage: 'Enter offset height and offset roll to calculate the rolling offset.',
     invalidMessage: 'Offset height and offset roll must be greater than 0.',
   },

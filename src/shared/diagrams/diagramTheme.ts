@@ -21,6 +21,19 @@ export const diagramTheme = {
   calloutStroke: 'rgba(38, 49, 66, 0.9)',
   ghostMessage: colors.muted,
   arrowFill: colors.muted,
+  flowArrow: colors.primary,
+  obstruction: {
+    fill: 'rgba(143, 155, 173, 0.16)',
+    stroke: 'rgba(143, 155, 173, 0.58)',
+  },
+  bendBadge: {
+    fill: colors.surface2,
+    stroke: colors.border,
+    text: colors.text,
+    primaryFill: colors.primaryMuted,
+    primaryStroke: colors.primaryBorder,
+    primaryText: colors.primary,
+  },
   /** Empty / preview diagram chrome — shared across all calculators. */
   ghost: {
     pipeShadowOpacity: 0.55,

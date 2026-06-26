@@ -28,6 +28,6 @@ Final field-readiness pass on existing calculator screens. No architecture chang
 
 ## Verification
 
-`npm run check` passes (220 tests).
+`npm run check` passes (395 tests).
 
 See [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md) for tooling notes from Phase 5.8.

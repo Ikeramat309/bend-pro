@@ -2,9 +2,12 @@ import { Rect } from 'react-native-svg';
 
 import {
   BendRadiusZone,
+  DiagramBendBadge,
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFieldCue,
+  DiagramFlowArrow,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
@@ -324,6 +327,12 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
       <BendRadiusZone d={geo.bendInnerR} glowWidth={13} />
       <BendRadiusZone d={geo.bendOuterR} glowWidth={13} />
 
+      <DiagramBendBadge x={xOL} y={BASE_Y - 24} order={3} />
+      <DiagramBendBadge x={xIL} y={topY - 26} order={1} primary />
+      <DiagramBendBadge x={xIR} y={topY - 26} order={2} primary />
+      <DiagramBendBadge x={xOR} y={BASE_Y - 24} order={4} />
+      <DiagramFlowArrow x={START_X - 4} y={BASE_Y} />
+
       <DimensionLine
         x1={dbb1.x}
         y1={dbb1.y}
@@ -443,6 +452,7 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
           textAnchor="start"
         />
       </DiagramCallout>
+      <DiagramFieldCue text={saddle4Copy.diagram.fieldCue} />
     </DiagramSvg>
   );
 }

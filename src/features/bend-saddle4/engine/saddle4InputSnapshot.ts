@@ -1,10 +1,14 @@
-import type { CalculatorInputSnapshot } from '@/core/sessions/sessionTypes';
+import type { CalculatorSetup } from '@/core/settings/calculatorSetup';
 import {
+  baseSetupPatchFromLayout,
+  formatStoredLengthText,
   isRecord,
   optionalFiniteNumber,
   pickJsonLeaves,
   requiredFiniteNumber,
 } from '@/core/sessions/inputSnapshotUtils';
+import { sanitizeSetupSnapshot } from '@/core/sessions/sessionSanitize';
+import type { CalculatorInputSnapshot, RecentLayout } from '@/core/sessions/sessionTypes';
 
 import type { Saddle4Angle, Saddle4EngineInput } from './saddle4.types';
 import { SADDLE4_CONFIG } from '../saddle4.config';
@@ -67,5 +71,46 @@ export function sanitizeSaddle4InputSnapshot(raw: unknown): Saddle4InputSnapshot
     bendAngle: raw.bendAngle,
     saddleWidth: optionalFiniteNumber(raw.saddleWidth),
     distanceToCenter: optionalFiniteNumber(raw.distanceToCenter),
+  };
+}
+
+export type Saddle4RestoredFields = {
+  obstructionHeightText: string;
+  saddleWidthText: string;
+  showSaddleWidthInput: boolean;
+  distanceToCenterText: string;
+  bendAngle: Saddle4Angle;
+};
+
+export function restoreSaddle4FromLayout(
+  layout: RecentLayout,
+): { setupPatch: Partial<CalculatorSetup>; fields: Saddle4RestoredFields } | null {
+  const snap = sanitizeSaddle4InputSnapshot(layout.inputSnapshot);
+  if (!snap) {
+    return null;
+  }
+
+  const setupSnapshot = sanitizeSetupSnapshot(layout.setupSnapshot);
+  return {
+    setupPatch: baseSetupPatchFromLayout(layout),
+    fields: {
+      obstructionHeightText: formatStoredLengthText(
+        snap.obstructionHeight,
+        setupSnapshot.unitSystem,
+        setupSnapshot.roundingPrecision,
+      ),
+      saddleWidthText: formatStoredLengthText(
+        snap.saddleWidth,
+        setupSnapshot.unitSystem,
+        setupSnapshot.roundingPrecision,
+      ),
+      showSaddleWidthInput: snap.saddleWidth !== undefined,
+      distanceToCenterText: formatStoredLengthText(
+        snap.distanceToCenter,
+        setupSnapshot.unitSystem,
+        setupSnapshot.roundingPrecision,
+      ),
+      bendAngle: snap.bendAngle,
+    },
   };
 }

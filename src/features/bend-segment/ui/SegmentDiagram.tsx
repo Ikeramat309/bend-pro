@@ -1,9 +1,12 @@
 import { Circle } from 'react-native-svg';
 
 import {
+  DiagramBendBadge,
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFieldCue,
+  DiagramFlowArrow,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
@@ -117,6 +120,8 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
       <PipeSegment d={path} variant="shadow" />
       <PipeSegment d={path} variant="pipe" gradientId="segmentPipeGradient" />
 
+      <DiagramFlowArrow x={start.x - LEAD_IN - 4} y={start.y} />
+
       {/* Radius leader + center pivot. */}
       <Circle cx={CX} cy={CY} r={2.5} fill={diagramTheme.dimension} />
       <DiagramLeaderLine x1={CX} y1={CY} x2={mid.x} y2={mid.y} opacity={0.7} />
@@ -135,6 +140,7 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
         const p = arcPoint(t);
         const nx = Math.sin(t);
         const ny = Math.cos(t);
+
         return (
           <MarkLine
             key={i}
@@ -146,6 +152,29 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
           />
         );
       })}
+      {ticks.length > 0 ? (
+        <>
+          <DiagramBendBadge
+            x={arcPoint(ticks[0]).x + Math.sin(ticks[0]) * 18}
+            y={arcPoint(ticks[0]).y + Math.cos(ticks[0]) * 18}
+            order={1}
+            primary
+          />
+          {data.numberOfBends > 1 ? (
+            <DiagramBendBadge
+              x={
+                arcPoint(ticks[ticks.length - 1]).x +
+                Math.sin(ticks[ticks.length - 1]) * 18
+              }
+              y={
+                arcPoint(ticks[ticks.length - 1]).y +
+                Math.cos(ticks[ticks.length - 1]) * 18
+              }
+              order={data.numberOfBends}
+            />
+          ) : null}
+        </>
+      ) : null}
 
       {/* Between-bends spacing callout. */}
       <DiagramLeaderLine x1={gapPoint.x} y1={gapPoint.y} x2={gapOuter.x} y2={gapOuter.y} opacity={0.7} />
@@ -171,6 +200,7 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
           textAnchor="start"
         />
       </DiagramCallout>
+      <DiagramFieldCue text={segmentCopy.diagram.fieldCue} />
     </DiagramSvg>
   );
 }

@@ -38,6 +38,7 @@ export const segmentCopy = {
   diagram: {
     radius: 'R',
     spacing: 'Between Bends',
+    fieldCue: 'Mark lead-in · bend shots 1→n along arc',
     emptyMessage: 'Enter radius and angle to lay out the segment bend.',
     invalidMessage: 'Radius and angle must be greater than 0.',
   },

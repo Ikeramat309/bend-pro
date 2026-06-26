@@ -58,3 +58,10 @@ export {
 } from './persistRecentLayout';
 
 export { usePersistRecentLayout, type UsePersistRecentLayoutParams } from './usePersistRecentLayout';
+
+export {
+  useRestoreRecentLayout,
+  type LayoutRestoreResult,
+} from './useRestoreRecentLayout';
+
+export { continueLayoutRoute } from './continueLayoutRoute';

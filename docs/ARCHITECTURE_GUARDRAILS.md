@@ -109,7 +109,7 @@ Guide titles may differ slightly from registry titles for readability — but id
 
 To add a **generic** built-in profile:
 
-1. Add profile data in `src/data/benders/` following existing `BenderSourceType` patterns (`generic`, not `verified` unless manufacturer-sourced).
+1. Add profile data in `src/data/benders/` following existing `BenderChartKind` patterns (`generic-field-reference`, not `manufacturer` unless manufacturer-sourced with `sourceNote`).
 2. Register in `src/data/benders/index.ts` / profile list used by the bender database screen.
 3. Add tests in `benders.test.ts` or colocated `*.test.ts`.
 4. Do **not** add manufacturer-verified chart data without an explicit product task.

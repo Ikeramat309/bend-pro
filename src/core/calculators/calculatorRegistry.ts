@@ -33,9 +33,7 @@ const REGISTRY_SOURCE = [
     tags: ['offset', 'basic'],
     sortOrder: 10,
     showOnBendsScreen: true,
-    showOnHome: true,
-    homeLabel: 'Continue Layout',
-    homeDescription: 'Open Basic Offset',
+    showOnHome: false,
   },
   {
     id: 'parallelOffset',
@@ -204,10 +202,6 @@ export function getCalculatorRoute(id: CalculatorId): Href | undefined {
     return undefined;
   }
   return entry.route;
-}
-
-export function getHomeContinueCalculator(): CalculatorDefinition | undefined {
-  return CALCULATOR_REGISTRY.find((entry) => entry.showOnHome && entry.status === 'active');
 }
 
 function toBendsScreenItem(entry: CalculatorDefinition): BendsScreenItem {

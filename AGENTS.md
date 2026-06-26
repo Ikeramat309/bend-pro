@@ -27,7 +27,7 @@ In this order:
 3. `docs/CURRENT_STATE.md` — what exists, what works, what's incomplete
 4. `docs/AI_AGENT_WORKFLOW.md` — **required rules for editing code** (before-edit checklist, safety rules, report format)
 5. `docs/GLOSSARY.md` — required terminology
-6. Then, as the task demands: `docs/ROADMAP.md`, `docs/KNOWN_ISSUES.md`, `docs/ARCHITECTURE_GUARDRAILS.md`, `docs/UI_WORKSPACE_LAYOUT.md`, `docs/CALCULATOR_RULES.md`, `docs/DIAGRAM_SYSTEM.md`, `docs/PROJECT_MAP.md`, `docs/APP_ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/NAMING_RULES.md`
+6. Then, as the task demands: `docs/ROADMAP.md`, `docs/KNOWN_ISSUES.md`, `docs/TRUST_MODEL.md`, `docs/ARCHITECTURE_GUARDRAILS.md`, `docs/UI_WORKSPACE_LAYOUT.md`, `docs/CALCULATOR_RULES.md`, `docs/DIAGRAM_SYSTEM.md`, `docs/PROJECT_MAP.md`, `docs/APP_ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/NAMING_RULES.md`
 
 ## Core rules (non-negotiable)
 

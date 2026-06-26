@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     minHeight: workspaceTheme.dock.actionMinHeight,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 2,
-    borderRadius: 8,
+    borderRadius: workspaceTheme.dock.actionBorderRadius,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
@@ -89,10 +89,10 @@ const styles = StyleSheet.create({
     backgroundColor: workspaceTheme.dock.actionEmphasisBackground,
   },
   actionPressed: {
-    opacity: 0.88,
+    opacity: workspaceTheme.dock.pressedOpacity,
   },
   actionDisabled: {
-    opacity: 0.45,
+    opacity: workspaceTheme.dock.disabledOpacity,
   },
   actionText: {
     ...typography.label,
@@ -109,10 +109,10 @@ const styles = StyleSheet.create({
   },
   guide: {
     minHeight: workspaceTheme.dock.actionMinHeight,
-    minWidth: 72,
+    minWidth: workspaceTheme.dock.guideMinWidth,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 2,
-    borderRadius: 8,
+    borderRadius: workspaceTheme.dock.actionBorderRadius,
     backgroundColor: colors.surface2,
     borderWidth: 1,
     borderColor: colors.border,

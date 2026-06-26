@@ -1,5 +1,5 @@
 import { colors } from './colors';
-import { layout, spacing } from './spacing';
+import { layout, radius, spacing } from './spacing';
 import { fontSize, typography } from './typography';
 
 /** Calculator workspace layout tokens — polish through shared shell, not per-screen. */
@@ -43,8 +43,12 @@ export const workspaceTheme = {
     minTopBarHeight: layout.topBarHeight - 12,
     paddingTop: spacing.xs + 2,
     actionMinHeight: 40,
+    actionBorderRadius: radius.md,
     actionEmphasisBorder: colors.primaryBorder,
     actionEmphasisBackground: colors.primaryMuted,
     actionEmphasisText: colors.primary,
+    pressedOpacity: 0.88,
+    disabledOpacity: 0.45,
+    guideMinWidth: spacing.xxxl + spacing.xxxl + spacing.sm,
   },
 } as const;

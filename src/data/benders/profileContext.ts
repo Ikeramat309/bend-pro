@@ -8,14 +8,14 @@ import { formatLength } from '@/utils/formatLength';
 
 import type { BenderProfile } from './types';
 
-export type Stub90DeductSource = 'override' | 'profile-chart' | 'default-fallback';
+export type Stub90DeductSource = 'override' | 'profile-chart' | 'missing-chart';
 
 export type Stub90DeductContext = {
   source: Stub90DeductSource;
   profileName: string;
   tradeSize: TradeSize;
   chartDeductInches?: number;
-  effectiveDeductInches: number;
+  effectiveDeductInches?: number;
 };
 
 export function resolveStub90DeductSource(
@@ -33,13 +33,13 @@ export function resolveStub90DeductSource(
   if (profile.emtStub90TakeUpInches[tradeSize] !== undefined) {
     return 'profile-chart';
   }
-  return 'default-fallback';
+  return 'missing-chart';
 }
 
 export function resolveStub90DeductContext(
   profile: BenderProfile,
   tradeSize: TradeSize,
-  effectiveDeductInches: number,
+  effectiveDeductInches: number | undefined,
   deductOverrideInches?: number,
 ): Stub90DeductContext {
   const source = resolveStub90DeductSource(profile, tradeSize, deductOverrideInches);
@@ -61,7 +61,10 @@ export function formatStub90DeductContextLine(
   rounding: RoundingOption,
 ): string {
   const sizeLabel = `${context.tradeSize}"`;
-  const effective = formatLength(context.effectiveDeductInches, unitSystem, rounding);
+  const effective =
+    context.effectiveDeductInches !== undefined
+      ? formatLength(context.effectiveDeductInches, unitSystem, rounding)
+      : undefined;
 
   switch (context.source) {
     case 'override': {
@@ -73,13 +76,13 @@ export function formatStub90DeductContextLine(
     }
     case 'profile-chart':
       return `${context.profileName}: ${effective} deduct for ${sizeLabel} EMT`;
-    case 'default-fallback':
-      return `${context.profileName} has no chart for ${sizeLabel} EMT — using default ${effective} deduct`;
+    case 'missing-chart':
+      return `${context.profileName} has no stub 90 deduct chart for ${sizeLabel} EMT — set a custom deduct to calculate the mark.`;
   }
 }
 
 export function formatStub90DeductContextAction(context: Stub90DeductContext): string | undefined {
-  if (context.source === 'default-fallback') {
+  if (context.source === 'missing-chart') {
     return 'Tap Deduct to set your bender value.';
   }
   if (context.source === 'override') {
@@ -88,7 +91,22 @@ export function formatStub90DeductContextAction(context: Stub90DeductContext): s
   return undefined;
 }
 
-/** Offset — bender selection is shown for consistency; math uses standard angle tables. */
-export function formatOffsetProfileContextLine(profileName: string, bendAngle: BendAngle): string {
-  return `${profileName} — offset uses standard ${bendAngle}° multiplier and shrink tables (not bender-specific charts).`;
+/** Trust strip title — offset math uses standard angle tables, not the bender shoe. */
+export function formatStandardOffsetTableTrustTitle(bendAngle: BendAngle): string {
+  return `Standard ${bendAngle}° offset table`;
+}
+
+/** Trust strip title — saddle math uses standard preset tables. */
+export function formatStandardSaddleTableTrustTitle(angleLabel: string): string {
+  return `Standard ${angleLabel} table`;
+}
+
+/** Trust strip title — segment bend is geometric, not shoe-based. */
+export function formatSegmentTrustTitle(): string {
+  return 'Geometric model';
+}
+
+/** Selected bender shown in meta when it does not drive calculator math. */
+export function formatSetupOnlyBenderMeta(profileName: string): string {
+  return `${profileName} (setup only)`;
 }

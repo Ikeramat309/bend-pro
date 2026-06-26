@@ -28,7 +28,10 @@ The single entry point for the repo is the root [`AGENTS.md`](../AGENTS.md). Sta
 | [`PROJECT_MAP.md`](PROJECT_MAP.md) | Where code lives |
 | [`AI_AGENT_WORKFLOW.md`](AI_AGENT_WORKFLOW.md) | Edit rules, safety, task report format |
 | [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md) | Engine/UI separation, math safety |
+| [`TRUST_MODEL.md`](TRUST_MODEL.md) | Per-calculator input effects; bender profile scope |
 | [`TESTING.md`](TESTING.md) | Where tests live and how to add them |
+| [`FIELD_VALIDATION.md`](FIELD_VALIDATION.md) | Beta field-validation matrix, “field validated” definition, persistence QA |
+| [`FIELD_VALIDATION_TEST_SHEET.md`](FIELD_VALIDATION_TEST_SHEET.md) | Printable electrician test cases |
 | [`GLOSSARY.md`](GLOSSARY.md) | Trade terminology |
 | [`NAMING_RULES.md`](NAMING_RULES.md) | Canonical UI labels |
 | [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md) | Diagram-first principles |

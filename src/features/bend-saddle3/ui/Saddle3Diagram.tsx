@@ -2,9 +2,12 @@ import { Circle } from 'react-native-svg';
 
 import {
   BendRadiusZone,
+  DiagramBendBadge,
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
+  DiagramFieldCue,
+  DiagramFlowArrow,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
@@ -23,7 +26,7 @@ import {
   capSaddle3DiagramInputs,
 } from '../diagram/saddle3DiagramGeometry';
 
-const { centerX: CENTER_X, baseY: BASE_Y } = SADDLE3_DIAGRAM_LAYOUT;
+const { centerX: CENTER_X, baseY: BASE_Y, startX: SADDLE3_START_X } = SADDLE3_DIAGRAM_LAYOUT;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
@@ -84,8 +87,8 @@ function ObstructionCircle({
   ghost = false,
 }: ObstructionCircleProps) {
   const cy = baselineY - radius;
-  const fill = ghost ? diagramTheme.ghost.obstructionFill : 'rgba(143, 155, 173, 0.16)';
-  const stroke = ghost ? diagramTheme.ghost.obstructionStroke : 'rgba(143, 155, 173, 0.58)';
+  const fill = ghost ? diagramTheme.ghost.obstructionFill : diagramTheme.obstruction.fill;
+  const stroke = ghost ? diagramTheme.ghost.obstructionStroke : diagramTheme.obstruction.stroke;
 
   return (
     <Circle cx={centerX} cy={cy} r={radius} fill={fill} stroke={stroke} strokeWidth={1.5} />
@@ -159,6 +162,11 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
 
       <BendRadiusZone d={bendLeft} glowWidth={13} />
       <BendRadiusZone d={bendRight} glowWidth={13} />
+
+      <DiagramBendBadge x={x1} y={BASE_Y - 24} order={2} />
+      <DiagramBendBadge x={CENTER_X} y={peakY - 26} order={1} primary />
+      <DiagramBendBadge x={x2} y={BASE_Y - 24} order={3} />
+      <DiagramFlowArrow x={SADDLE3_START_X - 4} y={BASE_Y} />
 
       <DimensionLine
         x1={dbb1.x}
@@ -236,6 +244,7 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
           textAnchor="start"
         />
       </DiagramCallout>
+      <DiagramFieldCue text={saddle3Copy.diagram.fieldCue} />
     </DiagramSvg>
   );
 }

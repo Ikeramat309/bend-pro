@@ -54,13 +54,17 @@ describe('calculateStub90', () => {
     });
   });
 
-  test('unlisted trade size falls back to default deduct without a warning', () => {
+  test('unsupported trade size warns and suppresses deduct mark', () => {
     const result = calculateStub90(baseInput({ tradeSize: '1-1/4' }));
 
-    expect(result.deduct).toBe(5);
-    expect(result.deductMark).toBe(7);
-    expect(result.deductSource).toBe('default-fallback');
-    expect(result.warnings).toEqual([]);
+    expect(result.deductSource).toBe('missing-chart');
+    expect(result.isValidDeductMark).toBe(false);
+    expect(result.deductMark).toBeUndefined();
+    expect(result.diagramData).toBeUndefined();
+    expect(result.deductFormatted).toBe('—');
+    expect(result.warnings).toEqual([
+      'Generic Hand Bender has no stub 90 deduct for 1-1/4" EMT. Set a custom deduct or choose a size on this profile\'s chart.',
+    ]);
   });
 
   test('unknown bender profile id falls back to the generic profile', () => {
@@ -117,7 +121,7 @@ describe('calculateStub90', () => {
       expect(result.warnings).toEqual([]);
     });
 
-    test('override suppresses the unlisted-size fallback source', () => {
+    test('override suppresses missing-chart state', () => {
       const result = calculateStub90(baseInput({ tradeSize: '1-1/4', deductOverrideInches: 11 }));
 
       expect(result.deduct).toBe(11);

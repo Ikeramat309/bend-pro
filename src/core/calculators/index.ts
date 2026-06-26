@@ -13,7 +13,6 @@ export {
   getBendsScreenFamilies,
   getCalculatorById,
   getCalculatorRoute,
-  getHomeContinueCalculator,
   isCalculatorId,
   type CalculatorId,
   type GuideCalculatorId,

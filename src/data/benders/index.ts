@@ -16,9 +16,9 @@ import type { BenderProfile, BenderProfileId } from './types';
 export type {
   BenderCategory,
   BenderChartKind,
+  BenderChartSource,
   BenderProfile,
   BenderProfileId,
-  BenderSourceType,
   BuiltInBenderProfileId,
   EmtStub90TakeUpByTradeSize,
 } from './types';
@@ -44,7 +44,6 @@ export {
   type CustomBenderProfileStored,
 } from './customBenders';
 
-export { DEFAULT_EMT_STUB90_TAKE_UP_INCHES } from './benderDefaults';
 export { GENERIC_HAND_BENDER } from './genericHandBender';
 export { HAND_BENDER_ALT_CHART } from './handBenderAltChart';
 export { HAND_BENDER_COMPACT } from './handBenderCompact';
@@ -105,7 +104,10 @@ export function formatProfileStub90Summary(profile: BenderProfile): string {
 }
 
 export {
-  formatOffsetProfileContextLine,
+  formatSegmentTrustTitle,
+  formatSetupOnlyBenderMeta,
+  formatStandardOffsetTableTrustTitle,
+  formatStandardSaddleTableTrustTitle,
   formatStub90DeductContextAction,
   formatStub90DeductContextLine,
   resolveStub90DeductContext,
@@ -114,7 +116,6 @@ export {
   type Stub90DeductSource,
 } from './profileContext';
 export {
-  getBenderSourceType,
   resolveEffectiveStub90DeductInches,
   type EffectiveStub90Deduct,
 } from './benderResolution';

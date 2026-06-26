@@ -99,12 +99,8 @@ describe('calculatorRegistry', () => {
     });
   });
 
-  test('home continue entry is a single active calculator with a route', () => {
-    const homeEntries = CALCULATOR_REGISTRY.filter((entry) => entry.showOnHome);
-    expect(homeEntries).toHaveLength(1);
-    expect(homeEntries[0]?.id).toBe('offset');
-    expect(homeEntries[0]?.status).toBe('active');
-    expect(getCalculatorRoute('offset')).toBeDefined();
+  test('no calculator uses a static Home shortcut', () => {
+    expect(CALCULATOR_REGISTRY.filter((entry) => entry.showOnHome)).toEqual([]);
   });
 
   test('isCalculatorId accepts registry ids and rejects unknown strings', () => {

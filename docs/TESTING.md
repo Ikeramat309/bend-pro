@@ -41,3 +41,9 @@ Tests are **colocated** with the code they cover — same folder, `*.test.ts` su
 - Expo route files (`src/app/`) — thin re-exports only.
 - Copy strings in `*.copy.ts` unless they encode parseable formats.
 - Trivial one-line wrappers with no branching.
+
+## Field validation (beta)
+
+Automated tests lock **app-verified** expected marks. **Field validated** means a qualified electrician bent physical EMT and passed job-site acceptance — see [`FIELD_VALIDATION.md`](FIELD_VALIDATION.md) and the [printable sheet](FIELD_VALIDATION_TEST_SHEET.md).
+
+After changing `src/core/settings/` or `src/core/sessions/`, run the persistence verification steps in `FIELD_VALIDATION.md` (setup restart, Continue Layout, offline combined). CI covers pure persistence via `calculatorSetup.test.ts`, `settingsHydration.test.ts`, `recentLayoutsService.test.ts`, and `persistRecentLayout.test.ts`.

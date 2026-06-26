@@ -94,7 +94,7 @@ export function getRecentLayoutRoute(layout: RecentLayout): Href | undefined {
  * Resolves the best Continue Layout candidate from recents.
  * Falls back to undefined when no routable recent exists.
  *
- * TODO(HomeScreen): call from Home after `loadRecentLayouts` hydration — not wired yet.
+ * TODO(HomeScreen): call from Home after `loadRecentLayouts` hydration — wired in HomeScreen.
  */
 export function resolveContinueLayoutCandidate(
   layouts: RecentLayout[],

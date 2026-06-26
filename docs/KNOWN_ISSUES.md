@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Practical limitations as of the Phase 5.8 stability checkpoint. These are **not necessarily bugs** — many are intentional scope boundaries.
+Practical limitations as of Phase 5.9. These are **not necessarily bugs** — many are intentional scope boundaries.
 
 ## Tooling and generated files
 
@@ -44,9 +44,15 @@ Practical limitations as of the Phase 5.8 stability checkpoint. These are **not 
 - **Rolling offset** — combines height and roll into a true offset, then standard two-bend layout. Does **not** model 3D bender-head rotation; field workers still orient the bender for the rolling plane.
 - **4-point saddle** — all four bends use one angle. No per-bend angle mix.
 
+## Sessions and Home
+
+- **Recent layouts persist from calculators** — all six active screens call `usePersistRecentLayout` when results are valid or warning-only.
+- **Home Continue Layout** — shown only when a routable recent exists; navigates with `layoutId` and restores inputs on the calculator screen.
+
 ## Architecture and product
 
-- **Calculator registry** lives in `src/core/calculators/`. Add new calculators there first before wiring routes or hub UI.
+- **Calculator registry** is implemented in `src/core/calculators/` (ids, routes, Bends hub, home metadata). Add new calculators there first before wiring routes or hub UI.
+- **Input trust model** — bender profile affects Stub 90 deduct math only; see [`TRUST_MODEL.md`](TRUST_MODEL.md).
 - **Phase 6 calculators** (Kick, parallel offset, box offset, back-to-back 90, hydraulic layout) are placeholders only — not built.
 - **EMT only** — no RMC, IMC, or PVC support.
 

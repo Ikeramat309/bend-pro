@@ -83,7 +83,7 @@ Imperial length fields use `FieldInput.lengthInput="imperial"` to open **`Length
 
 ## Bender / profile data
 
-- **`src/data/benders/`** — built-in hand-bender profiles, stub 90 deduct tables, `getBenderProfile`, custom profile helpers, **`benderResolution.ts`** (`BenderSourceType`, override precedence), **`profileChart.ts`** (chart rows, capabilities), **`BenderChartKind`** (manufacturer reserved for sourced verified data)
+- **`src/data/benders/`** — built-in hand-bender profiles, stub 90 deduct tables, `getBenderProfile`, custom profile helpers, **`benderResolution.ts`** (override precedence, no invented deducts), **`profileChart.ts`** (chart rows, capabilities), **`BenderChartKind`** (canonical chart source: generic, custom-measured, manufacturer)
 - **`src/screens/BenderProfileDetailSheet.tsx`** — full deduct table and profile capabilities
 - **`src/core/settings/setupOverrides.ts`** — list/clear manual deduct, multiplier, and shrink overrides
 - **`src/data/conduit/`**, **`src/data/emt/`** — EMT trade sizes (EMT only for now)
@@ -108,7 +108,7 @@ Trust strip on calculator screens reads active profile from setup; Edit Setup sh
 
 **All new calculators and field tools must be added to the registry first** — then wire routes, guides, and feature folders from that entry. Do not hand-maintain parallel lists in `bendLibrary.ts` or screen-level title maps.
 
-Helpers: `getCalculatorRoute(id)`, `getBendsScreenFamilies()`, `getHomeContinueCalculator()`. Route path strings: `calculatorRoutes.ts` (`CALCULATOR_ROUTE_PATHS`) — navigation spreads these into `Routes`; core must not import navigation. Tests in `calculatorRegistry.test.ts` and `architectureGuardrails.test.ts` guard duplicate ids, missing routes, guide consistency, feature isolation, and import cycles.
+Helpers: `getCalculatorRoute(id)`, `getBendsScreenFamilies()`. Route path strings: `calculatorRoutes.ts` (`CALCULATOR_ROUTE_PATHS`) — navigation spreads these into `Routes`; core must not import navigation. Tests in `calculatorRegistry.test.ts` and `architectureGuardrails.test.ts` guard duplicate ids, missing routes, guide consistency, feature isolation, and import cycles.
 
 `src/data/bendLibrary.ts` re-exports Bends hub groups from the registry for backward compatibility.
 
@@ -140,10 +140,9 @@ Each active calculator has typed JSON-safe input snapshot helpers under `src/fea
 **`src/core/sessions/`** stores calculator sessions and recent layouts (AsyncStorage, schema-versioned JSON).
 
 - `usePersistRecentLayout()` — debounced save on valid/warning results (wired on all active calculator screens)
+- `useRestoreRecentLayout()` — restores inputs when opened with `?layoutId=` from Home
 - `upsertRecentLayoutForCalculator()` — one recent entry per calculator id
-- `resolveContinueLayoutCandidate()` — for future Home Continue hydration
-
-Home Continue Layout still uses registry fallback — see TODO in `HomeScreen.tsx`.
+- `resolveContinueLayoutCandidate()` + `continueLayoutRoute()` — Home Continue hydration and navigation
 
 ## Verification
 

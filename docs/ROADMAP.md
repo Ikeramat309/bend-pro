@@ -56,7 +56,7 @@ Profile chart kinds, detail sheet, override hub, grouped database.
 
 ## Phase 5.8 — Cleanup and stability checkpoint ✅ complete
 
-- `npm run check` fully passing (typecheck, lint, 220 tests)
+- `npm run check` fully passing (typecheck, lint, 395 tests)
 - ESLint ignores `.expo/`; lint cache moved out of Expo cache dir
 - Docs audit; phase wrap-ups archived; [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md)
 
@@ -66,7 +66,16 @@ See [`PHASE_5_9_POLISH.md`](PHASE_5_9_POLISH.md).
 
 **Delivered:** tighter workspace tokens; consistent diagram scaling via `DiagramSvg`; compact warnings/results/dock; LengthInputSheet layout polish; Rolling Mark 1 optional input aligned with Offset/Saddles.
 
-## Phase 6 — Future calculators (not started)
+## Phase 6 — Field validation prep ✅ complete (docs)
+
+Beta prep for real electricians — no new calculators, no debug/export screen.
+
+- [`FIELD_VALIDATION.md`](FIELD_VALIDATION.md) — validation matrix (calculator × size × angle → expected marks), **field validated** definition, offline + persistence verification steps
+- [`FIELD_VALIDATION_TEST_SHEET.md`](FIELD_VALIDATION_TEST_SHEET.md) — printable tester case sheet
+
+**Next:** run field sessions and move matrix rows from App-verified → Field validated.
+
+## Phase 7 — Future calculators (not started)
 
 Kick, parallel offset, box offset, back-to-back 90, hydraulic layout — registered as `planned` in `src/core/calculators/` (visible on Bends hub as Coming Soon).
 

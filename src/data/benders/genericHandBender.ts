@@ -12,9 +12,12 @@ export const GENERIC_HAND_BENDER: BenderProfile = {
   category: 'hand',
   chartKind: 'generic-field-reference',
   description: 'Default generic field reference for hand benders. Not a manufacturer chart.',
+  // Generic published field-reference take-up values (not a manufacturer chart).
+  // 1-1/4" (11") is the common published value — FIELD-VERIFY before relying on it.
   emtStub90TakeUpInches: {
     '1/2': 5,
     '3/4': 6,
     '1': 8,
+    '1-1/4': 11,
   },
 };

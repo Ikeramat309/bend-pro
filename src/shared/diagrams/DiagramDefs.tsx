@@ -13,11 +13,21 @@ export function DiagramDefs({ gradientId, arrowId = 'diagramArrow', ghost = fals
   const startOpacity = ghost ? diagramMetrics.ghostPipeOpacity : 1;
   const endOpacity = ghost ? diagramMetrics.ghostPipeOpacity * 0.85 : 1;
 
+  // Ghost (preview) pipes fade out; live pipes keep the full metallic sheen.
+  const stopOpacity = (offset: number) =>
+    ghost ? String(startOpacity - (startOpacity - endOpacity) * offset) : '1';
+
   return (
     <Defs>
       <LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-        <Stop offset="0" stopColor={diagramTheme.pipe} stopOpacity={String(startOpacity)} />
-        <Stop offset="1" stopColor={diagramTheme.pipeCore} stopOpacity={String(endOpacity)} />
+        {diagramTheme.pipeGradientStops.map((stop) => (
+          <Stop
+            key={stop.offset}
+            offset={String(stop.offset)}
+            stopColor={stop.color}
+            stopOpacity={stopOpacity(stop.offset)}
+          />
+        ))}
       </LinearGradient>
       {!ghost ? (
         <Marker

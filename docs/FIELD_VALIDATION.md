@@ -6,6 +6,8 @@ Prepares Bend Pro for beta testing with real electricians. This doc defines **fi
 
 **Scope today:** six active EMT calculators only. No new calculators. No debug/export screen — testers use the app and the sheet.
 
+**Supported sizes (v1):** EMT **1/2", 3/4", 1", 1-1/4"** only. The setup picker hides 1-1/2" and 2" (out of honest hand-bender range / no generic chart). The 1-1/4" stub-90 take-up (11") is a **generic published value pending physical field verification** — see the math sign-off note. Any uncharted size still warns and offers a custom deduct (calibration path) rather than guessing.
+
 ---
 
 ## What “field validated” means
@@ -26,6 +28,35 @@ A matrix row is **field validated** only when all of the following are recorded 
 6. Tester name, date, bender model, free-text notes (spring-back, shoe difference, etc.)
 
 **Field validated ≠ app-verified.** Passing Jest does not replace a real bend. Beta sign-off requires moving priority cases from App-verified → Field validated.
+
+---
+
+## Math review sign-off (desk validation)
+
+Senior-engineer review of each engine's formula and constants against published
+trade references. **Desk validation only — does not replace physical bends.**
+Constants are locked by `*.engine.test.ts`; the saddle3 multipliers are also
+cross-checked against trigonometry (cosecant of the side angle) so a constant
+change cannot pass silently.
+
+| Calculator | Core formula | Constants | Reference checked | Status |
+|------------|--------------|-----------|-------------------|--------|
+| Offset | spacing = height × mult; shrink = height × shrink/in | 10°×6, 22.5°×2.6, 30°×2, 45°×1.4, 60°×1.2; shrink 1/16–1/2 | Standard offset multiplier/shrink tables (Ugly's, Benfield) | ✅ matches |
+| Stub 90 | mark = stub − deduct | Generic take-up 1/2"=5, 3/4"=6, 1"=8 | Generic hand-bender field references | ✅ matches (generic, field-verify) |
+| 3-Point Saddle | center→side = height × csc(side angle) | 22.5°=2.613, 30°=2.0, 45°=1.414 | Trig-exact cosecant; cross-checked in tests | ✅ exact (see note) |
+| 4-Point Saddle | two offsets; between = height × mult | Same as offset table (2.6/2.0/1.4) | Standard offset tables | ✅ matches |
+| Segment | spacing = R × α(rad); developed = R × Θ(rad) | π/180 arc geometry | Standard segment/large-radius layout | ✅ matches |
+| Rolling | trueOffset = √(height² + roll²), then offset | Offset table | Standard rolling-offset (hypotenuse) method | ✅ matches |
+
+**Awareness note (not a bug):** the 3-point saddle 45° preset uses the
+trig-exact multiplier **2.613** (csc 22.5°). Some field charts round this to
+**2.5**. Bend Pro is intentionally exact; this can produce a small (~4%)
+difference vs a rounded paper chart. Field-verify before relying on it for tall
+saddles.
+
+**Outstanding before field beta:** physical bends per the priority list below.
+Desk validation confirms the math is internally and referentially correct; it
+does not confirm real-world fit (spring-back, shoe geometry, tape placement).
 
 ---
 
@@ -61,7 +92,8 @@ A matrix row is **field validated** only when all of the following are recorded 
 | STU-REF | 1/2" | 12" | 5" | 7" | Reference case |
 | STU-34 | 3/4" | 12" | 6" | 6" | |
 | STU-1 | 1" | 12" | 8" | 4" | |
-| STU-114 | 1-1/4" | 12" | — | **Blocked** | Warning; no silent fallback — set custom deduct |
+| STU-114 | 1-1/4" | 18" | 11" | 7" | **Generic 1-1/4" take-up (11") — FIELD-VERIFY** before trusting |
+| STU-BLK | 1-1/2" | 18" | — | **Blocked** | Out of v1 range / no chart — warning, no silent fallback, set custom deduct |
 | STU-LEG | 1/2" | 12" | 5" | 7" | Optional leg 24" — diagram only |
 
 **Formula:** deduct mark = stub length − deduct (from bender profile chart or override).

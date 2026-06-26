@@ -21,6 +21,8 @@ Practical limitations as of Phase 5.9. These are **not necessarily bugs** — ma
 - **Saddle calculators** (3-point and 4-point) do not offer manual multiplier or shrink overrides. Offset and Rolling Offset share angle-table overrides only.
 - **Offset multiplier and shrink overrides** are global per bend angle in setup — not stored per bender profile.
 - **Bender profiles** today only carry **stub 90 deduct** charts. Offset math uses generic angle tables regardless of which profile is selected.
+- **Supported EMT sizes (v1):** the setup picker offers **1/2", 3/4", 1", 1-1/4"** only (`SUPPORTED_EMT_TRADE_SIZES` in `src/data/emt/emtSizes.ts`). 1-1/2" and 2" are hidden until backed by honest data. The full `EMT_TRADE_SIZES` type is retained for capability and previously-saved setups.
+- **1-1/4" stub-90 take-up (11") is a generic published value pending physical field verification.** Built-in profiles label it generic; field-verify before relying on it. Uncharted sizes still warn and offer a custom deduct.
 - **Manufacturer shoe charts** are **not shipped**. `BenderChartKind: 'manufacturer'` is reserved for future profiles that include a verified `sourceNote`. Built-in profiles are generic field references only.
 - **Custom bender profiles** are device-local (calculator setup storage). There is no cloud sync.
 

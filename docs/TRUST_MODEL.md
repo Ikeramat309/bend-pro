@@ -9,6 +9,7 @@ This document describes **what each input actually affects** in the six active c
 1. **Bender profile selection affects Stub 90 math only.** On every other calculator, the selected bender is shown in the trust strip and result metadata but does **not** change multiplier, shrink, spacing, or mark math.
 2. **No silent fallbacks.** When a required lookup is missing or invalid, the engine must not produce a plausible-looking result without a warning or invalid state. Stub 90 unsupported sizes return `missing-chart` with a warning and no deduct mark.
 3. **Setup vs calculator inputs.** *Setup* (Edit Setup sheet) travels across calculators. *Calculator inputs* are per-screen fields and optional marks.
+4. **Honest size scope (v1).** The setup picker offers EMT **1/2", 3/4", 1", 1-1/4"** only (`SUPPORTED_EMT_TRADE_SIZES`). The full size type still exists for capability and previously-saved setups, but larger sizes are hidden until backed by honest data. The **1-1/4" stub-90 take-up (11") is a generic published value pending physical field verification.** Any size without a chart on the selected profile returns `missing-chart` (warning + custom-deduct calibration), never a guess.
 
 ## Shared setup (`CalculatorSetup`)
 

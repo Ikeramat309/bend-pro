@@ -10,7 +10,7 @@ describe('resolveEffectiveStub90DeductInches', () => {
   });
 
   test('returns missing chart for unsupported trade sizes without inventing a deduct', () => {
-    const result = resolveEffectiveStub90DeductInches(GENERIC_HAND_BENDER, '1-1/4');
+    const result = resolveEffectiveStub90DeductInches(GENERIC_HAND_BENDER, '1-1/2');
     expect(result.deductInches).toBeUndefined();
     expect(result.source).toBe('missing-chart');
     expect(result.chartDeductInches).toBeUndefined();

@@ -62,11 +62,11 @@ This separation means a math fix can never be hidden inside a rendering change, 
 
 Follow [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) and `diagramTheme`:
 
-- Blue/cyan conduit on dark surfaces
+- **Metallic blue-steel conduit** on dark surfaces — `pipeGradientStops` give a lit-tube sheen (hybrid SVG metallic direction; no raster assets)
 - Orange for user marks
-- Restrained contrasting color for deduct/radius zones
+- **Green for bend-radius / take-up zones** (`bendZone` tokens) — reads clearly against the metallic pipe and orange marks
 - Neutral white/grey for labels and dimension lines
-- Avoid making every measurement a different bright color
+- Avoid making every measurement a different bright color (pipe = steel, marks = orange, bend zones = green is the full palette)
 
 ## Status (Phase 2 complete)
 

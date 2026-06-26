@@ -6,13 +6,30 @@ export const diagramTheme = {
   border: 'rgba(38, 49, 66, 0.85)',
   pipe: '#5BA8C9',
   pipeCore: '#2E7FA3',
+  /** Bright steel sheen band for the metallic pipe gradient. */
+  pipeSheen: '#CFE9F6',
   pipeHighlight: 'rgba(246, 248, 251, 0.14)',
   pipeShadow: 'rgba(43, 127, 168, 0.1)',
+  /**
+   * Metallic pipe gradient — dark edges with an offset bright sheen band so the
+   * conduit reads like a lit steel tube while staying lightweight SVG.
+   */
+  pipeGradientStops: [
+    { offset: 0, color: '#2E7FA3' },
+    { offset: 0.3, color: '#CFE9F6' },
+    { offset: 0.55, color: '#5BA8C9' },
+    { offset: 1, color: '#256C8C' },
+  ],
   /** Bend / deduct marks on the pipe. */
   mark: colors.mark,
   markGlow: 'rgba(255, 122, 47, 0.22)',
   deduct: 'rgba(255, 122, 47, 0.1)',
   deductStroke: 'rgba(255, 122, 47, 0.55)',
+  /** Green bend-radius (take-up) zone highlight — the area the shoe forms. */
+  bendZone: {
+    fill: 'rgba(74, 222, 128, 0.16)',
+    stroke: 'rgba(74, 222, 128, 0.62)',
+  },
   dimension: 'rgba(143, 155, 173, 0.55)',
   dimensionStrong: 'rgba(246, 248, 251, 0.65)',
   label: colors.text,

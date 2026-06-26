@@ -16,11 +16,11 @@ describe('resolveStub90DeductSource', () => {
   });
 
   test('missing chart when size is not on the profile', () => {
-    expect(resolveStub90DeductSource(GENERIC_HAND_BENDER, '1-1/4')).toBe('missing-chart');
+    expect(resolveStub90DeductSource(GENERIC_HAND_BENDER, '1-1/2')).toBe('missing-chart');
   });
 
   test('override takes precedence', () => {
-    expect(resolveStub90DeductSource(GENERIC_HAND_BENDER, '1-1/4', 6)).toBe('override');
+    expect(resolveStub90DeductSource(GENERIC_HAND_BENDER, '1-1/2', 6)).toBe('override');
   });
 });
 
@@ -33,9 +33,9 @@ describe('formatStub90DeductContextLine', () => {
   });
 
   test('describes missing chart without inventing a deduct value', () => {
-    const context = resolveStub90DeductContext(GENERIC_HAND_BENDER, '1-1/4', undefined);
+    const context = resolveStub90DeductContext(GENERIC_HAND_BENDER, '1-1/2', undefined);
     expect(formatStub90DeductContextLine(context, 'imperial', '1/16')).toBe(
-      'Generic Hand Bender has no stub 90 deduct chart for 1-1/4" EMT — set a custom deduct to calculate the mark.',
+      'Generic Hand Bender has no stub 90 deduct chart for 1-1/2" EMT — set a custom deduct to calculate the mark.',
     );
   });
 

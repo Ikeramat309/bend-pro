@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 
 import {
   IMPERIAL_ROUNDING_OPTIONS,
@@ -10,12 +10,15 @@ import {
   type CalculatorSetup,
 } from '@/core/settings';
 import { getBenderProfile, getBenderProfileIdByName, mergeBenderProfiles } from '@/data/benders';
-import { EMT_TRADE_SIZES } from '@/data/emt';
+import { SUPPORTED_EMT_TRADE_SIZES } from '@/data/emt';
 import { Routes } from '@/navigation';
 import { AppHeader, HubNavCard, HubSettingsCard, OptionChipGroup, SetupOverridesCard } from '@/shared/ui';
 import { colors, uiTheme } from '@/theme';
 
 const UNIT_LABELS = ['Imperial', 'Metric'] as const;
+
+/** Beta feedback inbox — placeholder address; swap before public beta. */
+const FEEDBACK_EMAIL = 'feedback@bendpro.app';
 
 export function SettingsScreen() {
   const router = useRouter();
@@ -58,7 +61,7 @@ export function SettingsScreen() {
         <HubSettingsCard title="Field Defaults" body="Used by every calculator. Editable per-bend too.">
           <OptionChipGroup
             title="EMT Size"
-            options={EMT_TRADE_SIZES}
+            options={SUPPORTED_EMT_TRADE_SIZES}
             selected={setup.conduitSize}
             onSelect={(conduitSize) => update({ conduitSize })}
           />
@@ -80,6 +83,20 @@ export function SettingsScreen() {
         </HubSettingsCard>
 
         <SetupOverridesCard />
+
+        <HubSettingsCard title="Beta" body="Found a wrong number or a confusing screen? Tell us — field feedback shapes the release.">
+          <HubNavCard
+            label="Send feedback"
+            description="Report a bad mark, a bug, or an idea"
+            onPress={() => {
+              const subject = encodeURIComponent('Bend Pro beta feedback');
+              const body = encodeURIComponent(
+                `App version: ${Constants.expoConfig?.version ?? ''}\nCalculator:\nWhat happened:\n`,
+              );
+              void Linking.openURL(`mailto:${FEEDBACK_EMAIL}?subject=${subject}&body=${body}`);
+            }}
+          />
+        </HubSettingsCard>
 
         <HubSettingsCard
           title="About"

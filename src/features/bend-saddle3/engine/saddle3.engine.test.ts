@@ -1,4 +1,5 @@
 import { calculateSaddle3 } from './saddle3.engine';
+import { SADDLE3_ANGLE_DATA } from './saddle3AngleData';
 import type { Saddle3EngineInput } from './saddle3.types';
 
 function baseInput(overrides: Partial<Saddle3EngineInput> = {}): Saddle3EngineInput {
@@ -82,5 +83,36 @@ describe('calculateSaddle3', () => {
 
     expect(result.obstructionHeight).toBeCloseTo(2, 2);
     expect(result.centerMark).toBeCloseTo(24 + 2 * (3 / 16), 2);
+  });
+});
+
+/**
+ * Trade-reference cross-check (non-circular).
+ *
+ * The 3-point saddle center-to-side distance is the conduit length needed to
+ * gain the obstruction height across a side bend of angle θ, which is the
+ * trigonometric cosecant: distance = height / sin(θ) = height × csc(θ).
+ * Asserting the shipped multiplier against csc(θ) computed independently here
+ * validates the constant against geometry itself — not against its own value.
+ *
+ * Reference: standard conduit-bending geometry (e.g. Benfield Conduit Bending
+ * Manual; Ugly's Electrical References — 3-point saddle layout).
+ */
+describe('saddle3 multipliers match the cosecant of the side angle', () => {
+  const cases: { preset: keyof typeof SADDLE3_ANGLE_DATA; sideAngle: number }[] = [
+    { preset: '22.5-45', sideAngle: 22.5 },
+    { preset: '30-60', sideAngle: 30 },
+    { preset: '45-90', sideAngle: 45 },
+  ];
+
+  test.each(cases)('$preset center-to-side multiplier ≈ csc(side angle)', ({ preset, sideAngle }) => {
+    const cosecant = 1 / Math.sin((sideAngle * Math.PI) / 180);
+    expect(SADDLE3_ANGLE_DATA[preset].centerToSideMultiplier).toBeCloseTo(cosecant, 2);
+  });
+
+  test('center bend angle is always double the side bend angle', () => {
+    for (const row of Object.values(SADDLE3_ANGLE_DATA)) {
+      expect(row.centerAngle).toBe(row.sideAngle * 2);
+    }
   });
 });

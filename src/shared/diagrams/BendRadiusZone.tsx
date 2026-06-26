@@ -11,7 +11,8 @@ export type BendRadiusZoneProps = {
 
 /**
  * Highlighted bend-radius zone — the take-up region the bender shoe
- * consumes. Drawn as a soft glow plus a thin accent line over the arc.
+ * consumes. Drawn as a soft green glow plus a thin accent line over the arc,
+ * so the bend areas read clearly against the metallic pipe and orange marks.
  */
 export function BendRadiusZone({ d, glowWidth = 22 }: BendRadiusZoneProps) {
   return (
@@ -19,7 +20,7 @@ export function BendRadiusZone({ d, glowWidth = 22 }: BendRadiusZoneProps) {
       <Path
         d={d}
         fill="none"
-        stroke={diagramTheme.deduct}
+        stroke={diagramTheme.bendZone.fill}
         strokeWidth={glowWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -27,8 +28,8 @@ export function BendRadiusZone({ d, glowWidth = 22 }: BendRadiusZoneProps) {
       <Path
         d={d}
         fill="none"
-        stroke={diagramTheme.deductStroke}
-        strokeWidth={1}
+        stroke={diagramTheme.bendZone.stroke}
+        strokeWidth={1.25}
         strokeLinecap="round"
         strokeLinejoin="round"
       />

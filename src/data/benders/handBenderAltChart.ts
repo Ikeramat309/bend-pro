@@ -10,9 +10,11 @@ export const HAND_BENDER_ALT_CHART: BenderProfile = {
   category: 'hand',
   chartKind: 'generic-field-reference',
   description: 'Alternate generic take-up chart — use when your sticker runs slightly high.',
+  // Generic alternate field-reference chart (~+0.5" vs standard). Not a brand chart.
   emtStub90TakeUpInches: {
     '1/2': 5.5,
     '3/4': 6.5,
     '1': 8.5,
+    '1-1/4': 11.5,
   },
 };

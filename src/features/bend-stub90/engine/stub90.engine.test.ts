@@ -43,6 +43,8 @@ describe('calculateStub90', () => {
       { tradeSize: '1/2', deduct: 5, mark: 7 },
       { tradeSize: '3/4', deduct: 6, mark: 6 },
       { tradeSize: '1', deduct: 8, mark: 4 },
+      // 1-1/4" generic take-up (11") — pending physical field verification.
+      { tradeSize: '1-1/4', deduct: 11, mark: 1 },
     ];
 
     test.each(cases)('$tradeSize" EMT → deduct $deduct", mark $mark"', ({ tradeSize, deduct, mark }) => {
@@ -55,7 +57,8 @@ describe('calculateStub90', () => {
   });
 
   test('unsupported trade size warns and suppresses deduct mark', () => {
-    const result = calculateStub90(baseInput({ tradeSize: '1-1/4' }));
+    // 1-1/2" is outside the v1 hand-bender range and has no generic chart.
+    const result = calculateStub90(baseInput({ tradeSize: '1-1/2' }));
 
     expect(result.deductSource).toBe('missing-chart');
     expect(result.isValidDeductMark).toBe(false);
@@ -63,7 +66,7 @@ describe('calculateStub90', () => {
     expect(result.diagramData).toBeUndefined();
     expect(result.deductFormatted).toBe('—');
     expect(result.warnings).toEqual([
-      'Generic Hand Bender has no stub 90 deduct for 1-1/4" EMT. Set a custom deduct or choose a size on this profile\'s chart.',
+      'Generic Hand Bender has no stub 90 deduct for 1-1/2" EMT. Set a custom deduct or choose a size on this profile\'s chart.',
     ]);
   });
 
@@ -122,10 +125,13 @@ describe('calculateStub90', () => {
     });
 
     test('override suppresses missing-chart state', () => {
-      const result = calculateStub90(baseInput({ tradeSize: '1-1/4', deductOverrideInches: 11 }));
+      const result = calculateStub90(
+        baseInput({ stubHeight: 24, tradeSize: '1-1/2', deductOverrideInches: 14 }),
+      );
 
-      expect(result.deduct).toBe(11);
+      expect(result.deduct).toBe(14);
       expect(result.deductSource).toBe('override');
+      expect(result.deductMark).toBe(10);
       expect(result.warnings).toEqual([]);
     });
 

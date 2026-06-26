@@ -13,7 +13,7 @@ import {
   mergeBenderProfiles,
 } from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
-import { EMT_TRADE_SIZES } from '@/data/emt';
+import { SUPPORTED_EMT_TRADE_SIZES } from '@/data/emt';
 import { Routes } from '@/navigation';
 import { OptionChipGroup } from '@/shared/ui/OptionChipGroup';
 import { Sheet } from '@/shared/ui/Sheet';
@@ -100,7 +100,7 @@ function EditSetupSheetOpen({
       onPrimaryPress={() => onApply(draft)}>
       <OptionChipGroup
         title="EMT Size"
-        options={EMT_TRADE_SIZES}
+        options={SUPPORTED_EMT_TRADE_SIZES}
         selected={draft.conduitSize}
         onSelect={(conduitSize) =>
           updateDraft({ conduitType: DEFAULT_CONDUIT_TYPE, conduitSize })

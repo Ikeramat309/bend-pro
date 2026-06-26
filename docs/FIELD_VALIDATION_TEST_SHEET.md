@@ -31,6 +31,7 @@
 | STU-REF | Stub 90 | 1/2" | 90° | Stub **12"** | Deduct mark **7"** (deduct **5"**) | Deduct mark on stub | | | |
 | STU-34 | Stub 90 | 3/4" | 90° | Stub **12"** | Deduct mark **6"** (deduct **6"**) | | | | |
 | STU-1 | Stub 90 | 1" | 90° | Stub **12"** | Deduct mark **4"** (deduct **8"**) | | | | |
+| STU-114 | Stub 90 | 1-1/4" | 90° | Stub **18"** | Deduct mark **7"** (deduct **11"**) | **Generic take-up — verify!** | | | |
 | S3-REF | 3-Pt Saddle | 1/2" | 22.5° / 45° | Obs **2"**, dist to center **24"** | Center mark **24 3/8"** | Sides ≈ **19 1/8"** · **29 5/8"** | | | |
 | S4-REF | 4-Pt Saddle | 1/2" | 22.5° | Obs **2"**, width **4"**, dist **30"** | Center **30 3/8"** | Inners ≈ **28 3/8"** · **32 3/8"**; outers ≈ **23 3/16"** · **37 9/16"** | | | |
 | SEG-REF | Segment | 1/2" | 90° total, **10°**/bend | Radius **30"**, start **12"** | Spacing **5 1/4"**, 9 bends | First ≈ **14 5/8"**, last ≈ **56 1/2"** | | | |
@@ -54,7 +55,7 @@
 
 | ID | Calc | Setup | Expected app behavior | ☐ Pass | ☐ Fail | Notes |
 |----|------|-------|----------------------|--------|--------|-------|
-| STU-114 | Stub 90 | 1-1/4" EMT, stub 12" | Warning; **no** deduct mark; no silent fallback | | | |
+| STU-BLK | Stub 90 | Add a custom bender with **only a 1/2" deduct**, then select **3/4" EMT** | Warning; **no** deduct mark; no silent fallback; prompts custom deduct | | | |
 
 ---
 

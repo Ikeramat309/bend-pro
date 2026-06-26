@@ -17,7 +17,7 @@ import {
   HubSectionTitle,
   type BendTabId,
 } from '@/shared/ui';
-import { colors, uiTheme } from '@/theme';
+import { uiTheme, useTheme } from '@/theme';
 
 async function loadContinueCandidate(): Promise<ContinueLayoutCandidate | undefined> {
   const { default: AsyncStorage } = await import('@react-native-async-storage/async-storage');
@@ -27,6 +27,7 @@ async function loadContinueCandidate(): Promise<ContinueLayoutCandidate | undefi
 
 export function HomeScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
   const [continueCandidate, setContinueCandidate] = useState<ContinueLayoutCandidate | undefined>();
 
   useFocusEffect(
@@ -67,12 +68,12 @@ export function HomeScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: colors.background }]}>
       <AppHeader
         title="Bend Pro"
         subtitle="Layout"
         badge="Beta"
-        rightIcon={<Text style={styles.topIcon}>⚙</Text>}
+        rightIcon={<Text style={[styles.topIcon, { color: colors.text }]}>⚙</Text>}
         onRightPress={() => router.push(Routes.settings)}
       />
 
@@ -97,7 +98,6 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   content: {
     width: '100%',
@@ -108,7 +108,6 @@ const styles = StyleSheet.create({
     gap: uiTheme.hub.contentGap,
   },
   topIcon: {
-    color: colors.text,
     fontSize: 20,
   },
   navSection: {

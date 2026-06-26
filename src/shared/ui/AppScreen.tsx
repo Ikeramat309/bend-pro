@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { colors, uiTheme } from '@/theme';
+import { uiTheme, useTheme } from '@/theme';
 
 export type AppScreenProps = {
   children: ReactNode;
@@ -14,6 +14,7 @@ export type AppScreenProps = {
 
 /** Standard full-screen shell: safe area, background, optional scroll and footer slot. */
 export function AppScreen({ children, scroll = false, contentStyle, footer }: AppScreenProps) {
+  const { colors } = useTheme();
   const body = scroll ? (
     <ScrollView
       contentContainerStyle={[styles.scrollContent, contentStyle]}
@@ -26,7 +27,7 @@ export function AppScreen({ children, scroll = false, contentStyle, footer }: Ap
   );
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: colors.background }]}>
       <SafeAreaView style={styles.safeArea} edges={['left', 'right']}>
         {body}
       </SafeAreaView>
@@ -38,7 +39,6 @@ export function AppScreen({ children, scroll = false, contentStyle, footer }: Ap
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   safeArea: {
     flex: 1,

@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, layout, spacing, touchTarget, typography, workspaceTheme } from '@/theme';
+import { layout, spacing, touchTarget, typography, useTheme, workspaceTheme, type ThemePalette } from '@/theme';
 
 export type AppHeaderProps = {
   title: string;
@@ -28,6 +29,8 @@ export function AppHeader({
   density = 'default',
 }: AppHeaderProps) {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const compact = density === 'compact';
 
   return (
@@ -87,7 +90,8 @@ export function AppHeader({
   );
 }
 
-const styles = StyleSheet.create({
+function makeStyles(colors: ThemePalette) {
+  return StyleSheet.create({
   container: {
     borderBottomWidth: 1,
   },
@@ -162,4 +166,5 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: '600',
   },
-});
+  });
+}

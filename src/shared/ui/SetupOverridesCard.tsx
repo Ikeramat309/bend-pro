@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -8,7 +9,7 @@ import {
   useCalculatorSetup,
   type SetupOverrideEntry,
 } from '@/core/settings';
-import { colors, spacing, uiTheme } from '@/theme';
+import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 import { HubSettingsCard } from './HubSettingsCard';
 
@@ -20,6 +21,8 @@ export type SetupOverridesCardProps = {
 /** Lists manual chart overrides saved in calculator setup. */
 export function SetupOverridesCard({ showClearAll = true }: SetupOverridesCardProps) {
   const { setup, setSetup } = useCalculatorSetup();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const overrides = listSetupOverrides(setup);
 
   function clearOne(entry: SetupOverrideEntry) {
@@ -76,63 +79,65 @@ export function SetupOverridesCard({ showClearAll = true }: SetupOverridesCardPr
   );
 }
 
-const styles = StyleSheet.create({
-  intro: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.muted,
-  },
-  list: {
-    gap: spacing.sm,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.md,
-    paddingVertical: spacing.xs,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  rowText: {
-    flex: 1,
-    gap: 2,
-  },
-  label: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  hint: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: colors.muted,
-  },
-  clearButton: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: uiTheme.chip.borderRadius,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface2,
-  },
-  clearText: {
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-  clearAllButton: {
-    alignSelf: 'flex-start',
-    paddingVertical: spacing.xs,
-  },
-  clearAllText: {
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '600',
-    color: colors.error,
-  },
-  pressed: {
-    opacity: 0.88,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    intro: {
+      fontSize: 14,
+      lineHeight: 20,
+      color: c.muted,
+    },
+    list: {
+      gap: spacing.sm,
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: spacing.md,
+      paddingVertical: spacing.xs,
+      borderTopWidth: 1,
+      borderTopColor: c.border,
+    },
+    rowText: {
+      flex: 1,
+      gap: 2,
+    },
+    label: {
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '600',
+      color: c.text,
+    },
+    hint: {
+      fontSize: 12,
+      lineHeight: 16,
+      color: c.muted,
+    },
+    clearButton: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs,
+      borderRadius: uiTheme.chip.borderRadius,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface2,
+    },
+    clearText: {
+      fontSize: 12,
+      lineHeight: 16,
+      fontWeight: '700',
+      color: c.primary,
+    },
+    clearAllButton: {
+      alignSelf: 'flex-start',
+      paddingVertical: spacing.xs,
+    },
+    clearAllText: {
+      fontSize: 13,
+      lineHeight: 18,
+      fontWeight: '600',
+      color: c.error,
+    },
+    pressed: {
+      opacity: 0.88,
+    },
+  });
+}

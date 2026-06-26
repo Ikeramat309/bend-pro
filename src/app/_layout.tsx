@@ -1,16 +1,21 @@
 import '@/global.css';
 
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
-import { useColorScheme } from 'react-native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  Stack,
+  ThemeProvider as NavThemeProvider,
+} from 'expo-router';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { SettingsProvider } from '@/core/settings';
+import { ThemeProvider, useTheme } from '@/theme';
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+function ThemedStack() {
+  const { scheme } = useTheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
       <SettingsProvider>
         <AnimatedSplashOverlay />
         <Stack screenOptions={{ headerShown: false }}>
@@ -27,6 +32,14 @@ export default function RootLayout() {
           <Stack.Screen name="rolling" />
         </Stack>
       </SettingsProvider>
+    </NavThemeProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <ThemedStack />
     </ThemeProvider>
   );
 }

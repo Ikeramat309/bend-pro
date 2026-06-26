@@ -1,29 +1,13 @@
 /**
- * FILE: src/theme/colors.ts
+ * Bend Pro design tokens.
  *
- * Bend Pro design tokens from Figma handoff (Minimal Mobile UI System).
- * Use for field-mode UI under src/shared/workspace/.
+ * `colors` is the DARK palette and the backward-compatible default for any
+ * component not yet migrated to the runtime theme. New / migrated components
+ * should read the active palette from `useTheme()` (see `ThemeContext.tsx`) so
+ * they respond to light/dark. Both palettes live in `palette.ts`.
  */
+import { darkColors, type ThemePalette } from './palette';
 
-export const colors = {
-  background: '#05070B',
-  screen: '#080C13',
-  surface: '#101722',
-  surface2: '#151E2B',
-  border: '#263142',
+export const colors: ThemePalette = darkColors;
 
-  text: '#F6F8FB',
-  muted: '#8F9BAD',
-
-  primary: '#35BDF8',
-  mark: '#FF7A2F',
-  warning: '#FFD22E',
-  success: '#4ADE80',
-  error: '#EF4444',
-
-  /** Primary at 10% — guided mode / tinted rows */
-  primaryMuted: 'rgba(59, 189, 248, 0.12)',
-  primaryBorder: 'rgba(59, 189, 248, 0.3)',
-} as const;
-
-export type BendColor = keyof typeof colors;
+export type BendColor = keyof ThemePalette;

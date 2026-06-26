@@ -1,7 +1,8 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, layout, spacing, touchTarget, typography, uiTheme } from '@/theme';
+import { layout, spacing, touchTarget, typography, useTheme, type ThemePalette } from '@/theme';
 
 export type BendTabId = 'layout' | 'bends' | 'benders' | 'guide';
 
@@ -20,6 +21,8 @@ const TABS: { id: BendTabId; label: string }[] = [
 /** Main hub bottom navigation. */
 export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
     <View
@@ -54,36 +57,38 @@ export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    borderTopWidth: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    minHeight: layout.bottomNavHeight,
-    alignItems: 'center',
-  },
-  tab: {
-    flex: 1,
-    minHeight: touchTarget - 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.sm,
-    borderRadius: 8,
-    marginHorizontal: 2,
-  },
-  tabActive: {
-    backgroundColor: uiTheme.bottomNav.activeBackground,
-  },
-  tabLabel: {
-    ...typography.tabLabel,
-    color: colors.muted,
-    fontWeight: '600',
-    fontSize: 11,
-    letterSpacing: 0.3,
-  },
-  tabLabelActive: {
-    color: colors.primary,
-    fontWeight: '700',
-  },
-});
+function makeStyles(colors: ThemePalette) {
+  return StyleSheet.create({
+    container: {
+      borderTopWidth: 1,
+    },
+    row: {
+      flexDirection: 'row',
+      minHeight: layout.bottomNavHeight,
+      alignItems: 'center',
+    },
+    tab: {
+      flex: 1,
+      minHeight: touchTarget - 4,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: spacing.sm,
+      borderRadius: 8,
+      marginHorizontal: 2,
+    },
+    tabActive: {
+      backgroundColor: colors.primaryMuted,
+    },
+    tabLabel: {
+      ...typography.tabLabel,
+      color: colors.muted,
+      fontWeight: '600',
+      fontSize: 11,
+      letterSpacing: 0.3,
+    },
+    tabLabelActive: {
+      color: colors.primary,
+      fontWeight: '700',
+    },
+  });
+}

@@ -3,20 +3,22 @@ import {
   buildOffsetDiagramGeometry,
 } from '../diagram/offsetDiagramGeometry';
 
-describe('buildOffsetDiagramGeometry', () => {
-  test('30° offset produces readable rise and bend positions', () => {
+describe('buildOffsetDiagramGeometry (vertical)', () => {
+  test('30° offset produces a readable jog with bend 2 above bend 1', () => {
     const geo = buildOffsetDiagramGeometry({
       bendAngleDeg: 30,
       distanceBetweenBendsInches: 12,
     });
 
-    expect(geo.rise).toBeGreaterThan(OFFSET_DIAGRAM_LAYOUT.riseMin);
-    expect(geo.x2).toBeGreaterThan(geo.x1);
-    expect(geo.pipePath).toContain('M 24 230');
+    expect(geo.shift).toBeGreaterThan(OFFSET_DIAGRAM_LAYOUT.shiftMin);
+    expect(geo.x2).toBeGreaterThan(geo.x1); // jog to the side
+    expect(geo.y2).toBeLessThan(geo.y1); // bend 2 is higher up the screen
+    expect(geo.pipePath).toContain(`M ${OFFSET_DIAGRAM_LAYOUT.leftX} ${OFFSET_DIAGRAM_LAYOUT.bottomY}`);
     expect(geo.bendZone1).toContain('Q');
+    expect(geo.bendZone2).toContain('Q');
   });
 
-  test('shallower angle produces longer horizontal travel', () => {
+  test('shallower angle produces longer vertical travel and a smaller jog', () => {
     const shallow = buildOffsetDiagramGeometry({
       bendAngleDeg: 10,
       distanceBetweenBendsInches: 12,
@@ -26,11 +28,11 @@ describe('buildOffsetDiagramGeometry', () => {
       distanceBetweenBendsInches: 12,
     });
 
-    expect(shallow.dx).toBeGreaterThan(steep.dx);
-    expect(shallow.rise).toBeLessThan(steep.rise);
+    expect(shallow.dy).toBeGreaterThan(steep.dy);
+    expect(shallow.shift).toBeLessThan(steep.shift);
   });
 
-  test('mark 1 shifts first bend when provided', () => {
+  test('mark 1 shifts the first bend along the run', () => {
     const withoutMark = buildOffsetDiagramGeometry({
       bendAngleDeg: 45,
       distanceBetweenBendsInches: 10,
@@ -41,6 +43,6 @@ describe('buildOffsetDiagramGeometry', () => {
       mark1Inches: 20,
     });
 
-    expect(withMark.x1).not.toBe(withoutMark.x1);
+    expect(withMark.y1).not.toBe(withoutMark.y1);
   });
 });

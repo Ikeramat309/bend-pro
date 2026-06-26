@@ -13,9 +13,23 @@ import { getBenderProfile, getBenderProfileIdByName, mergeBenderProfiles } from 
 import { SUPPORTED_EMT_TRADE_SIZES } from '@/data/emt';
 import { Routes } from '@/navigation';
 import { AppHeader, HubNavCard, HubSettingsCard, OptionChipGroup, SetupOverridesCard } from '@/shared/ui';
-import { colors, uiTheme } from '@/theme';
+import { uiTheme, useTheme, type ThemeMode } from '@/theme';
 
 const UNIT_LABELS = ['Imperial', 'Metric'] as const;
+
+const APPEARANCE_LABELS = ['System', 'Light', 'Dark'] as const;
+type AppearanceLabel = (typeof APPEARANCE_LABELS)[number];
+
+const MODE_TO_LABEL: Record<ThemeMode, AppearanceLabel> = {
+  system: 'System',
+  light: 'Light',
+  dark: 'Dark',
+};
+const LABEL_TO_MODE: Record<AppearanceLabel, ThemeMode> = {
+  System: 'system',
+  Light: 'light',
+  Dark: 'dark',
+};
 
 /** Beta feedback inbox — placeholder address; swap before public beta. */
 const FEEDBACK_EMAIL = 'feedback@bendpro.app';
@@ -23,6 +37,7 @@ const FEEDBACK_EMAIL = 'feedback@bendpro.app';
 export function SettingsScreen() {
   const router = useRouter();
   const { setup, setSetup } = useCalculatorSetup();
+  const { colors, mode, setMode } = useTheme();
   const roundingOptions =
     setup.unit === 'imperial' ? IMPERIAL_ROUNDING_OPTIONS : METRIC_ROUNDING_OPTIONS;
   const benderProfileNames = mergeBenderProfiles(setup.customBenderProfiles).map(
@@ -34,7 +49,7 @@ export function SettingsScreen() {
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: colors.background }]}>
       <AppHeader
         title="Settings"
         subtitle="Units, defaults, and app preferences"
@@ -43,6 +58,15 @@ export function SettingsScreen() {
       />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <HubSettingsCard title="Appearance" body="Follow your device, or force light or dark.">
+          <OptionChipGroup
+            title="Theme"
+            options={APPEARANCE_LABELS}
+            selected={MODE_TO_LABEL[mode]}
+            onSelect={(label) => setMode(LABEL_TO_MODE[label])}
+          />
+        </HubSettingsCard>
+
         <HubSettingsCard title="Units">
           <OptionChipGroup
             title="Unit"
@@ -110,7 +134,6 @@ export function SettingsScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.background,
   },
   content: {
     width: '100%',

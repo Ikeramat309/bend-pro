@@ -51,25 +51,25 @@ export type DiagramTheme = {
   };
 };
 
-/** Dark canvas palette — unchanged from the original diagramTheme. */
+/** Dark canvas palette — canvas matches app background for a seamless well. */
 export const darkDiagram: DiagramTheme = {
-  canvas: '#080E16',
+  canvas: '#0B0E13',
   border: 'rgba(38, 49, 66, 0.85)',
-  pipe: '#5BA8C9',
-  pipeCore: '#2E7FA3',
-  /** Bright steel sheen band for the metallic pipe gradient. */
-  pipeSheen: '#CFE9F6',
-  pipeHighlight: 'rgba(246, 248, 251, 0.14)',
-  pipeShadow: 'rgba(43, 127, 168, 0.1)',
+  pipe: '#7C8896',
+  pipeCore: '#39424E',
+  /** Bright steel sheen band for the brushed galvanized pipe gradient. */
+  pipeSheen: '#D2DAE3',
+  pipeHighlight: 'rgba(246, 248, 251, 0.12)',
+  pipeShadow: 'rgba(57, 66, 78, 0.14)',
   /**
-   * Metallic pipe gradient — dark edges with an offset bright sheen band so the
-   * conduit reads like a lit steel tube while staying lightweight SVG.
+   * Brushed steel pipe gradient — cool gray edges with an offset bright sheen band
+   * so the conduit reads like galvanized EMT without stealing color from marks/zones.
    */
   pipeGradientStops: [
-    { offset: 0, color: '#2E7FA3' },
-    { offset: 0.3, color: '#CFE9F6' },
-    { offset: 0.55, color: '#5BA8C9' },
-    { offset: 1, color: '#256C8C' },
+    { offset: 0, color: '#46505E' },
+    { offset: 0.32, color: '#D2DAE3' },
+    { offset: 0.6, color: '#7C8896' },
+    { offset: 1, color: '#39424E' },
   ],
   /** Bend / deduct marks on the pipe. */
   mark: colors.mark,
@@ -115,20 +115,20 @@ export const darkDiagram: DiagramTheme = {
   },
 };
 
-/** Light canvas palette — same keys, tuned for a white diagram well. */
+/** Light canvas palette — canvas matches app background for a seamless well. */
 export const lightDiagram: DiagramTheme = {
-  canvas: lightColors.screen,
+  canvas: lightColors.background,
   border: 'rgba(217, 222, 230, 0.95)',
-  pipe: '#3D8BB5',
-  pipeCore: '#1D5A75',
-  pipeSheen: '#D4EEF8',
-  pipeHighlight: 'rgba(14, 17, 22, 0.08)',
-  pipeShadow: 'rgba(43, 127, 168, 0.14)',
+  pipe: '#9BA7B5',
+  pipeCore: '#5A6573',
+  pipeSheen: '#EDF1F5',
+  pipeHighlight: 'rgba(14, 17, 22, 0.06)',
+  pipeShadow: 'rgba(90, 100, 112, 0.12)',
   pipeGradientStops: [
-    { offset: 0, color: '#1D5A75' },
-    { offset: 0.3, color: '#D4EEF8' },
-    { offset: 0.55, color: '#4A9CC4' },
-    { offset: 1, color: '#256C8C' },
+    { offset: 0, color: '#6B7785' },
+    { offset: 0.32, color: '#EDF1F5' },
+    { offset: 0.6, color: '#9BA7B5' },
+    { offset: 1, color: '#5A6573' },
   ],
   mark: lightColors.mark,
   markGlow: 'rgba(232, 89, 12, 0.22)',

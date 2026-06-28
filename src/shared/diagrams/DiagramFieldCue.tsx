@@ -1,3 +1,5 @@
+import { G } from 'react-native-svg';
+
 import { DiagramLabel } from './DiagramLabel';
 
 export type DiagramFieldCueProps = {
@@ -9,14 +11,16 @@ export type DiagramFieldCueProps = {
 /** Compact field-work legend — bend order, direction, and watch-fors. */
 export function DiagramFieldCue({ text, x = 180, y = 293 }: DiagramFieldCueProps) {
   return (
-    <DiagramLabel
-      x={x}
-      y={y}
-      text={text}
-      variant="muted"
-      fontSize={9}
-      fontWeight="600"
-      textAnchor="middle"
-    />
+    <G opacity={0.72}>
+      <DiagramLabel
+        x={x}
+        y={y}
+        text={text}
+        variant="muted"
+        fontSize={8.5}
+        fontWeight="500"
+        textAnchor="middle"
+      />
+    </G>
   );
 }

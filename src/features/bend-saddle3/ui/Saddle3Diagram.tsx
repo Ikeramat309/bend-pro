@@ -7,7 +7,6 @@ import {
   DiagramCanvas,
   DiagramDefs,
   DiagramFieldCue,
-  DiagramFlowArrow,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
@@ -26,7 +25,7 @@ import {
   capSaddle3DiagramInputs,
 } from '../diagram/saddle3DiagramGeometry';
 
-const { centerX: CENTER_X, baseY: BASE_Y, startX: SADDLE3_START_X } = SADDLE3_DIAGRAM_LAYOUT;
+const { centerX: CENTER_X, baseY: BASE_Y } = SADDLE3_DIAGRAM_LAYOUT;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
@@ -168,7 +167,6 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
       <DiagramBendBadge x={x1} y={BASE_Y - 24} order={2} />
       <DiagramBendBadge x={CENTER_X} y={peakY - 26} order={1} primary />
       <DiagramBendBadge x={x2} y={BASE_Y - 24} order={3} />
-      <DiagramFlowArrow x={SADDLE3_START_X - 4} y={BASE_Y} />
 
       <DimensionLine
         x1={dbb1.x}

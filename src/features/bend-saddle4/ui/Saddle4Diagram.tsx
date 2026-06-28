@@ -7,7 +7,6 @@ import {
   DiagramCanvas,
   DiagramDefs,
   DiagramFieldCue,
-  DiagramFlowArrow,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
@@ -333,7 +332,6 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
       <DiagramBendBadge x={xIL} y={topY - 26} order={1} primary />
       <DiagramBendBadge x={xIR} y={topY - 26} order={2} primary />
       <DiagramBendBadge x={xOR} y={BASE_Y - 24} order={4} />
-      <DiagramFlowArrow x={START_X - 4} y={BASE_Y} />
 
       <DimensionLine
         x1={dbb1.x}

@@ -6,7 +6,6 @@ import {
   DiagramCanvas,
   DiagramDefs,
   DiagramFieldCue,
-  DiagramFlowArrow,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
@@ -122,8 +121,6 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
 
       <PipeSegment d={path} variant="shadow" />
       <PipeSegment d={path} variant="pipe" gradientId="segmentPipeGradient" />
-
-      <DiagramFlowArrow x={start.x - LEAD_IN - 4} y={start.y} />
 
       {/* Radius leader + center pivot. */}
       <Circle cx={CX} cy={CY} r={2.5} fill={theme.dimension} />

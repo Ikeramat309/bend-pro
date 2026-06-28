@@ -5,7 +5,6 @@ import {
   DiagramCanvas,
   DiagramDefs,
   DiagramFieldCue,
-  DiagramFlowArrow,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
@@ -111,7 +110,6 @@ function OffsetLiveDiagram({ data }: { data: OffsetDiagramData }) {
 
       <DiagramBendBadge x={x1} y={BOTTOM_Y - 22} order={1} />
       <DiagramBendBadge x={x2} y={topY - 22} order={2} />
-      <DiagramFlowArrow x={START_X - 6} y={BOTTOM_Y} />
 
       <MarkLine x1={x1} y1={BOTTOM_Y - 12} x2={x1} y2={BOTTOM_Y + 12} />
       <DiagramLabel
@@ -205,15 +203,6 @@ function OffsetLiveDiagram({ data }: { data: OffsetDiagramData }) {
         />
       </DiagramCallout>
 
-      <DiagramLabel
-        x={346}
-        y={292}
-        text={`${offsetCopy.diagram.title} • ${data.bendAngle}°`}
-        variant="muted"
-        fontSize={10}
-        fontWeight="600"
-        textAnchor="end"
-      />
       <DiagramFieldCue text={offsetCopy.diagram.fieldCue} />
     </DiagramSvg>
   );

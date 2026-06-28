@@ -4,6 +4,6 @@ import type { BendAngle } from '@/core/types';
 export const OFFSET_CONFIG = {
   defaultAngle: 30 as BendAngle,
   validAngles: [10, 22.5, 30, 45, 60] as const,
-  diagramHeight: 440,
-  diagramViewBox: '0 0 300 440',
+  diagramHeight: 300,
+  diagramViewBox: '0 0 360 300',
 } as const;

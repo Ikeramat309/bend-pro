@@ -29,7 +29,7 @@ A generic calculator gives you a number. Bend Pro gives you a **layout**: a visu
 - **Six calculators:** Offset, Stub 90, 3-Point Saddle, 4-Point Saddle, Segment Bend, and Rolling Offset — all live with engine tests and diagrams.
 - **Stabilization over expansion:** Phase 4 is wrapped; new calculators wait for explicit tasks. Hardening existing calculators is the preferred next work.
 
-See [`archive/PHASE_4_WRAPUP.md`](archive/PHASE_4_WRAPUP.md) for the additional-calculators close-out and deferred items.
+See [`HANDOFF.md`](HANDOFF.md) for current state and deferred items.
 
 ## Field-use priorities
 
@@ -56,7 +56,7 @@ These are **planned future work** — they do not exist yet and must not be docu
 
 - Kick / 90 with kick
 
-Exact order and scope are decided in [`ROADMAP.md`](ROADMAP.md), not here.
+Exact order and scope are decided in [`HANDOFF.md`](HANDOFF.md), not here.
 
 ## Non-goals for the current phase
 
@@ -69,5 +69,5 @@ Exact order and scope are decided in [`ROADMAP.md`](ROADMAP.md), not here.
 ## Related docs
 
 - [`CURRENT_STATE.md`](CURRENT_STATE.md) — what actually exists today
-- [`ROADMAP.md`](ROADMAP.md) — phased plan
+- [`HANDOFF.md`](HANDOFF.md) — plan and direction
 - [`GLOSSARY.md`](GLOSSARY.md) — trade terminology

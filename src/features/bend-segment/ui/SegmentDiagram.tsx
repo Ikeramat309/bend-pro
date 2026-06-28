@@ -25,7 +25,7 @@ const CY = 84;
 const R_PX = 92;
 const LEAD_IN = 96;
 const LEAD_OUT = 64;
-const TICK_HALF = 8;
+const TICK_HALF = 13;
 
 const GHOST_PIPE =
   'M 54 176 L 150 176 L 158 175 L 178 168 L 205 150 L 226 124 L 238 96 L 242 84 L 242 20';

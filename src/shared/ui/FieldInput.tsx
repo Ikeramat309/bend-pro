@@ -83,8 +83,10 @@ export function FieldInput({
   const [lengthSheetVisible, setLengthSheetVisible] = useState(false);
   const useLengthSheet = lengthInput === 'imperial';
   const borderColor = shellBorder(colors, error, focused || lengthSheetVisible);
+  // Continuous treatment: transparent by default, a faint surface tint only
+  // while active so the field reads as part of the sheet, not a boxed card.
   const shellBackground =
-    focused || lengthSheetVisible ? colors.surface : colors.surface2;
+    focused || lengthSheetVisible ? colors.surface : 'transparent';
   const keyboardType = resolveKeyboardType(lengthInput, inputProps);
 
   const sharedInputProps: TextInputProps = {
@@ -249,21 +251,21 @@ function makeStyles(c: ThemePalette) {
       gap: spacing.xs,
     },
     fieldShell: {
-      borderWidth: 1,
+      borderBottomWidth: 1.5,
       borderRadius: uiTheme.field.shell.borderRadius,
     },
     fieldShellDefault: {
       flexDirection: 'row',
       alignItems: 'center',
       minHeight: uiTheme.field.defaultMinHeight,
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: spacing.xs,
       gap: spacing.sm,
     },
     fieldShellCompact: {
       minHeight: uiTheme.field.compactMinHeight,
-      paddingHorizontal: spacing.md,
-      paddingVertical: 10,
+      paddingHorizontal: spacing.xs,
+      paddingVertical: 8,
       justifyContent: 'space-between',
       gap: 3,
     },

@@ -211,14 +211,14 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
       <MarkLine x1={CENTER_X} y1={peakY - 12} x2={CENTER_X} y2={peakY + 12} />
       <DiagramLabel
         x={CENTER_X}
-        y={peakY - 32}
+        y={peakY - 52}
         text={saddle3Copy.diagram.centerMark}
         variant="muted"
         fontSize={9.5}
         fontWeight="600"
       />
       {hasMarks && data.display.centerMark ? (
-        <DiagramLabel x={CENTER_X} y={peakY - 18} text={data.display.centerMark} variant="mark" fontSize={11} />
+        <DiagramLabel x={CENTER_X} y={peakY - 38} text={data.display.centerMark} variant="mark" fontSize={11} />
       ) : null}
 
       <MarkLine x1={x2} y1={BASE_Y - 12} x2={x2} y2={BASE_Y + 12} opacity={0.62} />

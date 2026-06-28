@@ -46,9 +46,7 @@ src/
 
 ## Documentation
 
-- **AI agents:** start at [`AGENTS.md`](AGENTS.md), then [`docs/README.md`](docs/README.md).
+- **AI agents:** start at [`docs/HANDOFF.md`](docs/HANDOFF.md) (current state, plan, design system), then [`AGENTS.md`](AGENTS.md).
 - **Current state:** [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md)
 - **Architecture:** [`docs/APP_ARCHITECTURE.md`](docs/APP_ARCHITECTURE.md)
-- **Calculator layout rules:** [`docs/UI_WORKSPACE_LAYOUT.md`](docs/UI_WORKSPACE_LAYOUT.md)
-
-Historical phase notes live in [`docs/archive/`](docs/archive/).
+- **Doc index:** [`docs/README.md`](docs/README.md)

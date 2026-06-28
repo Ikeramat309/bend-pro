@@ -406,27 +406,27 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
       <MarkLine x1={xIL} y1={topY - 12} x2={xIL} y2={topY + 12} opacity={0.62} />
       <DiagramLabel
         x={xIL}
-        y={topY - 32}
-        text={saddle4Copy.diagram.top}
+        y={topY - 54}
+        text={`${saddle4Copy.diagram.top} 1`}
         variant="muted"
         fontSize={9.5}
         fontWeight="600"
       />
       {hasMarks && data.display.innerMark1 ? (
-        <DiagramLabel x={xIL} y={topY - 18} text={data.display.innerMark1} variant="mark" fontSize={11} />
+        <DiagramLabel x={xIL} y={topY - 40} text={data.display.innerMark1} variant="mark" fontSize={11} />
       ) : null}
 
       <MarkLine x1={xIR} y1={topY - 12} x2={xIR} y2={topY + 12} opacity={0.62} />
       <DiagramLabel
         x={xIR}
-        y={topY - 32}
-        text={saddle4Copy.diagram.top}
+        y={topY - 54}
+        text={`${saddle4Copy.diagram.top} 2`}
         variant="muted"
         fontSize={9.5}
         fontWeight="600"
       />
       {hasMarks && data.display.innerMark2 ? (
-        <DiagramLabel x={xIR} y={topY - 18} text={data.display.innerMark2} variant="mark" fontSize={11} />
+        <DiagramLabel x={xIR} y={topY - 40} text={data.display.innerMark2} variant="mark" fontSize={11} />
       ) : null}
 
       <MarkLine x1={xOR} y1={BASE_Y - 12} x2={xOR} y2={BASE_Y + 12} opacity={0.62} />

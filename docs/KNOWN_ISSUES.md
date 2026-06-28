@@ -65,4 +65,4 @@ Practical limitations as of Phase 5.9. These are **not necessarily bugs** — ma
 - Trust-strip tap → bender profile detail
 - Animations and motion design pass
 
-See also [`CURRENT_STATE.md`](CURRENT_STATE.md), [`CLEANUP_REPORT.md`](CLEANUP_REPORT.md), and historical notes in [`archive/`](archive/).
+See also [`HANDOFF.md`](HANDOFF.md) and [`CURRENT_STATE.md`](CURRENT_STATE.md).

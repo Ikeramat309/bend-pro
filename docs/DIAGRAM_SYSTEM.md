@@ -60,7 +60,7 @@ This separation means a math fix can never be hidden inside a rendering change, 
 
 ## Visual language
 
-Follow [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md) and `diagramTheme`:
+Follow [`HANDOFF.md`](HANDOFF.md) §4 and `diagramTheme` / `useDiagramTheme()`:
 
 - **Metallic blue-steel conduit** on dark surfaces — `pipeGradientStops` give a lit-tube sheen (hybrid SVG metallic direction; no raster assets)
 - Orange for user marks

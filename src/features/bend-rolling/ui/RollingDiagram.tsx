@@ -338,14 +338,14 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
       <MarkLine x1={x2} y1={topY - 12} x2={x2} y2={topY + 12} />
       <DiagramLabel
         x={x2}
-        y={topY - 30}
+        y={topY - 46}
         text={rollingCopy.diagram.mark2}
         variant="muted"
         fontSize={9.5}
         fontWeight="600"
       />
       {mark2Display ? (
-        <DiagramLabel x={x2} y={topY - 16} text={mark2Display} variant="default" fontSize={11} />
+        <DiagramLabel x={x2} y={topY - 32} text={mark2Display} variant="default" fontSize={11} />
       ) : null}
 
       <DimensionLine

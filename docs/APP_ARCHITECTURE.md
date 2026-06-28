@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Bend Pro uses thin routes, self-contained calculator features, and shared UI/diagram/workspace layers. Related: [`PROJECT_MAP.md`](PROJECT_MAP.md), [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md), [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md), [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md).
+Bend Pro uses thin routes, self-contained calculator features, and shared UI/diagram/workspace layers. Related: [`PROJECT_MAP.md`](PROJECT_MAP.md), [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md), [`DIAGRAM_SYSTEM.md`](DIAGRAM_SYSTEM.md).
 
 ## Flow
 
@@ -63,7 +63,7 @@ Universal calculator chrome (Phase 1 foundation):
 
 Supporting pieces still used by layout or sheets: `EditSetupSheet`, `AngleSelector`, `OptionalFieldButton`, `OptionalInputSummary`, `MeasurementChip`, `WarningList`. Legacy `SetupSummary` / `PipeWorkspaceResult` remain exported but calculators should use the new shell.
 
-See [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md) for result priority and dock rules.
+See [`HANDOFF.md`](HANDOFF.md) §4 for the locked UI/result/dock direction.
 
 ## `src/shared/diagrams` — reusable SVG primitives
 

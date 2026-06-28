@@ -8,7 +8,7 @@ Required workflow for every AI agent editing this repository. This doc consolida
 
 Before touching any file:
 
-1. Read [`AGENTS.md`](../AGENTS.md) and understand the current phase ([`CURRENT_STATE.md`](CURRENT_STATE.md), [`ROADMAP.md`](ROADMAP.md)).
+1. Read [`HANDOFF.md`](HANDOFF.md) and [`AGENTS.md`](../AGENTS.md) to understand current state and the plan.
 2. Confirm the task scope. Which folders are you allowed to touch? Keep each task inside clearly allowed folders.
 3. If the task involves a calculator, read [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md) and the feature's README (`src/features/bend-*/README.md`).
 4. If the task involves wording or labels, read [`GLOSSARY.md`](GLOSSARY.md) and [`NAMING_RULES.md`](NAMING_RULES.md).
@@ -52,9 +52,9 @@ Math is field-safety-critical — people mark real conduit from these numbers.
 
 - Use shared components (`src/shared/ui/`, `src/shared/workspace/`, `src/shared/diagrams/`) instead of copying them into features.
 - Use theme tokens from `src/theme/` — no hard-coded colors/spacing in new work.
-- Follow the diagram-first design direction in [`DESIGN_SYSTEM.md`](DESIGN_SYSTEM.md): one strong pipe workspace card per calculator screen, minimal clutter.
+- Follow the locked diagram-first design direction in [`HANDOFF.md`](HANDOFF.md) §4: one continuous surface, steel-tube hero pipe, minimal clutter.
 - Use the exact UI labels from [`NAMING_RULES.md`](NAMING_RULES.md) and [`GLOSSARY.md`](GLOSSARY.md).
-- Do not implement design-direction ideas from `DESIGN_SYSTEM.md` unless a task specifically asks for visual work.
+- Do not implement speculative design-direction ideas unless a task specifically asks for visual work.
 
 ## File organization rules
 

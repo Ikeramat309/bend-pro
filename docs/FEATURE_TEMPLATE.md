@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-Use this structure for future calculator modules. Build new calculators only when the [roadmap](ROADMAP.md) phase calls for them, and follow [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md).
+Use this structure for future calculator modules. Build new calculators only when [`HANDOFF.md`](HANDOFF.md) says the Definition of Done is met and they're explicitly scoped, and follow [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md).
 
 ```text
 src/features/bend-example/

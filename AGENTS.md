@@ -2,6 +2,8 @@
 
 This is the master onboarding document for every AI coding agent working in this repository. Read it before touching anything.
 
+> **Current work, plan, locked decisions, and the UI design system live in [`docs/HANDOFF.md`](docs/HANDOFF.md). Read that first.** This file holds the permanent rules.
+
 ## What Bend Pro is
 
 Bend Pro is a **mobile-first EMT conduit bending app** for electricians, apprentices, and field workers. It is built with **Expo, React Native, and TypeScript**.
@@ -14,9 +16,9 @@ It is **not** a generic calculator app. It is a field tool. People will mark and
 
 ## Current phase
 
-**Phase 5.9 complete (calculator UI polish).** Phases 1–5 delivered the shared workspace, hub UI, imperial length sheet, guide mode, and bender database. Phases 5.6–5.9 tightened layout, diagram visibility, tooling, and field-readiness. **Phase 6 — future calculators — is not started** unless explicitly scoped.
+Six EMT calculators ship; math is desk-validated; the app is in a **UI redesign** (continuous-surface, light/dark, steel-tube horizontal diagrams) heading toward field beta. **No new calculators** until the [Definition of Done](docs/HANDOFF.md) is met.
 
-See [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), [`docs/ROADMAP.md`](docs/ROADMAP.md), [`docs/PHASE_5_9_POLISH.md`](docs/PHASE_5_9_POLISH.md), and [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md).
+See [`docs/HANDOFF.md`](docs/HANDOFF.md) (plan + design system), [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), and [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md).
 
 ## Read these docs first
 
@@ -27,7 +29,7 @@ In this order:
 3. `docs/CURRENT_STATE.md` — what exists, what works, what's incomplete
 4. `docs/AI_AGENT_WORKFLOW.md` — **required rules for editing code** (before-edit checklist, safety rules, report format)
 5. `docs/GLOSSARY.md` — required terminology
-6. Then, as the task demands: `docs/ROADMAP.md`, `docs/KNOWN_ISSUES.md`, `docs/TRUST_MODEL.md`, `docs/ARCHITECTURE_GUARDRAILS.md`, `docs/UI_WORKSPACE_LAYOUT.md`, `docs/CALCULATOR_RULES.md`, `docs/DIAGRAM_SYSTEM.md`, `docs/PROJECT_MAP.md`, `docs/APP_ARCHITECTURE.md`, `docs/DESIGN_SYSTEM.md`, `docs/NAMING_RULES.md`
+6. Then, as the task demands: `docs/KNOWN_ISSUES.md`, `docs/TRUST_MODEL.md`, `docs/ARCHITECTURE_GUARDRAILS.md`, `docs/CALCULATOR_RULES.md`, `docs/DIAGRAM_SYSTEM.md`, `docs/PROJECT_MAP.md`, `docs/APP_ARCHITECTURE.md`, `docs/NAMING_RULES.md` (UI design direction: `docs/HANDOFF.md` §4)
 
 ## Core rules (non-negotiable)
 

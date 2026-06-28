@@ -1,8 +1,12 @@
 # Bend Pro Current State
 
-Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
+Part of the [documentation index](README.md). **For current work and the full plan, read [`HANDOFF.md`](HANDOFF.md) first.**
 
-Honest snapshot of where the app stands. **Phases 1–5 complete; Phases 5.6–5.9 delivered usability, diagram recovery, cleanup, and final calculator UI polish.** Six calculators ship on the shared workspace shell. See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), [`ROADMAP.md`](ROADMAP.md), [`PHASE_5_9_POLISH.md`](PHASE_5_9_POLISH.md), and [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md).
+Honest snapshot of where the app stands. Six calculators ship on the shared workspace shell; the calculator math is desk-validated and the app is in a **UI redesign** (continuous-surface, light/dark, steel-tube diagrams) heading toward field beta. See [`HANDOFF.md`](HANDOFF.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), and [`TRUST_MODEL.md`](TRUST_MODEL.md).
+
+## UI redesign status
+
+The app is mid-redesign toward the locked direction in [`HANDOFF.md` §4](HANDOFF.md): one continuous surface (no cards), horizontal steel-**tube** pipe drawn naturally per calculator, orange marks, green bend zones, one blue accent, a big centered hero result, quiet borderless inputs, and **dark + light** themes (Settings → Appearance). Theme foundation, hub theming, theme-aware diagrams, continuous-surface shell, and the hero result have landed; remaining work is the final polish pass (overlaps, sheet theming, light-mode contrast) — see [`HANDOFF.md` §5](HANDOFF.md).
 
 ## What currently exists
 
@@ -76,7 +80,7 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 - Hub screens: `src/screens/` (Home, Bends, Settings)
 - Persisted setup: `src/core/settings/`
 - Theme: `src/theme/`
-- **`npm run check`** — typecheck + lint + import-cycle scan + tests; **396 tests** passing (38 suites)
+- **`npm run check`** — typecheck + lint + import-cycle scan + tests; ~**401 tests** passing (38 suites) — verify on pickup
 
 ### Field validation prep (Phase 6 docs)
 
@@ -106,6 +110,6 @@ See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full list. Summary:
 
 - **Terminology** — [`GLOSSARY.md`](GLOSSARY.md), [`NAMING_RULES.md`](NAMING_RULES.md)
 - **Math changes** — [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md); engines only
-- **Layout changes** — keep pipe workspace hero large; respect floating result limits in [`UI_WORKSPACE_LAYOUT.md`](UI_WORKSPACE_LAYOUT.md)
+- **Layout changes** — keep the pipe workspace the hero; follow the locked UI direction in [`HANDOFF.md`](HANDOFF.md) §4
 
-See [`ROADMAP.md`](ROADMAP.md) and [`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md).
+See [`HANDOFF.md`](HANDOFF.md) and [`APP_ARCHITECTURE.md`](APP_ARCHITECTURE.md).

@@ -181,7 +181,7 @@ export function getDiagramTheme(scheme: 'light' | 'dark'): DiagramTheme {
 export const diagramMetrics = {
   width: 360,
   height: 300,
-  pipeStroke: 11,
+  pipeStroke: 19,
   markStroke: 2.5,
   dimensionStroke: 1,
   extensionStroke: 0.75,

@@ -1,7 +1,58 @@
 import { colors } from '@/theme';
+import { lightColors } from '@/theme/palette';
 
-/** Shared SVG colors and stroke sizes for pipe diagrams. */
-export const diagramTheme = {
+export type DiagramTheme = {
+  canvas: string;
+  border: string;
+  pipe: string;
+  pipeCore: string;
+  pipeSheen: string;
+  pipeHighlight: string;
+  pipeShadow: string;
+  pipeGradientStops: readonly { offset: number; color: string }[];
+  mark: string;
+  markGlow: string;
+  deduct: string;
+  deductStroke: string;
+  bendZone: {
+    fill: string;
+    stroke: string;
+  };
+  dimension: string;
+  dimensionStrong: string;
+  label: string;
+  mutedLabel: string;
+  calloutFill: string;
+  calloutStroke: string;
+  ghostMessage: string;
+  arrowFill: string;
+  flowArrow: string;
+  obstruction: {
+    fill: string;
+    stroke: string;
+  };
+  bendBadge: {
+    fill: string;
+    stroke: string;
+    text: string;
+    primaryFill: string;
+    primaryStroke: string;
+    primaryText: string;
+  };
+  ghost: {
+    pipeShadowOpacity: number;
+    markOpacity: number;
+    dimensionOpacity: number;
+    obstructionFill: string;
+    obstructionStroke: string;
+    calloutFill: string;
+    calloutStroke: string;
+    calloutInvalidStroke: string;
+  };
+};
+
+/** Dark canvas palette — unchanged from the original diagramTheme. */
+export const darkDiagram: DiagramTheme = {
   canvas: '#080E16',
   border: 'rgba(38, 49, 66, 0.85)',
   pipe: '#5BA8C9',
@@ -62,7 +113,70 @@ export const diagramTheme = {
     calloutStroke: 'rgba(38, 49, 66, 0.75)',
     calloutInvalidStroke: 'rgba(255, 122, 47, 0.45)',
   },
-} as const;
+};
+
+/** Light canvas palette — same keys, tuned for a white diagram well. */
+export const lightDiagram: DiagramTheme = {
+  canvas: lightColors.screen,
+  border: 'rgba(217, 222, 230, 0.95)',
+  pipe: '#3D8BB5',
+  pipeCore: '#1D5A75',
+  pipeSheen: '#D4EEF8',
+  pipeHighlight: 'rgba(14, 17, 22, 0.08)',
+  pipeShadow: 'rgba(43, 127, 168, 0.14)',
+  pipeGradientStops: [
+    { offset: 0, color: '#1D5A75' },
+    { offset: 0.3, color: '#D4EEF8' },
+    { offset: 0.55, color: '#4A9CC4' },
+    { offset: 1, color: '#256C8C' },
+  ],
+  mark: lightColors.mark,
+  markGlow: 'rgba(232, 89, 12, 0.22)',
+  deduct: 'rgba(232, 89, 12, 0.1)',
+  deductStroke: 'rgba(232, 89, 12, 0.55)',
+  bendZone: {
+    fill: 'rgba(22, 163, 74, 0.16)',
+    stroke: 'rgba(22, 163, 74, 0.62)',
+  },
+  dimension: 'rgba(91, 100, 112, 0.55)',
+  dimensionStrong: 'rgba(14, 17, 22, 0.75)',
+  label: lightColors.text,
+  mutedLabel: lightColors.muted,
+  calloutFill: 'rgba(255, 255, 255, 0.94)',
+  calloutStroke: 'rgba(217, 222, 230, 0.95)',
+  ghostMessage: lightColors.muted,
+  arrowFill: lightColors.muted,
+  flowArrow: lightColors.primary,
+  obstruction: {
+    fill: 'rgba(91, 100, 112, 0.12)',
+    stroke: 'rgba(91, 100, 112, 0.48)',
+  },
+  bendBadge: {
+    fill: lightColors.surface2,
+    stroke: lightColors.border,
+    text: lightColors.text,
+    primaryFill: lightColors.primaryMuted,
+    primaryStroke: lightColors.primaryBorder,
+    primaryText: lightColors.primary,
+  },
+  ghost: {
+    pipeShadowOpacity: 0.55,
+    markOpacity: 0.38,
+    dimensionOpacity: 0.34,
+    obstructionFill: 'rgba(91, 100, 112, 0.08)',
+    obstructionStroke: 'rgba(91, 100, 112, 0.28)',
+    calloutFill: 'rgba(255, 255, 255, 0.88)',
+    calloutStroke: 'rgba(217, 222, 230, 0.85)',
+    calloutInvalidStroke: 'rgba(232, 89, 12, 0.45)',
+  },
+};
+
+/** Backward-compatible alias — static dark palette for unmigrated call sites. */
+export const diagramTheme = darkDiagram;
+
+export function getDiagramTheme(scheme: 'light' | 'dark'): DiagramTheme {
+  return scheme === 'light' ? lightDiagram : darkDiagram;
+}
 
 export const diagramMetrics = {
   width: 360,

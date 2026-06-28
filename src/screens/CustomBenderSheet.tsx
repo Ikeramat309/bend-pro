@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -13,7 +13,7 @@ import {
   SheetDangerAction,
   SheetFormGroup,
 } from '@/shared/ui';
-import { uiTheme } from '@/theme';
+import { uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 export type CustomBenderSheetProps = {
   visible: boolean;
@@ -48,6 +48,8 @@ function CustomBenderSheetOpen({
   onDelete,
   saveError,
 }: CustomBenderSheetProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [draft, setDraft] = useState<CustomBenderProfileDraft>(() =>
     profile ? draftFromCustomProfile(profile) : emptyDraft(),
   );
@@ -134,11 +136,16 @@ function emptyDraft(): CustomBenderProfileDraft {
   return { name: '', deductHalf: '', deductThreeQuarter: '', deductOne: '' };
 }
 
-const styles = StyleSheet.create({
-  intro: uiTheme.sheet.intro,
-  deductRow: {
-    flexDirection: 'row',
-    gap: 12,
-    alignItems: 'stretch',
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    intro: {
+      ...uiTheme.sheet.intro,
+      color: c.muted,
+    },
+    deductRow: {
+      flexDirection: 'row',
+      gap: 12,
+      alignItems: 'stretch',
+    },
+  });
+}

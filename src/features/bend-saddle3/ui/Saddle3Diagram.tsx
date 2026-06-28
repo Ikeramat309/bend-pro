@@ -15,7 +15,7 @@ import {
   DimensionLine,
   MarkLine,
   PipeSegment,
-  diagramTheme,
+  useDiagramTheme,
 } from '@/shared/diagrams';
 import type { Saddle3DiagramData } from '../engine/saddle3.types';
 import { SADDLE3_CONFIG } from '../saddle3.config';
@@ -56,6 +56,7 @@ export function Saddle3Diagram({ data, isEmpty = false, isInvalid = false }: Sad
 }
 
 function Saddle3GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
+  const theme = useDiagramTheme();
   const geo = buildSaddle3DiagramGeometry(2, 5.23, 22.5);
 
   return (
@@ -63,11 +64,11 @@ function Saddle3GhostDiagram({ message, invalid }: { message: string; invalid?: 
       <DiagramDefs gradientId="saddle3GhostGradient" ghost />
       <DiagramCanvas />
       <ObstructionCircle centerX={CENTER_X} baselineY={BASE_Y} radius={geo.obsRadius} ghost />
-      <PipeSegment d={geo.pipePath} variant="shadow" opacity={diagramTheme.ghost.pipeShadowOpacity} />
+      <PipeSegment d={geo.pipePath} variant="shadow" opacity={theme.ghost.pipeShadowOpacity} />
       <PipeSegment d={geo.pipePath} variant="pipe" gradientId="saddle3GhostGradient" />
-      <MarkLine x1={geo.x1} y1={BASE_Y - 11} x2={geo.x1} y2={BASE_Y + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
-      <MarkLine x1={CENTER_X} y1={geo.peakY - 12} x2={CENTER_X} y2={geo.peakY + 7} opacity={diagramTheme.ghost.markOpacity} />
-      <MarkLine x1={geo.x2} y1={BASE_Y - 11} x2={geo.x2} y2={BASE_Y + 11} opacity={diagramTheme.ghost.dimensionOpacity} />
+      <MarkLine x1={geo.x1} y1={BASE_Y - 11} x2={geo.x1} y2={BASE_Y + 11} opacity={theme.ghost.dimensionOpacity} />
+      <MarkLine x1={CENTER_X} y1={geo.peakY - 12} x2={CENTER_X} y2={geo.peakY + 7} opacity={theme.ghost.markOpacity} />
+      <MarkLine x1={geo.x2} y1={BASE_Y - 11} x2={geo.x2} y2={BASE_Y + 11} opacity={theme.ghost.dimensionOpacity} />
       <DiagramGhostMessage text={message} invalid={invalid} />
     </DiagramSvg>
   );
@@ -86,9 +87,10 @@ function ObstructionCircle({
   radius,
   ghost = false,
 }: ObstructionCircleProps) {
+  const theme = useDiagramTheme();
   const cy = baselineY - radius;
-  const fill = ghost ? diagramTheme.ghost.obstructionFill : diagramTheme.obstruction.fill;
-  const stroke = ghost ? diagramTheme.ghost.obstructionStroke : diagramTheme.obstruction.stroke;
+  const fill = ghost ? theme.ghost.obstructionFill : theme.obstruction.fill;
+  const stroke = ghost ? theme.ghost.obstructionStroke : theme.obstruction.stroke;
 
   return (
     <Circle cx={centerX} cy={cy} r={radius} fill={fill} stroke={stroke} strokeWidth={1.5} />

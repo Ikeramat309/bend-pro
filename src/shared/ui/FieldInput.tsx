@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View, type TextInputProps } from 'react-native';
 
 import { LengthInputSheet } from './LengthInputSheet';
-import { colors, spacing, uiTheme } from '@/theme';
+import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 export type FieldInputVariant = 'default' | 'compact' | 'picker';
 export type LengthInputMode = 'decimal' | 'imperial';
@@ -22,10 +22,10 @@ export type FieldInputProps = {
   inputProps?: Omit<TextInputProps, 'value' | 'onChangeText' | 'placeholder'>;
 };
 
-function shellBorder(error?: string, focused?: boolean) {
-  if (error) return colors.error;
-  if (focused) return uiTheme.field.shell.focusBorderColor;
-  return uiTheme.field.shell.borderColor;
+function shellBorder(c: ThemePalette, error?: string, focused?: boolean) {
+  if (error) return c.error;
+  if (focused) return c.primaryBorder;
+  return c.border;
 }
 
 function resolveKeyboardType(
@@ -36,14 +36,18 @@ function resolveKeyboardType(
   return inputProps?.keyboardType ?? 'decimal-pad';
 }
 
+type FieldStyles = ReturnType<typeof makeStyles>;
+
 function ImperialValueText({
   value,
   placeholder,
   compact,
+  styles,
 }: {
   value: string;
   placeholder: string;
   compact?: boolean;
+  styles: FieldStyles;
 }) {
   const isEmpty = value.trim() === '';
   return (
@@ -72,15 +76,15 @@ export function FieldInput({
   lengthInput,
   inputProps,
 }: FieldInputProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const inputRef = useRef<TextInput>(null);
   const [focused, setFocused] = useState(false);
   const [lengthSheetVisible, setLengthSheetVisible] = useState(false);
   const useLengthSheet = lengthInput === 'imperial';
-  const borderColor = shellBorder(error, focused || lengthSheetVisible);
+  const borderColor = shellBorder(colors, error, focused || lengthSheetVisible);
   const shellBackground =
-    focused || lengthSheetVisible
-      ? uiTheme.field.shell.focusBackground
-      : uiTheme.field.shell.backgroundColor;
+    focused || lengthSheetVisible ? colors.surface : colors.surface2;
   const keyboardType = resolveKeyboardType(lengthInput, inputProps);
 
   const sharedInputProps: TextInputProps = {
@@ -167,7 +171,7 @@ export function FieldInput({
               {helperText ? <Text style={styles.helperText}>{helperText}</Text> : null}
             </View>
             <View style={styles.compactValueRow}>
-              <ImperialValueText value={value} placeholder={placeholder} compact />
+              <ImperialValueText value={value} placeholder={placeholder} compact styles={styles} />
               {unit ? <Text style={styles.unitCompact}>{unit}</Text> : null}
             </View>
           </Pressable>
@@ -212,7 +216,7 @@ export function FieldInput({
           ]}
           accessibilityRole="button"
           accessibilityLabel={`${label}, edit length`}>
-          <ImperialValueText value={value} placeholder={placeholder} />
+          <ImperialValueText value={value} placeholder={placeholder} styles={styles} />
           {unit ? <Text style={styles.unitDefault}>{unit}</Text> : null}
         </Pressable>
         {lengthSheet}
@@ -234,136 +238,138 @@ export function FieldInput({
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: {
-    gap: spacing.xs,
-  },
-  wrapCompact: {
-    flex: 1,
-    minWidth: 0,
-    gap: spacing.xs,
-  },
-  fieldShell: {
-    borderWidth: 1,
-    borderRadius: uiTheme.field.shell.borderRadius,
-  },
-  fieldShellDefault: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    minHeight: uiTheme.field.defaultMinHeight,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    gap: spacing.sm,
-  },
-  fieldShellCompact: {
-    minHeight: uiTheme.field.compactMinHeight,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 10,
-    justifyContent: 'space-between',
-    gap: 3,
-  },
-  fieldShellPressed: {
-    opacity: 0.88,
-  },
-  fieldLabel: uiTheme.field.label,
-  compactLabelBlock: {
-    gap: 1,
-  },
-  helperText: {
-    fontSize: 11,
-    lineHeight: 14,
-    color: colors.muted,
-    textTransform: 'none',
-    letterSpacing: 0,
-    fontWeight: '500',
-  },
-  compactValueRow: {
-    flex: 1,
-    minWidth: 0,
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    justifyContent: 'flex-end',
-    gap: spacing.xs,
-  },
-  inputDefault: {
-    flex: 1,
-    minWidth: 0,
-    fontSize: uiTheme.field.defaultValueSize,
-    lineHeight: 32,
-    fontWeight: '600',
-    color: colors.text,
-    paddingVertical: 0,
-    paddingHorizontal: 0,
-    fontVariant: ['tabular-nums'],
-  },
-  inputDefaultDisplay: {
-    flex: 1,
-    minWidth: 0,
-    fontSize: uiTheme.field.defaultValueSize,
-    lineHeight: 32,
-    fontWeight: '600',
-    color: colors.text,
-    fontVariant: ['tabular-nums'],
-  },
-  inputCompact: {
-    flex: 1,
-    minWidth: 48,
-    fontSize: uiTheme.field.compactValueSize,
-    lineHeight: 28,
-    fontWeight: '600',
-    color: colors.text,
-    paddingVertical: 0,
-    paddingHorizontal: 0,
-    textAlign: 'right',
-    fontVariant: ['tabular-nums'],
-  },
-  inputCompactDisplay: {
-    flex: 1,
-    minWidth: 48,
-    fontSize: uiTheme.field.compactValueSize,
-    lineHeight: 28,
-    fontWeight: '600',
-    color: colors.text,
-    textAlign: 'right',
-    fontVariant: ['tabular-nums'],
-  },
-  placeholderDisplay: {
-    color: colors.muted,
-  },
-  unitDefault: {
-    fontSize: 18,
-    lineHeight: 22,
-    fontWeight: '600',
-    color: colors.primary,
-    flexShrink: 0,
-  },
-  unitCompact: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: '600',
-    color: colors.primary,
-    flexShrink: 0,
-  },
-  pickerValue: {
-    flex: 1,
-    minWidth: 0,
-    fontSize: uiTheme.field.compactValueSize,
-    lineHeight: 28,
-    fontWeight: '600',
-    color: colors.text,
-    textAlign: 'right',
-    fontVariant: ['tabular-nums'],
-  },
-  pickerChevron: {
-    color: colors.primary,
-    fontSize: 22,
-    lineHeight: 24,
-    fontWeight: '600',
-    flexShrink: 0,
-  },
-  error: {
-    fontSize: 11,
-    lineHeight: 14,
-    color: colors.error,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    wrap: {
+      gap: spacing.xs,
+    },
+    wrapCompact: {
+      flex: 1,
+      minWidth: 0,
+      gap: spacing.xs,
+    },
+    fieldShell: {
+      borderWidth: 1,
+      borderRadius: uiTheme.field.shell.borderRadius,
+    },
+    fieldShellDefault: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      minHeight: uiTheme.field.defaultMinHeight,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      gap: spacing.sm,
+    },
+    fieldShellCompact: {
+      minHeight: uiTheme.field.compactMinHeight,
+      paddingHorizontal: spacing.md,
+      paddingVertical: 10,
+      justifyContent: 'space-between',
+      gap: 3,
+    },
+    fieldShellPressed: {
+      opacity: 0.88,
+    },
+    fieldLabel: { ...uiTheme.field.label, color: c.muted },
+    compactLabelBlock: {
+      gap: 1,
+    },
+    helperText: {
+      fontSize: 11,
+      lineHeight: 14,
+      color: c.muted,
+      textTransform: 'none',
+      letterSpacing: 0,
+      fontWeight: '500',
+    },
+    compactValueRow: {
+      flex: 1,
+      minWidth: 0,
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      justifyContent: 'flex-end',
+      gap: spacing.xs,
+    },
+    inputDefault: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: uiTheme.field.defaultValueSize,
+      lineHeight: 32,
+      fontWeight: '600',
+      color: c.text,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
+      fontVariant: ['tabular-nums'],
+    },
+    inputDefaultDisplay: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: uiTheme.field.defaultValueSize,
+      lineHeight: 32,
+      fontWeight: '600',
+      color: c.text,
+      fontVariant: ['tabular-nums'],
+    },
+    inputCompact: {
+      flex: 1,
+      minWidth: 48,
+      fontSize: uiTheme.field.compactValueSize,
+      lineHeight: 28,
+      fontWeight: '600',
+      color: c.text,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
+      textAlign: 'right',
+      fontVariant: ['tabular-nums'],
+    },
+    inputCompactDisplay: {
+      flex: 1,
+      minWidth: 48,
+      fontSize: uiTheme.field.compactValueSize,
+      lineHeight: 28,
+      fontWeight: '600',
+      color: c.text,
+      textAlign: 'right',
+      fontVariant: ['tabular-nums'],
+    },
+    placeholderDisplay: {
+      color: c.muted,
+    },
+    unitDefault: {
+      fontSize: 18,
+      lineHeight: 22,
+      fontWeight: '600',
+      color: c.primary,
+      flexShrink: 0,
+    },
+    unitCompact: {
+      fontSize: 16,
+      lineHeight: 20,
+      fontWeight: '600',
+      color: c.primary,
+      flexShrink: 0,
+    },
+    pickerValue: {
+      flex: 1,
+      minWidth: 0,
+      fontSize: uiTheme.field.compactValueSize,
+      lineHeight: 28,
+      fontWeight: '600',
+      color: c.text,
+      textAlign: 'right',
+      fontVariant: ['tabular-nums'],
+    },
+    pickerChevron: {
+      color: c.primary,
+      fontSize: 22,
+      lineHeight: 24,
+      fontWeight: '600',
+      flexShrink: 0,
+    },
+    error: {
+      fontSize: 11,
+      lineHeight: 14,
+      color: c.error,
+    },
+  });
+}

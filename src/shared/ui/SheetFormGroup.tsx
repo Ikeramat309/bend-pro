@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { spacing, uiTheme } from '@/theme';
+import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 export type SheetFormGroupProps = {
   title: string;
@@ -11,6 +12,9 @@ export type SheetFormGroupProps = {
 
 /** Grouped fields inside a bottom sheet — title, optional hint, stacked inputs. */
 export function SheetFormGroup({ title, hint, children }: SheetFormGroupProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <View style={styles.group}>
       <Text style={styles.title}>{title}</Text>
@@ -20,14 +24,22 @@ export function SheetFormGroup({ title, hint, children }: SheetFormGroupProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  group: {
-    gap: spacing.xs,
-  },
-  title: uiTheme.sheet.formGroupTitle,
-  hint: uiTheme.sheet.formGroupHint,
-  fields: {
-    gap: spacing.sm,
-    marginTop: spacing.xs,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    group: {
+      gap: spacing.xs,
+    },
+    title: {
+      ...uiTheme.sheet.formGroupTitle,
+      color: c.text,
+    },
+    hint: {
+      ...uiTheme.sheet.formGroupHint,
+      color: c.muted,
+    },
+    fields: {
+      gap: spacing.sm,
+      marginTop: spacing.xs,
+    },
+  });
+}

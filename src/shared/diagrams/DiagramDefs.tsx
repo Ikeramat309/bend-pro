@@ -1,6 +1,7 @@
 import { Defs, LinearGradient, Marker, Path, Stop } from 'react-native-svg';
 
-import { diagramMetrics, diagramTheme } from './diagramTheme';
+import { diagramMetrics } from './diagramTheme';
+import { useDiagramTheme } from './useDiagramTheme';
 
 export type DiagramDefsProps = {
   gradientId: string;
@@ -10,6 +11,7 @@ export type DiagramDefsProps = {
 
 /** Shared pipe gradient and dimension arrow markers. */
 export function DiagramDefs({ gradientId, arrowId = 'diagramArrow', ghost = false }: DiagramDefsProps) {
+  const theme = useDiagramTheme();
   const startOpacity = ghost ? diagramMetrics.ghostPipeOpacity : 1;
   const endOpacity = ghost ? diagramMetrics.ghostPipeOpacity * 0.85 : 1;
 
@@ -20,7 +22,7 @@ export function DiagramDefs({ gradientId, arrowId = 'diagramArrow', ghost = fals
   return (
     <Defs>
       <LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-        {diagramTheme.pipeGradientStops.map((stop) => (
+        {theme.pipeGradientStops.map((stop) => (
           <Stop
             key={stop.offset}
             offset={String(stop.offset)}
@@ -38,7 +40,7 @@ export function DiagramDefs({ gradientId, arrowId = 'diagramArrow', ghost = fals
           refY={3}
           orient="auto"
           markerUnits="strokeWidth">
-          <Path d="M 0 0 L 6 3 L 0 6 z" fill={diagramTheme.arrowFill} />
+          <Path d="M 0 0 L 6 3 L 0 6 z" fill={theme.arrowFill} />
         </Marker>
       ) : null}
     </Defs>

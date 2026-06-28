@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing, typography, uiTheme } from '@/theme';
+import { spacing, typography, uiTheme, useTheme, type ThemePalette } from '@/theme';
 import {
   adjustLengthInputByInches,
   LENGTH_STEP_DELTAS_INCHES,
@@ -47,6 +47,8 @@ export function LengthInputSheet({
   onCancel,
   bounds,
 }: LengthInputSheetProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [editDraft, setEditDraft] = useState<string | null>(null);
   const draft = editDraft ?? value;
 
@@ -145,6 +147,8 @@ type TapeRulerControlProps = {
 
 /** Simple snap ruler — tap positions along the bar adjust in 1/16" steps. */
 function TapeRulerControl({ inches, minInches, maxInches, onChange }: TapeRulerControlProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [trackWidth, setTrackWidth] = useState(0);
   const span = maxInches - minInches;
   const ratio = span > 0 ? (inches - minInches) / span : 0;
@@ -181,102 +185,107 @@ function TapeRulerControl({ inches, minInches, maxInches, onChange }: TapeRulerC
   );
 }
 
-const styles = StyleSheet.create({
-  body: {
-    gap: sheetTheme.sectionGap,
-  },
-  sectionLabel: sheetTheme.sectionLabel,
-  valueRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    paddingVertical: spacing.sm,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface2,
-  },
-  value: {
-    fontSize: sheetTheme.valueSize,
-    lineHeight: 30,
-    fontWeight: '700',
-    color: colors.text,
-    fontVariant: ['tabular-nums'],
-  },
-  valuePlaceholder: {
-    color: colors.muted,
-  },
-  unit: {
-    ...typography.subtitle,
-    fontSize: 17,
-    lineHeight: 21,
-    fontWeight: '600',
-    color: colors.primary,
-  },
-  stepSection: {
-    gap: spacing.xs,
-  },
-  stepRow: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  stepButton: {
-    flex: 1,
-    minHeight: sheetTheme.stepMinHeight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface2,
-  },
-  stepPressed: {
-    opacity: 0.88,
-  },
-  stepButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.text,
-    fontVariant: ['tabular-nums'],
-  },
-  rulerSection: {
-    gap: 2,
-  },
-  rulerHint: {
-    fontSize: 11,
-    lineHeight: 14,
-    color: colors.muted,
-  },
-  rulerTrack: {
-    position: 'relative',
-    height: sheetTheme.rulerHeight,
-    justifyContent: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface2,
-    overflow: 'hidden',
-  },
-  rulerTicks: {
-    ...StyleSheet.absoluteFill,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.sm,
-    alignItems: 'center',
-  },
-  rulerTick: {
-    width: 1,
-    height: 12,
-    backgroundColor: colors.border,
-  },
-  rulerThumb: {
-    position: 'absolute',
-    top: 5,
-    width: 4,
-    height: sheetTheme.rulerHeight - 10,
-    marginLeft: -2,
-    borderRadius: 2,
-    backgroundColor: colors.primary,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    body: {
+      gap: sheetTheme.sectionGap,
+    },
+    sectionLabel: {
+      ...sheetTheme.sectionLabel,
+      color: c.muted,
+    },
+    valueRow: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      justifyContent: 'center',
+      gap: spacing.sm,
+      paddingVertical: spacing.sm,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface2,
+    },
+    value: {
+      fontSize: sheetTheme.valueSize,
+      lineHeight: 30,
+      fontWeight: '700',
+      color: c.text,
+      fontVariant: ['tabular-nums'],
+    },
+    valuePlaceholder: {
+      color: c.muted,
+    },
+    unit: {
+      ...typography.subtitle,
+      fontSize: 17,
+      lineHeight: 21,
+      fontWeight: '600',
+      color: c.primary,
+    },
+    stepSection: {
+      gap: spacing.xs,
+    },
+    stepRow: {
+      flexDirection: 'row',
+      gap: spacing.xs,
+    },
+    stepButton: {
+      flex: 1,
+      minHeight: sheetTheme.stepMinHeight,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface2,
+    },
+    stepPressed: {
+      opacity: 0.88,
+    },
+    stepButtonText: {
+      fontSize: 12,
+      fontWeight: '600',
+      color: c.text,
+      fontVariant: ['tabular-nums'],
+    },
+    rulerSection: {
+      gap: 2,
+    },
+    rulerHint: {
+      fontSize: 11,
+      lineHeight: 14,
+      color: c.muted,
+    },
+    rulerTrack: {
+      position: 'relative',
+      height: sheetTheme.rulerHeight,
+      justifyContent: 'center',
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface2,
+      overflow: 'hidden',
+    },
+    rulerTicks: {
+      ...StyleSheet.absoluteFill,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: spacing.sm,
+      alignItems: 'center',
+    },
+    rulerTick: {
+      width: 1,
+      height: 12,
+      backgroundColor: c.border,
+    },
+    rulerThumb: {
+      position: 'absolute',
+      top: 5,
+      width: 4,
+      height: sheetTheme.rulerHeight - 10,
+      marginLeft: -2,
+      borderRadius: 2,
+      backgroundColor: c.primary,
+    },
+  });
+}

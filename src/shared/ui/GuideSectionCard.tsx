@@ -1,13 +1,17 @@
+import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { GuideSection } from '@/data/guide';
-import { colors, spacing, uiTheme } from '@/theme';
+import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 export type GuideSectionCardProps = {
   section: GuideSection;
 };
 
 export function GuideSectionCard({ section }: GuideSectionCardProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <View style={styles.card}>
       {section.title ? <Text style={styles.title}>{section.title}</Text> : null}
@@ -30,45 +34,47 @@ export function GuideSectionCard({ section }: GuideSectionCardProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    gap: spacing.sm,
-    borderRadius: uiTheme.hub.settingsCard.borderRadius,
-    borderWidth: 1,
-    borderColor: uiTheme.hub.settingsCard.borderColor,
-    backgroundColor: uiTheme.hub.settingsCard.backgroundColor,
-    padding: uiTheme.hub.settingsCard.padding,
-  },
-  title: {
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  lineRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: spacing.sm,
-  },
-  marker: {
-    width: 18,
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '700',
-    color: colors.primary,
-    flexShrink: 0,
-  },
-  line: {
-    flex: 1,
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.muted,
-  },
-  singleLine: {
-    flex: 1,
-  },
-  mono: {
-    fontFamily: 'monospace',
-    color: colors.text,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    card: {
+      gap: spacing.sm,
+      borderRadius: uiTheme.hub.settingsCard.borderRadius,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+      padding: uiTheme.hub.settingsCard.padding,
+    },
+    title: {
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '700',
+      color: c.text,
+    },
+    lineRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: spacing.sm,
+    },
+    marker: {
+      width: 18,
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '700',
+      color: c.primary,
+      flexShrink: 0,
+    },
+    line: {
+      flex: 1,
+      fontSize: 14,
+      lineHeight: 20,
+      color: c.muted,
+    },
+    singleLine: {
+      flex: 1,
+    },
+    mono: {
+      fontFamily: 'monospace',
+      color: c.text,
+    },
+  });
+}

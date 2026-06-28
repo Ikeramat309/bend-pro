@@ -16,14 +16,13 @@ import {
   DimensionLine,
   MarkLine,
   PipeSegment,
-  diagramTheme,
+  useDiagramTheme,
 } from '@/shared/diagrams';
 import type { RollingDiagramData } from '../engine/rolling.types';
 import { ROLLING_CONFIG } from '../rolling.config';
 import { rollingCopy } from '../rolling.copy';
 
 const GHOST_PIPE = 'M 24 230 H 88 L 192 126 H 336';
-const { ghost } = diagramTheme;
 
 const START_X = 24;
 const END_X = 336;
@@ -69,6 +68,8 @@ export function RollingDiagram({ data, isEmpty = false, isInvalid = false }: Rol
 }
 
 function RollingGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
+  const { ghost } = useDiagramTheme();
+
   return (
     <DiagramSvg viewBox={ROLLING_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="rollingGhostGradient" ghost />
@@ -84,6 +85,7 @@ function RollingGhostDiagram({ message, invalid }: { message: string; invalid?: 
 }
 
 function RollInsetGhost() {
+  const theme = useDiagramTheme();
   const triV = 34;
   const triH = 22;
   const top = { x: INSET_CORNER_X, y: INSET_CORNER_Y - triV };
@@ -104,7 +106,7 @@ function RollInsetGhost() {
       <Path
         d={`M ${INSET_CORNER_X} ${INSET_CORNER_Y} L ${top.x} ${top.y} M ${INSET_CORNER_X} ${INSET_CORNER_Y} L ${rollEnd.x} ${rollEnd.y}`}
         fill="none"
-        stroke={diagramTheme.dimension}
+        stroke={theme.dimension}
         strokeWidth={1.5}
         strokeLinecap="round"
         opacity={0.35}
@@ -127,6 +129,7 @@ type RollInsetProps = {
 
 /** Isometric L — height up, roll tilting into depth — tucked in the top-right. */
 function RollInset({ offsetHeightInches, advanceInches, heightLabel, rollLabel }: RollInsetProps) {
+  const theme = useDiagramTheme();
   const maxLeg = Math.max(offsetHeightInches, advanceInches);
   const triV = INSET_MAX_LEG * (offsetHeightInches / maxLeg);
   const triH = INSET_MAX_LEG * (advanceInches / maxLeg);
@@ -159,8 +162,8 @@ function RollInset({ offsetHeightInches, advanceInches, heightLabel, rollLabel }
           cx={cx}
           cy={cy}
           r={5}
-          fill={diagramTheme.pipe}
-          stroke={diagramTheme.pipeHighlight}
+          fill={theme.pipe}
+          stroke={theme.pipeHighlight}
           strokeWidth={1}
           opacity={0.9}
         />
@@ -171,7 +174,7 @@ function RollInset({ offsetHeightInches, advanceInches, heightLabel, rollLabel }
           y1={cy}
           x2={top.x}
           y2={top.y}
-          stroke={diagramTheme.pipe}
+          stroke={theme.pipe}
           strokeWidth={4}
           strokeLinecap="round"
           opacity={0.85}
@@ -206,20 +209,20 @@ function RollInset({ offsetHeightInches, advanceInches, heightLabel, rollLabel }
           y1={cy}
           x2={rollEnd.x}
           y2={rollEnd.y}
-          stroke={diagramTheme.pipe}
+          stroke={theme.pipe}
           strokeWidth={4}
           strokeLinecap="round"
           opacity={0.85}
         />
         <Path
           d={`M ${rollEnd.x - 6} ${rollEnd.y - 2} L ${rollEnd.x + 2} ${rollEnd.y + 4} L ${rollEnd.x - 2} ${rollEnd.y + 6} Z`}
-          fill={diagramTheme.dimension}
+          fill={theme.dimension}
           opacity={0.7}
         />
         <Path
           d={`M ${cx - 10} ${hMidY} A 14 14 0 0 1 ${rollMid.x - 6} ${rollMid.y - 4}`}
           fill="none"
-          stroke={diagramTheme.dimension}
+          stroke={theme.dimension}
           strokeWidth={1}
           strokeDasharray="3 2"
           opacity={0.55}
@@ -254,7 +257,7 @@ function RollInset({ offsetHeightInches, advanceInches, heightLabel, rollLabel }
         <Path
           d={`M ${cx + 7} ${cy} L ${cx + 7} ${cy - 7} L ${cx} ${cy - 7}`}
           fill="none"
-          stroke={diagramTheme.dimension}
+          stroke={theme.dimension}
           strokeWidth={0.75}
           opacity={0.75}
         />

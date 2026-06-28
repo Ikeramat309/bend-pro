@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
+import { useMemo } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, spacing, touchTarget, typography, uiTheme } from '@/theme';
+import { spacing, touchTarget, typography, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 export type SheetProps = {
   visible: boolean;
@@ -29,6 +30,8 @@ export function Sheet({
   onSecondaryPress,
 }: SheetProps) {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -67,85 +70,87 @@ export function Sheet({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: uiTheme.sheet.backdrop,
-  },
-  sheet: {
-    width: '100%',
-    maxWidth: uiTheme.layout.maxContentWidth,
-    alignSelf: 'center',
-    maxHeight: uiTheme.sheet.maxHeight,
-    borderTopLeftRadius: uiTheme.sheet.borderRadius,
-    borderTopRightRadius: uiTheme.sheet.borderRadius,
-    borderWidth: 1,
-    borderBottomWidth: 0,
-    borderColor: colors.border,
-    backgroundColor: colors.screen,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    gap: spacing.lg,
-  },
-  handle: {
-    width: 40,
-    height: 4,
-    alignSelf: 'center',
-    borderRadius: 999,
-    backgroundColor: uiTheme.sheet.handleColor,
-  },
-  header: {
-    gap: spacing.xs,
-  },
-  title: {
-    color: colors.text,
-    fontSize: 18,
-    fontWeight: '700',
-    lineHeight: 24,
-  },
-  subtitle: {
-    ...typography.subtitle,
-    color: colors.muted,
-    fontSize: 14,
-  },
-  content: {
-    gap: spacing.lg,
-    paddingBottom: spacing.xs,
-  },
-  actions: {
-    flexDirection: 'row',
-    gap: spacing.md,
-  },
-  secondaryButton: {
-    flex: 1,
-    minHeight: touchTarget - 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: uiTheme.chip.borderRadius,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: uiTheme.sheet.secondaryBackground,
-  },
-  primaryButton: {
-    flex: 1,
-    minHeight: touchTarget - 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: uiTheme.chip.borderRadius,
-    backgroundColor: uiTheme.sheet.primaryBackground,
-  },
-  buttonPressed: {
-    opacity: 0.88,
-  },
-  secondaryText: {
-    ...typography.chip,
-    color: colors.text,
-    fontWeight: '600',
-  },
-  primaryText: {
-    ...typography.chip,
-    color: colors.background,
-    fontWeight: '700',
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      backgroundColor: uiTheme.sheet.backdrop,
+    },
+    sheet: {
+      width: '100%',
+      maxWidth: uiTheme.layout.maxContentWidth,
+      alignSelf: 'center',
+      maxHeight: uiTheme.sheet.maxHeight,
+      borderTopLeftRadius: uiTheme.sheet.borderRadius,
+      borderTopRightRadius: uiTheme.sheet.borderRadius,
+      borderWidth: 1,
+      borderBottomWidth: 0,
+      borderColor: c.border,
+      backgroundColor: c.screen,
+      paddingHorizontal: spacing.lg,
+      paddingTop: spacing.md,
+      gap: spacing.lg,
+    },
+    handle: {
+      width: 40,
+      height: 4,
+      alignSelf: 'center',
+      borderRadius: 999,
+      backgroundColor: c.border,
+    },
+    header: {
+      gap: spacing.xs,
+    },
+    title: {
+      color: c.text,
+      fontSize: 18,
+      fontWeight: '700',
+      lineHeight: 24,
+    },
+    subtitle: {
+      ...typography.subtitle,
+      color: c.muted,
+      fontSize: 14,
+    },
+    content: {
+      gap: spacing.lg,
+      paddingBottom: spacing.xs,
+    },
+    actions: {
+      flexDirection: 'row',
+      gap: spacing.md,
+    },
+    secondaryButton: {
+      flex: 1,
+      minHeight: touchTarget - 4,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: uiTheme.chip.borderRadius,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+    },
+    primaryButton: {
+      flex: 1,
+      minHeight: touchTarget - 4,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: uiTheme.chip.borderRadius,
+      backgroundColor: c.primary,
+    },
+    buttonPressed: {
+      opacity: 0.88,
+    },
+    secondaryText: {
+      ...typography.chip,
+      color: c.text,
+      fontWeight: '600',
+    },
+    primaryText: {
+      ...typography.chip,
+      color: c.background,
+      fontWeight: '700',
+    },
+  });
+}

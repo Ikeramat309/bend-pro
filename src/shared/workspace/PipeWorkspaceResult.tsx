@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useTheme, type ThemePalette } from '@/theme';
 
 import { MeasurementChip, type MeasurementChipTone } from './MeasurementChip';
 import { PipeWorkspaceCard } from './PipeWorkspaceCard';
@@ -32,6 +32,9 @@ export function PipeWorkspaceResult({
   chips,
   note,
 }: PipeWorkspaceResultProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <PipeWorkspaceCard variant="highlight" title={title}>
       <View style={styles.diagramWell}>{diagram}</View>
@@ -60,44 +63,46 @@ export function PipeWorkspaceResult({
   );
 }
 
-const styles = StyleSheet.create({
-  diagramWell: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  resultsPanel: {
-    gap: spacing.lg,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.lg,
-  },
-  resultBlock: {
-    gap: spacing.xs,
-  },
-  resultLabel: {
-    ...typography.tabLabel,
-    color: colors.muted,
-    fontWeight: '600',
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
-  },
-  resultValue: {
-    fontSize: 30,
-    lineHeight: 34,
-    fontWeight: '700',
-    color: colors.text,
-    fontVariant: ['tabular-nums'],
-  },
-  chipRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'stretch',
-    gap: spacing.sm,
-    rowGap: spacing.sm,
-  },
-  note: {
-    ...typography.subtitle,
-    color: colors.muted,
-    marginTop: -spacing.xs,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    diagramWell: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    resultsPanel: {
+      gap: spacing.lg,
+      paddingHorizontal: spacing.lg,
+      paddingTop: spacing.lg,
+      paddingBottom: spacing.lg,
+    },
+    resultBlock: {
+      gap: spacing.xs,
+    },
+    resultLabel: {
+      ...typography.tabLabel,
+      color: c.muted,
+      fontWeight: '600',
+      letterSpacing: 0.6,
+      textTransform: 'uppercase',
+    },
+    resultValue: {
+      fontSize: 30,
+      lineHeight: 34,
+      fontWeight: '700',
+      color: c.text,
+      fontVariant: ['tabular-nums'],
+    },
+    chipRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'stretch',
+      gap: spacing.sm,
+      rowGap: spacing.sm,
+    },
+    note: {
+      ...typography.subtitle,
+      color: c.muted,
+      marginTop: -spacing.xs,
+    },
+  });
+}

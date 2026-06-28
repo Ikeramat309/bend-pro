@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { FieldInput } from '@/shared/ui';
-import { colors, spacing, workspaceTheme } from '@/theme';
+import { spacing, workspaceTheme } from '@/theme';
 
 import { OptionalFieldButton } from './OptionalFieldButton';
 import type { BendInputConfig } from './workspaceTypes';
@@ -89,8 +89,6 @@ const styles = StyleSheet.create({
     gap: workspaceTheme.inputStrip.rowGap,
     paddingHorizontal: spacing.lg,
     paddingVertical: workspaceTheme.inputStrip.paddingVertical,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   row: {
     flexDirection: 'row',

@@ -1,8 +1,9 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { BenderProfile } from '@/data/benders';
 import { formatChartKindLabel, formatProfileStub90Summary } from '@/data/benders';
-import { colors, spacing, uiTheme } from '@/theme';
+import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 import { HubStatusBadge } from './HubStatusBadge';
 
@@ -26,6 +27,9 @@ export function BenderProfileCard({
   onViewChart,
   onEdit,
 }: BenderProfileCardProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <View style={[styles.card, isActive && styles.cardActive]}>
       <Pressable
@@ -69,104 +73,106 @@ export function BenderProfileCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: uiTheme.benderCard.borderRadius,
-    borderWidth: 1,
-    borderColor: uiTheme.benderCard.borderColor,
-    backgroundColor: uiTheme.benderCard.backgroundColor,
-    overflow: 'hidden',
-  },
-  cardActive: {
-    borderColor: uiTheme.benderCard.activeBorderColor,
-    backgroundColor: uiTheme.benderCard.activeBackgroundColor,
-  },
-  body: {
-    gap: spacing.sm,
-    padding: uiTheme.benderCard.padding,
-  },
-  pressed: {
-    opacity: 0.88,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: spacing.md,
-  },
-  titleBlock: {
-    flex: 1,
-    gap: 2,
-  },
-  title: {
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '700',
-    color: colors.text,
-  },
-  category: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: colors.muted,
-  },
-  chartKind: {
-    fontSize: 11,
-    lineHeight: 14,
-    color: colors.primary,
-    fontWeight: '600',
-  },
-  description: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.muted,
-  },
-  deductRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.sm,
-    paddingTop: spacing.xs,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  deductText: {
-    flex: 1,
-    gap: 2,
-  },
-  deductLabel: {
-    fontSize: 10,
-    lineHeight: 13,
-    fontWeight: '600',
-    letterSpacing: 0.55,
-    textTransform: 'uppercase',
-    color: colors.muted,
-  },
-  deductValue: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '600',
-    color: colors.text,
-    fontVariant: ['tabular-nums'],
-  },
-  chartLink: {
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: '700',
-    color: colors.primary,
-    flexShrink: 0,
-  },
-  editButton: {
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    paddingVertical: spacing.sm,
-    backgroundColor: colors.surface2,
-  },
-  editText: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: colors.primary,
-    fontWeight: '700',
-    letterSpacing: 0.3,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    card: {
+      borderRadius: uiTheme.benderCard.borderRadius,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+      overflow: 'hidden',
+    },
+    cardActive: {
+      borderColor: c.primaryBorder,
+      backgroundColor: c.primaryMuted,
+    },
+    body: {
+      gap: spacing.sm,
+      padding: uiTheme.benderCard.padding,
+    },
+    pressed: {
+      opacity: 0.88,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      gap: spacing.md,
+    },
+    titleBlock: {
+      flex: 1,
+      gap: 2,
+    },
+    title: {
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '700',
+      color: c.text,
+    },
+    category: {
+      fontSize: 12,
+      lineHeight: 16,
+      color: c.muted,
+    },
+    chartKind: {
+      fontSize: 11,
+      lineHeight: 14,
+      color: c.primary,
+      fontWeight: '600',
+    },
+    description: {
+      fontSize: 14,
+      lineHeight: 20,
+      color: c.muted,
+    },
+    deductRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: spacing.sm,
+      paddingTop: spacing.xs,
+      borderTopWidth: 1,
+      borderTopColor: c.border,
+    },
+    deductText: {
+      flex: 1,
+      gap: 2,
+    },
+    deductLabel: {
+      fontSize: 10,
+      lineHeight: 13,
+      fontWeight: '600',
+      letterSpacing: 0.55,
+      textTransform: 'uppercase',
+      color: c.muted,
+    },
+    deductValue: {
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '600',
+      color: c.text,
+      fontVariant: ['tabular-nums'],
+    },
+    chartLink: {
+      fontSize: 13,
+      lineHeight: 18,
+      fontWeight: '700',
+      color: c.primary,
+      flexShrink: 0,
+    },
+    editButton: {
+      alignItems: 'center',
+      borderTopWidth: 1,
+      borderTopColor: c.border,
+      paddingVertical: spacing.sm,
+      backgroundColor: c.surface2,
+    },
+    editText: {
+      fontSize: 12,
+      lineHeight: 16,
+      color: c.primary,
+      fontWeight: '700',
+      letterSpacing: 0.3,
+    },
+  });
+}

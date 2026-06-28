@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing, touchTarget, uiTheme } from '@/theme';
+import { spacing, touchTarget, uiTheme, useTheme, type ThemePalette } from '@/theme';
 import {
   applyFractionKey,
   FRACTION_KEYPAD_QUICK_KEYS,
@@ -57,6 +58,8 @@ function buildRows(showDone: boolean): KeyDef[][] {
 
 /** Trade fraction keypad for imperial length fields — glove-friendly tap targets. */
 export function FractionKeypad({ value, onChangeText, showDone = true }: FractionKeypadProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const rows = buildRows(showDone);
 
   function handleKey(key: KeyDef) {
@@ -109,68 +112,70 @@ export function FractionKeypad({ value, onChangeText, showDone = true }: Fractio
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: {
-    gap: spacing.xs,
-    paddingTop: spacing.sm,
-  },
-  quickRow: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  quickKey: {
-    flex: 1,
-    minHeight: touchTarget - 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: uiTheme.fractionKeypad.keyRadius,
-    borderWidth: 1,
-    borderColor: colors.primaryBorder,
-    backgroundColor: colors.primaryMuted,
-  },
-  quickKeyText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: colors.primary,
-    fontVariant: ['tabular-nums'],
-  },
-  row: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  key: {
-    flex: 1,
-    minHeight: touchTarget - 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: uiTheme.fractionKeypad.keyRadius,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface2,
-  },
-  keyWide: {
-    flex: 2,
-  },
-  keyDone: {
-    borderColor: colors.primaryBorder,
-    backgroundColor: colors.surface,
-  },
-  keyPressed: {
-    opacity: 0.88,
-  },
-  keyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text,
-    fontVariant: ['tabular-nums'],
-  },
-  keyUtilityText: {
-    fontSize: 16,
-    color: colors.muted,
-  },
-  keyDoneText: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    wrap: {
+      gap: spacing.xs,
+      paddingTop: spacing.sm,
+    },
+    quickRow: {
+      flexDirection: 'row',
+      gap: spacing.xs,
+    },
+    quickKey: {
+      flex: 1,
+      minHeight: touchTarget - 6,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: uiTheme.fractionKeypad.keyRadius,
+      borderWidth: 1,
+      borderColor: c.primaryBorder,
+      backgroundColor: c.primaryMuted,
+    },
+    quickKeyText: {
+      fontSize: 14,
+      fontWeight: '700',
+      color: c.primary,
+      fontVariant: ['tabular-nums'],
+    },
+    row: {
+      flexDirection: 'row',
+      gap: spacing.xs,
+    },
+    key: {
+      flex: 1,
+      minHeight: touchTarget - 4,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: uiTheme.fractionKeypad.keyRadius,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface2,
+    },
+    keyWide: {
+      flex: 2,
+    },
+    keyDone: {
+      borderColor: c.primaryBorder,
+      backgroundColor: c.surface,
+    },
+    keyPressed: {
+      opacity: 0.88,
+    },
+    keyText: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: c.text,
+      fontVariant: ['tabular-nums'],
+    },
+    keyUtilityText: {
+      fontSize: 16,
+      color: c.muted,
+    },
+    keyDoneText: {
+      fontSize: 14,
+      fontWeight: '700',
+      color: c.primary,
+    },
+  });
+}

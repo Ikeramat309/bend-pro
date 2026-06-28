@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { CalculatorSetup } from '@/core/settings';
@@ -9,7 +10,7 @@ import {
   getProfileCapabilities,
 } from '@/data/benders';
 import { HubStatusBadge, Sheet, SheetFormGroup } from '@/shared/ui';
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useTheme, type ThemePalette } from '@/theme';
 
 export type BenderProfileDetailSheetProps = {
   visible: boolean;
@@ -31,6 +32,8 @@ export function BenderProfileDetailSheet({
   onSelect,
   onEdit,
 }: BenderProfileDetailSheetProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const rows = buildProfileDeductRows(profile, setup.stub90DeductOverridesInches);
   const capabilities = getProfileCapabilities(profile);
   const hasOverride = rows.some((row) => row.overrideDeductInches !== undefined);
@@ -106,93 +109,95 @@ export function BenderProfileDetailSheet({
   );
 }
 
-const styles = StyleSheet.create({
-  headerMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  category: {
-    ...typography.subtitle,
-    color: colors.muted,
-    textTransform: 'capitalize',
-  },
-  description: {
-    ...typography.subtitle,
-    color: colors.text,
-  },
-  sourceNote: {
-    ...typography.subtitle,
-    color: colors.muted,
-    fontStyle: 'italic',
-  },
-  editLink: {
-    alignSelf: 'flex-start',
-    paddingVertical: spacing.xs,
-  },
-  editLinkPressed: {
-    opacity: 0.88,
-  },
-  editLinkText: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-  table: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    backgroundColor: colors.surface2,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  tableRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  tableCell: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.text,
-    fontVariant: ['tabular-nums'],
-  },
-  tableHeaderCell: {
-    fontSize: 11,
-    lineHeight: 14,
-    fontWeight: '700',
-    letterSpacing: 0.55,
-    textTransform: 'uppercase',
-    color: colors.muted,
-  },
-  sizeCol: {
-    flex: 1.1,
-  },
-  valueCol: {
-    flex: 1,
-    textAlign: 'right',
-  },
-  mutedCell: {
-    color: colors.muted,
-  },
-  overrideCell: {
-    color: colors.primary,
-    fontWeight: '700',
-  },
-  overrideFootnote: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: colors.muted,
-  },
-  capabilityLine: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    headerMeta: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+    },
+    category: {
+      ...typography.subtitle,
+      color: c.muted,
+      textTransform: 'capitalize',
+    },
+    description: {
+      ...typography.subtitle,
+      color: c.text,
+    },
+    sourceNote: {
+      ...typography.subtitle,
+      color: c.muted,
+      fontStyle: 'italic',
+    },
+    editLink: {
+      alignSelf: 'flex-start',
+      paddingVertical: spacing.xs,
+    },
+    editLinkPressed: {
+      opacity: 0.88,
+    },
+    editLinkText: {
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '700',
+      color: c.primary,
+    },
+    table: {
+      borderWidth: 1,
+      borderColor: c.border,
+      borderRadius: 12,
+      overflow: 'hidden',
+    },
+    tableHeader: {
+      flexDirection: 'row',
+      backgroundColor: c.surface2,
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    tableRow: {
+      flexDirection: 'row',
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    tableCell: {
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      fontSize: 14,
+      lineHeight: 20,
+      color: c.text,
+      fontVariant: ['tabular-nums'],
+    },
+    tableHeaderCell: {
+      fontSize: 11,
+      lineHeight: 14,
+      fontWeight: '700',
+      letterSpacing: 0.55,
+      textTransform: 'uppercase',
+      color: c.muted,
+    },
+    sizeCol: {
+      flex: 1.1,
+    },
+    valueCol: {
+      flex: 1,
+      textAlign: 'right',
+    },
+    mutedCell: {
+      color: c.muted,
+    },
+    overrideCell: {
+      color: c.primary,
+      fontWeight: '700',
+    },
+    overrideFootnote: {
+      fontSize: 12,
+      lineHeight: 16,
+      color: c.muted,
+    },
+    capabilityLine: {
+      ...typography.subtitle,
+      color: c.muted,
+    },
+  });
+}

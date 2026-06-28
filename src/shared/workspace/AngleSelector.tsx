@@ -1,8 +1,7 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors } from '@/theme/colors';
-import { radius, spacing, touchTarget } from '@/theme/spacing';
-import { typography } from '@/theme/typography';
+import { radius, spacing, touchTarget, typography, useTheme, type ThemePalette } from '@/theme';
 
 export const BEND_ANGLE_OPTIONS = [10, 22.5, 30, 45, 60] as const;
 export type BendAngleOption = (typeof BEND_ANGLE_OPTIONS)[number];
@@ -24,6 +23,9 @@ export function AngleSelector({
   onSelect,
   disabled = false,
 }: BendAngleSelectorProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <View style={styles.wrap}>
       <Text style={styles.label}>{label}</Text>
@@ -63,52 +65,54 @@ export function AngleSelector({
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: {
-    gap: spacing.md,
-  },
-  label: {
-    ...typography.label,
-    color: colors.muted,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: spacing.md,
-  },
-  chip: {
-    flex: 1,
-    minHeight: touchTarget - 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  chipSelected: {
-    backgroundColor: colors.primary,
-    borderColor: colors.primary,
-  },
-  chipCommon: {
-    borderColor: colors.primaryBorder,
-  },
-  chipPressed: {
-    opacity: 0.9,
-  },
-  chipText: {
-    ...typography.chip,
-    color: colors.text,
-    fontSize: 15,
-  },
-  chipTextSelected: {
-    color: colors.background,
-  },
-  chipTextCommon: {
-    color: colors.primary,
-  },
-  hint: {
-    fontSize: 12,
-    color: colors.muted,
-    fontWeight: '500',
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    wrap: {
+      gap: spacing.md,
+    },
+    label: {
+      ...typography.label,
+      color: c.muted,
+    },
+    row: {
+      flexDirection: 'row',
+      gap: spacing.md,
+    },
+    chip: {
+      flex: 1,
+      minHeight: touchTarget - 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: radius.lg,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+    },
+    chipSelected: {
+      backgroundColor: c.primary,
+      borderColor: c.primary,
+    },
+    chipCommon: {
+      borderColor: c.primaryBorder,
+    },
+    chipPressed: {
+      opacity: 0.9,
+    },
+    chipText: {
+      ...typography.chip,
+      color: c.text,
+      fontSize: 15,
+    },
+    chipTextSelected: {
+      color: c.background,
+    },
+    chipTextCommon: {
+      color: c.primary,
+    },
+    hint: {
+      fontSize: 12,
+      color: c.muted,
+      fontWeight: '500',
+    },
+  });
+}

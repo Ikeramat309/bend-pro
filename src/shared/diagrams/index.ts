@@ -1,7 +1,15 @@
 export { DiagramFrame, type DiagramFrameProps } from './DiagramFrame';
 export { DiagramSvg, type DiagramSvgProps } from './DiagramSvg';
 export { DiagramGhostMessage, type DiagramGhostMessageProps } from './DiagramGhostMessage';
-export { diagramMetrics, diagramTheme } from './diagramTheme';
+export {
+  darkDiagram,
+  diagramMetrics,
+  diagramTheme,
+  getDiagramTheme,
+  lightDiagram,
+  type DiagramTheme,
+} from './diagramTheme';
+export { useDiagramTheme } from './useDiagramTheme';
 export { BendRadiusZone, type BendRadiusZoneProps } from './BendRadiusZone';
 export { DiagramCallout, type DiagramCalloutProps } from './DiagramCallout';
 export { DiagramCanvas } from './DiagramCanvas';

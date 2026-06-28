@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
-import { colors, radius, spacing, typography } from '@/theme';
+import { radius, spacing, typography, useTheme, type ThemePalette } from '@/theme';
 
 export type HubAddButtonProps = {
   label: string;
@@ -8,6 +9,9 @@ export type HubAddButtonProps = {
 };
 
 export function HubAddButton({ label, onPress }: HubAddButtonProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <Pressable
       onPress={onPress}
@@ -18,22 +22,24 @@ export function HubAddButton({ label, onPress }: HubAddButtonProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.primaryBorder,
-    backgroundColor: colors.primaryMuted,
-    paddingVertical: spacing.md,
-  },
-  pressed: {
-    opacity: 0.88,
-  },
-  label: {
-    ...typography.body,
-    color: colors.primary,
-    fontWeight: '700',
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    button: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: radius.lg,
+      borderWidth: 1,
+      borderColor: c.primaryBorder,
+      backgroundColor: c.primaryMuted,
+      paddingVertical: spacing.md,
+    },
+    pressed: {
+      opacity: 0.88,
+    },
+    label: {
+      ...typography.body,
+      color: c.primary,
+      fontWeight: '700',
+    },
+  });
+}

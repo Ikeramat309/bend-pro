@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, radius, spacing, typography, workspaceTheme } from '@/theme';
+import { radius, spacing, typography, useTheme, type ThemePalette } from '@/theme';
 
 export type PipeWorkspaceCardProps = {
   children: ReactNode;
@@ -17,6 +17,8 @@ export function PipeWorkspaceCard({
   variant = 'default',
   onPress,
 }: PipeWorkspaceCardProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const isWorkspace = variant === 'highlight';
   const cardStyle: StyleProp<ViewStyle> = [
     styles.card,
@@ -46,41 +48,44 @@ export function PipeWorkspaceCard({
   return <View style={cardStyle}>{body}</View>;
 }
 
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: radius.xl,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.xl,
-    gap: spacing.lg,
-    overflow: 'hidden',
-  },
-  cardWorkspace: {
-    flex: 1,
-    minHeight: 0,
-    padding: 0,
-    gap: 0,
-    borderColor: workspaceTheme.workspace.cardBorderColor,
-    backgroundColor: colors.surface,
-  },
-  pressed: {
-    opacity: 0.92,
-  },
-  title: {
-    ...typography.label,
-    color: colors.primary,
-    fontWeight: '700',
-  },
-  titleWorkspace: {
-    fontSize: 11,
-    lineHeight: 14,
-    fontWeight: '600',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
-    color: colors.muted,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.sm,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    card: {
+      borderRadius: radius.xl,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+      padding: spacing.xl,
+      gap: spacing.lg,
+      overflow: 'hidden',
+    },
+    cardWorkspace: {
+      flex: 1,
+      minHeight: 0,
+      padding: 0,
+      gap: 0,
+      // Continuous surface: the pipe workspace dissolves into the screen — no card.
+      borderWidth: 0,
+      backgroundColor: 'transparent',
+    },
+    pressed: {
+      opacity: 0.92,
+    },
+    title: {
+      ...typography.label,
+      color: c.primary,
+      fontWeight: '700',
+    },
+    titleWorkspace: {
+      fontSize: 11,
+      lineHeight: 14,
+      fontWeight: '600',
+      letterSpacing: 0.8,
+      textTransform: 'uppercase',
+      color: c.muted,
+      paddingHorizontal: spacing.lg,
+      paddingTop: spacing.lg,
+      paddingBottom: spacing.sm,
+    },
+  });
+}

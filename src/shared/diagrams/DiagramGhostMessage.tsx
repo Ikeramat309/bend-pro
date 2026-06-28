@@ -1,6 +1,7 @@
-import { diagramMetrics, diagramTheme } from './diagramTheme';
+import { diagramMetrics } from './diagramTheme';
 import { DiagramCallout } from './DiagramCallout';
 import { DiagramLabel } from './DiagramLabel';
+import { useDiagramTheme } from './useDiagramTheme';
 
 export type DiagramGhostMessageProps = {
   text: string;
@@ -21,6 +22,7 @@ export function DiagramGhostMessage({
   y = diagramMetrics.height - 14,
   invalid = false,
 }: DiagramGhostMessageProps) {
+  const theme = useDiagramTheme();
   const width = estimateCalloutWidth(text);
   const height = 24;
   const x = (diagramMetrics.width - width) / 2;
@@ -32,8 +34,8 @@ export function DiagramGhostMessage({
       y={calloutY}
       width={width}
       height={height}
-      fill={diagramTheme.ghost.calloutFill}
-      stroke={invalid ? diagramTheme.ghost.calloutInvalidStroke : diagramTheme.ghost.calloutStroke}>
+      fill={theme.ghost.calloutFill}
+      stroke={invalid ? theme.ghost.calloutInvalidStroke : theme.ghost.calloutStroke}>
       <DiagramLabel
         x={diagramMetrics.width / 2}
         y={y}

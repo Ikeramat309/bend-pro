@@ -1,7 +1,7 @@
 /**
  * Shrink-per-inch override bottom sheet for Rolling Offset.
  */
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -12,7 +12,7 @@ import { MAX_OFFSET_SHRINK_PER_INCH } from '@/core/settings';
 import type { BendAngle, UnitSystem } from '@/core/types';
 import { FieldInput } from '@/shared/ui';
 import { Sheet } from '@/shared/ui/Sheet';
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useTheme, type ThemePalette } from '@/theme';
 import { getLengthUnitLabel, getLengthInputMode } from '@/utils/units';
 
 import { rollingCopy } from '../rolling.copy';
@@ -25,6 +25,7 @@ export type ShrinkOverrideSheetProps = {
   chartShrinkPerInchFormatted: string;
   currentOverrideInches?: number;
   onCancel: () => void;
+  /** `undefined` clears the override (back to the table value). */
   onApply: (overrideInches: number | undefined) => void;
 };
 
@@ -52,6 +53,8 @@ function ShrinkOverrideSheetOpen({
   onCancel,
   onApply,
 }: ShrinkOverrideSheetProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [text, setText] = useState(() =>
     currentOverrideInches !== undefined
       ? formatCanonicalLengthForDisplay(currentOverrideInches, unitSystem)
@@ -100,25 +103,27 @@ function ShrinkOverrideSheetOpen({
   );
 }
 
-const styles = StyleSheet.create({
-  description: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-  chartCard: {
-    gap: spacing.xs,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-  },
-  chartLine: {
-    ...typography.subtitle,
-    color: colors.text,
-  },
-  hintLine: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    description: {
+      ...typography.subtitle,
+      color: c.muted,
+    },
+    chartCard: {
+      gap: spacing.xs,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+      padding: spacing.lg,
+    },
+    chartLine: {
+      ...typography.subtitle,
+      color: c.text,
+    },
+    hintLine: {
+      ...typography.subtitle,
+      color: c.muted,
+    },
+  });
+}

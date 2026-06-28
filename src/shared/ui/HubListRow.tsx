@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing, uiTheme } from '@/theme';
+import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 import { HubStatusBadge } from './HubStatusBadge';
 
@@ -23,6 +24,9 @@ export function HubListRow({
   isLast = false,
   onPress,
 }: HubListRowProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <Pressable
       onPress={onPress}
@@ -45,55 +49,57 @@ export function HubListRow({
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    minHeight: uiTheme.hub.listRow.minHeight,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.md,
-    paddingHorizontal: uiTheme.hub.listRow.paddingHorizontal,
-    paddingVertical: uiTheme.hub.listRow.paddingVertical,
-  },
-  rowBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  rowDimmed: {
-    opacity: 0.72,
-  },
-  pressed: {
-    opacity: 0.88,
-  },
-  text: {
-    flex: 1,
-    gap: spacing.xs,
-  },
-  titleLine: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  title: {
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  description: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.muted,
-  },
-  chevron: {
-    fontSize: uiTheme.hub.chevronSize,
-    lineHeight: 30,
-  },
-  chevronActive: {
-    color: colors.primary,
-  },
-  chevronMuted: {
-    color: colors.muted,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    row: {
+      minHeight: uiTheme.hub.listRow.minHeight,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: spacing.md,
+      paddingHorizontal: uiTheme.hub.listRow.paddingHorizontal,
+      paddingVertical: uiTheme.hub.listRow.paddingVertical,
+    },
+    rowBorder: {
+      borderBottomWidth: 1,
+      borderBottomColor: c.border,
+    },
+    rowDimmed: {
+      opacity: 0.72,
+    },
+    pressed: {
+      opacity: 0.88,
+    },
+    text: {
+      flex: 1,
+      gap: spacing.xs,
+    },
+    titleLine: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      gap: spacing.sm,
+    },
+    title: {
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '600',
+      color: c.text,
+    },
+    description: {
+      fontSize: 14,
+      lineHeight: 20,
+      color: c.muted,
+    },
+    chevron: {
+      fontSize: uiTheme.hub.chevronSize,
+      lineHeight: 30,
+    },
+    chevronActive: {
+      color: c.primary,
+    },
+    chevronMuted: {
+      color: c.muted,
+    },
+  });
+}

@@ -16,15 +16,14 @@ import {
     DimensionLine,
     MarkLine,
     PipeSegment,
-    diagramTheme,
     resolveProportionalSpans,
+    useDiagramTheme,
 } from '@/shared/diagrams';
 import type { Stub90DiagramData } from '../engine/stub90.types';
 import { STUB90_CONFIG } from '../stub90.config';
 import { stub90Copy } from '../stub90.copy';
 
 const GHOST_PIPE_PATH = 'M 18 218 H 252 Q 298 218 298 172 V 34';
-const { ghost } = diagramTheme;
 
 /** Free end of the leg (left edge of the horizontal run). */
 const START_X = 18;
@@ -69,6 +68,8 @@ export function Stub90Diagram({ data, isEmpty = false, isInvalid = false }: Stub
 }
 
 function Stub90GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
+  const { ghost } = useDiagramTheme();
+
   return (
     <DiagramSvg viewBox={STUB90_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="ghostPipeGradient" ghost />
@@ -84,6 +85,7 @@ function Stub90GhostDiagram({ message, invalid }: { message: string; invalid?: b
 }
 
 function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
+  const theme = useDiagramTheme();
   const legDisplay = data.legLengthInches !== undefined ? data.display.leg : undefined;
 
   // Semi-proportional layout: the leg drives the horizontal span (square-ish
@@ -146,8 +148,8 @@ function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
 
       {/* Free ends: leg end (left) and stub tip (top) — the stub tip is the
           end the deduct mark is measured from. */}
-      <Circle cx={START_X} cy={BOTTOM_Y} r={5.5} fill={diagramTheme.pipeCore} />
-      <Circle cx={cornerX} cy={topY} r={5.5} fill={diagramTheme.pipeCore} />
+      <Circle cx={START_X} cy={BOTTOM_Y} r={5.5} fill={theme.pipeCore} />
+      <Circle cx={cornerX} cy={topY} r={5.5} fill={theme.pipeCore} />
 
       {/* The bend mark, on the stub just above the arc. */}
       <MarkLine x1={cornerX - 13} y1={markY} x2={cornerX + 13} y2={markY} />

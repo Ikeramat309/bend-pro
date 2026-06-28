@@ -2,7 +2,7 @@
  * Edit Setup bottom sheet — draft state while open; parent updates only on Apply.
  */
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { BendAngle, ConduitType, RoundingOption, TradeSize, UnitSystem } from '@/core/types';
@@ -17,7 +17,7 @@ import { SUPPORTED_EMT_TRADE_SIZES } from '@/data/emt';
 import { Routes } from '@/navigation';
 import { OptionChipGroup } from '@/shared/ui/OptionChipGroup';
 import { Sheet } from '@/shared/ui/Sheet';
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useTheme, type ThemePalette } from '@/theme';
 
 export type SetupUnit = UnitSystem;
 export type SetupRounding = RoundingOption;
@@ -66,6 +66,8 @@ function EditSetupSheetOpen({
   onCancel,
   onApply,
 }: Pick<EditSetupSheetProps, 'values' | 'onCancel' | 'onApply'>) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const router = useRouter();
   const { setup } = useCalculatorSetup();
   const benderProfileNames = mergeBenderProfiles(setup.customBenderProfiles).map(
@@ -160,35 +162,37 @@ function EditSetupSheetOpen({
   );
 }
 
-const styles = StyleSheet.create({
-  browseLink: {
-    alignSelf: 'flex-start',
-    paddingVertical: spacing.xs,
-  },
-  browseLinkPressed: {
-    opacity: 0.88,
-  },
-  browseLinkText: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-  currentCard: {
-    gap: spacing.xs,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-  },
-  currentTitle: {
-    ...typography.label,
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-  currentLine: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    browseLink: {
+      alignSelf: 'flex-start',
+      paddingVertical: spacing.xs,
+    },
+    browseLinkPressed: {
+      opacity: 0.88,
+    },
+    browseLinkText: {
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '700',
+      color: c.primary,
+    },
+    currentCard: {
+      gap: spacing.xs,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+      padding: spacing.lg,
+    },
+    currentTitle: {
+      ...typography.label,
+      color: c.text,
+      marginBottom: spacing.xs,
+    },
+    currentLine: {
+      ...typography.subtitle,
+      color: c.muted,
+    },
+  });
+}

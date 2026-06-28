@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, spacing, typography } from '@/theme';
+import { radius, spacing, typography, useTheme, type ThemePalette } from '@/theme';
 
 export type BenderProfileContextTone = 'info' | 'warning';
 
@@ -10,21 +11,22 @@ export type BenderProfileContextProps = {
   tone?: BenderProfileContextTone;
 };
 
-const toneStyles: Record<
-  BenderProfileContextTone,
-  { border: string; background: string; text: string }
-> = {
-  info: {
-    border: colors.border,
-    background: colors.surface2,
-    text: colors.muted,
-  },
-  warning: {
-    border: colors.warning,
-    background: 'rgba(255, 210, 46, 0.06)',
-    text: colors.warning,
-  },
-};
+function toneStyles(
+  c: ThemePalette,
+): Record<BenderProfileContextTone, { border: string; background: string; text: string }> {
+  return {
+    info: {
+      border: c.border,
+      background: c.surface2,
+      text: c.muted,
+    },
+    warning: {
+      border: c.warning,
+      background: 'rgba(255, 210, 46, 0.06)',
+      text: c.warning,
+    },
+  };
+}
 
 /** Shows where the active bender profile's values come from for this calculator. */
 export function BenderProfileContext({
@@ -32,7 +34,9 @@ export function BenderProfileContext({
   action,
   tone = 'info',
 }: BenderProfileContextProps) {
-  const palette = toneStyles[tone];
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const palette = toneStyles(colors)[tone];
 
   return (
     <View
@@ -46,19 +50,21 @@ export function BenderProfileContext({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    gap: spacing.xs,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    padding: spacing.md,
-  },
-  message: {
-    ...typography.subtitle,
-    fontWeight: '600',
-  },
-  action: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    card: {
+      gap: spacing.xs,
+      borderRadius: radius.lg,
+      borderWidth: 1,
+      padding: spacing.md,
+    },
+    message: {
+      ...typography.subtitle,
+      fontWeight: '600',
+    },
+    action: {
+      ...typography.subtitle,
+      color: c.muted,
+    },
+  });
+}

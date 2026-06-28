@@ -1,6 +1,6 @@
 import { Text as SvgText } from 'react-native-svg';
 
-import { diagramTheme } from './diagramTheme';
+import { useDiagramTheme } from './useDiagramTheme';
 
 export type DiagramLabelVariant = 'default' | 'muted' | 'mark' | 'strong';
 
@@ -15,13 +15,6 @@ export type DiagramLabelProps = {
   rotation?: number;
 };
 
-const variantColors: Record<DiagramLabelVariant, string> = {
-  default: diagramTheme.label,
-  muted: diagramTheme.mutedLabel,
-  mark: diagramTheme.mark,
-  strong: diagramTheme.dimensionStrong,
-};
-
 /** SVG text label for diagram annotations. */
 export function DiagramLabel({
   x,
@@ -33,6 +26,13 @@ export function DiagramLabel({
   textAnchor = 'middle',
   rotation,
 }: DiagramLabelProps) {
+  const theme = useDiagramTheme();
+  const variantColors: Record<DiagramLabelVariant, string> = {
+    default: theme.label,
+    muted: theme.mutedLabel,
+    mark: theme.mark,
+    strong: theme.dimensionStrong,
+  };
   const transform = rotation != null ? `rotate(${rotation} ${x} ${y})` : undefined;
 
   return (

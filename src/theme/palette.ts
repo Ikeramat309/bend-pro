@@ -57,11 +57,11 @@ export const lightColors: ThemePalette = {
   background: '#F5F7FA',
   screen: '#FFFFFF',
   surface: '#FFFFFF',
-  surface2: '#EEF2F7',
-  border: '#D9DEE6',
+  surface2: '#E4E9F0',
+  border: '#C8D0DA',
 
   text: '#0E1116',
-  muted: '#5B6470',
+  muted: '#566070',
 
   primary: '#2F6BFF',
   mark: '#E8590C',

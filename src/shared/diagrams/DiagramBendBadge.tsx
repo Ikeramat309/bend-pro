@@ -1,6 +1,6 @@
 import { Circle, Text as SvgText } from 'react-native-svg';
 
-import { diagramTheme } from './diagramTheme';
+import { useDiagramTheme } from './useDiagramTheme';
 
 export type DiagramBendBadgeProps = {
   x: number;
@@ -19,8 +19,9 @@ export function DiagramBendBadge({
   primary = false,
   size = 11,
 }: DiagramBendBadgeProps) {
+  const theme = useDiagramTheme();
   const r = size / 2 + 2;
-  const badge = diagramTheme.bendBadge;
+  const badge = theme.bendBadge;
 
   return (
     <>

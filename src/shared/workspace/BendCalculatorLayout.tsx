@@ -1,8 +1,9 @@
+import { useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BottomNav } from '@/shared/ui';
-import { colors, spacing, workspaceTheme } from '@/theme';
+import { spacing, useTheme, workspaceTheme, type ThemePalette } from '@/theme';
 
 import { BendActionDock } from './BendActionDock';
 import { BendHeader } from './BendHeader';
@@ -28,6 +29,9 @@ export function BendCalculatorLayout({
   onBackPress,
   footer,
 }: BendCalculatorLayoutProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   const workspaceNode = (
     <BendPipeWorkspace
       diagram={workspace}
@@ -62,30 +66,32 @@ export function BendCalculatorLayout({
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  body: {
-    flex: 1,
-  },
-  inputScroll: {
-    flexGrow: 0,
-    flexShrink: 0,
-    maxHeight: workspaceTheme.inputStrip.maxHeight,
-  },
-  inputScrollContent: {
-    flexGrow: 0,
-  },
-  workspace: {
-    flex: 1,
-    minHeight: workspaceTheme.workspace.minHeight,
-    flexShrink: 1,
-  },
-  warnings: {
-    flexShrink: 0,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: workspaceTheme.warningStrip.paddingVertical,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: c.background,
+    },
+    body: {
+      flex: 1,
+    },
+    inputScroll: {
+      flexGrow: 0,
+      flexShrink: 0,
+      maxHeight: workspaceTheme.inputStrip.maxHeight,
+    },
+    inputScrollContent: {
+      flexGrow: 0,
+    },
+    workspace: {
+      flex: 1,
+      minHeight: workspaceTheme.workspace.minHeight,
+      flexShrink: 1,
+    },
+    warnings: {
+      flexShrink: 0,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: workspaceTheme.warningStrip.paddingVertical,
+    },
+  });
+}

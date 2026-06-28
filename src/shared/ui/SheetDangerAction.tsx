@@ -1,6 +1,7 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useTheme, type ThemePalette } from '@/theme';
 
 export type SheetDangerActionProps = {
   label: string;
@@ -9,6 +10,9 @@ export type SheetDangerActionProps = {
 
 /** Destructive sheet action — delete, remove, reset. */
 export function SheetDangerAction({ label, onPress }: SheetDangerActionProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+
   return (
     <Pressable
       onPress={onPress}
@@ -19,18 +23,20 @@ export function SheetDangerAction({ label, onPress }: SheetDangerActionProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    paddingVertical: spacing.sm,
-    marginTop: spacing.xs,
-  },
-  pressed: {
-    opacity: 0.88,
-  },
-  label: {
-    ...typography.subtitle,
-    color: colors.error,
-    fontWeight: '600',
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    button: {
+      alignItems: 'center',
+      paddingVertical: spacing.sm,
+      marginTop: spacing.xs,
+    },
+    pressed: {
+      opacity: 0.88,
+    },
+    label: {
+      ...typography.subtitle,
+      color: c.error,
+      fontWeight: '600',
+    },
+  });
+}

@@ -1,6 +1,7 @@
 import { G, Line } from 'react-native-svg';
 
-import { diagramMetrics, diagramTheme } from './diagramTheme';
+import { diagramMetrics } from './diagramTheme';
+import { useDiagramTheme } from './useDiagramTheme';
 
 export type DimensionLineProps = {
   x1: number;
@@ -24,6 +25,8 @@ export function DimensionLine({
   extensionLines = [],
   opacity = 1,
 }: DimensionLineProps) {
+  const theme = useDiagramTheme();
+
   return (
     <G opacity={opacity}>
       <Line
@@ -31,7 +34,7 @@ export function DimensionLine({
         y1={y1}
         x2={x2}
         y2={y2}
-        stroke={diagramTheme.dimension}
+        stroke={theme.dimension}
         strokeWidth={diagramMetrics.dimensionStroke}
         markerStart={showArrows ? `url(#${arrowMarkerId})` : undefined}
         markerEnd={showArrows ? `url(#${arrowMarkerId})` : undefined}
@@ -43,7 +46,7 @@ export function DimensionLine({
           y1={line.y1}
           x2={line.x2}
           y2={line.y2}
-          stroke={diagramTheme.dimension}
+          stroke={theme.dimension}
           strokeWidth={diagramMetrics.extensionStroke}
         />
       ))}

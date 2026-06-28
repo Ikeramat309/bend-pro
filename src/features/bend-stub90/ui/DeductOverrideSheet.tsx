@@ -5,7 +5,7 @@
  * Draft state while open; parent updates only on Apply. Blank input means
  * "use the bender value" (clears the override).
  */
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -16,7 +16,7 @@ import { MAX_DEDUCT_OVERRIDE_INCHES } from '@/core/settings';
 import type { TradeSize, UnitSystem } from '@/core/types';
 import { FieldInput } from '@/shared/ui';
 import { Sheet } from '@/shared/ui/Sheet';
-import { colors, spacing, typography } from '@/theme';
+import { spacing, typography, useTheme, type ThemePalette } from '@/theme';
 import { getLengthUnitLabel, getLengthInputMode } from '@/utils/units';
 
 import { stub90Copy } from '../stub90.copy';
@@ -59,6 +59,8 @@ function DeductOverrideSheetOpen({
   onCancel,
   onApply,
 }: DeductOverrideSheetProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [text, setText] = useState(() =>
     currentOverrideInches !== undefined
       ? formatCanonicalLengthForDisplay(currentOverrideInches, unitSystem)
@@ -107,25 +109,27 @@ function DeductOverrideSheetOpen({
   );
 }
 
-const styles = StyleSheet.create({
-  description: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-  benderCard: {
-    gap: spacing.xs,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: spacing.lg,
-  },
-  benderLine: {
-    ...typography.subtitle,
-    color: colors.text,
-  },
-  hintLine: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    description: {
+      ...typography.subtitle,
+      color: c.muted,
+    },
+    benderCard: {
+      gap: spacing.xs,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface,
+      padding: spacing.lg,
+    },
+    benderLine: {
+      ...typography.subtitle,
+      color: c.text,
+    },
+    hintLine: {
+      ...typography.subtitle,
+      color: c.muted,
+    },
+  });
+}

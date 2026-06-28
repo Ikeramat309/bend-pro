@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, TextInput, type TextInputProps } from 'react-native';
 
-import { colors, spacing, typography, uiTheme } from '@/theme';
+import { spacing, typography, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 export type HubSearchFieldProps = {
   value: string;
@@ -16,6 +16,8 @@ export function HubSearchField({
   placeholder = 'Search',
   inputProps,
 }: HubSearchFieldProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [focused, setFocused] = useState(false);
 
   return (
@@ -33,19 +35,21 @@ export function HubSearchField({
   );
 }
 
-const styles = StyleSheet.create({
-  input: {
-    minHeight: uiTheme.hub.search.minHeight,
-    borderRadius: uiTheme.hub.search.borderRadius,
-    borderWidth: 1,
-    borderColor: uiTheme.hub.search.borderColor,
-    backgroundColor: uiTheme.hub.search.backgroundColor,
-    paddingHorizontal: spacing.lg,
-    color: colors.text,
-    ...typography.body,
-  },
-  inputFocused: {
-    borderColor: uiTheme.hub.search.focusBorderColor,
-    backgroundColor: uiTheme.field.shell.focusBackground,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    input: {
+      minHeight: uiTheme.hub.search.minHeight,
+      borderRadius: uiTheme.hub.search.borderRadius,
+      borderWidth: 1,
+      borderColor: c.border,
+      backgroundColor: c.surface2,
+      paddingHorizontal: spacing.lg,
+      color: c.text,
+      ...typography.body,
+    },
+    inputFocused: {
+      borderColor: c.primaryBorder,
+      backgroundColor: c.surface,
+    },
+  });
+}

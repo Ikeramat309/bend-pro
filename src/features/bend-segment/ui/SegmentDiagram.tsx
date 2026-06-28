@@ -14,7 +14,7 @@ import {
   DiagramSvg,
   MarkLine,
   PipeSegment,
-  diagramTheme,
+  useDiagramTheme,
 } from '@/shared/diagrams';
 import type { SegmentDiagramData } from '../engine/segment.types';
 import { SEGMENT_CONFIG } from '../segment.config';
@@ -58,11 +58,13 @@ export function SegmentDiagram({ data, isEmpty = false, isInvalid = false }: Seg
 }
 
 function SegmentGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
+  const theme = useDiagramTheme();
+
   return (
     <DiagramSvg viewBox={SEGMENT_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="segmentGhostGradient" ghost />
       <DiagramCanvas />
-      <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={diagramTheme.ghost.pipeShadowOpacity} />
+      <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={theme.ghost.pipeShadowOpacity} />
       <PipeSegment d={GHOST_PIPE} variant="pipe" gradientId="segmentGhostGradient" />
       <DiagramGhostMessage text={message} invalid={invalid} y={SEGMENT_CONFIG.diagramHeight - 14} />
     </DiagramSvg>
@@ -70,6 +72,7 @@ function SegmentGhostDiagram({ message, invalid }: { message: string; invalid?: 
 }
 
 function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
+  const theme = useDiagramTheme();
   const totalRad = (data.totalAngle * Math.PI) / 180;
   // Cap the drawn sweep so very large angles still fit the frame; the labels
   // carry the true numbers.
@@ -123,7 +126,7 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
       <DiagramFlowArrow x={start.x - LEAD_IN - 4} y={start.y} />
 
       {/* Radius leader + center pivot. */}
-      <Circle cx={CX} cy={CY} r={2.5} fill={diagramTheme.dimension} />
+      <Circle cx={CX} cy={CY} r={2.5} fill={theme.dimension} />
       <DiagramLeaderLine x1={CX} y1={CY} x2={mid.x} y2={mid.y} opacity={0.7} />
       <DiagramLabel
         x={rLabelX + 8}

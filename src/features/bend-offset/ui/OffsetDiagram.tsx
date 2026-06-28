@@ -13,7 +13,7 @@ import {
   DimensionLine,
   MarkLine,
   PipeSegment,
-  diagramTheme,
+  useDiagramTheme,
 } from '@/shared/diagrams';
 import type { OffsetDiagramData } from '../engine/offset.types';
 import { OFFSET_CONFIG } from '../offset.config';
@@ -26,7 +26,6 @@ import {
 
 const { startX: START_X, bottomY: BOTTOM_Y } = OFFSET_DIAGRAM_LAYOUT;
 const GHOST_PIPE = OFFSET_GHOST_PIPE;
-const { ghost } = diagramTheme;
 
 export type OffsetDiagramProps = {
   data?: OffsetDiagramData;
@@ -54,6 +53,8 @@ export function OffsetDiagram({ data, isEmpty = false, isInvalid = false }: Offs
 }
 
 function OffsetGhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
+  const { ghost } = useDiagramTheme();
+
   return (
     <DiagramSvg viewBox={OFFSET_CONFIG.diagramViewBox}>
       <DiagramDefs gradientId="offsetGhostGradient" ghost />

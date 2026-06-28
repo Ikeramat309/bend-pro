@@ -15,10 +15,12 @@ import {
   Sheet,
   type BendTabId,
 } from '@/shared/ui';
-import { colors, uiTheme } from '@/theme';
+import { uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 export function BendsScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const [search, setSearch] = useState('');
   const [comingSoonVisible, setComingSoonVisible] = useState(false);
 
@@ -118,24 +120,26 @@ export function BendsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    width: '100%',
-    maxWidth: uiTheme.layout.maxContentWidth,
-    alignSelf: 'center',
-    padding: uiTheme.layout.screenPadding,
-    paddingBottom: uiTheme.layout.sectionBottom,
-    gap: uiTheme.hub.contentGap,
-  },
-  topIcon: {
-    color: colors.text,
-    fontSize: 20,
-  },
-  familySection: {
-    gap: uiTheme.hub.sectionGap,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: c.background,
+    },
+    content: {
+      width: '100%',
+      maxWidth: uiTheme.layout.maxContentWidth,
+      alignSelf: 'center',
+      padding: uiTheme.layout.screenPadding,
+      paddingBottom: uiTheme.layout.sectionBottom,
+      gap: uiTheme.hub.contentGap,
+    },
+    topIcon: {
+      color: c.text,
+      fontSize: 20,
+    },
+    familySection: {
+      gap: uiTheme.hub.sectionGap,
+    },
+  });
+}

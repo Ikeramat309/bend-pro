@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -21,10 +22,12 @@ import {
   HubSettingsCard,
   type BendTabId,
 } from '@/shared/ui';
-import { colors, spacing, uiTheme } from '@/theme';
+import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 export function GuideScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const { calculator } = useLocalSearchParams<{ calculator?: string | string[] }>();
   const calculatorId = Array.isArray(calculator) ? calculator[0] : calculator;
   const guide =
@@ -68,6 +71,8 @@ type GuideIndexViewProps = {
 
 function GuideIndexView({ onOpenGuide }: GuideIndexViewProps) {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const families = [...new Set(CALCULATOR_GUIDES.map((item) => item.family))];
 
   return (
@@ -117,6 +122,8 @@ type GuideDetailViewProps = {
 
 function GuideDetailView({ guide, onBackPress }: GuideDetailViewProps) {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
     <>
@@ -149,57 +156,59 @@ function GuideDetailView({ guide, onBackPress }: GuideDetailViewProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    width: '100%',
-    maxWidth: uiTheme.layout.maxContentWidth,
-    alignSelf: 'center',
-    padding: uiTheme.layout.screenPadding,
-    paddingBottom: spacing.xxxl,
-    gap: spacing.lg,
-  },
-  section: {
-    gap: spacing.sm,
-  },
-  summary: {
-    fontSize: 15,
-    lineHeight: 22,
-    color: colors.text,
-  },
-  topIcon: {
-    color: colors.text,
-    fontSize: 20,
-  },
-  openCalculator: {
-    minHeight: uiTheme.hub.navCard.minHeight,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: uiTheme.hub.navCard.borderRadius,
-    borderWidth: 1,
-    borderColor: colors.primaryBorder,
-    backgroundColor: colors.primaryMuted,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  openCalculatorPressed: {
-    opacity: 0.88,
-  },
-  openCalculatorText: {
-    flex: 1,
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '700',
-    color: colors.primary,
-  },
-  openCalculatorChevron: {
-    fontSize: uiTheme.hub.chevronSize,
-    lineHeight: 30,
-    color: colors.primary,
-    fontWeight: '600',
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: c.background,
+    },
+    content: {
+      width: '100%',
+      maxWidth: uiTheme.layout.maxContentWidth,
+      alignSelf: 'center',
+      padding: uiTheme.layout.screenPadding,
+      paddingBottom: spacing.xxxl,
+      gap: spacing.lg,
+    },
+    section: {
+      gap: spacing.sm,
+    },
+    summary: {
+      fontSize: 15,
+      lineHeight: 22,
+      color: c.text,
+    },
+    topIcon: {
+      color: c.text,
+      fontSize: 20,
+    },
+    openCalculator: {
+      minHeight: uiTheme.hub.navCard.minHeight,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderRadius: uiTheme.hub.navCard.borderRadius,
+      borderWidth: 1,
+      borderColor: c.primaryBorder,
+      backgroundColor: c.primaryMuted,
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md,
+    },
+    openCalculatorPressed: {
+      opacity: 0.88,
+    },
+    openCalculatorText: {
+      flex: 1,
+      fontSize: 16,
+      lineHeight: 22,
+      fontWeight: '700',
+      color: c.primary,
+    },
+    openCalculatorChevron: {
+      fontSize: uiTheme.hub.chevronSize,
+      lineHeight: 30,
+      color: c.primary,
+      fontWeight: '600',
+    },
+  });
+}

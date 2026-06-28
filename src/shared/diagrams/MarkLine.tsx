@@ -1,7 +1,8 @@
 import { G, Line } from 'react-native-svg';
 
 import { DiagramLabel, type DiagramLabelVariant } from './DiagramLabel';
-import { diagramMetrics, diagramTheme } from './diagramTheme';
+import { diagramMetrics } from './diagramTheme';
+import { useDiagramTheme } from './useDiagramTheme';
 
 export type MarkLineProps = {
   x1: number;
@@ -27,6 +28,8 @@ export function MarkLine({
   labelVariant = 'muted',
   opacity = 1,
 }: MarkLineProps) {
+  const theme = useDiagramTheme();
+
   return (
     <G opacity={opacity}>
       <Line
@@ -34,7 +37,7 @@ export function MarkLine({
         y1={y1}
         x2={x2}
         y2={y2}
-        stroke={diagramTheme.markGlow}
+        stroke={theme.markGlow}
         strokeWidth={diagramMetrics.markStroke + 5}
         strokeLinecap="round"
       />
@@ -43,7 +46,7 @@ export function MarkLine({
         y1={y1}
         x2={x2}
         y2={y2}
-        stroke={diagramTheme.mark}
+        stroke={theme.mark}
         strokeWidth={diagramMetrics.markStroke}
         strokeLinecap="round"
       />

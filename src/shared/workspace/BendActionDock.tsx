@@ -1,7 +1,8 @@
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, spacing, typography, workspaceTheme } from '@/theme';
+import { spacing, typography, useTheme, workspaceTheme, type ThemePalette } from '@/theme';
 
 import type { BendActionDockConfig } from './workspaceTypes';
 
@@ -9,6 +10,8 @@ export type BendActionDockProps = BendActionDockConfig;
 
 /** Adaptive calculator action dock — left actions plus Guide on the right. */
 export function BendActionDock({ left, guide }: BendActionDockProps) {
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const insets = useSafeAreaInsets();
 
   return (
@@ -56,73 +59,61 @@ export function BendActionDock({ left, guide }: BendActionDockProps) {
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.md,
-    paddingHorizontal: spacing.lg,
-    paddingTop: workspaceTheme.dock.paddingTop,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: colors.screen,
-  },
-  left: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  action: {
-    minHeight: workspaceTheme.dock.actionMinHeight,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2,
-    borderRadius: workspaceTheme.dock.actionBorderRadius,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    justifyContent: 'center',
-  },
-  actionEmphasis: {
-    borderColor: workspaceTheme.dock.actionEmphasisBorder,
-    backgroundColor: workspaceTheme.dock.actionEmphasisBackground,
-  },
-  actionPressed: {
-    opacity: workspaceTheme.dock.pressedOpacity,
-  },
-  actionDisabled: {
-    opacity: workspaceTheme.dock.disabledOpacity,
-  },
-  actionText: {
-    ...typography.label,
-    color: colors.text,
-    fontWeight: '600',
-    fontSize: 13,
-  },
-  actionTextEmphasis: {
-    color: workspaceTheme.dock.actionEmphasisText,
-    fontWeight: '700',
-  },
-  actionTextDisabled: {
-    color: colors.muted,
-  },
-  guide: {
-    minHeight: workspaceTheme.dock.actionMinHeight,
-    minWidth: workspaceTheme.dock.guideMinWidth,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2,
-    borderRadius: workspaceTheme.dock.actionBorderRadius,
-    backgroundColor: colors.surface2,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  guideText: {
-    ...typography.label,
-    color: colors.muted,
-    fontWeight: '700',
-    fontSize: 13,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    wrap: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: spacing.md,
+      paddingHorizontal: spacing.lg,
+      paddingTop: workspaceTheme.dock.paddingTop,
+      // Continuous surface — quiet borderless actions, no dock bar.
+      backgroundColor: 'transparent',
+    },
+    left: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: spacing.lg,
+    },
+    action: {
+      minHeight: workspaceTheme.dock.actionMinHeight,
+      paddingVertical: spacing.xs + 2,
+      justifyContent: 'center',
+    },
+    actionEmphasis: {},
+    actionPressed: {
+      opacity: workspaceTheme.dock.pressedOpacity,
+    },
+    actionDisabled: {
+      opacity: workspaceTheme.dock.disabledOpacity,
+    },
+    actionText: {
+      ...typography.label,
+      color: c.muted,
+      fontWeight: '600',
+      fontSize: 14,
+    },
+    actionTextEmphasis: {
+      color: c.primary,
+      fontWeight: '700',
+    },
+    actionTextDisabled: {
+      color: c.muted,
+    },
+    guide: {
+      minHeight: workspaceTheme.dock.actionMinHeight,
+      paddingVertical: spacing.xs + 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    guideText: {
+      ...typography.label,
+      color: c.primary,
+      fontWeight: '700',
+      fontSize: 14,
+    },
+  });
+}

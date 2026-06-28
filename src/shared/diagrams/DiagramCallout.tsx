@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { G, Rect } from 'react-native-svg';
 
-import { diagramTheme } from './diagramTheme';
+import { useDiagramTheme } from './useDiagramTheme';
 
 export type DiagramCalloutProps = {
   x: number;
@@ -20,12 +20,22 @@ export function DiagramCallout({
   width,
   height,
   children,
-  fill = diagramTheme.calloutFill,
-  stroke = diagramTheme.calloutStroke,
+  fill,
+  stroke,
 }: DiagramCalloutProps) {
+  const theme = useDiagramTheme();
+
   return (
     <G>
-      <Rect x={x} y={y} width={width} height={height} rx={8} fill={fill} stroke={stroke} />
+      <Rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        rx={8}
+        fill={fill ?? theme.calloutFill}
+        stroke={stroke ?? theme.calloutStroke}
+      />
       {children}
     </G>
   );

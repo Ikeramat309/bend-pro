@@ -30,7 +30,7 @@ import {
   SetupOverridesCard,
   type BendTabId,
 } from '@/shared/ui';
-import { colors, spacing, typography, uiTheme } from '@/theme';
+import { spacing, typography, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 type SheetState =
   | { mode: 'closed' }
@@ -39,6 +39,8 @@ type SheetState =
 
 export function BenderDatabaseScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const { profile: profileParam } = useLocalSearchParams<{ profile?: string | string[] }>();
   const profileIdFromRoute = Array.isArray(profileParam) ? profileParam[0] : profileParam;
 
@@ -254,28 +256,33 @@ export function BenderDatabaseScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  content: {
-    gap: uiTheme.hub.sectionGap,
-    paddingBottom: uiTheme.layout.sectionBottom,
-  },
-  topIcon: {
-    color: colors.text,
-    fontSize: 20,
-  },
-  intro: uiTheme.hub.intro,
-  limitHint: {
-    ...typography.subtitle,
-    color: colors.muted,
-  },
-  list: {
-    gap: uiTheme.hub.sectionGap,
-  },
-  section: {
-    gap: spacing.sm,
-  },
-});
+function makeStyles(c: ThemePalette) {
+  return StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: c.background,
+    },
+    content: {
+      gap: uiTheme.hub.sectionGap,
+      paddingBottom: uiTheme.layout.sectionBottom,
+    },
+    topIcon: {
+      color: c.text,
+      fontSize: 20,
+    },
+    intro: {
+      ...uiTheme.hub.intro,
+      color: c.muted,
+    },
+    limitHint: {
+      ...typography.subtitle,
+      color: c.muted,
+    },
+    list: {
+      gap: uiTheme.hub.sectionGap,
+    },
+    section: {
+      gap: spacing.sm,
+    },
+  });
+}

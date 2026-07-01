@@ -7,14 +7,13 @@ import { getCalculatorById } from '@/core/calculators';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { usePersistRecentLayout, useRestoreRecentLayout } from '@/core/sessions';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
-import { getBenderProfile, formatSetupOnlyBenderMeta, formatStandardOffsetTableTrustTitle } from '@/data/benders';
+import { getBenderProfile } from '@/data/benders';
 import { Routes, guideRoute } from '@/navigation';
 import { LengthInputSheet, Sheet } from '@/shared/ui';
 import {
   AngleSelector,
   BendCalculatorLayout,
   EditSetupSheet,
-  OptionalInputSummary,
   type BendAngleOption,
   type SetupValues,
 } from '@/shared/workspace';
@@ -24,7 +23,7 @@ import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/ut
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateOffset } from '../engine/offset.engine';
-import { formatMultiplier, getOffsetAngleData } from '../engine/offsetAngleData';
+import { getOffsetAngleData } from '../engine/offsetAngleData';
 import { toOffsetCalculationResult } from '../engine/offsetCalculationResult';
 import {
   createOffsetInputSnapshot,
@@ -33,7 +32,6 @@ import {
 } from '../engine/offsetInputSnapshot';
 import { OFFSET_CONFIG } from '../offset.config';
 import { offsetCopy } from '../offset.copy';
-import { MultiplierOverrideSheet } from './MultiplierOverrideSheet';
 import { OffsetDiagram } from './OffsetDiagram';
 import { ShrinkOverrideSheet } from './ShrinkOverrideSheet';
 
@@ -46,7 +44,6 @@ export default function OffsetScreen() {
   const [bendAngle, setBendAngle] = useState<BendAngle>(OFFSET_CONFIG.defaultAngle);
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
-  const [multiplierSheetVisible, setMultiplierSheetVisible] = useState(false);
   const [shrinkSheetVisible, setShrinkSheetVisible] = useState(false);
 
   useRestoreRecentLayout('offset', restoreOffsetFromLayout, (fields) => {
@@ -62,7 +59,6 @@ export default function OffsetScreen() {
 
   const benderProfile = getBenderProfile(benderProfileId, customBenderProfiles);
   const chartAngleData = getOffsetAngleData(bendAngle);
-  const chartMultiplier = chartAngleData?.multiplier ?? 0;
   const chartShrinkPerInch = chartAngleData?.shrinkPerInch ?? 0;
   const offsetHeight = parseLengthInput(offsetHeightText);
   const mark1Number = parseLengthInput(mark1Text);
@@ -74,7 +70,6 @@ export default function OffsetScreen() {
     .filter(Boolean)
     .join(' • ');
   const hasValidOffset = offsetHeight !== undefined && offsetHeight > 0;
-  const profileContextMessage = formatSetupOnlyBenderMeta(benderProfile.name);
   const lengthInput = getLengthInputMode(unit);
 
   const engineInput = useMemo(
@@ -126,10 +121,6 @@ export default function OffsetScreen() {
   const distanceValue = hasValidOffset ? result.distanceBetweenBendsFormatted : '—';
   const visibleWarnings = offsetHeightText.trim() !== '' ? result.warnings : [];
 
-  const multiplierChipLabel = result.isMultiplierOverridden
-    ? offsetCopy.results.multiplierCustom
-    : offsetCopy.results.multiplier;
-
   const shrinkChipLabel = result.isShrinkOverridden
     ? offsetCopy.results.shrinkCustom
     : offsetCopy.results.shrink;
@@ -159,17 +150,6 @@ export default function OffsetScreen() {
     setSetupVisible(false);
   }
 
-  function applyMultiplierOverride(override: number | undefined) {
-    const overrides = { ...setup.offsetMultiplierOverrides };
-    if (override === undefined) {
-      delete overrides[bendAngle];
-    } else {
-      overrides[bendAngle] = override;
-    }
-    setSetup(patchCalculatorSetup(setup, { offsetMultiplierOverrides: overrides }));
-    setMultiplierSheetVisible(false);
-  }
-
   function applyShrinkOverride(overrideInches: number | undefined) {
     const overrides = { ...setup.offsetShrinkPerInchOverrides };
     if (overrideInches === undefined) {
@@ -190,11 +170,11 @@ export default function OffsetScreen() {
   return (
     <BendCalculatorLayout
       title={offsetCopy.screenTitle}
-      subtitle={setupSummary}
+      subtitle=""
       onBackPress={handleBackPress}
       trust={{
-        benderName: formatStandardOffsetTableTrustTitle(bendAngle),
-        meta: [setupSummary, setupMeta, profileContextMessage].filter(Boolean).join(' • '),
+        benderName: benderProfile.name,
+        meta: [setupSummary, setupMeta].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[
@@ -226,22 +206,6 @@ export default function OffsetScreen() {
             },
           ],
         },
-        ...(mark1Text.trim()
-          ? [
-              {
-                type: 'custom' as const,
-                key: 'mark1Summary',
-                node: (
-                  <OptionalInputSummary
-                    label={offsetCopy.fields.mark1.label}
-                    value={mark1Text}
-                    unit={unitLabel}
-                    onPress={() => setMark1SheetVisible(true)}
-                  />
-                ),
-              },
-            ]
-          : []),
       ]}
       workspace={
         <OffsetDiagram
@@ -264,19 +228,13 @@ export default function OffsetScreen() {
                 tone: result.isShrinkOverridden ? 'primary' : undefined,
                 onPress: () => setShrinkSheetVisible(true),
               },
-              {
-                label: `${multiplierChipLabel} (${bendAngle}°)`,
-                value: formatMultiplier(result.multiplier),
-                tone: result.isMultiplierOverridden ? 'primary' : undefined,
-                onPress: () => setMultiplierSheetVisible(true),
-              },
             ]
           : undefined
       }
       dock={{
         left: [
           { key: 'reset', label: 'Reset', onPress: resetInputs },
-          { key: 'set-mark', label: offsetCopy.fields.mark1.addButton, onPress: () => setMark1SheetVisible(true) },
+          { key: 'set-mark', label: 'Set First Mark', onPress: () => setMark1SheetVisible(true) },
         ],
         guide: { onPress: () => router.push(guideRoute('offset')) },
       }}
@@ -321,15 +279,6 @@ export default function OffsetScreen() {
             }}
             onCancel={() => setSetupVisible(false)}
             onApply={applySetup}
-          />
-          <MultiplierOverrideSheet
-            visible={multiplierSheetVisible}
-            bendAngle={bendAngle}
-            benderName={benderProfile.name}
-            chartMultiplierFormatted={formatMultiplier(chartMultiplier)}
-            currentOverride={multiplierOverride}
-            onCancel={() => setMultiplierSheetVisible(false)}
-            onApply={applyMultiplierOverride}
           />
           <ShrinkOverrideSheet
             visible={shrinkSheetVisible}

@@ -9,6 +9,7 @@ import type { BendInputConfig } from './workspaceTypes';
 export type BendInputStripProps = {
   inputs?: BendInputConfig[];
   children?: React.ReactNode;
+  density?: 'default' | 'compact';
 };
 
 function renderInput(input: BendInputConfig): React.ReactNode {
@@ -72,16 +73,19 @@ function renderInput(input: BendInputConfig): React.ReactNode {
 }
 
 /** Adaptive calculator input area — compact fields, pickers, optional rows. */
-export function BendInputStrip({ inputs, children }: BendInputStripProps) {
+export function BendInputStrip({ inputs, children, density = 'default' }: BendInputStripProps) {
+  const compact = density === 'compact';
+  const wrapStyle = compact ? styles.wrapCompact : styles.wrap;
+
   if (children) {
-    return <View style={styles.wrap}>{children}</View>;
+    return <View style={wrapStyle}>{children}</View>;
   }
 
   if (!inputs?.length) {
     return null;
   }
 
-  return <View style={styles.wrap}>{inputs.map((input) => renderInput(input))}</View>;
+  return <View style={wrapStyle}>{inputs.map((input) => renderInput(input))}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -89,6 +93,11 @@ const styles = StyleSheet.create({
     gap: workspaceTheme.inputStrip.rowGap,
     paddingHorizontal: spacing.lg,
     paddingVertical: workspaceTheme.inputStrip.paddingVertical,
+  },
+  wrapCompact: {
+    gap: workspaceTheme.inputStrip.rowGap,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: 2,
   },
   row: {
     flexDirection: 'row',

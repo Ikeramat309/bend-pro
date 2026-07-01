@@ -77,11 +77,13 @@ export type BendDockAction = {
   onPress: () => void;
   disabled?: boolean;
   /** Workflow action styling — defaults to emphasis on the last left action when 2+ actions. */
-  variant?: 'default' | 'emphasis';
+  variant?: 'default' | 'emphasis' | 'pill';
 };
 
 export type BendActionDockConfig = {
   left: BendDockAction[];
+  /** Optional centered dock action — e.g. Set First Mark between Reset and Guide. */
+  center?: BendDockAction;
   guide?: {
     label?: string;
     onPress: () => void;
@@ -102,5 +104,11 @@ export type BendCalculatorLayoutProps = {
   showBottomNav?: boolean;
   warnings?: string[];
   onBackPress: () => void;
+  /** Tighter vertical rhythm between inputs, diagram, and results. */
+  workspaceDensity?: 'default' | 'compact';
+  /** Tighter input strip padding. */
+  inputDensity?: 'default' | 'compact';
+  /** Center the screen title in the header bar. */
+  centerTitle?: boolean;
   footer?: ReactNode;
 };

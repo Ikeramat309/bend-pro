@@ -11,12 +11,18 @@ export type BendPipeWorkspaceProps = {
   diagram: ReactNode;
   primaryResult?: BendResultConfig;
   secondaryResults?: BendResultConfig[];
+  density?: 'default' | 'compact';
 };
 
 /** Hero pipe workspace — diagram-first with a centered primary result below the pipe. */
-export function BendPipeWorkspace({ diagram, primaryResult, secondaryResults }: BendPipeWorkspaceProps) {
+export function BendPipeWorkspace({
+  diagram,
+  primaryResult,
+  secondaryResults,
+  density = 'default',
+}: BendPipeWorkspaceProps) {
   const { colors } = useTheme();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const styles = useMemo(() => makeStyles(colors, density), [colors, density]);
   const secondary = (secondaryResults ?? []).slice(0, 2);
   const hasResults = Boolean(primaryResult || secondary.length > 0);
 
@@ -65,18 +71,20 @@ export function BendPipeWorkspace({ diagram, primaryResult, secondaryResults }: 
   );
 }
 
-function makeStyles(c: ThemePalette) {
+function makeStyles(c: ThemePalette, density: 'default' | 'compact') {
+  const compact = density === 'compact';
+
   return StyleSheet.create({
     wrap: {
       flex: 1,
       minHeight: workspaceTheme.workspace.minHeight,
       paddingHorizontal: spacing.lg,
-      paddingTop: workspaceTheme.workspace.wrapPaddingTop,
-      paddingBottom: workspaceTheme.workspace.wrapPaddingBottom,
+      paddingTop: compact ? 0 : workspaceTheme.workspace.wrapPaddingTop,
+      paddingBottom: compact ? 0 : workspaceTheme.workspace.wrapPaddingBottom,
     },
     cardInner: {
       flex: 1,
-      minHeight: workspaceTheme.workspace.diagramMinHeight + 88,
+      minHeight: workspaceTheme.workspace.diagramMinHeight + (compact ? 76 : 88),
     },
     diagramWell: {
       flex: 1,
@@ -87,10 +95,10 @@ function makeStyles(c: ThemePalette) {
     resultHero: {
       flexShrink: 0,
       alignItems: 'center',
-      gap: spacing.sm,
+      gap: compact ? spacing.xs : spacing.sm,
       paddingHorizontal: spacing.md,
-      paddingTop: spacing.xs,
-      paddingBottom: spacing.sm,
+      paddingTop: compact ? 0 : spacing.xs,
+      paddingBottom: compact ? spacing.xs : spacing.sm,
       backgroundColor: 'transparent',
     },
     primaryBlock: {

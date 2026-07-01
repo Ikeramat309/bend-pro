@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import type { BendAngle } from '@/core/types';
 import { snapshotSetupFromInput } from '@/core/calculations';
@@ -23,7 +24,7 @@ import { getLengthUnitLabel, getLengthInputMode, getUnitSystemLabel } from '@/ut
 import { parseLengthInput } from '@/utils/parseLengthInput';
 
 import { calculateOffset } from '../engine/offset.engine';
-import { getOffsetAngleData } from '../engine/offsetAngleData';
+import { formatMultiplier, getOffsetAngleData } from '../engine/offsetAngleData';
 import { toOffsetCalculationResult } from '../engine/offsetCalculationResult';
 import {
   createOffsetInputSnapshot,
@@ -32,8 +33,12 @@ import {
 } from '../engine/offsetInputSnapshot';
 import { OFFSET_CONFIG } from '../offset.config';
 import { offsetCopy } from '../offset.copy';
+import { MultiplierOverrideSheet } from './MultiplierOverrideSheet';
 import { OffsetDiagram } from './OffsetDiagram';
 import { ShrinkOverrideSheet } from './ShrinkOverrideSheet';
+
+/** Approved diagram layout — scale wrapper only, no SVG geometry changes. */
+const DIAGRAM_DISPLAY_SCALE = 1.06;
 
 export default function OffsetScreen() {
   const router = useRouter();
@@ -44,6 +49,7 @@ export default function OffsetScreen() {
   const [bendAngle, setBendAngle] = useState<BendAngle>(OFFSET_CONFIG.defaultAngle);
   const [setupVisible, setSetupVisible] = useState(false);
   const [angleSheetVisible, setAngleSheetVisible] = useState(false);
+  const [multiplierSheetVisible, setMultiplierSheetVisible] = useState(false);
   const [shrinkSheetVisible, setShrinkSheetVisible] = useState(false);
 
   useRestoreRecentLayout('offset', restoreOffsetFromLayout, (fields) => {
@@ -59,11 +65,13 @@ export default function OffsetScreen() {
 
   const benderProfile = getBenderProfile(benderProfileId, customBenderProfiles);
   const chartAngleData = getOffsetAngleData(bendAngle);
+  const chartMultiplier = chartAngleData?.multiplier ?? 0;
   const chartShrinkPerInch = chartAngleData?.shrinkPerInch ?? 0;
   const offsetHeight = parseLengthInput(offsetHeightText);
   const mark1Number = parseLengthInput(mark1Text);
   const hasMark1 = mark1Number !== undefined;
   const unitLabel = getLengthUnitLabel(unit);
+  const showFieldUnit = unit === 'metric';
   const setupSummary = `${conduitType} ${conduitSize}"`;
   const overrideHint = getSetupOverrideHint(setup, { calculator: 'offset', bendAngle });
   const setupMeta = [`${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`, overrideHint]
@@ -124,6 +132,9 @@ export default function OffsetScreen() {
   const shrinkChipLabel = result.isShrinkOverridden
     ? offsetCopy.results.shrinkCustom
     : offsetCopy.results.shrink;
+  const multiplierChipLabel = result.isMultiplierOverridden
+    ? offsetCopy.results.multiplierCustom
+    : offsetCopy.results.multiplier;
 
   function handleBackPress() {
     const safeRouter = router as typeof router & { canGoBack?: () => boolean };
@@ -150,6 +161,17 @@ export default function OffsetScreen() {
     setSetupVisible(false);
   }
 
+  function applyMultiplierOverride(override: number | undefined) {
+    const overrides = { ...setup.offsetMultiplierOverrides };
+    if (override === undefined) {
+      delete overrides[bendAngle];
+    } else {
+      overrides[bendAngle] = override;
+    }
+    setSetup(patchCalculatorSetup(setup, { offsetMultiplierOverrides: overrides }));
+    setMultiplierSheetVisible(false);
+  }
+
   function applyShrinkOverride(overrideInches: number | undefined) {
     const overrides = { ...setup.offsetShrinkPerInchOverrides };
     if (overrideInches === undefined) {
@@ -171,6 +193,9 @@ export default function OffsetScreen() {
     <BendCalculatorLayout
       title={offsetCopy.screenTitle}
       subtitle=""
+      centerTitle
+      inputDensity="compact"
+      workspaceDensity="compact"
       onBackPress={handleBackPress}
       trust={{
         benderName: benderProfile.name,
@@ -189,7 +214,7 @@ export default function OffsetScreen() {
               value: offsetHeightText,
               onChangeText: setOffsetHeightText,
               placeholder: offsetCopy.fields.offsetHeight.placeholder,
-              unit: unitLabel,
+              unit: showFieldUnit ? unitLabel : undefined,
               variant: 'compact',
               lengthInput,
               error:
@@ -208,11 +233,15 @@ export default function OffsetScreen() {
         },
       ]}
       workspace={
-        <OffsetDiagram
-          data={result.diagramData}
-          isEmpty={!hasValidOffset}
-          isInvalid={offsetHeightText !== '' && !hasValidOffset}
-        />
+        <View style={styles.diagramScaleWrap}>
+          <View style={styles.diagramScaleInner}>
+            <OffsetDiagram
+              data={result.diagramData}
+              isEmpty={!hasValidOffset}
+              isInvalid={offsetHeightText !== '' && !hasValidOffset}
+            />
+          </View>
+        </View>
       }
       primaryResult={
         hasValidOffset
@@ -228,14 +257,23 @@ export default function OffsetScreen() {
                 tone: result.isShrinkOverridden ? 'primary' : undefined,
                 onPress: () => setShrinkSheetVisible(true),
               },
+              {
+                label: multiplierChipLabel,
+                value: formatMultiplier(result.multiplier),
+                tone: result.isMultiplierOverridden ? 'primary' : undefined,
+                onPress: () => setMultiplierSheetVisible(true),
+              },
             ]
           : undefined
       }
       dock={{
-        left: [
-          { key: 'reset', label: 'Reset', onPress: resetInputs },
-          { key: 'set-mark', label: 'Set First Mark', onPress: () => setMark1SheetVisible(true) },
-        ],
+        left: [{ key: 'reset', label: 'Reset', onPress: resetInputs }],
+        center: {
+          key: 'set-mark',
+          label: 'Set First Mark',
+          variant: 'pill',
+          onPress: () => setMark1SheetVisible(true),
+        },
         guide: { onPress: () => router.push(guideRoute('offset')) },
       }}
       warnings={visibleWarnings}
@@ -245,7 +283,7 @@ export default function OffsetScreen() {
             visible={mark1SheetVisible}
             label={offsetCopy.fields.mark1.label}
             value={mark1Text}
-            unit={unitLabel}
+            unit={showFieldUnit ? unitLabel : undefined}
             placeholder={offsetCopy.fields.mark1.placeholder}
             onCommit={(text) => {
               setMark1Text(text);
@@ -280,6 +318,15 @@ export default function OffsetScreen() {
             onCancel={() => setSetupVisible(false)}
             onApply={applySetup}
           />
+          <MultiplierOverrideSheet
+            visible={multiplierSheetVisible}
+            bendAngle={bendAngle}
+            benderName={benderProfile.name}
+            chartMultiplierFormatted={formatMultiplier(chartMultiplier)}
+            currentOverride={multiplierOverride}
+            onCancel={() => setMultiplierSheetVisible(false)}
+            onApply={applyMultiplierOverride}
+          />
           <ShrinkOverrideSheet
             visible={shrinkSheetVisible}
             bendAngle={bendAngle}
@@ -295,3 +342,18 @@ export default function OffsetScreen() {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  diagramScaleWrap: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  diagramScaleInner: {
+    flex: 1,
+    width: '100%',
+    transform: [{ scale: DIAGRAM_DISPLAY_SCALE }],
+  },
+});

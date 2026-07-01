@@ -15,6 +15,8 @@ export type AppHeaderProps = {
   onRightPress?: () => void;
   /** Compact bar for calculator screens — saves vertical space for the pipe workspace. */
   density?: 'default' | 'compact';
+  /** Center title in the header bar while keeping the back control on the left. */
+  centerTitle?: boolean;
 };
 
 /** Top app bar for calculator and hub screens. */
@@ -27,11 +29,67 @@ export function AppHeader({
   rightIcon,
   onRightPress,
   density = 'default',
+  centerTitle = false,
 }: AppHeaderProps) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const compact = density === 'compact';
+
+  if (centerTitle) {
+    return (
+      <View
+        style={[
+          styles.container,
+          {
+            paddingTop: insets.top,
+            backgroundColor: colors.screen,
+            borderBottomColor: colors.border,
+          },
+        ]}>
+        <View style={[styles.row, compact && styles.rowCompact, styles.rowCentered]}>
+          <View style={styles.sideSlot}>
+            {showBack ? (
+              <Pressable
+                onPress={onBackPress}
+                style={styles.iconButton}
+                accessibilityRole="button"
+                accessibilityLabel="Go back">
+                <Text style={styles.backIcon}>←</Text>
+              </Pressable>
+            ) : (
+              <View style={styles.sideSpacer} />
+            )}
+          </View>
+          <View style={styles.centerTitleSlot}>
+            <Text style={[styles.title, compact && styles.titleCompact, styles.titleCentered]} numberOfLines={1}>
+              {title}
+            </Text>
+            {subtitle ? (
+              <Text
+                style={[styles.subtitle, compact && styles.subtitleCompact, styles.subtitleCentered]}
+                numberOfLines={1}>
+                {subtitle}
+              </Text>
+            ) : null}
+          </View>
+          <View style={styles.sideSlot}>
+            {rightIcon ? (
+              <Pressable
+                onPress={onRightPress}
+                style={styles.iconButton}
+                accessibilityRole="button"
+                accessibilityLabel="Menu">
+                {rightIcon}
+              </Pressable>
+            ) : (
+              <View style={styles.sideSpacer} />
+            )}
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View
@@ -106,6 +164,31 @@ function makeStyles(colors: ThemePalette) {
   rowCompact: {
     minHeight: workspaceTheme.header.minHeight,
     paddingVertical: workspaceTheme.header.paddingVertical,
+  },
+  rowCentered: {
+    justifyContent: 'center',
+  },
+  sideSlot: {
+    width: touchTarget,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sideSpacer: {
+    width: touchTarget,
+    height: touchTarget,
+  },
+  centerTitleSlot: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+    paddingHorizontal: spacing.xs,
+  },
+  titleCentered: {
+    textAlign: 'center',
+  },
+  subtitleCentered: {
+    textAlign: 'center',
   },
   left: {
     flex: 1,

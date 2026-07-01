@@ -27,6 +27,9 @@ export function BendCalculatorLayout({
   showBottomNav = false,
   warnings,
   onBackPress,
+  workspaceDensity = 'default',
+  inputDensity = 'default',
+  centerTitle = false,
   footer,
 }: BendCalculatorLayoutProps) {
   const { colors } = useTheme();
@@ -37,12 +40,13 @@ export function BendCalculatorLayout({
       diagram={workspace}
       primaryResult={primaryResult}
       secondaryResults={secondaryResults}
+      density={workspaceDensity}
     />
   );
 
   return (
     <View style={styles.screen}>
-      <BendHeader title={title} subtitle={subtitle} onBackPress={onBackPress} />
+      <BendHeader title={title} subtitle={subtitle} onBackPress={onBackPress} centerTitle={centerTitle} />
       <SafeAreaView style={styles.body} edges={['left', 'right', 'bottom']}>
         <BendTrustStrip {...trust} />
         <ScrollView
@@ -50,7 +54,9 @@ export function BendCalculatorLayout({
           contentContainerStyle={styles.inputScrollContent}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}>
-          <BendInputStrip inputs={inputs}>{inputStrip}</BendInputStrip>
+          <BendInputStrip inputs={inputs} density={inputDensity}>
+            {inputStrip}
+          </BendInputStrip>
         </ScrollView>
         <View style={styles.workspace}>{workspaceNode}</View>
         {warnings && warnings.length > 0 ? (

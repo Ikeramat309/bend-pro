@@ -14,15 +14,15 @@ import {
   useDiagramTheme,
 } from '@/shared/diagrams';
 import { G, Line } from 'react-native-svg';
-import type { OffsetDiagramData } from '../engine/offset.types';
-import { OFFSET_CONFIG } from '../offset.config';
-import { offsetCopy } from '../offset.copy';
 import {
-  OFFSET_GHOST_PIPE,
   OFFSET_DIAGRAM_LAYOUT,
+  OFFSET_GHOST_PIPE,
   buildOffsetDiagramGeometry,
   type OffsetDiagramGeometry,
 } from '../diagram/offsetDiagramGeometry';
+import type { OffsetDiagramData } from '../engine/offset.types';
+import { OFFSET_CONFIG } from '../offset.config';
+import { offsetCopy } from '../offset.copy';
 
 /** Model-space layout from geometry (pre-180° pipe path). */
 const MODEL = OFFSET_DIAGRAM_LAYOUT;

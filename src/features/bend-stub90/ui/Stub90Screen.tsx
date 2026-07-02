@@ -5,13 +5,7 @@ import { snapshotSetupFromInput } from '@/core/calculations';
 import { getCalculatorById } from '@/core/calculators';
 import { getSetupOverrideHint, patchCalculatorSetup, useCalculatorSetup } from '@/core/settings';
 import { usePersistRecentLayout, useRestoreRecentLayout } from '@/core/sessions';
-import {
-  formatStub90DeductContextAction,
-  formatStub90DeductContextLine,
-  getBenderProfile,
-  getEmtStub90TakeUpInches,
-  resolveStub90DeductContext,
-} from '@/data/benders';
+import { getBenderProfile, getEmtStub90TakeUpInches } from '@/data/benders';
 import { DEFAULT_CONDUIT_TYPE } from '@/data/conduit';
 import { Routes, guideRoute } from '@/navigation';
 import {
@@ -42,6 +36,7 @@ export default function Stub90Screen() {
   const [stubLengthText, setStubLengthText] = useState('');
   const [legLengthText, setLegLengthText] = useState('');
   const [showLegInput, setShowLegInput] = useState(false);
+  const [legSheetVisible, setLegSheetVisible] = useState(false);
   const [setupVisible, setSetupVisible] = useState(false);
   const [deductSheetVisible, setDeductSheetVisible] = useState(false);
 
@@ -61,11 +56,12 @@ export default function Stub90Screen() {
   const legLength = parseLengthInput(legLengthText);
   const hasValidLegLength = legLength !== undefined && legLength > 0;
   const unitLabel = getLengthUnitLabel(unit);
+  const showFieldUnit = unit === 'metric';
   const setupSummary = `${conduitType} ${conduitSize}"`;
   const overrideHint = getSetupOverrideHint(setup, { calculator: 'stub90' });
-  const setupMeta = [`${getUnitSystemLabel(unit)} • ${getRoundingLabel(rounding)}`, overrideHint]
+  const setupMeta = [`${getUnitSystemLabel(unit)} · ${getRoundingLabel(rounding)}`, overrideHint]
     .filter(Boolean)
-    .join(' • ');
+    .join(' · ');
   const hasValidStubLength = stubLength !== undefined && stubLength > 0;
   const lengthInput = getLengthInputMode(unit);
 
@@ -113,15 +109,6 @@ export default function Stub90Screen() {
 
   const hasValidDeductMark = hasValidStubLength && result.isValidDeductMark;
   const deductMarkValue = hasValidDeductMark ? result.deductMarkFormatted ?? '—' : '—';
-  const deductContext = resolveStub90DeductContext(
-    benderProfile,
-    conduitSize,
-    result.deductSource === 'missing-chart' ? undefined : result.deduct,
-    deductOverrideInches,
-  );
-  const profileContextMessage = formatStub90DeductContextLine(deductContext, unit, rounding);
-  const profileContextAction = formatStub90DeductContextAction(deductContext);
-  const profileContextTone = deductContext.source === 'missing-chart' ? 'warning' : 'info';
   const visibleWarnings = stubLengthText.trim() !== '' ? result.warnings : [];
 
   function handleBackPress() {
@@ -161,21 +148,32 @@ export default function Stub90Screen() {
     setStubLengthText('');
     setLegLengthText('');
     setShowLegInput(false);
+    setLegSheetVisible(false);
+  }
+
+  function enableLegInput() {
+    setShowLegInput(true);
+    setLegSheetVisible(true);
+  }
+
+  function removeLegInput() {
+    setShowLegInput(false);
+    setLegLengthText('');
+    setLegSheetVisible(false);
   }
 
   return (
     <BendCalculatorLayout
       title={stub90Copy.screenTitle}
-      subtitle={setupSummary}
+      subtitle=""
+      centerTitle
+      inputDensity="compact"
+      workspaceDensity="compact"
       onBackPress={handleBackPress}
       trust={{
         benderName: benderProfile.name,
-        meta: setupMeta,
-        note: profileContextMessage,
-        noteTone: profileContextTone,
-        noteAction: profileContextAction,
+        meta: [setupSummary, setupMeta].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
-        onNoteAction: profileContextAction ? () => setDeductSheetVisible(true) : undefined,
       }}
       inputs={[
         {
@@ -185,35 +183,35 @@ export default function Stub90Screen() {
           value: stubLengthText,
           onChangeText: setStubLengthText,
           placeholder: stub90Copy.fields.stubLength.placeholder,
-          unit: unitLabel,
+          unit: showFieldUnit ? unitLabel : undefined,
+          variant: 'compact',
           lengthInput,
           error:
             stubLengthText !== '' && !hasValidStubLength
               ? stub90Copy.fields.stubLength.errorRequired
               : undefined,
         },
-        {
-          type: 'optional',
-          key: 'leg',
-          addLabel: stub90Copy.fields.leg.addButton,
-          onAdd: () => setShowLegInput(true),
-          visible: showLegInput,
-          field: {
-            type: 'field',
-            key: 'legField',
-            label: stub90Copy.fields.leg.label,
-            value: legLengthText,
-            onChangeText: setLegLengthText,
-            placeholder: stub90Copy.fields.leg.placeholder,
-            unit: unitLabel,
-            variant: 'compact',
-            lengthInput,
-            error:
-              legLengthText.trim() !== '' && !hasValidLegLength
-                ? stub90Copy.fields.leg.errorRequired
-                : undefined,
-          },
-        },
+        ...(showLegInput
+          ? [
+              {
+                type: 'field' as const,
+                key: 'legField',
+                label: stub90Copy.fields.leg.label,
+                value: legLengthText,
+                onChangeText: setLegLengthText,
+                placeholder: stub90Copy.fields.leg.placeholder,
+                unit: showFieldUnit ? unitLabel : undefined,
+                variant: 'compact' as const,
+                lengthInput,
+                lengthSheetOpen: legSheetVisible,
+                onLengthSheetOpenChange: setLegSheetVisible,
+                error:
+                  legLengthText.trim() !== '' && !hasValidLegLength
+                    ? stub90Copy.fields.leg.errorRequired
+                    : undefined,
+              },
+            ]
+          : []),
       ]}
       workspace={
         <Stub90Diagram
@@ -243,6 +241,19 @@ export default function Stub90Screen() {
       }
       dock={{
         left: [{ key: 'reset', label: 'Reset', onPress: resetInputs }],
+        center: showLegInput
+          ? {
+              key: 'remove-leg',
+              label: stub90Copy.fields.leg.removeButton,
+              variant: 'pill',
+              onPress: removeLegInput,
+            }
+          : {
+              key: 'add-leg',
+              label: stub90Copy.fields.leg.addButton,
+              variant: 'pill',
+              onPress: enableLegInput,
+            },
         guide: { onPress: () => router.push(guideRoute('stub90')) },
       }}
       warnings={visibleWarnings}

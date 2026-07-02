@@ -26,6 +26,8 @@ function renderInput(input: BendInputConfig): React.ReactNode {
           variant={input.variant}
           error={input.error}
           lengthInput={input.lengthInput}
+          lengthSheetOpen={input.lengthSheetOpen}
+          onLengthSheetOpenChange={input.onLengthSheetOpenChange}
           inputProps={input.keyboardType ? { keyboardType: input.keyboardType } : undefined}
         />
       );
@@ -52,6 +54,8 @@ function renderInput(input: BendInputConfig): React.ReactNode {
           variant={input.field.variant ?? 'compact'}
           error={input.field.error}
           lengthInput={input.field.lengthInput}
+          lengthSheetOpen={input.field.lengthSheetOpen}
+          onLengthSheetOpenChange={input.field.onLengthSheetOpenChange}
           inputProps={
             input.field.keyboardType ? { keyboardType: input.field.keyboardType } : undefined
           }

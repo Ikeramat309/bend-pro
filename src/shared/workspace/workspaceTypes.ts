@@ -23,6 +23,9 @@ export type BendFieldInputConfig = {
   variant?: 'default' | 'compact';
   /** Imperial fraction keypad or metric decimal pad for length fields. */
   lengthInput?: 'decimal' | 'imperial';
+  /** Optional controlled imperial length sheet — for opening from outside the field. */
+  lengthSheetOpen?: boolean;
+  onLengthSheetOpenChange?: (open: boolean) => void;
   /** System keyboard for non-length numeric fields (e.g. degrees). */
   keyboardType?: 'decimal-pad';
   error?: string;

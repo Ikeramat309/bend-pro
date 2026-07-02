@@ -19,6 +19,9 @@ export type FieldInputProps = {
   error?: string;
   /** Decimal pad for metric; sheet-based fraction keypad for imperial. */
   lengthInput?: LengthInputMode;
+  /** Optional controlled imperial length sheet — for opening from outside the field. */
+  lengthSheetOpen?: boolean;
+  onLengthSheetOpenChange?: (open: boolean) => void;
   inputProps?: Omit<TextInputProps, 'value' | 'onChangeText' | 'placeholder'>;
 };
 
@@ -74,13 +77,16 @@ export function FieldInput({
   onPress,
   error,
   lengthInput,
+  lengthSheetOpen,
+  onLengthSheetOpenChange,
   inputProps,
 }: FieldInputProps) {
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const inputRef = useRef<TextInput>(null);
   const [focused, setFocused] = useState(false);
-  const [lengthSheetVisible, setLengthSheetVisible] = useState(false);
+  const [internalLengthSheetVisible, setInternalLengthSheetVisible] = useState(false);
+  const lengthSheetVisible = lengthSheetOpen ?? internalLengthSheetVisible;
   const useLengthSheet = lengthInput === 'imperial';
   const borderColor = shellBorder(colors, error, focused || lengthSheetVisible);
   // Continuous treatment: transparent by default, a faint surface tint only
@@ -106,6 +112,14 @@ export function FieldInput({
       inputProps?.onBlur?.(event);
     },
   };
+
+  function setLengthSheetVisible(open: boolean) {
+    if (onLengthSheetOpenChange) {
+      onLengthSheetOpenChange(open);
+    } else {
+      setInternalLengthSheetVisible(open);
+    }
+  }
 
   function openLengthSheet() {
     setLengthSheetVisible(true);

@@ -11,6 +11,7 @@ export const stub90Copy = {
       label: 'Leg',
       placeholder: 'Optional',
       addButton: 'Add Leg',
+      removeButton: 'Remove Leg',
       errorRequired: 'Enter a leg greater than 0.',
     },
   },

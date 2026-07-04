@@ -70,11 +70,22 @@ describe('calculateStub90', () => {
     ]);
   });
 
-  test('unknown bender profile id falls back to the generic profile', () => {
+  test('unknown bender profile id falls back to the generic profile with a visible warning', () => {
     const result = calculateStub90(baseInput({ benderProfileId: 'does-not-exist' }));
 
     expect(result.benderProfileUsed.id).toBe('generic-hand-bender');
     expect(result.deduct).toBe(5);
+    expect(result.warnings).toContain(
+      'Saved bender was not found — using Generic Hand Bender instead. Reselect your bender in Setup.',
+    );
+  });
+
+  test('known bender profile id produces no fallback warning', () => {
+    const result = calculateStub90(baseInput());
+
+    expect(
+      result.warnings.some((warning) => warning.includes('Saved bender was not found')),
+    ).toBe(false);
   });
 
   describe('invalid inputs', () => {

@@ -6,7 +6,7 @@
  * shrink = offsetHeight × shrinkPerInch
  */
 import { toCanonicalInches } from '@/core/measurements';
-import { getBenderProfile } from '@/data/benders';
+import { formatMissingBenderProfileWarning, resolveBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { OffsetEngineInput, OffsetEngineResult } from './offset.types';
@@ -49,7 +49,13 @@ function collectWarnings(input: OffsetEngineInput): string[] {
 
 export function calculateOffset(input: OffsetEngineInput): OffsetEngineResult {
   const warnings = collectWarnings(input);
-  const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
+  const { profile: benderProfile, isFallback: isProfileFallback } = resolveBenderProfile(
+    input.benderProfileId,
+    input.customBenderProfiles ?? [],
+  );
+  if (isProfileFallback) {
+    warnings.push(formatMissingBenderProfileWarning(benderProfile.name));
+  }
 
   // Guard against angles outside the table (unreachable through the UI,
   // but an unknown angle must produce an invalid result, not a crash).

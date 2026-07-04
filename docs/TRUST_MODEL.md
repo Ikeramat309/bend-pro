@@ -110,7 +110,7 @@ These exist in code today and should be visible to the user or tightened in futu
 
 | Location | Behavior | User-visible? |
 |----------|----------|---------------|
-| Unknown bender profile id | `getBenderProfileById` falls back to the first built-in generic profile | Trust strip shows generic name; no dedicated warning |
+| Unknown bender profile id | `resolveBenderProfile` falls back to the first built-in generic profile and reports `isFallback`; every engine emits a warning ("Saved bender was not found — using Generic Hand Bender…") | Yes — warning strip on all six calculators |
 | Invalid saddle 3 preset (engine guard) | Defaults to `SADDLE3_CONFIG.defaultPreset` | Should not occur via UI |
 | Invalid offset / rolling angle (engine guard) | `isValid: false`, zero multiplier | Invalid result, not a silent success |
 | Invalid saddle 4 angle (engine guard) | Defaults to `SADDLE4_CONFIG.defaultAngle` | Should not occur via UI |

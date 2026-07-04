@@ -9,7 +9,9 @@ import { HAND_BENDER_COMPACT } from './handBenderCompact';
 import {
   getBenderProfileById,
   getBenderProfileIdByNameFromAll,
+  resolveBenderProfileById,
   type CustomBenderProfileStored,
+  type ResolvedBenderProfile,
 } from './customBenders';
 import type { BenderProfile, BenderProfileId } from './types';
 
@@ -37,11 +39,13 @@ export {
   MAX_CUSTOM_BENDER_NAME_LENGTH,
   MAX_CUSTOM_BENDER_PROFILES,
   mergeBenderProfiles,
+  resolveBenderProfileById,
   sanitizeCustomBenderProfile,
   sanitizeCustomBenderProfiles,
   toBenderProfile,
   type CustomBenderProfileDraft,
   type CustomBenderProfileStored,
+  type ResolvedBenderProfile,
 } from './customBenders';
 
 export { GENERIC_HAND_BENDER } from './genericHandBender';
@@ -65,6 +69,19 @@ export function getBenderProfile(
   customProfiles: readonly CustomBenderProfileStored[] = [],
 ): BenderProfile {
   return getBenderProfileById(profileId, customProfiles);
+}
+
+/**
+ * Resolves a profile id and reports whether the default was substituted.
+ * Engines must use this (not getBenderProfile) so a dangling id — e.g. a
+ * deleted custom bender still referenced by setup — surfaces as a warning
+ * instead of a silent swap.
+ */
+export function resolveBenderProfile(
+  profileId: string,
+  customProfiles: readonly CustomBenderProfileStored[] = [],
+): ResolvedBenderProfile {
+  return resolveBenderProfileById(profileId, customProfiles);
 }
 
 export function getBenderProfileIdByName(
@@ -104,6 +121,7 @@ export function formatProfileStub90Summary(profile: BenderProfile): string {
 }
 
 export {
+  formatMissingBenderProfileWarning,
   formatSegmentTrustTitle,
   formatSetupOnlyBenderMeta,
   formatStandardOffsetTableTrustTitle,

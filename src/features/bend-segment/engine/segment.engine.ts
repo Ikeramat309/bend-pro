@@ -17,7 +17,7 @@
  * shoe, so no deduct/take-up is applied.
  */
 import { toCanonicalInches } from '@/core/measurements';
-import { getBenderProfile } from '@/data/benders';
+import { formatMissingBenderProfileWarning, resolveBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { SegmentEngineInput, SegmentEngineResult } from './segment.types';
@@ -86,7 +86,10 @@ function collectWarnings(
 }
 
 export function calculateSegment(input: SegmentEngineInput): SegmentEngineResult {
-  const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
+  const { profile: benderProfile, isFallback: isProfileFallback } = resolveBenderProfile(
+    input.benderProfileId,
+    input.customBenderProfiles ?? [],
+  );
 
   const radiusInches = toCanonicalInches(input.radius || 0, input.unitSystem);
   const totalAngle = input.totalAngle || 0;
@@ -114,6 +117,9 @@ export function calculateSegment(input: SegmentEngineInput): SegmentEngineResult
   const lastMarkInches = marksInches ? marksInches[marksInches.length - 1] : undefined;
 
   const warnings = collectWarnings(input, numberOfBends, degreesPerBend);
+  if (isProfileFallback) {
+    warnings.push(formatMissingBenderProfileWarning(benderProfile.name));
+  }
   const isValid = inputsPositive;
 
   const fmt = (value: number) => formatLength(value, input.unitSystem, input.roundingPrecision);

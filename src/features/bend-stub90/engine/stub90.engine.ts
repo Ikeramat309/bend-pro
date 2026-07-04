@@ -5,7 +5,11 @@
  * deductMark = stubLength - deduct (take-up)
  */
 import { toCanonicalInches } from '@/core/measurements';
-import { getBenderProfile, resolveEffectiveStub90DeductInches } from '@/data/benders';
+import {
+  formatMissingBenderProfileWarning,
+  resolveBenderProfile,
+  resolveEffectiveStub90DeductInches,
+} from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { Stub90EngineInput, Stub90EngineResult } from './stub90.types';
@@ -16,7 +20,13 @@ function missingChartWarning(profileName: string, tradeSize: string): string {
 
 export function calculateStub90(input: Stub90EngineInput): Stub90EngineResult {
   const warnings: string[] = [];
-  const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
+  const { profile: benderProfile, isFallback: isProfileFallback } = resolveBenderProfile(
+    input.benderProfileId,
+    input.customBenderProfiles ?? [],
+  );
+  if (isProfileFallback) {
+    warnings.push(formatMissingBenderProfileWarning(benderProfile.name));
+  }
   const {
     deductInches,
     source: deductSource,

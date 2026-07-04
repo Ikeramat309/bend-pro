@@ -5,6 +5,7 @@ import {
   isBenderProfileNameTaken,
   isCustomBenderProfileId,
   mergeBenderProfiles,
+  resolveBenderProfileById,
   sanitizeCustomBenderProfile,
   sanitizeCustomBenderProfiles,
   toBenderProfile,
@@ -45,6 +46,22 @@ describe('custom bender profiles', () => {
   test('getBenderProfileById falls back when custom profile missing', () => {
     const profile = getBenderProfileById('custom-deleted', [sampleCustom]);
     expect(profile.id).toBe(DEFAULT_BENDER_PROFILE_ID);
+  });
+
+  test('resolveBenderProfileById reports no fallback for known ids', () => {
+    const builtIn = resolveBenderProfileById(DEFAULT_BENDER_PROFILE_ID, [sampleCustom]);
+    expect(builtIn.isFallback).toBe(false);
+    expect(builtIn.profile.id).toBe(DEFAULT_BENDER_PROFILE_ID);
+
+    const custom = resolveBenderProfileById('custom-test-1', [sampleCustom]);
+    expect(custom.isFallback).toBe(false);
+    expect(custom.profile.name).toBe('Shop bender');
+  });
+
+  test('resolveBenderProfileById flags fallback for unknown ids', () => {
+    const resolved = resolveBenderProfileById('custom-deleted', [sampleCustom]);
+    expect(resolved.isFallback).toBe(true);
+    expect(resolved.profile.id).toBe(DEFAULT_BENDER_PROFILE_ID);
   });
 
   test('isBenderProfileNameTaken detects built-in and custom names', () => {

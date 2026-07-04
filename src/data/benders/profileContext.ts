@@ -110,3 +110,8 @@ export function formatSegmentTrustTitle(): string {
 export function formatSetupOnlyBenderMeta(profileName: string): string {
   return `${profileName} (setup only)`;
 }
+
+/** Warning when a saved bender profile id no longer resolves (e.g. deleted custom bender). */
+export function formatMissingBenderProfileWarning(fallbackProfileName: string): string {
+  return `Saved bender was not found — using ${fallbackProfileName} instead. Reselect your bender in Setup.`;
+}

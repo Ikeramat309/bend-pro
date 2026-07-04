@@ -17,7 +17,7 @@
  * Angles come from the preset table — not bender-specific.
  */
 import { toCanonicalInches } from '@/core/measurements';
-import { getBenderProfile } from '@/data/benders';
+import { formatMissingBenderProfileWarning, resolveBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { Saddle4EngineInput, Saddle4EngineResult } from './saddle4.types';
@@ -69,7 +69,10 @@ function collectWarnings(input: Saddle4EngineInput, outerMark1Inches?: number): 
 }
 
 export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult {
-  const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
+  const { profile: benderProfile, isFallback: isProfileFallback } = resolveBenderProfile(
+    input.benderProfileId,
+    input.customBenderProfiles ?? [],
+  );
   const angle = isSaddle4Angle(input.bendAngle) ? input.bendAngle : SADDLE4_CONFIG.defaultAngle;
   const angleData = getSaddle4AngleData(angle);
 
@@ -109,6 +112,9 @@ export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult
     innerMark2Inches !== undefined ? innerMark2Inches + betweenBendsInches : undefined;
 
   const warnings = collectWarnings(input, outerMark1Inches);
+  if (isProfileFallback) {
+    warnings.push(formatMissingBenderProfileWarning(benderProfile.name));
+  }
 
   const isValid = Number.isFinite(input.obstructionHeight) && input.obstructionHeight > 0;
 

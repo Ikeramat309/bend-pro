@@ -53,12 +53,32 @@ export function mergeBenderProfiles(
   return [...BUILT_IN_PROFILES, ...customProfiles.map(toBenderProfile)];
 }
 
+export type ResolvedBenderProfile = {
+  profile: BenderProfile;
+  /** True when profileId did not match any profile and the default was substituted. */
+  isFallback: boolean;
+};
+
+/**
+ * Resolves a profile id without hiding failure: callers that surface results to
+ * users must check `isFallback` and say so (no silent substitution).
+ */
+export function resolveBenderProfileById(
+  profileId: string,
+  customProfiles: readonly CustomBenderProfileStored[] = [],
+): ResolvedBenderProfile {
+  const merged = mergeBenderProfiles(customProfiles);
+  const match = merged.find((profile) => profile.id === profileId);
+  return match !== undefined
+    ? { profile: match, isFallback: false }
+    : { profile: BUILT_IN_PROFILES[0], isFallback: true };
+}
+
 export function getBenderProfileById(
   profileId: string,
   customProfiles: readonly CustomBenderProfileStored[] = [],
 ): BenderProfile {
-  const merged = mergeBenderProfiles(customProfiles);
-  return merged.find((profile) => profile.id === profileId) ?? BUILT_IN_PROFILES[0];
+  return resolveBenderProfileById(profileId, customProfiles).profile;
 }
 
 export function getBenderProfileIdByNameFromAll(

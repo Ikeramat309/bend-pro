@@ -13,7 +13,7 @@
  * Multiplier and shrink use the standard offset angle table — not bender-specific.
  */
 import { toCanonicalInches } from '@/core/measurements';
-import { getBenderProfile } from '@/data/benders';
+import { formatMissingBenderProfileWarning, resolveBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { RollingEngineInput, RollingEngineResult } from './rolling.types';
@@ -68,7 +68,10 @@ function collectWarnings(input: RollingEngineInput, trueOffsetInches: number): s
 }
 
 export function calculateRolling(input: RollingEngineInput): RollingEngineResult {
-  const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
+  const { profile: benderProfile, isFallback: isProfileFallback } = resolveBenderProfile(
+    input.benderProfileId,
+    input.customBenderProfiles ?? [],
+  );
 
   const angleInfo = getRollingAngleData(input.bendAngle);
   const chartMultiplier = angleInfo?.multiplier ?? 0;
@@ -111,6 +114,9 @@ export function calculateRolling(input: RollingEngineInput): RollingEngineResult
     angleInfo !== undefined;
 
   const resolvedWarnings = collectWarnings(input, trueOffsetInches);
+  if (isProfileFallback) {
+    resolvedWarnings.push(formatMissingBenderProfileWarning(benderProfile.name));
+  }
 
   const fmt = (value: number) => formatLength(value, input.unitSystem, input.roundingPrecision);
   const fmtOpt = (value?: number) => (value !== undefined ? fmt(value) : undefined);

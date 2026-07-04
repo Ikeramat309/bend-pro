@@ -12,7 +12,7 @@
  * back to level. Angles come from the preset table — not bender-specific.
  */
 import { toCanonicalInches } from '@/core/measurements';
-import { getBenderProfile } from '@/data/benders';
+import { formatMissingBenderProfileWarning, resolveBenderProfile } from '@/data/benders';
 import { formatLength } from '@/utils/formatLength';
 
 import type { Saddle3EngineInput, Saddle3EngineResult } from './saddle3.types';
@@ -54,7 +54,13 @@ function collectWarnings(input: Saddle3EngineInput): string[] {
 
 export function calculateSaddle3(input: Saddle3EngineInput): Saddle3EngineResult {
   const warnings = collectWarnings(input);
-  const benderProfile = getBenderProfile(input.benderProfileId, input.customBenderProfiles ?? []);
+  const { profile: benderProfile, isFallback: isProfileFallback } = resolveBenderProfile(
+    input.benderProfileId,
+    input.customBenderProfiles ?? [],
+  );
+  if (isProfileFallback) {
+    warnings.push(formatMissingBenderProfileWarning(benderProfile.name));
+  }
   const preset = isSaddle3AnglePreset(input.anglePreset)
     ? input.anglePreset
     : SADDLE3_CONFIG.defaultPreset;

@@ -179,11 +179,7 @@ function makeStyles(c: ThemePalette) {
     },
     currentCard: {
       gap: spacing.xs,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: c.border,
-      backgroundColor: c.surface,
-      padding: spacing.lg,
+      paddingTop: spacing.sm,
     },
     currentTitle: {
       ...typography.label,

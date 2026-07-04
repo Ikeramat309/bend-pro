@@ -117,11 +117,7 @@ function makeStyles(c: ThemePalette) {
     },
     benderCard: {
       gap: spacing.xs,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: c.border,
-      backgroundColor: c.surface,
-      padding: spacing.lg,
+      paddingTop: spacing.sm,
     },
     benderLine: {
       ...typography.subtitle,

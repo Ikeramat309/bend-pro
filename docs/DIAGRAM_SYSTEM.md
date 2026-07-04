@@ -58,6 +58,24 @@ Engines return a `diagramData` object with everything the diagram needs (e.g. `s
 
 This separation means a math fix can never be hidden inside a rendering change, and a rendering fix can never move a real-world mark. See [`CALCULATOR_RULES.md`](CALCULATOR_RULES.md).
 
+## Isometric 3D pipe module (`src/shared/diagrams/iso/`)
+
+Multi-plane calculators render a **true 3D centerline** in a **fixed isometric projection** using the same brushed-steel tube styling as 2D diagrams.
+
+**World axes:** X = along the run (right), Y = lateral depth (into the scene), Z = up.
+
+**Projection:** `screenX = (x − y) · cos(30°)`, `screenY = (x + y) · sin(30°) − z` (SVG Y grows downward; +Z moves up on screen).
+
+**Geometry:** `buildPipeCenterline` fillets interior waypoints with circular arcs (display only — never feeds marks or math). `fitIsoTransform` scales/translates projected points into the diagram viewBox.
+
+**Labels:** `placeIsoLabels` assigns anchor slots in left/right/top/bottom bands outside the pipe bounding box (inflated by tube width). Leader lines connect feature points to slots; label rects must not intersect the inflated pipe bounds.
+
+**Scene furniture (`isoScene.ts`):** the depth-perception cues shared by every iso diagram — a **floor grid patch** on z = 0 (`buildFloorGrid` + `floorPatchCorners`), a **cast shadow** of the pipe flattened onto the floor (`buildFloorShadow`), **open end-cap cross sections** so the pipe reads as a hollow conduit (`buildEndCapCircle`), and an **on-floor angle arc** between two directions (`buildAngleArcOnFloor`). Colors come from `diagramTheme.floor` / `diagramTheme.endCap` (dark + light). The pipe centerline rides one tube radius above the floor so the shadow separates.
+
+**Limitation:** `IsoPipe` handles **single-run pipes** only. Self-crossing depth sorting is a known future need for complex multi-run layouts.
+
+Kick 90 is the pilot consumer; Rolling Offset, parallel kicks, matching bends, and multi-bend layouts will reuse this module when built.
+
 ## Visual language
 
 Follow [`HANDOFF.md`](HANDOFF.md) §4 and `diagramTheme` / `useDiagramTheme()`:

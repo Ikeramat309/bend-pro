@@ -179,6 +179,42 @@ describe('calculateStub90', () => {
     expect(result.benderProfileUsed.category).toBe('custom');
   });
 
+  describe('manufacturer bender profiles', () => {
+    test('klein-angle-setter-iron 3/4" uses manufacturer chart deduct', () => {
+      const result = calculateStub90(
+        baseInput({
+          benderProfileId: 'klein-angle-setter-iron',
+          tradeSize: '3/4',
+          stubHeight: 12,
+        }),
+      );
+
+      expect(result.deduct).toBe(6);
+      expect(result.deductMark).toBe(6);
+      expect(result.deductSource).toBe('profile-chart');
+      expect(result.isValidDeductMark).toBe(true);
+      expect(result.benderProfileUsed.id).toBe('klein-angle-setter-iron');
+    });
+
+    test('milwaukee-aluminum reference_only profile triggers missing-chart warning', () => {
+      const result = calculateStub90(
+        baseInput({
+          benderProfileId: 'milwaukee-aluminum',
+          tradeSize: '1/2',
+          stubHeight: 12,
+        }),
+      );
+
+      expect(result.deductSource).toBe('missing-chart');
+      expect(result.isValidDeductMark).toBe(false);
+      expect(result.deductMark).toBeUndefined();
+      expect(result.diagramData).toBeUndefined();
+      expect(result.warnings).toContain(
+        'Milwaukee (Aluminum) has no stub 90 deduct for 1/2" EMT. Set a custom deduct or choose a size on this profile\'s chart.',
+      );
+    });
+  });
+
   test('optional leg length passes through and formats', () => {
     const result = calculateStub90(baseInput({ legLength: 20 }));
 

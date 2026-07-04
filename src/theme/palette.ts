@@ -31,6 +31,13 @@ export type ThemePalette = {
   /** primary at low alpha — tinted rows / guided mode */
   primaryMuted: string;
   primaryBorder: string;
+
+  /** warning at low alpha — warning strips, badges, chips */
+  warningTint: string;
+  warningTintBorder: string;
+
+  /** modal sheet scrim behind bottom sheets */
+  sheetBackdrop: string;
 };
 
 export const darkColors: ThemePalette = {
@@ -51,6 +58,11 @@ export const darkColors: ThemePalette = {
 
   primaryMuted: 'rgba(76, 141, 255, 0.14)',
   primaryBorder: 'rgba(76, 141, 255, 0.32)',
+
+  warningTint: 'rgba(255, 210, 46, 0.08)',
+  warningTintBorder: 'rgba(255, 210, 46, 0.35)',
+
+  sheetBackdrop: 'rgba(5, 7, 11, 0.86)',
 };
 
 export const lightColors: ThemePalette = {
@@ -71,6 +83,11 @@ export const lightColors: ThemePalette = {
 
   primaryMuted: 'rgba(47, 107, 255, 0.10)',
   primaryBorder: 'rgba(47, 107, 255, 0.30)',
+
+  warningTint: 'rgba(180, 83, 9, 0.12)',
+  warningTintBorder: 'rgba(180, 83, 9, 0.32)',
+
+  sheetBackdrop: 'rgba(14, 17, 22, 0.45)',
 };
 
 export type ColorScheme = 'light' | 'dark';

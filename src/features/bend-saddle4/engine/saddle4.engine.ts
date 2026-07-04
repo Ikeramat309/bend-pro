@@ -116,7 +116,10 @@ export function calculateSaddle4(input: Saddle4EngineInput): Saddle4EngineResult
     warnings.push(formatMissingBenderProfileWarning(benderProfile.name));
   }
 
-  const isValid = Number.isFinite(input.obstructionHeight) && input.obstructionHeight > 0;
+  const isValid =
+    Number.isFinite(input.obstructionHeight) &&
+    input.obstructionHeight > 0 &&
+    isSaddle4Angle(input.bendAngle);
 
   const fmt = (value: number) => formatLength(value, input.unitSystem, input.roundingPrecision);
   const fmtOpt = (value?: number) => (value !== undefined ? fmt(value) : undefined);

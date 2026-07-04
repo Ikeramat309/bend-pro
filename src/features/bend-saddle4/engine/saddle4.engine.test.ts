@@ -79,6 +79,16 @@ describe('calculateSaddle4', () => {
     expect(result.diagramData).toBeUndefined();
   });
 
+  test('invalid bend angle produces warning and invalid result without diagram', () => {
+    const result = calculateSaddle4(
+      baseInput({ bendAngle: 15 as Saddle4EngineInput['bendAngle'] }),
+    );
+
+    expect(result.isValid).toBe(false);
+    expect(result.warnings).toContain('Selected bend angle is not valid.');
+    expect(result.diagramData).toBeUndefined();
+  });
+
   test('invalid saddle width produces a warning but keeps offset results', () => {
     const result = calculateSaddle4(baseInput({ saddleWidth: 0 }));
 

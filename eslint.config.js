@@ -11,6 +11,10 @@ module.exports = defineConfig([
       'node_modules/**',
       'web-build/**',
       'src/calculators/**',
+      // IDE preview artifact — an undeletable reparse point that breaks the glob walk.
+      'scripts/__preview__/**',
+      // Local visual-debug scratch folder (gitignored; may linger delete-pending on Windows).
+      '.debug/**',
     ],
   },
 ]);

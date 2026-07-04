@@ -8,12 +8,14 @@ import { parseLengthInput } from '@/utils/parseLengthInput';
 import { GENERIC_HAND_BENDER } from './genericHandBender';
 import { HAND_BENDER_ALT_CHART } from './handBenderAltChart';
 import { HAND_BENDER_COMPACT } from './handBenderCompact';
+import { MANUFACTURER_BENDER_PROFILES } from './manufacturers';
 import type { BenderProfile, EmtStub90TakeUpByTradeSize } from './types';
 
 const BUILT_IN_PROFILES: readonly BenderProfile[] = [
   GENERIC_HAND_BENDER,
   HAND_BENDER_ALT_CHART,
   HAND_BENDER_COMPACT,
+  ...MANUFACTURER_BENDER_PROFILES,
 ];
 
 export type CustomBenderProfileStored = {

@@ -65,6 +65,16 @@ describe('calculateSaddle3', () => {
     expect(result.diagramData).toBeUndefined();
   });
 
+  test('invalid angle preset produces warning and invalid result without diagram', () => {
+    const result = calculateSaddle3(
+      baseInput({ anglePreset: 'bogus' as Saddle3EngineInput['anglePreset'] }),
+    );
+
+    expect(result.isValid).toBe(false);
+    expect(result.warnings).toContain('Selected saddle angle preset is not valid.');
+    expect(result.diagramData).toBeUndefined();
+  });
+
   test('negative distance to center is rejected', () => {
     const result = calculateSaddle3(baseInput({ distanceToCenter: -1 }));
 

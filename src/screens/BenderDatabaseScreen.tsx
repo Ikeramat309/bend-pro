@@ -11,7 +11,7 @@ import {
   isKnownBenderProfileId,
   MAX_CUSTOM_BENDER_PROFILES,
   mergeBenderProfiles,
-  splitProfilesByOrigin,
+  splitProfilesByChartKind,
   type BenderProfile,
   type CustomBenderProfileStored,
 } from '@/data/benders';
@@ -55,7 +55,10 @@ export function BenderDatabaseScreen() {
     () => filterAllBenderProfiles(searchText, customProfiles),
     [customProfiles, searchText],
   );
-  const { builtIn, custom } = useMemo(() => splitProfilesByOrigin(profiles), [profiles]);
+  const { manufacturer, generic, custom } = useMemo(
+    () => splitProfilesByChartKind(profiles),
+    [profiles],
+  );
   const activeProfileId = setup.benderProfileId;
   const canAddCustom = customProfiles.length < MAX_CUSTOM_BENDER_PROFILES;
   const detailProfileId =
@@ -166,9 +169,8 @@ export function BenderDatabaseScreen() {
 
       <AppScreen scroll contentStyle={styles.content}>
         <Text style={styles.intro}>
-          Generic field-reference charts and your custom measured deducts. These are not manufacturer
-          shoe charts — tap Chart on a profile to see the full table, or override a single size from
-          a calculator result chip.
+          Manufacturer charts from published specs, generic field references, and your own measured
+          benders. Tap Chart on a profile for the full table and sources.
         </Text>
 
         <SetupOverridesCard />
@@ -192,10 +194,17 @@ export function BenderDatabaseScreen() {
           <HubEmptyState title="No matching profiles" body="Try a different search term." />
         ) : (
           <View style={styles.list}>
-            {builtIn.length > 0 ? (
+            {manufacturer.length > 0 ? (
               <View style={styles.section}>
-                <HubSectionTitle>Built-in charts</HubSectionTitle>
-                {renderProfileList(builtIn)}
+                <HubSectionTitle>Manufacturer charts</HubSectionTitle>
+                {renderProfileList(manufacturer)}
+              </View>
+            ) : null}
+
+            {generic.length > 0 ? (
+              <View style={styles.section}>
+                <HubSectionTitle>Generic charts</HubSectionTitle>
+                {renderProfileList(generic)}
               </View>
             ) : null}
 

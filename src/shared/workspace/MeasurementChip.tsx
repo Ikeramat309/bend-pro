@@ -30,8 +30,8 @@ function toneStyles(
       value: c.text,
     },
     warning: {
-      border: 'rgba(255, 210, 46, 0.28)',
-      bg: 'rgba(255, 210, 46, 0.06)',
+      border: c.warningTintBorder,
+      bg: c.warningTint,
       label: c.warning,
       value: c.text,
     },

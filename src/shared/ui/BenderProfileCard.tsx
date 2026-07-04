@@ -2,7 +2,13 @@ import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { BenderProfile } from '@/data/benders';
-import { formatChartKindLabel, formatProfileStub90Summary } from '@/data/benders';
+import {
+  formatChartKindLabel,
+  formatManufacturerBrandMaterial,
+  formatProfileStub90Summary,
+  formatVerificationStatusLabel,
+  isVerificationStatusWarning,
+} from '@/data/benders';
 import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
 
 import { HubStatusBadge } from './HubStatusBadge';
@@ -29,6 +35,19 @@ export function BenderProfileCard({
 }: BenderProfileCardProps) {
   const { colors } = useTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  const isManufacturer = profile.chartKind === 'manufacturer';
+  const brandMaterial = formatManufacturerBrandMaterial(profile);
+  const verificationStatus = profile.verificationStatus;
+  const statusLabel =
+    isManufacturer && verificationStatus !== undefined
+      ? formatVerificationStatusLabel(verificationStatus)
+      : formatChartKindLabel(profile.chartKind);
+  const statusTone =
+    verificationStatus !== undefined && isVerificationStatusWarning(verificationStatus)
+      ? 'warning'
+      : isManufacturer
+        ? 'muted'
+        : undefined;
 
   return (
     <View style={[styles.card, isActive && styles.cardActive]}>
@@ -40,8 +59,16 @@ export function BenderProfileCard({
         <View style={styles.header}>
           <View style={styles.titleBlock}>
             <Text style={styles.title}>{profile.name}</Text>
-            <Text style={styles.category}>{formatCategory(profile.category)}</Text>
-            <Text style={styles.chartKind}>{formatChartKindLabel(profile.chartKind)}</Text>
+            {isManufacturer && brandMaterial ? (
+              <Text style={styles.category}>{brandMaterial}</Text>
+            ) : (
+              <Text style={styles.category}>{formatCategory(profile.category)}</Text>
+            )}
+            {statusTone !== undefined ? (
+              <HubStatusBadge label={statusLabel} tone={statusTone} />
+            ) : (
+              <Text style={styles.chartKind}>{statusLabel}</Text>
+            )}
           </View>
           {isActive ? <HubStatusBadge label="Active" tone="primary" /> : null}
         </View>

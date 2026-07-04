@@ -23,7 +23,7 @@ Practical limitations as of Phase 5.9. These are **not necessarily bugs** — ma
 - **Bender profiles** today only carry **stub 90 deduct** charts. Offset math uses generic angle tables regardless of which profile is selected.
 - **Supported EMT sizes (v1):** the setup picker offers **1/2", 3/4", 1", 1-1/4"** only (`SUPPORTED_EMT_TRADE_SIZES` in `src/data/emt/emtSizes.ts`). 1-1/2" and 2" are hidden until backed by honest data. The full `EMT_TRADE_SIZES` type is retained for capability and previously-saved setups.
 - **1-1/4" stub-90 take-up (11") is a generic published value pending physical field verification.** Built-in profiles label it generic; field-verify before relying on it. Uncharted sizes still warn and offer a custom deduct.
-- **Manufacturer shoe charts** are **not shipped**. `BenderChartKind: 'manufacturer'` is reserved for future profiles that include a verified `sourceNote`. Built-in profiles are generic field references only.
+- **Manufacturer shoe charts (workbook v1.1)** ship for **Greenlee, Klein, Gardner Bender, and IDEAL** — stub-90 take-up from published specs; centerline radius is **display-only** (does not change marks). **Milwaukee** and **Southwire** profiles are identity-only reference entries with no published take-up — Stub 90 shows a missing-chart warning and the custom-deduct path. Bender profile still affects **Stub 90 math only**; offset and other calculators use generic angle tables.
 - **Custom bender profiles** are device-local (calculator setup storage). There is no cloud sync.
 
 ## Fraction keypad (imperial)

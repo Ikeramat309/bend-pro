@@ -102,7 +102,7 @@ function makeStyles(c: ThemePalette) {
       backgroundColor: c.primaryMuted,
     },
     noteRowWarning: {
-      backgroundColor: 'rgba(255, 210, 46, 0.1)',
+      backgroundColor: c.warningTint,
     },
     note: {
       flex: 1,

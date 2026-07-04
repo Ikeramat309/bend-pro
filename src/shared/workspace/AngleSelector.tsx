@@ -84,16 +84,13 @@ function makeStyles(c: ThemePalette) {
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: radius.lg,
-      borderWidth: 1,
-      borderColor: c.border,
-      backgroundColor: c.surface,
+      backgroundColor: c.surface2,
     },
     chipSelected: {
       backgroundColor: c.primary,
-      borderColor: c.primary,
     },
     chipCommon: {
-      borderColor: c.primaryBorder,
+      backgroundColor: c.primaryMuted,
     },
     chipPressed: {
       opacity: 0.9,

@@ -20,6 +20,18 @@ export type DiagramTheme = {
   };
   dimension: string;
   dimensionStrong: string;
+  /** Isometric scene furniture — floor plane, grid, and cast shadow. */
+  floor: {
+    fill: string;
+    grid: string;
+    edge: string;
+    shadow: string;
+  };
+  /** Open conduit end-cap cross section. */
+  endCap: {
+    fill: string;
+    stroke: string;
+  };
   label: string;
   mutedLabel: string;
   calloutFill: string;
@@ -83,6 +95,16 @@ export const darkDiagram: DiagramTheme = {
   },
   dimension: 'rgba(143, 155, 173, 0.55)',
   dimensionStrong: 'rgba(246, 248, 251, 0.65)',
+  floor: {
+    fill: 'rgba(143, 155, 173, 0.05)',
+    grid: 'rgba(143, 155, 173, 0.12)',
+    edge: 'rgba(143, 155, 173, 0.25)',
+    shadow: 'rgba(0, 0, 0, 0.4)',
+  },
+  endCap: {
+    fill: '#141A22',
+    stroke: '#9AA5B1',
+  },
   label: colors.text,
   mutedLabel: colors.muted,
   calloutFill: 'rgba(8, 14, 22, 0.94)',
@@ -140,6 +162,16 @@ export const lightDiagram: DiagramTheme = {
   },
   dimension: 'rgba(91, 100, 112, 0.55)',
   dimensionStrong: 'rgba(14, 17, 22, 0.75)',
+  floor: {
+    fill: 'rgba(91, 100, 112, 0.05)',
+    grid: 'rgba(91, 100, 112, 0.14)',
+    edge: 'rgba(91, 100, 112, 0.3)',
+    shadow: 'rgba(14, 17, 22, 0.16)',
+  },
+  endCap: {
+    fill: '#3F4956',
+    stroke: '#7C8896',
+  },
   label: lightColors.text,
   mutedLabel: lightColors.muted,
   calloutFill: 'rgba(255, 255, 255, 0.94)',

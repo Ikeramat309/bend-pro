@@ -8,6 +8,7 @@ export const CALCULATOR_ROUTE_PATHS = {
   saddle4: '/saddle4',
   segment: '/segment',
   rolling: '/rolling',
+  kick90: '/kick90',
 } as const satisfies Record<string, Href>;
 
 export type CalculatorRouteKey = keyof typeof CALCULATOR_ROUTE_PATHS;

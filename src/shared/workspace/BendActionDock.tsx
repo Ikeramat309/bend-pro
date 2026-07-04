@@ -112,10 +112,10 @@ function makeStyles(c: ThemePalette) {
       minWidth: 0,
     },
     slotCenter: {
-      flex: 1.35,
+      flexGrow: 0,
+      flexShrink: 0,
       alignItems: 'center',
       justifyContent: 'center',
-      minWidth: 0,
     },
     slotRight: {
       flex: 1,
@@ -138,11 +138,10 @@ function makeStyles(c: ThemePalette) {
     },
     actionEmphasis: {},
     actionPill: {
+      flexShrink: 0,
       paddingHorizontal: spacing.md,
       borderRadius: workspaceTheme.dock.actionBorderRadius,
-      backgroundColor: workspaceTheme.dock.actionEmphasisBackground,
-      borderWidth: 1,
-      borderColor: workspaceTheme.dock.actionEmphasisBorder,
+      backgroundColor: c.primaryMuted,
     },
     actionPressed: {
       opacity: workspaceTheme.dock.pressedOpacity,
@@ -161,7 +160,7 @@ function makeStyles(c: ThemePalette) {
       fontWeight: '700',
     },
     actionTextPill: {
-      color: workspaceTheme.dock.actionEmphasisText,
+      color: c.primary,
       fontWeight: '700',
       fontSize: 13,
     },

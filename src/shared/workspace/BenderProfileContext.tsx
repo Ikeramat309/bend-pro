@@ -22,7 +22,7 @@ function toneStyles(
     },
     warning: {
       border: c.warning,
-      background: 'rgba(255, 210, 46, 0.06)',
+      background: c.warningTint,
       text: c.warning,
     },
   };

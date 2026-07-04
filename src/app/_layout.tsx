@@ -1,5 +1,6 @@
 import '@/global.css';
 
+import { useMemo } from 'react';
 import {
   DarkTheme,
   DefaultTheme,
@@ -12,13 +13,33 @@ import { SettingsProvider } from '@/core/settings';
 import { ThemeProvider, useTheme } from '@/theme';
 
 function ThemedStack() {
-  const { scheme } = useTheme();
+  const { scheme, colors } = useTheme();
+
+  const navTheme = useMemo(() => {
+    const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
+    return {
+      ...base,
+      colors: {
+        ...base.colors,
+        primary: colors.primary,
+        background: colors.background,
+        card: colors.background,
+        text: colors.text,
+        border: colors.border,
+        notification: colors.primary,
+      },
+    };
+  }, [scheme, colors]);
 
   return (
-    <NavThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <NavThemeProvider value={navTheme}>
       <SettingsProvider>
         <AnimatedSplashOverlay />
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: colors.background },
+          }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="bends" />
           <Stack.Screen name="settings" />

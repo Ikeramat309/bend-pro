@@ -128,8 +128,6 @@ function makeStyles(c: ThemePalette) {
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: uiTheme.fractionKeypad.keyRadius,
-      borderWidth: 1,
-      borderColor: c.primaryBorder,
       backgroundColor: c.primaryMuted,
     },
     quickKeyText: {
@@ -148,15 +146,12 @@ function makeStyles(c: ThemePalette) {
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: uiTheme.fractionKeypad.keyRadius,
-      borderWidth: 1,
-      borderColor: c.border,
       backgroundColor: c.surface2,
     },
     keyWide: {
       flex: 2,
     },
     keyDone: {
-      borderColor: c.primaryBorder,
       backgroundColor: c.surface,
     },
     keyPressed: {

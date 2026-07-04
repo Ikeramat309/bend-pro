@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). **For current work and the full plan, read [`HANDOFF.md`](HANDOFF.md) first.**
 
-Honest snapshot of where the app stands. Six calculators ship on the shared workspace shell; the calculator math is desk-validated and the app is in a **UI redesign** (continuous-surface, light/dark, steel-tube diagrams) heading toward field beta. See [`HANDOFF.md`](HANDOFF.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), and [`TRUST_MODEL.md`](TRUST_MODEL.md).
+Honest snapshot of where the app stands. Seven calculators ship on the shared workspace shell; the calculator math is desk-validated and the app is in a **UI redesign** (continuous-surface, light/dark, steel-tube diagrams) heading toward field beta. See [`HANDOFF.md`](HANDOFF.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), and [`TRUST_MODEL.md`](TRUST_MODEL.md).
 
 ## UI redesign status
 
@@ -20,6 +20,7 @@ All six use the **shared `BendCalculatorLayout`** shell (`src/shared/workspace/`
 - **4-Point Saddle** (`/saddle4`) — obstruction height (required), optional saddle width + distance to center, equal bend angle. Two-offset diagram. Dock: Reset · Set Center · Guide.
 - **Segment Bend** (`/segment`) — radius + total angle + degrees-per-bend → shot spacing, bend count (developed length on diagram). Dock: Reset · Set Arc / Next Segment · Guide.
 - **Rolling Offset** (`/rolling`) — offset height + roll → distance between bends, shrink. Shares offset multiplier/shrink overrides. Dock: Reset · Set First Mark / Set Roll · Guide.
+- **Kick 90** (`/kick90`) — kick rise + bend angle → distance between bends, shrink. Shares offset multiplier/shrink overrides. Optional Mark 1 / Mark 2. **Isometric 3D diagram** (true multi-plane centerline). Dock: Reset · Set First Mark · Guide.
 
 Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). Semi-proportional diagrams use shared primitives in `src/shared/diagrams/`.
 
@@ -58,25 +59,25 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 
 - **`src/core/calculators/`** — single source of truth for calculator ids, routes, Bends hub grouping, and home metadata
 - **`getBendsScreenFamilies()`**, **`getCalculatorRoute()`**, **`getCalculatorById()`** — Bends hub and navigation consume registry helpers
-- Planned calculators (Kick, parallel offset, etc.) registered with `status: 'planned'`; they appear on Bends as Coming Soon but have no routes
+- Planned calculators (parallel offset, box offset, etc.) registered with `status: 'planned'`; they appear on Bends as Coming Soon but have no routes
 
 ### Recent layouts
 
 - **`src/core/sessions/`** — AsyncStorage-backed recent-layout service with unit tests
-- **All six calculator screens** persist via `usePersistRecentLayout` and restore via `useRestoreRecentLayout` when opened with `?layoutId=`
+- **All seven calculator screens** persist via `usePersistRecentLayout` and restore via `useRestoreRecentLayout` when opened with `?layoutId=`
 - **Home Continue Layout** hydrates recents on focus (`loadRecentLayouts` + `resolveContinueLayoutCandidate`) and navigates to the stored calculator with layout id
 
 ### Bender profiles
 
-- Three generic hand-bender profiles + custom profiles (stub 90 deducts); **`BenderChartKind`** tags chart source (manufacturer reserved for sourced data)
-- **`BenderProfileDetailSheet`** — full stub 90 deduct table with override highlighting; **Chart ›** on profile cards
+- Three generic hand-bender profiles + **11 manufacturer profiles (workbook v1.1)** + custom profiles (stub 90 deducts); **`verificationStatus`** gates what can drive deduct math (reference-only profiles require custom deduct)
+- **`BenderProfileDetailSheet`** — manufacturer per-size table (models, take-up, radius, notes) or generic/custom stub 90 deduct table with override highlighting; **Chart ›** on profile cards
 - **`SetupOverridesCard`** — lists and clears manual deduct / multiplier / shrink overrides (Benders hub + Settings)
-- Bender database grouped **Built-in charts** / **Your benders**; Edit Setup and Settings link to manage benders
+- Bender database grouped **Manufacturer charts** / **Generic charts** / **Your benders**; Edit Setup and Settings link to manage benders
 - Persisted overrides (deduct, multiplier, shrink); profile context in calculator trust strip **note**
 
 ### Working app shell
 
-- Routes: `/`, `/bends`, `/offset`, `/stub90`, `/saddle3`, `/saddle4`, `/segment`, `/rolling`, `/settings`, `/bender-database`, `/guide`
+- Routes: `/`, `/bends`, `/offset`, `/stub90`, `/saddle3`, `/saddle4`, `/segment`, `/rolling`, `/kick90`, `/settings`, `/bender-database`, `/guide`
 - Hub screens: `src/screens/` (Home, Bends, Settings)
 - Persisted setup: `src/core/settings/`
 - Theme: `src/theme/`
@@ -104,7 +105,7 @@ See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full list. Summary:
 ## Next development priorities
 
 1. **Field validation sessions** — use [`FIELD_VALIDATION.md`](FIELD_VALIDATION.md) and the [test sheet](FIELD_VALIDATION_TEST_SHEET.md); record pass/fail on reference cases
-2. **Phase 7** — additional calculators (Kick, etc.) only when explicitly scoped
+2. **Catalog expansion** — Kick 90 shipped (first QuickBend-parity calculator); remaining items follow [`HANDOFF.md`](HANDOFF.md) §5 order
 
 ## Known risk areas
 

@@ -274,6 +274,50 @@ export const CALCULATOR_GUIDES: CalculatorGuide[] = [
       ],
     },
   },
+  {
+    id: 'kick90',
+    title: 'Kick 90',
+    family: '90s',
+    summary:
+      'Lay out a small-angle kick beside a 90° bend. Spacing from the 90° mark to the kick mark uses kick rise and the standard offset multiplier table.',
+    calculatorRoute: Routes.kick90,
+    formula: {
+      title: 'Formula',
+      mono: true,
+      lines: [
+        'Distance Between Bends = Kick Rise × Multiplier',
+        'Shrink = Kick Rise × Shrink per inch',
+        'Mark 2 = Mark 1 + Distance Between Bends',
+      ],
+    },
+    steps: {
+      title: 'Field steps',
+      ordered: true,
+      lines: [
+        'Measure kick rise — how far the leg must move sideways or up from the 90° run.',
+        'Pick the kick angle your bender allows (common: 30° or 45°).',
+        'Bend the 90° first, or know where its mark will land on the run.',
+        'Add shrink to your run measurement before marking — shrink is length the kick eats.',
+        'Mark the kick from the 90° bend mark at distance between bends; bend and check the leg clears.',
+      ],
+    },
+    mistakes: {
+      title: 'Common mistakes',
+      lines: [
+        'Forgetting shrink on the run before marking the kick — the finished leg will come up short.',
+        'Using the wrong angle multiplier from memory instead of the angle you actually bent.',
+        'Kicking on the wrong plane or rotation — the kick must move the run in the direction you measured.',
+      ],
+    },
+    example: {
+      title: 'Worked example',
+      lines: [
+        '6" kick rise at 30° (multiplier 2.0, shrink 1/4" per inch)',
+        '→ Distance Between Bends: 12"',
+        '→ Shrink: 1 1/2"',
+      ],
+    },
+  },
 ];
 
 export const GUIDE_INTRO = {

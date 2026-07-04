@@ -55,7 +55,10 @@ site, and wrong trade terminology confuses real users.
 - **Continuous surface:** one background, **no cards/boxes/dividers**. Separate
   zones with space and type hierarchy.
 - **Horizontal pipe, drawn naturally per calculator** (offset = run with a jog,
-  stub 90 = L, saddles = up-and-over, segment = arc). *We tried vertical and
+  stub 90 = L, saddles = up-and-over, segment = arc). **Single-plane calculators
+  stay 2D horizontal.** **Multi-plane calculators** (Kick 90 now; Rolling Offset,
+  parallel kicks, matching bends, multi-bend when built) use the shared fixed-view
+  isometric 3D pipe (founder-approved revision 2026-07-04). *We tried vertical and
   reverted — do not flip pipes vertical.*
 - **Pipe = brushed steel tube** (thick, rounded, 3-concentric-stroke cylinder).
   **Orange = marks. Green = bend/take-up zones. One calm blue = interactive
@@ -75,6 +78,9 @@ site, and wrong trade terminology confuses real users.
   in tests; rolling = hypotenuse; segment = arc geometry). See `FIELD_VALIDATION.md`.
 - **Stub 90 silent-fallback bug fixed:** uncharted sizes return `missing-chart`
   → warning + no deduct mark + custom-deduct calibration path (no guessing).
+- **Manufacturer bender database (workbook v1.1, 11 profiles)** shipped with
+  **`verificationStatus`**-gated math — sourced take-up drives Stub 90 deduct;
+  reference-only profiles (Milwaukee, Southwire) require a custom deduct.
 - **Scope locked** to 1/2"–1-1/4"; generic **1-1/4" take-up = 11"** added,
   flagged **PENDING physical field verification** (see §6).
 - `TRUST_MODEL.md` documents what each input actually affects (bender profile
@@ -135,10 +141,10 @@ Goal: every screen matches §4, no overlaps, light mode fully continuous.
   inputs) and `npm run check` is green; screenshot all six (dark + one light).
 - Fix any remaining label/mark/dimension overlaps (saddle apex, offset Mark 2 vs
   badge, offset-height label clipping the left edge, saddle4 top badges).
-- Theme + restyle the **sheets** to match the continuous surface:
-  `LengthInputSheet`, `EditSetupSheet`, `AngleSelector`, and the override sheets
-  (`MultiplierOverrideSheet`, `ShrinkOverrideSheet`, `DeductOverrideSheet`),
-  plus `Sheet`/`SheetFormGroup`. Verify they read correctly in light mode.
+- ~~Theme + restyle the **sheets**~~ **Done:** sheets themed for light/dark and
+  continuous surface (`Sheet`, `LengthInputSheet`, `FractionKeypad`,
+  `EditSetupSheet`, `AngleSelector`, override sheets). Verify on device if
+  anything still reads off in light mode.
 - Light-mode contrast pass once layouts settle.
 
 ### P2 — Field-validation readiness (founder-gated, see §6)
@@ -148,10 +154,28 @@ Goal: every screen matches §4, no overlaps, light mode fully continuous.
 ### P3 — Definition of Done before beta (gate to §7)
 See §7 checklist. Do not start new calculators until it's all true.
 
+### Catalog expansion (QuickBend-parity)
+
+Authorized order after the original six (founder-locked):
+
+1. **Kick 90** — shipped (engine, diagram, Mark 1, overrides, persistence)
+2. **Box Offset**
+3. **Back-to-Back 90**
+4. **Matching Centers / Matching Bends Offsets**
+5. **Simple Parallel / Parallel Offsets**
+6. **Compound 90s** (circle / rectangle / square obstruction)
+7. **Multiple Bends** — chained layout builder
+
+**Deferred (trust):** Computed gain/setback from radius — deferred; QuickBend's published values don't match pure radius geometry; needs validated definition or sourced data.
+
+Register each calculator in `src/core/calculators/` first; build engine + tests before full UI.
+
 ### Post-beta only (do NOT start without explicit scope)
-- New calculators (Kick, parallel offset, box offset, back-to-back 90, hydraulic)
-  — already registered as `planned` in `src/core/calculators/`. Follow
-  `FEATURE_TEMPLATE.md`; register first, build engine+tests before UI.
+- **First sidekick tool (decided, not built):** Conduit Fill (NEC latest + CEC 2024)
+  — after the bending core is done.
+- Remaining catalog expansion items (box offset, back-to-back 90, etc.) — see
+  **Catalog expansion** above; follow `FEATURE_TEMPLATE.md`; register first,
+  build engine+tests before UI.
 - Manufacturer/verified bender charts (require cited `sourceNote`).
 - A "Why this number?" detail sheet (keep it out of the default flow).
 - Saved jobs/layouts UI (`SavedLayout` type exists; no service yet).
@@ -163,7 +187,8 @@ See §7 checklist. Do not start new calculators until it's all true.
 1. **Field-verify the generic 1-1/4" stub-90 take-up (11")** before relying on it.
 2. **Physically bend one of each calculator** at a supported size and confirm the
    app's marks produce a correct real bend (moves matrix rows from App-verified →
-   Field validated).
+   Field validated). The founder owns current-model **Klein hand benders up to 1"
+   EMT**, so Klein profiles are the ones that can be physically verified on-site.
 3. Swap the placeholder `feedback@bendpro.app` in Settings before public beta.
 4. Decide app-store assets / naming when ready.
 

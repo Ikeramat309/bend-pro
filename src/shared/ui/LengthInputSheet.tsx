@@ -200,10 +200,6 @@ function makeStyles(c: ThemePalette) {
       justifyContent: 'center',
       gap: spacing.sm,
       paddingVertical: spacing.sm,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: c.border,
-      backgroundColor: c.surface2,
     },
     value: {
       fontSize: sheetTheme.valueSize,
@@ -235,8 +231,6 @@ function makeStyles(c: ThemePalette) {
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 10,
-      borderWidth: 1,
-      borderColor: c.border,
       backgroundColor: c.surface2,
     },
     stepPressed: {
@@ -261,8 +255,6 @@ function makeStyles(c: ThemePalette) {
       height: sheetTheme.rulerHeight,
       justifyContent: 'center',
       borderRadius: 10,
-      borderWidth: 1,
-      borderColor: c.border,
       backgroundColor: c.surface2,
       overflow: 'hidden',
     },

@@ -75,7 +75,7 @@ function makeStyles(c: ThemePalette) {
     backdrop: {
       flex: 1,
       justifyContent: 'flex-end',
-      backgroundColor: uiTheme.sheet.backdrop,
+      backgroundColor: c.sheetBackdrop,
     },
     sheet: {
       width: '100%',
@@ -84,9 +84,6 @@ function makeStyles(c: ThemePalette) {
       maxHeight: uiTheme.sheet.maxHeight,
       borderTopLeftRadius: uiTheme.sheet.borderRadius,
       borderTopRightRadius: uiTheme.sheet.borderRadius,
-      borderWidth: 1,
-      borderBottomWidth: 0,
-      borderColor: c.border,
       backgroundColor: c.screen,
       paddingHorizontal: spacing.lg,
       paddingTop: spacing.md,
@@ -127,9 +124,7 @@ function makeStyles(c: ThemePalette) {
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: uiTheme.chip.borderRadius,
-      borderWidth: 1,
-      borderColor: c.border,
-      backgroundColor: c.surface,
+      backgroundColor: c.surface2,
     },
     primaryButton: {
       flex: 1,

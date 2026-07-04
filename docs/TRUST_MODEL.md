@@ -2,7 +2,7 @@
 
 Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGENTS.md).
 
-This document describes **what each input actually affects** in the six active calculators. Bend Pro is a field tool: users must be able to trust that changing a control changes the right math, and that nothing important is substituted without surfacing it.
+This document describes **what each input actually affects** in the seven active calculators. Bend Pro is a field tool: users must be able to trust that changing a control changes the right math, and that nothing important is substituted without surfacing it.
 
 ## Principles
 
@@ -21,13 +21,14 @@ This document describes **what each input actually affects** in the six active c
 | **Conduit size** | **Stub 90 only** | Selects which row of the bender profile stub-90 deduct chart is used (or which manual deduct override key applies). Other calculators only require a size to be set (validation warning if missing). |
 | **Bender profile** | **Stub 90 only** | Selects stub-90 deduct chart (built-in or custom). See [Bender profile](#bender-profile) below. |
 | **Stub 90 deduct override** | **Stub 90 only** | Replaces profile chart deduct for the current conduit size. |
-| **Offset multiplier override** | **Offset, Rolling Offset** | Replaces standard angle-table multiplier for the current bend angle. |
-| **Offset shrink override** | **Offset, Rolling Offset** | Replaces standard angle-table shrink-per-inch for the current bend angle. |
+| **Offset multiplier override** | **Offset, Rolling Offset, Kick 90** | Replaces standard angle-table multiplier for the current bend angle. |
+| **Offset shrink override** | **Offset, Rolling Offset, Kick 90** | Replaces standard angle-table shrink-per-inch for the current bend angle. |
 
 ### Bender profile
 
 - **Stub 90:** profile → `emtStub90TakeUpInches[tradeSize]` → deduct in `deductMark = stubLength − deduct`. Manual deduct override wins over the chart.
 - **All other calculators:** profile name appears in trust strip / source notes only. Multiplier and shrink come from generic angle tables, not the shoe.
+- Manufacturer charts carry **`verificationStatus`**. Profiles marked **`reference_only`** have no source-backed take-up and **cannot drive deduct math** — Stub 90 warns and requires a custom deduct.
 
 ## Per calculator
 
@@ -104,16 +105,28 @@ Geometric model only — no deduct, take-up, or shoe chart.
 | Bender profile | Display / metadata only |
 | Multiplier / shrink overrides | Same as Offset for selected angle |
 
+### Kick 90 (`/kick90`)
+
+| Input | Affects |
+|-------|---------|
+| Kick rise | Distance between bends, shrink, Mark 2 (when Mark 1 set) |
+| Bend angle | Multiplier and shrink from angle table (or setup overrides) |
+| Mark 1 (optional) | Mark 2 position only (`mark2 = mark1 + spacing`) |
+| Unit, rounding | Conversion and display |
+| Conduit size | Validation only |
+| Bender profile | Display / metadata only |
+| Multiplier / shrink overrides | Same as Offset for selected angle |
+
 ## Current fallback behavior
 
 These exist in code today and should be visible to the user or tightened in future work:
 
 | Location | Behavior | User-visible? |
 |----------|----------|---------------|
-| Unknown bender profile id | `resolveBenderProfile` falls back to the first built-in generic profile and reports `isFallback`; every engine emits a warning ("Saved bender was not found — using Generic Hand Bender…") | Yes — warning strip on all six calculators |
-| Invalid saddle 3 preset (engine guard) | Defaults to `SADDLE3_CONFIG.defaultPreset` | Should not occur via UI |
+| Unknown bender profile id | `resolveBenderProfile` falls back to the first built-in generic profile and reports `isFallback`; every engine emits a warning ("Saved bender was not found — using Generic Hand Bender…") | Yes — warning strip on all seven calculators |
+| Invalid saddle 3 preset (engine guard) | `isValid: false`, warning, no diagram | Invalid result, not a silent success |
 | Invalid offset / rolling angle (engine guard) | `isValid: false`, zero multiplier | Invalid result, not a silent success |
-| Invalid saddle 4 angle (engine guard) | Defaults to `SADDLE4_CONFIG.defaultAngle` | Should not occur via UI |
+| Invalid saddle 4 angle (engine guard) | `isValid: false`, warning, no diagram | Invalid result, not a silent success |
 
 **Product rule:** new work should not add fallbacks that produce valid-looking marks without warnings. Prefer invalid state + explicit message.
 

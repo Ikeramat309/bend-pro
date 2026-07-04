@@ -82,7 +82,10 @@ export function calculateSaddle3(input: Saddle3EngineInput): Saddle3EngineResult
   const sideMark2Inches =
     centerMarkInches !== undefined ? centerMarkInches + centerToSideInches : undefined;
 
-  const isValid = Number.isFinite(input.obstructionHeight) && input.obstructionHeight > 0;
+  const isValid =
+    Number.isFinite(input.obstructionHeight) &&
+    input.obstructionHeight > 0 &&
+    isSaddle3AnglePreset(input.anglePreset);
 
   const obstructionHeightFormatted = formatLength(
     obstructionHeightInches,

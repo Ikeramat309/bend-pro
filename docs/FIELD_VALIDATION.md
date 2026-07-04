@@ -137,6 +137,16 @@ does not confirm real-world fit (spring-back, shoe geometry, tape placement).
 
 **Formulas:** true offset = √(height² + roll²); spacing = true offset × multiplier; Mark 2 = Mark 1 + spacing.
 
+### Kick 90 (`kick90`)
+
+| Case | Size | Angle | Kick rise | Mark 1 (opt.) | Expected between bends | Expected shrink | Expected Mark 2 |
+|------|------|-------|-----------|---------------|------------------------|-----------------|-----------------|
+| KIK-REF | 1/2" | 30° | 6" | — | 12" | 1 1/2" | — |
+| KIK-45 | 1/2" | 45° | 6" | — | 8 3/8" | 2 1/4" | — |
+| KIK-M | 1/2" | 30° | 6" | 10" | 12" | 1 1/2" | 22" |
+
+**Formulas:** spacing = kick rise × multiplier; shrink = kick rise × shrink per inch; Mark 2 = Mark 1 + spacing.
+
 ---
 
 ## Priority for beta

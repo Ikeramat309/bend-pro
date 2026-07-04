@@ -17,11 +17,39 @@ export type BenderChartKind =
 /** @deprecated Use {@link BenderChartKind} — kept as alias during migration. */
 export type BenderChartSource = BenderChartKind;
 
-/** Built-in generic hand-bender chart ids. */
+export type BenderVerificationStatus =
+  | 'verified_default' // manufacturer-sourced take-up + radius
+  | 'verified_with_source_note' // sourced, but carries a caution note
+  | 'field_layout_only' // take-up sourced; radius missing (no precise geometry)
+  | 'reference_only'; // identity/capacity only — must not drive marking math
+
+export type BenderSizeSpec = {
+  /** Manufacturer model numbers for this trade size, e.g. '841A; 841AH'. */
+  models: string;
+  /** Stub-90 take-up (deduct), inches — only when source-backed. */
+  takeUpInches?: number;
+  /** Centerline bend radius, inches — display/reference only today. */
+  centerlineRadiusInches?: number;
+  sourceIds: readonly string[];
+  note?: string;
+};
+
+/** Built-in hand-bender chart ids (generic + manufacturer). */
 export type BuiltInBenderProfileId =
   | 'generic-hand-bender'
   | 'hand-bender-alt-chart'
-  | 'hand-bender-compact';
+  | 'hand-bender-compact'
+  | 'greenlee-site-rite-aluminum'
+  | 'greenlee-site-rite-iron'
+  | 'greenlee-site-rite-dual-shoe'
+  | 'klein-angle-setter-iron'
+  | 'klein-angle-setter-aluminum'
+  | 'gardner-bigben-aluminum'
+  | 'ideal-aluminum'
+  | 'ideal-ductile-iron'
+  | 'milwaukee-aluminum'
+  | 'milwaukee-iron'
+  | 'southwire-mcb';
 
 /** Active profile id — built-in or user-created (`custom-…`). */
 export type BenderProfileId = BuiltInBenderProfileId | `custom-${string}`;
@@ -41,6 +69,11 @@ export type BenderProfile = {
   description: string;
   /** Required when chartKind is manufacturer — cite the real chart source. */
   sourceNote?: string;
+  brand?: string;
+  series?: string;
+  material?: string;
+  verificationStatus?: BenderVerificationStatus;
+  sizeSpecs?: Partial<Record<TradeSize, BenderSizeSpec>>;
   /** EMT stub 90 take-up (deduct), inches per trade size. */
   emtStub90TakeUpInches: EmtStub90TakeUpByTradeSize;
 };

@@ -27,3 +27,4 @@ export {
   type ProportionalSpan,
   type ResolvedSpans,
 } from './proportions';
+export * from './iso';

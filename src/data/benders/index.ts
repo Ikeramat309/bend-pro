@@ -6,6 +6,7 @@ import type { TradeSize } from '@/core/types';
 import { GENERIC_HAND_BENDER } from './genericHandBender';
 import { HAND_BENDER_ALT_CHART } from './handBenderAltChart';
 import { HAND_BENDER_COMPACT } from './handBenderCompact';
+import { MANUFACTURER_BENDER_PROFILES } from './manufacturers';
 import {
   getBenderProfileById,
   getBenderProfileIdByNameFromAll,
@@ -21,6 +22,8 @@ export type {
   BenderChartSource,
   BenderProfile,
   BenderProfileId,
+  BenderSizeSpec,
+  BenderVerificationStatus,
   BuiltInBenderProfileId,
   EmtStub90TakeUpByTradeSize,
 } from './types';
@@ -51,15 +54,18 @@ export {
 export { GENERIC_HAND_BENDER } from './genericHandBender';
 export { HAND_BENDER_ALT_CHART } from './handBenderAltChart';
 export { HAND_BENDER_COMPACT } from './handBenderCompact';
+export { MANUFACTURER_BENDER_PROFILES } from './manufacturers';
+export { BENDER_SOURCES, BENDER_WORKBOOK_VERSION } from './manufacturers/sources';
 
-/** EMT sizes shown in profile summaries (profiles only list these today). */
-export const PROFILE_SUMMARY_TRADE_SIZES: readonly TradeSize[] = ['1/2', '3/4', '1'];
+/** EMT sizes shown in profile summaries. */
+export const PROFILE_SUMMARY_TRADE_SIZES: readonly TradeSize[] = ['1/2', '3/4', '1', '1-1/4'];
 
 /** Profiles available to calculators today. */
 export const BENDER_PROFILES: readonly BenderProfile[] = [
   GENERIC_HAND_BENDER,
   HAND_BENDER_ALT_CHART,
   HAND_BENDER_COMPACT,
+  ...MANUFACTURER_BENDER_PROFILES,
 ];
 
 export const DEFAULT_BENDER_PROFILE_ID: BenderProfileId = 'generic-hand-bender';
@@ -138,10 +144,18 @@ export {
   type EffectiveStub90Deduct,
 } from './benderResolution';
 export {
+  buildManufacturerDetailRows,
   buildProfileDeductRows,
   formatChartKindLabel,
+  formatManufacturerBrandMaterial,
   formatProfileDeductCell,
+  formatVerificationStatusLabel,
   getProfileCapabilities,
+  isVerificationStatusWarning,
+  profileHasRadiusData,
+  splitProfilesByChartKind,
   splitProfilesByOrigin,
+  type ProfileChartKindGroups,
   type ProfileDeductRow,
+  type ProfileManufacturerDetailRow,
 } from './profileChart';

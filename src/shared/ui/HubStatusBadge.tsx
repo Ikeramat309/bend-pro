@@ -36,8 +36,8 @@ function makeStyles(c: ThemePalette) {
       backgroundColor: c.background,
     },
     warning: {
-      borderColor: 'rgba(255, 210, 46, 0.35)',
-      backgroundColor: 'rgba(255, 210, 46, 0.08)',
+      borderColor: c.warningTintBorder,
+      backgroundColor: c.warningTint,
     },
     text: {
       fontSize: 10,

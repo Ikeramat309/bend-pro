@@ -59,6 +59,24 @@ describe('buildRollingDiagramGeometry', () => {
     expect(geometry.dbbDim.start).not.toEqual(geometry.dbbDim.end);
   });
 
+  it('keeps the roll and height station at the free end, away from bend marks', () => {
+    const finalPipePoint = geometry.projectedPoints[geometry.projectedPoints.length - 1];
+    const secondMark = geometry.projectedPoints[geometry.secondMarkIndex];
+
+    expect(geometry.rollDim.end).toEqual(geometry.heightDim.start);
+    expect(geometry.heightDim.end).toEqual(finalPipePoint);
+    expect(
+      Math.hypot(
+        geometry.heightDim.end.x - secondMark.x,
+        geometry.heightDim.end.y - secondMark.y,
+      ),
+    ).toBeGreaterThan(20);
+  });
+
+  it('keeps the DBB labels above the pipe annotation field', () => {
+    expect(geometry.labels.dbbValue.y).toBeLessThan(geometry.projectedBounds.minY);
+  });
+
   it('ships a stable ghost scene for the empty state', () => {
     expect(ROLLING_GHOST_GEOMETRY.centerline.length).toBeGreaterThan(4);
     expect(ROLLING_GHOST_GEOMETRY.endCaps).toHaveLength(2);

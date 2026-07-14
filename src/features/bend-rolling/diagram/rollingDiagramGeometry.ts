@@ -32,7 +32,7 @@ export const ROLLING_DIAGRAM_LAYOUT = {
   gridSpacingWorld: 8,
   floorMarginWorld: 7,
   viewPadding: 25,
-  dbbDimOffset: 28,
+  dbbDimOffset: 42,
 } as const;
 
 const VIEW = { x: 0, y: 0, width: 360, height: 300 } as const;
@@ -84,7 +84,8 @@ export type RollingDiagramGeometry = {
     rollValue: RollingDiagramLabel;
     heightTitle: RollingDiagramLabel;
     heightValue: RollingDiagramLabel;
-    angle: RollingDiagramLabel;
+    angleTitle: RollingDiagramLabel;
+    angleValue: RollingDiagramLabel;
     markLegend1: RollingDiagramLabel;
     markLegend2: RollingDiagramLabel;
   };
@@ -195,11 +196,12 @@ export function buildRollingDiagramGeometry(
     ext2: { start: secondMark, end: dbbLine.end },
   };
 
-  // The dashed reference axis shows the path with no roll. The two dimensions
-  // then close the displacement: lateral roll first, vertical height second.
+  // Put the component dimensions at the free end of the pipe, away from both
+  // bend marks. The dashed reference axis shows the path with no roll; roll
+  // closes laterally first, then height closes vertically to the final run.
   const referenceStartWorld: Vec3 = { x: firstBendX, y: 0, z };
-  const referenceEndWorld: Vec3 = { x: secondBendX, y: 0, z };
-  const rolledBaseWorld: Vec3 = { x: secondBendX, y: finalY, z };
+  const referenceEndWorld: Vec3 = { x: waypoints[3].x, y: 0, z };
+  const rolledBaseWorld: Vec3 = { x: waypoints[3].x, y: finalY, z };
   const referenceAxis = {
     start: toScreen(referenceStartWorld, transform),
     end: toScreen(referenceEndWorld, transform),
@@ -207,7 +209,7 @@ export function buildRollingDiagramGeometry(
   const rollStart = toScreen(referenceEndWorld, transform);
   const rollEnd = toScreen(rolledBaseWorld, transform);
   const heightStart = rollEnd;
-  const heightEnd = toScreen(waypoints[2], transform);
+  const heightEnd = toScreen(waypoints[3], transform);
   const rollDim = { start: rollStart, end: rollEnd, mid: midpoint(rollStart, rollEnd) };
   const heightDim = {
     start: heightStart,
@@ -222,12 +224,13 @@ export function buildRollingDiagramGeometry(
   ];
 
   const dbbLabelX = clamp(dbbMid.x, 78, 282);
-  const dbbTitleY = clamp(dbbMid.y - 24, 18, 236);
-  const rollLabelX = clamp(rollDim.mid.x + 14, 22, 288);
-  const rollTitleY = clamp(rollDim.mid.y + 12, 36, 258);
-  const heightLabelX = clamp(heightDim.mid.x + 16, 22, 292);
-  const heightTitleY = clamp(heightDim.mid.y - 4, 34, 246);
-  const anglePoint = projectedPoints[Math.min(firstMarkIndex + 3, projectedPoints.length - 1)];
+  const dbbTitleY = clamp(dbbMid.y - 27, 16, 220);
+  const rollLabelX = clamp(rollDim.mid.x, 54, 306);
+  const rollTitleY = clamp(Math.max(rollDim.start.y, rollDim.end.y) + 18, 44, 252);
+  const heightLabelX = clamp(heightDim.mid.x + 42, 82, 346);
+  const heightTitleY = clamp(heightDim.mid.y - 7, 34, 236);
+  const angleLabelX = clamp(firstMark.x - 18, 68, 318);
+  const angleTitleY = clamp(firstMark.y + 35, 60, 236);
 
   return {
     waypoints,
@@ -254,17 +257,14 @@ export function buildRollingDiagramGeometry(
     labels: {
       dbbTitle: { x: dbbLabelX, y: dbbTitleY, anchor: 'middle' },
       dbbValue: { x: dbbLabelX, y: dbbTitleY + 15, anchor: 'middle' },
-      rollTitle: { x: rollLabelX, y: rollTitleY, anchor: 'start' },
-      rollValue: { x: rollLabelX, y: rollTitleY + 15, anchor: 'start' },
-      heightTitle: { x: heightLabelX, y: heightTitleY, anchor: 'start' },
-      heightValue: { x: heightLabelX, y: heightTitleY + 15, anchor: 'start' },
-      angle: {
-        x: clamp(anglePoint.x - 10, 20, 332),
-        y: clamp(anglePoint.y + 24, 24, 278),
-        anchor: 'middle',
-      },
-      markLegend1: { x: 14, y: 22, anchor: 'start' },
-      markLegend2: { x: 14, y: 38, anchor: 'start' },
+      rollTitle: { x: rollLabelX, y: rollTitleY, anchor: 'middle' },
+      rollValue: { x: rollLabelX, y: rollTitleY + 15, anchor: 'middle' },
+      heightTitle: { x: heightLabelX, y: heightTitleY, anchor: 'end' },
+      heightValue: { x: heightLabelX, y: heightTitleY + 15, anchor: 'end' },
+      angleTitle: { x: angleLabelX, y: angleTitleY, anchor: 'end' },
+      angleValue: { x: angleLabelX, y: angleTitleY + 15, anchor: 'end' },
+      markLegend1: { x: 14, y: 252, anchor: 'start' },
+      markLegend2: { x: 14, y: 268, anchor: 'start' },
     },
     drawnAngleDeg,
   };

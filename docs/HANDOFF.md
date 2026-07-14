@@ -16,7 +16,7 @@ npm start         # Expo; open on a device/simulator to see the UI
 ```
 
 - **Establish the baseline before any change:** run `npm run check`, note the test
-  count (expected ~**554**, 48 suites), and keep it green after every change.
+  count (expected ~**556**, 48 suites), and keep it green after every change.
 - **Never change calculator math** in `src/features/*/engine/` unless a task
   explicitly says so and provides field evidence. Math is field-safety-critical.
 - Work in small, reviewable steps. One concern per change set.

@@ -167,7 +167,7 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
         stroke={theme.mutedLabel}
         strokeWidth={1}
         strokeDasharray="5 5"
-        opacity={0.46}
+        opacity={0.32}
       />
 
       <DimensionLine
@@ -175,25 +175,15 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
         y1={geo.rollDim.start.y}
         x2={geo.rollDim.end.x}
         y2={geo.rollDim.end.y}
+        opacity={0.86}
       />
       <DimensionLine
         x1={geo.heightDim.start.x}
         y1={geo.heightDim.start.y}
         x2={geo.heightDim.end.x}
         y2={geo.heightDim.end.y}
+        opacity={0.86}
       />
-
-      <IsoPipe
-        centerline={geo.centerline}
-        transform={geo.transform}
-        zones={[geo.firstZone, geo.secondZone]}
-        marks={[{ index: geo.firstMarkIndex }, { index: geo.secondMarkIndex }]}
-        gradientId="rollingPipeGradient"
-      />
-      <RollingEndCaps geo={geo} />
-
-      <DiagramBendBadge x={firstMarkPoint.x} y={firstMarkPoint.y - 23} order={1} primary />
-      <DiagramBendBadge x={secondMarkPoint.x} y={secondMarkPoint.y - 23} order={2} />
 
       <DimensionLine
         x1={geo.dbbDim.start.x}
@@ -216,12 +206,35 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
         ]}
       />
 
+      <IsoPipe
+        centerline={geo.centerline}
+        transform={geo.transform}
+        zones={[geo.firstZone, geo.secondZone]}
+        marks={[{ index: geo.firstMarkIndex }, { index: geo.secondMarkIndex }]}
+        gradientId="rollingPipeGradient"
+      />
+      <RollingEndCaps geo={geo} />
+
+      <DiagramBendBadge
+        x={firstMarkPoint.x - 15}
+        y={firstMarkPoint.y - 26}
+        order={1}
+        primary
+        size={10}
+      />
+      <DiagramBendBadge
+        x={secondMarkPoint.x + 15}
+        y={secondMarkPoint.y - 26}
+        order={2}
+        size={10}
+      />
+
       <DiagramLabel
         x={geo.labels.dbbTitle.x}
         y={geo.labels.dbbTitle.y}
         text={rollingCopy.diagram.distanceBetweenBends}
         variant="muted"
-        fontSize={9.5}
+        fontSize={10}
         fontWeight="600"
         textAnchor={geo.labels.dbbTitle.anchor}
       />
@@ -230,7 +243,7 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
         y={geo.labels.dbbValue.y}
         text={data.display.distanceBetweenBends}
         variant="strong"
-        fontSize={13.5}
+        fontSize={14.5}
         fontWeight="700"
         textAnchor={geo.labels.dbbValue.anchor}
       />
@@ -240,7 +253,7 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
         y={geo.labels.rollTitle.y}
         text={rollingCopy.diagram.offsetRoll}
         variant="muted"
-        fontSize={9.5}
+        fontSize={10}
         fontWeight="600"
         textAnchor={geo.labels.rollTitle.anchor}
       />
@@ -249,7 +262,7 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
         y={geo.labels.rollValue.y}
         text={data.display.advance}
         variant="strong"
-        fontSize={13.5}
+        fontSize={14.5}
         fontWeight="700"
         textAnchor={geo.labels.rollValue.anchor}
       />
@@ -274,13 +287,22 @@ function RollingLiveDiagram({ data }: { data: RollingDiagramData }) {
       />
 
       <DiagramLabel
-        x={geo.labels.angle.x}
-        y={geo.labels.angle.y}
-        text={`${data.bendAngle}°`}
+        x={geo.labels.angleTitle.x}
+        y={geo.labels.angleTitle.y}
+        text={rollingCopy.fields.bendAngle.label}
         variant="muted"
-        fontSize={10}
+        fontSize={8.5}
         fontWeight="600"
-        textAnchor={geo.labels.angle.anchor}
+        textAnchor={geo.labels.angleTitle.anchor}
+      />
+      <DiagramLabel
+        x={geo.labels.angleValue.x}
+        y={geo.labels.angleValue.y}
+        text={`${data.bendAngle}°`}
+        variant="strong"
+        fontSize={13.5}
+        fontWeight="700"
+        textAnchor={geo.labels.angleValue.anchor}
       />
 
       {mark1Display ? (

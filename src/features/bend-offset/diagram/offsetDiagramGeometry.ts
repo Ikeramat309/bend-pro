@@ -112,4 +112,5 @@ export function buildOffsetDiagramGeometry(
   };
 }
 
-export const OFFSET_GHOST_PIPE = 'M 24 230 H 88 L 192 126 H 336';
+export const OFFSET_GHOST_PIPE =
+  'M 24 230 H 70 Q 88 230 103.3 220.5 L 176.7 135.5 Q 192 126 210 126 H 336';

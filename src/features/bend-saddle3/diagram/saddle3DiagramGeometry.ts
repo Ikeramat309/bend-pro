@@ -25,6 +25,7 @@ export type Saddle3DiagramGeometry = {
   obsRadius: number;
   pipePath: string;
   bendLeft: string;
+  bendCenter: string;
   bendRight: string;
 };
 
@@ -138,6 +139,7 @@ export function buildSaddle3DiagramGeometry(
     obsRadius,
     pipePath,
     bendLeft: `M ${a1x} ${baseY} Q ${x1} ${baseY} ${b1x} ${b1y}`,
+    bendCenter: `M ${c1x} ${c1y} Q ${centerX} ${peakY} ${c2x} ${c2y}`,
     bendRight: `M ${d1x} ${d1y} Q ${x2} ${baseY} ${d2x} ${baseY}`,
   };
 }

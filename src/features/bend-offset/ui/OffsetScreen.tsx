@@ -37,8 +37,8 @@ import { MultiplierOverrideSheet } from './MultiplierOverrideSheet';
 import { OffsetDiagram } from './OffsetDiagram';
 import { ShrinkOverrideSheet } from './ShrinkOverrideSheet';
 
-/** Approved diagram layout — scale wrapper only, no SVG geometry changes. */
-const DIAGRAM_DISPLAY_SCALE = 1.06;
+/** Keep end caps, bend tags, and the field cue inside the workspace at every size. */
+const DIAGRAM_DISPLAY_SCALE = 1;
 
 export default function OffsetScreen() {
   const router = useRouter();

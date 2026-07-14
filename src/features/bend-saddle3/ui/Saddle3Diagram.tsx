@@ -1,15 +1,15 @@
-import { Circle } from 'react-native-svg';
+import { Circle, Ellipse } from 'react-native-svg';
 
 import {
   BendRadiusZone,
   DiagramBendBadge,
-  DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
   DiagramFieldCue,
   DiagramFrame,
   DiagramGhostMessage,
   DiagramLabel,
+  DiagramLeaderLine,
   DiagramSvg,
   DimensionLine,
   MarkLine,
@@ -26,10 +26,6 @@ import {
 } from '../diagram/saddle3DiagramGeometry';
 
 const { centerX: CENTER_X, baseY: BASE_Y } = SADDLE3_DIAGRAM_LAYOUT;
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(Math.max(value, min), max);
-}
 
 export type Saddle3DiagramProps = {
   data?: Saddle3DiagramData;
@@ -96,28 +92,70 @@ function ObstructionCircle({
   );
 }
 
-function ObstructionHeightLabel({
+function ObstructionHeightPocket({
   centerX,
-  baselineY,
   radius,
   heightLabel,
 }: {
   centerX: number;
-  baselineY: number;
   radius: number;
   heightLabel: string;
 }) {
-  const cy = baselineY - radius;
-  const fontSize = clamp(radius * 0.42, 8.5, 11);
+  const pocketX = 320;
+  const vectorTop = 58;
+  const vectorBottom = vectorTop + Math.min(Math.max(radius * 2, 30), 58);
+  const obstructionTopY = BASE_Y - radius * 2;
 
   return (
-    <DiagramLabel
-      x={centerX}
-      y={cy + 4}
-      text={heightLabel}
-      variant="default"
-      fontSize={fontSize}
-      fontWeight="700"
+    <>
+      <DimensionLine
+        x1={pocketX}
+        y1={vectorTop}
+        x2={pocketX}
+        y2={vectorBottom}
+        showArrows
+      />
+      <DiagramLeaderLine
+        x1={pocketX - 2}
+        y1={vectorBottom + 4}
+        x2={centerX + 3}
+        y2={obstructionTopY - 2}
+        opacity={0.78}
+      />
+      <DiagramLabel
+        x={pocketX - 9}
+        y={31}
+        text="HEIGHT"
+        variant="muted"
+        fontSize={8}
+        fontWeight="700"
+        textAnchor="end"
+      />
+      <DiagramLabel
+        x={pocketX - 9}
+        y={46}
+        text={heightLabel}
+        variant="default"
+        fontSize={10.5}
+        fontWeight="700"
+        textAnchor="end"
+      />
+    </>
+  );
+}
+
+function PipeEndCap({ x, y }: { x: number; y: number }) {
+  const theme = useDiagramTheme();
+
+  return (
+    <Ellipse
+      cx={x}
+      cy={y}
+      rx={3.2}
+      ry={8.1}
+      fill={theme.endCap.fill}
+      stroke={theme.endCap.stroke}
+      strokeWidth={1.25}
     />
   );
 }
@@ -128,21 +166,31 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
     data.centerToSideInches,
   );
   const geo = buildSaddle3DiagramGeometry(visualObsIn, visualCenterToSide, data.sideAngle);
-  const { peakY, x1, x2, obsRadius, pipePath, bendLeft, bendRight } = geo;
+  const { peakY, x1, x2, obsRadius, pipePath, bendLeft, bendCenter, bendRight } = geo;
 
   const hasMarks = data.centerMarkInches !== undefined;
 
   const segDx = CENTER_X - x1;
   const segRise = BASE_Y - peakY;
   const diagonalPx = Math.hypot(segDx, segRise);
-  const nx = -segRise / diagonalPx;
-  const ny = -segDx / diagonalPx;
-  const dimOffset = 28;
-  const dbb1 = { x: x1 + nx * dimOffset, y: BASE_Y + ny * dimOffset };
-  const dbb2 = { x: CENTER_X + nx * dimOffset, y: peakY + ny * dimOffset };
-  const bbLabelT = 0.34;
-  const bbLabelX = dbb1.x + (dbb2.x - dbb1.x) * bbLabelT + nx * 24;
-  const bbLabelY = dbb1.y + (dbb2.y - dbb1.y) * bbLabelT + ny * 24;
+  const ux = segDx / diagonalPx;
+  const uy = -segRise / diagonalPx;
+  const dimensionCenter = { x: 91, y: 92 };
+  const dimensionHalf = 43;
+  const dbb1 = {
+    x: dimensionCenter.x - ux * dimensionHalf,
+    y: dimensionCenter.y - uy * dimensionHalf,
+  };
+  const dbb2 = {
+    x: dimensionCenter.x + ux * dimensionHalf,
+    y: dimensionCenter.y + uy * dimensionHalf,
+  };
+
+  const sideBadgeY = BASE_Y + 17;
+  const leftBadgeX = 45;
+  const rightBadgeX = 315;
+  const centerBadgeX = 164;
+  const centerBadgeY = 62;
 
   return (
     <DiagramSvg viewBox={SADDLE3_CONFIG.diagramViewBox}>
@@ -151,51 +199,122 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
 
       <ObstructionCircle centerX={CENTER_X} baselineY={BASE_Y} radius={obsRadius} />
 
-      <PipeSegment d={pipePath} variant="shadow" />
-      <PipeSegment d={pipePath} variant="pipe" gradientId="saddle3PipeGradient" />
-
-      <ObstructionHeightLabel
-        centerX={CENTER_X}
-        baselineY={BASE_Y}
-        radius={obsRadius}
-        heightLabel={data.display.obstructionHeight}
-      />
-
-      <BendRadiusZone d={bendLeft} glowWidth={13} />
-      <BendRadiusZone d={bendRight} glowWidth={13} />
-
-      <DiagramBendBadge x={x1} y={BASE_Y - 24} order={2} />
-      <DiagramBendBadge x={CENTER_X} y={peakY - 26} order={1} primary />
-      <DiagramBendBadge x={x2} y={BASE_Y - 24} order={3} />
-
       <DimensionLine
         x1={dbb1.x}
         y1={dbb1.y}
         x2={dbb2.x}
         y2={dbb2.y}
         showArrows={diagonalPx >= 36}
-        extensionLines={[
-          { x1: x1 + nx * 8, y1: BASE_Y + ny * 8, x2: x1 + nx * 30, y2: BASE_Y + ny * 30 },
-          { x1: CENTER_X + nx * 8, y1: peakY + ny * 8, x2: CENTER_X + nx * 30, y2: peakY + ny * 30 },
-        ]}
       />
+      <DiagramLeaderLine
+        x1={dbb1.x}
+        y1={dbb1.y + 5}
+        x2={x1}
+        y2={BASE_Y - 11}
+        opacity={0.72}
+      />
+      <DiagramLeaderLine
+        x1={dbb2.x}
+        y1={dbb2.y + 5}
+        x2={CENTER_X}
+        y2={peakY - 11}
+        opacity={0.72}
+      />
+      <ObstructionHeightPocket
+        centerX={CENTER_X}
+        radius={obsRadius}
+        heightLabel={data.display.obstructionHeight}
+      />
+      <DiagramLeaderLine
+        x1={CENTER_X}
+        y1={centerBadgeY + 12}
+        x2={CENTER_X}
+        y2={peakY - 11}
+        opacity={0.76}
+      />
+      <DiagramLeaderLine
+        x1={leftBadgeX + 9}
+        y1={sideBadgeY - 3}
+        x2={x1 - 2}
+        y2={BASE_Y + 9}
+        opacity={0.76}
+      />
+      <DiagramLeaderLine
+        x1={rightBadgeX - 9}
+        y1={sideBadgeY - 3}
+        x2={x2 + 2}
+        y2={BASE_Y + 9}
+        opacity={0.76}
+      />
+
+      <PipeSegment d={pipePath} variant="shadow" />
+      <PipeSegment d={pipePath} variant="pipe" gradientId="saddle3PipeGradient" />
+      <PipeEndCap x={SADDLE3_DIAGRAM_LAYOUT.startX - 8} y={BASE_Y} />
+      <PipeEndCap x={SADDLE3_DIAGRAM_LAYOUT.endX + 8} y={BASE_Y} />
+
+      <BendRadiusZone d={bendLeft} glowWidth={12} />
+      <BendRadiusZone d={bendCenter} glowWidth={15} />
+      <BendRadiusZone d={bendRight} glowWidth={12} />
+
       <DiagramLabel
-        x={bbLabelX}
-        y={bbLabelY}
+        x={28}
+        y={31}
         text={saddle3Copy.diagram.betweenBends}
         variant="muted"
-        fontSize={9.5}
-        fontWeight="600"
+        fontSize={8.5}
+        fontWeight="700"
+        textAnchor="start"
       />
       <DiagramLabel
-        x={bbLabelX}
-        y={bbLabelY + 14}
+        x={28}
+        y={47}
         text={data.display.centerToSide}
         variant="default"
         fontSize={11}
+        textAnchor="start"
       />
 
-      <MarkLine x1={x1} y1={BASE_Y - 12} x2={x1} y2={BASE_Y + 12} opacity={0.62} />
+      <DiagramLabel
+        x={180}
+        y={31}
+        text={saddle3Copy.results.centerMark}
+        variant="muted"
+        fontSize={8.5}
+        fontWeight="700"
+      />
+      {hasMarks && data.display.centerMark ? (
+        <DiagramLabel x={180} y={46} text={data.display.centerMark} variant="mark" fontSize={11} />
+      ) : null}
+      <DiagramBendBadge x={centerBadgeX} y={centerBadgeY} order={1} primary size={10} />
+      <DiagramLabel
+        x={190}
+        y={centerBadgeY + 3}
+        text={`${data.centerAngle}\u00B0`}
+        variant="default"
+        fontSize={10}
+        fontWeight="700"
+      />
+
+      <DiagramBendBadge x={leftBadgeX} y={sideBadgeY} order={2} size={9} />
+      <DiagramLabel
+        x={70}
+        y={sideBadgeY + 3}
+        text={`${data.sideAngle}\u00B0`}
+        variant="default"
+        fontSize={9.5}
+        fontWeight="700"
+      />
+      <DiagramBendBadge x={rightBadgeX} y={sideBadgeY} order={3} size={9} />
+      <DiagramLabel
+        x={290}
+        y={sideBadgeY + 3}
+        text={`${data.sideAngle}\u00B0`}
+        variant="default"
+        fontSize={9.5}
+        fontWeight="700"
+      />
+
+      <MarkLine x1={x1} y1={BASE_Y - 10} x2={x1} y2={BASE_Y + 10} opacity={0.7} />
       <DiagramLabel
         x={x1}
         y={BASE_Y + 34}
@@ -208,20 +327,8 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
         <DiagramLabel x={x1} y={BASE_Y + 48} text={data.display.sideMark1} variant="default" fontSize={11} />
       ) : null}
 
-      <MarkLine x1={CENTER_X} y1={peakY - 12} x2={CENTER_X} y2={peakY + 12} />
-      <DiagramLabel
-        x={CENTER_X}
-        y={peakY - 52}
-        text={saddle3Copy.diagram.centerMark}
-        variant="muted"
-        fontSize={9.5}
-        fontWeight="600"
-      />
-      {hasMarks && data.display.centerMark ? (
-        <DiagramLabel x={CENTER_X} y={peakY - 38} text={data.display.centerMark} variant="mark" fontSize={11} />
-      ) : null}
-
-      <MarkLine x1={x2} y1={BASE_Y - 12} x2={x2} y2={BASE_Y + 12} opacity={0.62} />
+      <MarkLine x1={CENTER_X} y1={peakY - 10} x2={CENTER_X} y2={peakY + 10} />
+      <MarkLine x1={x2} y1={BASE_Y - 10} x2={x2} y2={BASE_Y + 10} opacity={0.7} />
       <DiagramLabel
         x={x2}
         y={BASE_Y + 34}
@@ -234,16 +341,16 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
         <DiagramLabel x={x2} y={BASE_Y + 48} text={data.display.sideMark2} variant="default" fontSize={11} />
       ) : null}
 
-      <DiagramCallout x={16} y={14} width={132} height={26}>
-        <DiagramLabel
-          x={30}
-          y={31}
-          text={`${saddle3Copy.diagram.shrink}  ${data.display.shrink}`}
-          variant="default"
-          fontSize={10}
-          textAnchor="start"
-        />
-      </DiagramCallout>
+      <DiagramLeaderLine x1={CENTER_X} y1={BASE_Y + 2} x2={CENTER_X} y2={BASE_Y + 13} opacity={0.68} />
+      <DiagramLabel
+        x={CENTER_X}
+        y={BASE_Y + 26}
+        text="OBSTRUCTION"
+        variant="muted"
+        fontSize={8}
+        fontWeight="700"
+      />
+
       <DiagramFieldCue text={saddle3Copy.diagram.fieldCue} />
     </DiagramSvg>
   );

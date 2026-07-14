@@ -1,4 +1,4 @@
-import { Circle } from 'react-native-svg';
+import { Ellipse, G, Path } from 'react-native-svg';
 
 import {
   BendRadiusZone,
@@ -9,45 +9,34 @@ import {
   DiagramLabel,
   DiagramSvg,
   DimensionLine,
-  MarkLine,
-  PipeSegment,
   useDiagramTheme,
 } from '@/shared/diagrams';
 import type { Stub90DiagramData } from '../engine/stub90.types';
 import { STUB90_CONFIG } from '../stub90.config';
 import { stub90Copy } from '../stub90.copy';
 
-const GHOST_PIPE_PATH = 'M 18 218 H 252 Q 298 218 298 172 V 34';
-
 /**
- * Fixed instructional schematic — pipe shape and vector positions never change.
- * Actual stub, deduct mark, and leg values update label text only.
+ * Fixed instructional schematic. Values change with the calculation, while the
+ * bend stays large enough to read clearly at every supported stub length.
  */
-const STATIC = {
-  startX: 18,
-  bottomY: 218,
-  cornerX: 298,
-  bendStartX: 252,
-  arcTopY: 172,
-  topY: 34,
-  /** Orange deduct mark — just above the bend radius on the stub. */
-  markY: 164,
-  pipePath: GHOST_PIPE_PATH,
-  highlightPath: 'M 34 213 H 252 Q 290 213 290 172 V 50',
-  bendZonePath: 'M 252 218 Q 298 218 298 172',
-  stubDimX: 324,
-  stubLabelX: 342,
-  stubMidY: 126,
-  deductMarkDimX: 270,
-  deductMarkLabelMidY: 99,
-  legDimY: 268,
-  legLabelY: 260,
-  legValueY: 282,
-  legEndX: 304,
-  legMidX: 161,
+const LAYOUT = {
+  startX: 26,
+  bottomY: 211,
+  cornerX: 288,
+  bendStartX: 240,
+  bendTopY: 163,
+  topY: 32,
+  markY: 149,
+  pipePath: 'M 26 211 H 240 Q 288 211 288 163 V 32',
+  bendZonePath: 'M 240 211 Q 288 211 288 163',
+  deductDimX: 260,
+  /** Keep the vertical vector at the far edge so its horizontal label never crosses it. */
+  stubDimX: 353,
+  legDimY: 270,
 } as const;
 
-const VECTOR_VALUE_FONT_SIZE = 13.5;
+const PIPE_WIDTH = 19;
+const VALUE_FONT_SIZE = 13.5;
 
 export type Stub90DiagramProps = {
   data?: Stub90DiagramData;
@@ -55,7 +44,7 @@ export type Stub90DiagramProps = {
   isInvalid?: boolean;
 };
 
-/** Feature diagram for Stub 90 — built from shared SVG primitives. */
+/** Feature diagram for Stub 90 - built from shared SVG primitives. */
 export function Stub90Diagram({ data, isEmpty = false, isInvalid = false }: Stub90DiagramProps) {
   const message = isInvalid
     ? stub90Copy.diagram.invalidMessage
@@ -72,29 +61,150 @@ export function Stub90Diagram({ data, isEmpty = false, isInvalid = false }: Stub
   );
 }
 
+/** Satin EMT body with flat cuts so the hollow cross-sections remain visible. */
+function Stub90SatinPipe({ ghost = false }: { ghost?: boolean }) {
+  const theme = useDiagramTheme();
+  const opacity = ghost ? 0.24 : 1;
+
+  return (
+    <G opacity={opacity}>
+      <Path
+        d={LAYOUT.pipePath}
+        fill="none"
+        stroke={theme.pipeShadow}
+        strokeWidth={23}
+        strokeLinecap="butt"
+        strokeLinejoin="round"
+        opacity={ghost ? 0.35 : 0.24}
+      />
+      <Path
+        d={LAYOUT.pipePath}
+        fill="none"
+        stroke={theme.pipeCore}
+        strokeWidth={PIPE_WIDTH}
+        strokeLinecap="butt"
+        strokeLinejoin="round"
+      />
+      <Path
+        d={LAYOUT.pipePath}
+        fill="none"
+        stroke="url(#stub90PipeGradient)"
+        strokeWidth={PIPE_WIDTH * 0.86}
+        strokeLinecap="butt"
+        strokeLinejoin="round"
+      />
+      <Path
+        d={LAYOUT.pipePath}
+        fill="none"
+        stroke={theme.pipeSheen}
+        strokeWidth={PIPE_WIDTH * 0.13}
+        strokeLinecap="butt"
+        strokeLinejoin="round"
+        opacity={ghost ? 0.16 : 0.25}
+      />
+    </G>
+  );
+}
+
+function Stub90EndCaps({ ghost = false }: { ghost?: boolean }) {
+  const theme = useDiagramTheme();
+
+  return (
+    <G opacity={ghost ? 0.34 : 1}>
+      {/* Horizontal run: the cut face is vertical. */}
+      <Ellipse
+        cx={LAYOUT.startX}
+        cy={LAYOUT.bottomY}
+        rx={2.8}
+        ry={PIPE_WIDTH / 2}
+        fill={theme.pipe}
+        stroke={theme.pipeSheen}
+        strokeWidth={0.8}
+      />
+      <Ellipse
+        cx={LAYOUT.startX}
+        cy={LAYOUT.bottomY}
+        rx={1.65}
+        ry={PIPE_WIDTH * 0.35}
+        fill={theme.endCap.fill}
+        stroke={theme.endCap.stroke}
+        strokeWidth={0.65}
+      />
+
+      {/* Stub: the top cut face is horizontal. */}
+      <Ellipse
+        cx={LAYOUT.cornerX}
+        cy={LAYOUT.topY}
+        rx={PIPE_WIDTH / 2}
+        ry={2.8}
+        fill={theme.pipe}
+        stroke={theme.pipeSheen}
+        strokeWidth={0.8}
+      />
+      <Ellipse
+        cx={LAYOUT.cornerX}
+        cy={LAYOUT.topY}
+        rx={PIPE_WIDTH * 0.35}
+        ry={1.65}
+        fill={theme.endCap.fill}
+        stroke={theme.endCap.stroke}
+        strokeWidth={0.65}
+      />
+    </G>
+  );
+}
+
+/** A compact wrap-style field mark, drawn around the conduit instead of across it. */
+function DeductMarkCollar({ opacity = 1 }: { opacity?: number }) {
+  const theme = useDiagramTheme();
+
+  return (
+    <G opacity={opacity}>
+      <Ellipse
+        cx={LAYOUT.cornerX}
+        cy={LAYOUT.markY}
+        rx={PIPE_WIDTH / 2 + 0.8}
+        ry={2.45}
+        fill="none"
+        stroke={theme.markGlow}
+        strokeWidth={3.4}
+      />
+      <Ellipse
+        cx={LAYOUT.cornerX}
+        cy={LAYOUT.markY}
+        rx={PIPE_WIDTH / 2 + 0.8}
+        ry={2.45}
+        fill="none"
+        stroke={theme.mark}
+        strokeWidth={1.45}
+      />
+    </G>
+  );
+}
+
 function Stub90GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   const { ghost } = useDiagramTheme();
 
   return (
     <DiagramSvg viewBox={STUB90_CONFIG.diagramViewBox}>
-      <DiagramDefs gradientId="ghostPipeGradient" ghost />
+      <DiagramDefs gradientId="stub90PipeGradient" ghost />
       <DiagramCanvas />
-      <PipeSegment d={GHOST_PIPE_PATH} variant="shadow" opacity={ghost.pipeShadowOpacity} />
-      <PipeSegment d={GHOST_PIPE_PATH} variant="pipe" gradientId="ghostPipeGradient" />
-      <MarkLine x1={284} y1={STATIC.markY} x2={312} y2={STATIC.markY} opacity={ghost.markOpacity} />
+      <Stub90SatinPipe ghost />
+      <Stub90EndCaps ghost />
+      <DeductMarkCollar opacity={ghost.markOpacity} />
       <DimensionLine
-        x1={STATIC.stubDimX}
-        y1={STATIC.bottomY}
-        x2={STATIC.stubDimX}
-        y2={STATIC.topY}
+        x1={LAYOUT.stubDimX}
+        y1={LAYOUT.bottomY}
+        x2={LAYOUT.stubDimX}
+        y2={LAYOUT.topY}
         showArrows={false}
         opacity={ghost.dimensionOpacity}
       />
       <DimensionLine
-        x1={STATIC.startX}
-        y1={STATIC.legDimY}
-        x2={STATIC.legEndX}
-        y2={STATIC.legDimY}
+        x1={LAYOUT.startX}
+        y1={LAYOUT.legDimY}
+        x2={LAYOUT.cornerX}
+        y2={LAYOUT.legDimY}
         showArrows={false}
         opacity={ghost.dimensionOpacity}
       />
@@ -104,129 +214,104 @@ function Stub90GhostDiagram({ message, invalid }: { message: string; invalid?: b
 }
 
 function Stub90LiveDiagram({ data }: { data: Stub90DiagramData }) {
-  const theme = useDiagramTheme();
   const legDisplay = data.legLengthInches !== undefined ? data.display.leg : undefined;
-  const {
-    startX,
-    bottomY,
-    cornerX,
-    topY,
-    markY,
-    pipePath,
-    highlightPath,
-    bendZonePath,
-    stubDimX,
-    stubLabelX,
-    stubMidY,
-    deductMarkDimX,
-    deductMarkLabelMidY,
-    legDimY,
-    legLabelY,
-    legValueY,
-    legEndX,
-    legMidX,
-  } = STATIC;
 
   return (
     <DiagramSvg viewBox={STUB90_CONFIG.diagramViewBox}>
-      <DiagramDefs gradientId="pipeGradient" />
+      <DiagramDefs gradientId="stub90PipeGradient" />
       <DiagramCanvas />
 
-      <PipeSegment d={pipePath} variant="shadow" />
-      <PipeSegment d={pipePath} variant="pipe" gradientId="pipeGradient" />
-      <PipeSegment d={highlightPath} variant="highlight" />
+      <Stub90SatinPipe />
+      <BendRadiusZone d={LAYOUT.bendZonePath} glowWidth={16} />
+      <Stub90EndCaps />
+      <DeductMarkCollar />
 
-      <BendRadiusZone d={bendZonePath} />
-
-      <Circle cx={startX} cy={bottomY} r={5.5} fill={theme.pipeCore} />
-      <Circle cx={cornerX} cy={topY} r={5.5} fill={theme.pipeCore} />
-
-      <MarkLine x1={cornerX - 13} y1={markY} x2={cornerX + 13} y2={markY} />
-
+      {/* Deduct Mark: measure down the stub from its finished end. */}
       <DimensionLine
-        x1={deductMarkDimX}
-        y1={topY + 2}
-        x2={deductMarkDimX}
-        y2={markY - 2}
+        x1={LAYOUT.deductDimX}
+        y1={LAYOUT.topY + 2}
+        x2={LAYOUT.deductDimX}
+        y2={LAYOUT.markY - 2}
         extensionLines={[
-          { x1: cornerX - 36, y1: topY, x2: cornerX - 8, y2: topY },
-          { x1: cornerX - 36, y1: markY, x2: cornerX - 14, y2: markY },
+          { x1: LAYOUT.deductDimX + 5, y1: LAYOUT.topY, x2: LAYOUT.cornerX - 10, y2: LAYOUT.topY },
+          { x1: LAYOUT.deductDimX + 5, y1: LAYOUT.markY, x2: LAYOUT.cornerX - 11, y2: LAYOUT.markY },
         ]}
       />
       <DiagramLabel
-        x={deductMarkDimX - 16}
-        y={deductMarkLabelMidY - 8}
-        text={stub90Copy.diagram.deductMark}
-        variant="muted"
-        fontSize={9.5}
-        fontWeight="600"
+        x={LAYOUT.deductDimX - 11}
+        y={83}
+        text={stub90Copy.diagram.deductMark.toUpperCase()}
+        variant="mark"
+        fontSize={8.5}
+        fontWeight="700"
         textAnchor="end"
       />
       <DiagramLabel
-        x={deductMarkDimX - 16}
-        y={deductMarkLabelMidY + 14}
+        x={LAYOUT.deductDimX - 11}
+        y={101}
         text={data.display.deductMark}
-        variant="default"
-        fontSize={VECTOR_VALUE_FONT_SIZE}
+        variant="mark"
+        fontSize={VALUE_FONT_SIZE}
         fontWeight="700"
         textAnchor="end"
       />
 
+      {/* Stub Length: finished floor line at the 90 to the finished stub end. */}
       <DimensionLine
-        x1={stubDimX}
-        y1={bottomY}
-        x2={stubDimX}
-        y2={topY}
+        x1={LAYOUT.stubDimX}
+        y1={LAYOUT.bottomY}
+        x2={LAYOUT.stubDimX}
+        y2={LAYOUT.topY}
         extensionLines={[
-          { x1: cornerX + 6, y1: bottomY, x2: cornerX + 42, y2: bottomY },
-          { x1: cornerX + 8, y1: topY, x2: cornerX + 42, y2: topY },
+          { x1: LAYOUT.cornerX + 10, y1: LAYOUT.bottomY, x2: LAYOUT.stubDimX + 5, y2: LAYOUT.bottomY },
+          { x1: LAYOUT.cornerX + 10, y1: LAYOUT.topY, x2: LAYOUT.stubDimX + 5, y2: LAYOUT.topY },
         ]}
       />
       <DiagramLabel
-        x={stubLabelX}
-        y={stubMidY - 36}
-        text={stub90Copy.diagram.stubLength}
+        x={LAYOUT.cornerX + 15}
+        y={105}
+        text={stub90Copy.diagram.stubLength.toUpperCase()}
         variant="muted"
-        fontSize={9.5}
-        fontWeight="600"
-        rotation={90}
+        fontSize={7.7}
+        fontWeight="700"
+        textAnchor="start"
       />
       <DiagramLabel
-        x={stubLabelX}
-        y={stubMidY + 36}
+        x={LAYOUT.cornerX + 15}
+        y={124}
         text={data.display.stubLength}
-        variant="default"
-        fontSize={VECTOR_VALUE_FONT_SIZE}
+        variant="strong"
+        fontSize={VALUE_FONT_SIZE}
         fontWeight="700"
-        rotation={90}
+        textAnchor="start"
       />
 
       {legDisplay ? (
         <>
           <DimensionLine
-            x1={startX + 2}
-            y1={legDimY}
-            x2={legEndX - 2}
-            y2={legDimY}
+            x1={LAYOUT.startX + 2}
+            y1={LAYOUT.legDimY}
+            x2={LAYOUT.cornerX - 2}
+            y2={LAYOUT.legDimY}
             extensionLines={[
-              { x1: startX, y1: 238, x2: startX, y2: 276 },
-              { x1: legEndX, y1: 238, x2: legEndX, y2: 276 },
+              { x1: LAYOUT.startX, y1: LAYOUT.bottomY + 11, x2: LAYOUT.startX, y2: LAYOUT.legDimY + 5 },
+              { x1: LAYOUT.cornerX, y1: LAYOUT.bottomY + 11, x2: LAYOUT.cornerX, y2: LAYOUT.legDimY + 5 },
             ]}
           />
           <DiagramLabel
-            x={legMidX}
-            y={legLabelY}
-            text={stub90Copy.diagram.leg}
+            x={(LAYOUT.startX + LAYOUT.cornerX) / 2}
+            y={254}
+            text={stub90Copy.diagram.leg.toUpperCase()}
             variant="muted"
-            fontSize={9.5}
-            fontWeight="600"
+            fontSize={8.5}
+            fontWeight="700"
           />
           <DiagramLabel
-            x={legMidX}
-            y={legValueY}
+            x={(LAYOUT.startX + LAYOUT.cornerX) / 2}
+            y={290}
             text={legDisplay}
-            variant="default"
-            fontSize={VECTOR_VALUE_FONT_SIZE}
+            variant="strong"
+            fontSize={VALUE_FONT_SIZE}
             fontWeight="700"
           />
         </>

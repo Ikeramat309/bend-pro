@@ -48,14 +48,14 @@ Practical limitations as of Phase 5.9. These are **not necessarily bugs** — ma
 
 ## Sessions and Home
 
-- **Recent layouts persist from calculators** — all six active screens call `usePersistRecentLayout` when results are valid or warning-only.
+- **Recent layouts persist from calculators** — all seven active screens call `usePersistRecentLayout` when results are valid or warning-only.
 - **Home Continue Layout** — shown only when a routable recent exists; navigates with `layoutId` and restores inputs on the calculator screen.
 
 ## Architecture and product
 
 - **Calculator registry** is implemented in `src/core/calculators/` (ids, routes, Bends hub, home metadata). Add new calculators there first before wiring routes or hub UI.
 - **Input trust model** — bender profile affects Stub 90 deduct math only; see [`TRUST_MODEL.md`](TRUST_MODEL.md).
-- **Phase 6 calculators** (Kick, parallel offset, box offset, back-to-back 90, hydraulic layout) are placeholders only — not built.
+- **Catalog expansion after Kick 90** remains planned, not built; follow the locked order in [`HANDOFF.md`](HANDOFF.md) §5.
 - **EMT only** — no RMC, IMC, or PVC support.
 
 ## Deferred polish (not blocking)

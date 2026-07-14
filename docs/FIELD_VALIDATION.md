@@ -4,7 +4,7 @@ Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGEN
 
 Prepares Bend Pro for beta testing with real electricians. This doc defines **field validated**, lists the **validation matrix** (calculator × size × angle → expected marks), and links the [printable test sheet](FIELD_VALIDATION_TEST_SHEET.md).
 
-**Scope today:** six active EMT calculators only. No new calculators. No debug/export screen — testers use the app and the sheet.
+**Scope today:** seven active EMT calculators only. No new calculators. No debug/export screen — testers use the app and the sheet.
 
 **Supported sizes (v1):** EMT **1/2", 3/4", 1", 1-1/4"** only. The setup picker hides 1-1/2" and 2" (out of honest hand-bender range / no generic chart). The 1-1/4" stub-90 take-up (11") is a **generic published value pending physical field verification** — see the math sign-off note. Any uncharted size still warns and offers a custom deduct (calibration path) rather than guessing.
 
@@ -164,7 +164,7 @@ Minimum field-validation set before wider beta:
 
 Bend Pro is **offline-first** for calculator use:
 
-- All six calculators, bender profiles, and guide content ship **on device**
+- All seven calculators, bender profiles, and guide content ship **on device**
 - No network call is required to compute marks or show diagrams
 - AsyncStorage is local only — no cloud sync
 

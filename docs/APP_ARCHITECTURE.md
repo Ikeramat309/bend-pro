@@ -95,7 +95,7 @@ Trust strip on calculator screens reads active profile from setup; Edit Setup sh
 
 ## Guide content
 
-- **`src/data/guide/`** — static walkthroughs (formula, steps, mistakes, example) for all six calculators
+- **`src/data/guide/`** — static walkthroughs (formula, steps, mistakes, example) for all seven calculators
 - **`guideRoute(calculatorId)`** — calculator dock Guide opens contextual detail; bottom nav Guide opens index
 
 ## Calculator registry

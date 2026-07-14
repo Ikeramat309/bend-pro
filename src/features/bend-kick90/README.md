@@ -8,7 +8,7 @@ Given **kick rise** (how far the leg must move sideways/up) and a **bend angle**
 
 - **Distance Between Bends** — spacing from the 90° bend mark to the kick mark (`kickRise × multiplier`)
 - **Shrink** — conduit length lost (`kickRise × shrink per inch`)
-- **Mark 1 / Mark 2** — optional layout marks (engine supports; screen wiring is a follow-up)
+- **Mark 1 / Mark 2** — optional layout marks, wired through the screen and recent-layout persistence
 
 ## Engine
 

@@ -11,14 +11,14 @@ export type DiagramFieldCueProps = {
 /** Compact field-work legend — bend order, direction, and watch-fors. */
 export function DiagramFieldCue({ text, x = 180, y = 293 }: DiagramFieldCueProps) {
   return (
-    <G opacity={0.72}>
+    <G opacity={0.84}>
       <DiagramLabel
         x={x}
         y={y}
         text={text}
         variant="muted"
-        fontSize={8.5}
-        fontWeight="500"
+        fontSize={9.5}
+        fontWeight="600"
         textAnchor="middle"
       />
     </G>

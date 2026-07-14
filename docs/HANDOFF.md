@@ -16,7 +16,7 @@ npm start         # Expo; open on a device/simulator to see the UI
 ```
 
 - **Establish the baseline before any change:** run `npm run check`, note the test
-  count (expected ~**401**, 38 suites), and keep it green after every change.
+  count (expected ~**554**, 48 suites), and keep it green after every change.
 - **Never change calculator math** in `src/features/*/engine/` unless a task
   explicitly says so and provides field evidence. Math is field-safety-critical.
 - Work in small, reviewable steps. One concern per change set.
@@ -27,8 +27,8 @@ npm start         # Expo; open on a device/simulator to see the UI
 
 A **mobile-first EMT conduit-bending field tool** for electricians (Expo + React
 Native + TypeScript). Diagram-first: the pipe diagram is the hero of every
-calculator screen. Six calculators ship: **Offset, Stub 90, Rolling Offset,
-3-Point Saddle, 4-Point Saddle, Segment Bend.**
+calculator screen. Seven calculators ship: **Offset, Stub 90, Rolling Offset,
+3-Point Saddle, 4-Point Saddle, Segment Bend, Kick 90.**
 
 It is **not** a generic calculator. Wrong numbers waste real material on a job
 site, and wrong trade terminology confuses real users.
@@ -56,7 +56,7 @@ site, and wrong trade terminology confuses real users.
   zones with space and type hierarchy.
 - **Horizontal pipe, drawn naturally per calculator** (offset = run with a jog,
   stub 90 = L, saddles = up-and-over, segment = arc). **Single-plane calculators
-  stay 2D horizontal.** **Multi-plane calculators** (Kick 90 now; Rolling Offset,
+  stay 2D horizontal.** **Multi-plane calculators** (Kick 90 and Rolling Offset now;
   parallel kicks, matching bends, multi-bend when built) use the shared fixed-view
   isometric 3D pipe (founder-approved revision 2026-07-04). *We tried vertical and
   reverted — do not flip pipes vertical.*
@@ -73,7 +73,7 @@ site, and wrong trade terminology confuses real users.
 ## 3. Current state (what's done & green)
 
 **Trust / correctness (beta-wrap, complete):**
-- All six engines desk-validated against trade references; **no math bugs**
+- All seven engines desk-validated against trade references; **no math bugs**
   (offset multipliers/shrink textbook; saddle3 = csc(side angle), cross-checked
   in tests; rolling = hypotenuse; segment = arc geometry). See `FIELD_VALIDATION.md`.
 - **Stub 90 silent-fallback bug fixed:** uncharted sizes return `missing-chart`
@@ -90,7 +90,7 @@ site, and wrong trade terminology confuses real users.
 - **Continue Layout is real:** Home hydrates recent layouts on focus and opens
   the last calculation; screens restore inputs via `useRestoreRecentLayout`
   (`?layoutId=`). Recent layouts persist in AsyncStorage.
-- Guide mode complete for all six (formula/steps/mistakes/example + "Open the
+- Guide mode complete for all seven (formula/steps/mistakes/example + "Open the
   calculator" graduation affordance).
 
 **UI redesign (in progress — most landed):**
@@ -99,7 +99,7 @@ site, and wrong trade terminology confuses real users.
 - Diagram system theme-aware: `getDiagramTheme(scheme)` + `useDiagramTheme()`;
   all primitives + six feature diagrams consume it.
 - Continuous-surface shell (cards/dividers/dock-bar dissolved).
-- **Hero centered result** in `BendPipeWorkspace` (all six).
+- **Hero centered result** in `BendPipeWorkspace` (all seven).
 - **Offset reverted to horizontal** (the one screen that was wrongly vertical).
 - Last run (verify on pickup): **brushed-steel tube pipe**, **label/overlap
   fixes**, **lighter borderless input fields**. Confirm with `npm run check` +
@@ -138,7 +138,7 @@ photoreal) by design — flexible and animatable.
 ### P1 — Finish the UI polish pass
 Goal: every screen matches §4, no overlaps, light mode fully continuous.
 - Confirm the last Composer run landed (tube pipe, overlap fixes, borderless
-  inputs) and `npm run check` is green; screenshot all six (dark + one light).
+  inputs) and `npm run check` is green; screenshot all seven (dark + one light).
 - Fix any remaining label/mark/dimension overlaps (saddle apex, offset Mark 2 vs
   badge, offset-height label clipping the left edge, saddle4 top badges).
 - ~~Theme + restyle the **sheets**~~ **Done:** sheets themed for light/dark and
@@ -201,7 +201,7 @@ Register each calculator in `src/core/calculators/` first; build engine + tests 
       steel tube; UI matches §4 in dark **and** light.
 - [ ] All sheets themed (light/dark) and continuous-surface styled.
 - [ ] No silent wrong numbers; trust strips honest (Stub 90 only consumes bender).
-- [ ] Continue Layout restores the last layout for all six.
+- [ ] Continue Layout restores the last layout for all seven.
 - [ ] Picker shows only 1/2"–1-1/4"; uncharted sizes warn (no guess).
 - [ ] Docs truthful (this file + `CURRENT_STATE.md` + `KNOWN_ISSUES.md`).
 - [ ] 1-1/4" take-up field-verified; ≥1 physical bend per calculator passed.

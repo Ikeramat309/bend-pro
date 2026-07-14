@@ -16,6 +16,11 @@ Given **offset height**, **offset roll**, and a **bend angle**, calculates:
 - `engine/rollingAngleData.ts` — standard offset angle table (same constants as basic offset)
 - `engine/rolling.types.ts` — input/result/diagram contracts
 
+## Diagram
+
+- `diagram/rollingDiagramGeometry.ts` — pure fixed-view isometric presentation geometry
+- `ui/RollingDiagram.tsx` — true 3D centerline scene with floor reference, open tube ends, bend marks, and height/roll dimensions
+
 ## Formulas
 
 ```
@@ -54,5 +59,5 @@ Offset calculator. Manual overrides in setup are shared (`offsetMultiplierOverri
 ## Limitations
 
 - Uses the standard offset multiplier/shrink table — not bender-specific.
-- Does not model 3D rotation of the bender head; field workers still orient the bender for the rolling plane.
+- The diagram shows the conduit centerline in 3D, but does not model bender-head rotation; field workers still orient the bender for the rolling plane.
 - EMT only; uses shared calculator setup for size, bender display, units, rounding.

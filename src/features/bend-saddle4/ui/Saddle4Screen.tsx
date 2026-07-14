@@ -13,6 +13,9 @@ import {
   BendCalculatorLayout,
   EditSetupSheet,
   OptionalInputSummary,
+  type BendFieldInputConfig,
+  type BendInputConfig,
+  type BendPickerInputConfig,
   type SetupValues,
 } from '@/shared/workspace';
 import { getRoundingLabel } from '@/utils/rounding';
@@ -186,6 +189,87 @@ export default function Saddle4Screen() {
     setDistanceSheetVisible(false);
   }
 
+  const obstructionHeightInput: BendFieldInputConfig = {
+    type: 'field',
+    key: 'obstructionHeight',
+    label: saddle4Copy.fields.obstructionHeight.label,
+    value: obstructionHeightText,
+    onChangeText: setObstructionHeightText,
+    placeholder: saddle4Copy.fields.obstructionHeight.placeholder,
+    unit: unitLabel,
+    variant: 'compact',
+    lengthInput,
+    error:
+      obstructionHeightText !== '' && !hasValidHeight
+        ? saddle4Copy.fields.obstructionHeight.errorRequired
+        : undefined,
+  };
+
+  const saddleWidthInput: BendFieldInputConfig = {
+    type: 'field',
+    key: 'saddleWidthField',
+    label: saddle4Copy.fields.saddleWidth.label,
+    value: saddleWidthText,
+    onChangeText: setSaddleWidthText,
+    placeholder: saddle4Copy.fields.saddleWidth.placeholder,
+    unit: unitLabel,
+    variant: 'compact',
+    lengthInput,
+    error:
+      saddleWidthText !== '' && !hasValidWidth
+        ? saddle4Copy.fields.saddleWidth.errorRequired
+        : undefined,
+  };
+
+  const bendAngleInput: BendPickerInputConfig = {
+    type: 'picker',
+    key: 'angle',
+    label: saddle4Copy.fields.bendAngle.label,
+    value: angleData.label,
+    onPress: () => setAngleSheetVisible(true),
+  };
+
+  // Keep the complete 4-point input flow visible without a hidden third row.
+  // Before width is added, height and angle share the first row. Afterwards,
+  // height and width pair together and angle moves to the second row.
+  const calculatorInputs: BendInputConfig[] = [
+    {
+      type: 'row',
+      key: 'primary-measurements',
+      inputs: showSaddleWidthInput
+        ? [obstructionHeightInput, saddleWidthInput]
+        : [obstructionHeightInput, bendAngleInput],
+    },
+    ...(showSaddleWidthInput
+      ? [bendAngleInput]
+      : [
+          {
+            type: 'optional' as const,
+            key: 'saddleWidth',
+            addLabel: saddle4Copy.fields.saddleWidth.addButton,
+            onAdd: () => setShowSaddleWidthInput(true),
+            visible: false,
+            field: saddleWidthInput,
+          },
+        ]),
+    ...(distanceToCenterText.trim()
+      ? [
+          {
+            type: 'custom' as const,
+            key: 'distanceSummary',
+            node: (
+              <OptionalInputSummary
+                label={saddle4Copy.fields.distanceToCenter.label}
+                value={distanceToCenterText}
+                unit={unitLabel}
+                onPress={() => setDistanceSheetVisible(true)}
+              />
+            ),
+          },
+        ]
+      : []),
+  ];
+
   return (
     <BendCalculatorLayout
       title={saddle4Copy.screenTitle}
@@ -196,74 +280,7 @@ export default function Saddle4Screen() {
         meta: [setupSummary, setupSubtitle, setupOnlyMeta].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
-      inputs={[
-        {
-          type: 'row',
-          key: 'height',
-          inputs: [
-            {
-              type: 'field',
-              key: 'obstructionHeight',
-              label: saddle4Copy.fields.obstructionHeight.label,
-              value: obstructionHeightText,
-              onChangeText: setObstructionHeightText,
-              placeholder: saddle4Copy.fields.obstructionHeight.placeholder,
-              unit: unitLabel,
-              variant: 'compact',
-              lengthInput,
-              error:
-                obstructionHeightText !== '' && !hasValidHeight
-                  ? saddle4Copy.fields.obstructionHeight.errorRequired
-                  : undefined,
-            },
-          ],
-        },
-        {
-          type: 'optional',
-          key: 'saddleWidth',
-          addLabel: saddle4Copy.fields.saddleWidth.addButton,
-          onAdd: () => setShowSaddleWidthInput(true),
-          visible: showSaddleWidthInput,
-          field: {
-            type: 'field',
-            key: 'saddleWidthField',
-            label: saddle4Copy.fields.saddleWidth.label,
-            value: saddleWidthText,
-            onChangeText: setSaddleWidthText,
-            placeholder: saddle4Copy.fields.saddleWidth.placeholder,
-            unit: unitLabel,
-            variant: 'compact',
-            lengthInput,
-            error:
-              saddleWidthText !== '' && !hasValidWidth
-                ? saddle4Copy.fields.saddleWidth.errorRequired
-                : undefined,
-          },
-        },
-        {
-          type: 'picker',
-          key: 'angle',
-          label: saddle4Copy.fields.bendAngle.label,
-          value: angleData.label,
-          onPress: () => setAngleSheetVisible(true),
-        },
-        ...(distanceToCenterText.trim()
-          ? [
-              {
-                type: 'custom' as const,
-                key: 'distanceSummary',
-                node: (
-                  <OptionalInputSummary
-                    label={saddle4Copy.fields.distanceToCenter.label}
-                    value={distanceToCenterText}
-                    unit={unitLabel}
-                    onPress={() => setDistanceSheetVisible(true)}
-                  />
-                ),
-              },
-            ]
-          : []),
-      ]}
+      inputs={calculatorInputs}
       workspace={
         <Saddle4Diagram
           data={result.diagramData}

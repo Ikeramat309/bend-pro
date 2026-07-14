@@ -12,14 +12,14 @@ The app is mid-redesign toward the locked direction in [`HANDOFF.md` §4](HANDOF
 
 ### Working calculators
 
-All six use the **shared `BendCalculatorLayout`** shell (`src/shared/workspace/`). Math is unchanged in feature `engine/` folders.
+All seven use the **shared `BendCalculatorLayout`** shell (`src/shared/workspace/`). Math is unchanged in feature `engine/` folders.
 
 - **Offset** (`/offset`) — offset height + bend angle → distance between bends, shrink, optional Mark 1 / Mark 2. Mark 1 opens from **Set First Mark** dock action (compact chip when set). Primary floating result: distance between bends. Secondary: shrink + multiplier (tappable overrides). Dock: Reset · Set First Mark · Guide.
 - **Stub 90** (`/stub90`) — stub length − deduct → deduct mark, optional leg. Primary: deduct mark. Secondary: deduct (tappable override). Dock: Reset · Set Mark · Guide.
 - **3-Point Saddle** (`/saddle3`) — obstruction height + angle preset → between-bends spacing, shrink, layout marks. Primary swaps to center mark when distance-to-center is entered. Dock: Reset · Set Center · Guide.
 - **4-Point Saddle** (`/saddle4`) — obstruction height (required), optional saddle width + distance to center, equal bend angle. Two-offset diagram. Dock: Reset · Set Center · Guide.
 - **Segment Bend** (`/segment`) — radius + total angle + degrees-per-bend → shot spacing, bend count (developed length on diagram). Dock: Reset · Set Arc / Next Segment · Guide.
-- **Rolling Offset** (`/rolling`) — offset height + roll → distance between bends, shrink. Shares offset multiplier/shrink overrides. Dock: Reset · Set First Mark / Set Roll · Guide.
+- **Rolling Offset** (`/rolling`) — offset height + roll → distance between bends, shrink. Uses the shared fixed-view isometric 3D pipe so height and roll read directly from the centerline. Shares offset multiplier/shrink overrides. Dock: Reset · Set First Mark / Set Roll · Guide.
 - **Kick 90** (`/kick90`) — kick rise + bend angle → distance between bends, shrink. Shares offset multiplier/shrink overrides. Optional Mark 1 / Mark 2. **Isometric 3D diagram** (true multi-plane centerline). Dock: Reset · Set First Mark · Guide.
 
 Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). Semi-proportional diagrams use shared primitives in `src/shared/diagrams/`.

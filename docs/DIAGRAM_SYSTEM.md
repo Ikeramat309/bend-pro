@@ -74,7 +74,7 @@ Multi-plane calculators render a **true 3D centerline** in a **fixed isometric p
 
 **Limitation:** `IsoPipe` handles **single-run pipes** only. Self-crossing depth sorting is a known future need for complex multi-run layouts.
 
-Kick 90 is the pilot consumer; Rolling Offset, parallel kicks, matching bends, and multi-bend layouts will reuse this module when built.
+Kick 90 and Rolling Offset are the live consumers; parallel kicks, matching bends, and multi-bend layouts will reuse this module when built.
 
 ## Visual language
 

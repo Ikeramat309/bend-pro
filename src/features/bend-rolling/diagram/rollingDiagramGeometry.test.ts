@@ -63,8 +63,10 @@ describe('buildRollingDiagramGeometry', () => {
     const finalPipePoint = geometry.projectedPoints[geometry.projectedPoints.length - 1];
     const secondMark = geometry.projectedPoints[geometry.secondMarkIndex];
 
-    expect(geometry.rollDim.end).toEqual(geometry.heightDim.start);
-    expect(geometry.heightDim.end).toEqual(finalPipePoint);
+    expect(geometry.rollDim.end).toEqual(geometry.heightDim.ext1.start);
+    expect(geometry.heightDim.ext2.start).toEqual(finalPipePoint);
+    expect(geometry.heightDim.start.x).toBeGreaterThan(geometry.heightDim.ext1.start.x);
+    expect(geometry.heightDim.end.x).toBeGreaterThan(finalPipePoint.x);
     expect(
       Math.hypot(
         geometry.heightDim.end.x - secondMark.x,

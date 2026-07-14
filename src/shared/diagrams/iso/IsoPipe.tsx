@@ -23,6 +23,15 @@ export type IsoPipeProps = {
   zones?: readonly IsoPipeZone[];
   marks?: readonly IsoPipeMark[];
   gradientId: string;
+  /** Optional material tuning for diagrams that need a softer satin finish. */
+  bodyWidthRatio?: number;
+  sheenWidthRatio?: number;
+  sheenOpacity?: number;
+  shadowWidthRatio?: number;
+  shadowOpacity?: number;
+  zoneFillOpacity?: number;
+  zoneStrokeOpacity?: number;
+  lineCap?: 'butt' | 'round' | 'square';
   showFloorLine?: boolean;
   floorLineStart?: Vec3;
   floorLineEnd?: Vec3;
@@ -31,6 +40,8 @@ export type IsoPipeProps = {
 const PIPE_BODY_RATIO = 0.7;
 const PIPE_SHEEN_RATIO = 0.28;
 const PIPE_SHEEN_OPACITY = 0.5;
+const PIPE_SHADOW_RATIO = 30 / diagramMetrics.pipeStroke;
+const PIPE_SHADOW_OPACITY = 0.72;
 const MARK_TICK_HALF = 14;
 
 function projectPoints(centerline: readonly Vec3[], transform: IsoTransform): Point2[] {
@@ -68,6 +79,14 @@ export function IsoPipe({
   zones = [],
   marks = [],
   gradientId,
+  bodyWidthRatio = PIPE_BODY_RATIO,
+  sheenWidthRatio = PIPE_SHEEN_RATIO,
+  sheenOpacity = PIPE_SHEEN_OPACITY,
+  shadowWidthRatio = PIPE_SHADOW_RATIO,
+  shadowOpacity = PIPE_SHADOW_OPACITY,
+  zoneFillOpacity = 1,
+  zoneStrokeOpacity = 1,
+  lineCap = 'round',
   showFloorLine = false,
   floorLineStart,
   floorLineEnd,
@@ -97,10 +116,10 @@ export function IsoPipe({
         d={pathD}
         fill="none"
         stroke={theme.pipeShadow}
-        strokeWidth={30}
-        strokeLinecap="round"
+        strokeWidth={fullWidth * shadowWidthRatio}
+        strokeLinecap={lineCap}
         strokeLinejoin="round"
-        opacity={0.72}
+        opacity={shadowOpacity}
       />
 
       <Path
@@ -108,25 +127,25 @@ export function IsoPipe({
         fill="none"
         stroke={theme.pipeCore}
         strokeWidth={fullWidth}
-        strokeLinecap="round"
+        strokeLinecap={lineCap}
         strokeLinejoin="round"
       />
       <Path
         d={pathD}
         fill="none"
         stroke={bodyStroke}
-        strokeWidth={fullWidth * PIPE_BODY_RATIO}
-        strokeLinecap="round"
+        strokeWidth={fullWidth * bodyWidthRatio}
+        strokeLinecap={lineCap}
         strokeLinejoin="round"
       />
       <Path
         d={pathD}
         fill="none"
         stroke={theme.pipeSheen}
-        strokeWidth={fullWidth * PIPE_SHEEN_RATIO}
-        strokeLinecap="round"
+        strokeWidth={fullWidth * sheenWidthRatio}
+        strokeLinecap={lineCap}
         strokeLinejoin="round"
-        opacity={PIPE_SHEEN_OPACITY}
+        opacity={sheenOpacity}
       />
 
       {zones.map((zone, index) => {
@@ -144,6 +163,7 @@ export function IsoPipe({
               strokeWidth={18}
               strokeLinecap="round"
               strokeLinejoin="round"
+              opacity={zoneFillOpacity}
             />
             <Path
               d={zonePath}
@@ -152,6 +172,7 @@ export function IsoPipe({
               strokeWidth={1.25}
               strokeLinecap="round"
               strokeLinejoin="round"
+              opacity={zoneStrokeOpacity}
             />
           </Fragment>
         );

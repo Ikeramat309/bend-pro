@@ -32,7 +32,8 @@ export const ROLLING_DIAGRAM_LAYOUT = {
   gridSpacingWorld: 8,
   floorMarginWorld: 7,
   viewPadding: 25,
-  dbbDimOffset: 42,
+  dbbDimOffset: 34,
+  heightDimOffset: 18,
 } as const;
 
 const VIEW = { x: 0, y: 0, width: 360, height: 300 } as const;
@@ -76,7 +77,13 @@ export type RollingDiagramGeometry = {
     ext2: RollingProjectedLine;
   };
   rollDim: { start: Point2; end: Point2; mid: Point2 };
-  heightDim: { start: Point2; end: Point2; mid: Point2 };
+  heightDim: {
+    start: Point2;
+    end: Point2;
+    mid: Point2;
+    ext1: RollingProjectedLine;
+    ext2: RollingProjectedLine;
+  };
   labels: {
     dbbTitle: RollingDiagramLabel;
     dbbValue: RollingDiagramLabel;
@@ -208,13 +215,23 @@ export function buildRollingDiagramGeometry(
   };
   const rollStart = toScreen(referenceEndWorld, transform);
   const rollEnd = toScreen(rolledBaseWorld, transform);
-  const heightStart = rollEnd;
-  const heightEnd = toScreen(waypoints[3], transform);
+  const heightSourceStart = rollEnd;
+  const heightSourceEnd = toScreen(waypoints[3], transform);
+  const heightStart = {
+    x: heightSourceStart.x + layout.heightDimOffset,
+    y: heightSourceStart.y,
+  };
+  const heightEnd = {
+    x: heightSourceEnd.x + layout.heightDimOffset,
+    y: heightSourceEnd.y,
+  };
   const rollDim = { start: rollStart, end: rollEnd, mid: midpoint(rollStart, rollEnd) };
   const heightDim = {
     start: heightStart,
     end: heightEnd,
     mid: midpoint(heightStart, heightEnd),
+    ext1: { start: heightSourceStart, end: heightStart },
+    ext2: { start: heightSourceEnd, end: heightEnd },
   };
 
   const capRadiusWorld = 9.5 / Math.max(transform.scale, 0.001);
@@ -227,7 +244,7 @@ export function buildRollingDiagramGeometry(
   const dbbTitleY = clamp(dbbMid.y - 27, 16, 220);
   const rollLabelX = clamp(rollDim.mid.x, 54, 306);
   const rollTitleY = clamp(Math.max(rollDim.start.y, rollDim.end.y) + 18, 44, 252);
-  const heightLabelX = clamp(heightDim.mid.x + 42, 82, 346);
+  const heightLabelX = clamp(heightDim.mid.x + 10, 82, 318);
   const heightTitleY = clamp(heightDim.mid.y - 7, 34, 236);
   const angleLabelX = clamp(firstMark.x - 18, 68, 318);
   const angleTitleY = clamp(firstMark.y + 35, 60, 236);
@@ -259,8 +276,8 @@ export function buildRollingDiagramGeometry(
       dbbValue: { x: dbbLabelX, y: dbbTitleY + 15, anchor: 'middle' },
       rollTitle: { x: rollLabelX, y: rollTitleY, anchor: 'middle' },
       rollValue: { x: rollLabelX, y: rollTitleY + 15, anchor: 'middle' },
-      heightTitle: { x: heightLabelX, y: heightTitleY, anchor: 'end' },
-      heightValue: { x: heightLabelX, y: heightTitleY + 15, anchor: 'end' },
+      heightTitle: { x: heightLabelX, y: heightTitleY, anchor: 'start' },
+      heightValue: { x: heightLabelX, y: heightTitleY + 15, anchor: 'start' },
       angleTitle: { x: angleLabelX, y: angleTitleY, anchor: 'end' },
       angleValue: { x: angleLabelX, y: angleTitleY + 15, anchor: 'end' },
       markLegend1: { x: 14, y: 252, anchor: 'start' },

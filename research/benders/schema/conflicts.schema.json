@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bendpro.local/research/benders/schema/conflicts.json",
+  "title": "Conflicts staging file",
+  "type": "object",
+  "required": ["schemaVersion", "retrievedDate", "conflicts"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "retrievedDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "modelId",
+          "property",
+          "nominalSize",
+          "competingFactIds",
+          "conflictType",
+          "analysis",
+          "recommendedNextStep",
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.json#/$defs/id" },
+          "modelId": { "$ref": "common.json#/$defs/id" },
+          "property": { "$ref": "common.json#/$defs/measurementProperty" },
+          "nominalSize": { "type": "string" },
+          "competingFactIds": {
+            "type": "array",
+            "minItems": 2,
+            "items": { "$ref": "common.json#/$defs/id" }
+          },
+          "conflictType": { "$ref": "common.json#/$defs/conflictType" },
+          "analysis": { "type": "string" },
+          "recommendedNextStep": { "type": "string" },
+          "status": { "$ref": "common.json#/$defs/conflictStatus" }
+        }
+      }
+    }
+  }
+}

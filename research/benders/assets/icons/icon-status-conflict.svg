@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Conflict — bold triangle + bang -->
+  <g stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 4.25L20.25 19.5H3.75L12 4.25z"/>
+    <path d="M12 10v4.25"/>
+    <path d="M12 16.85v.01"/>
+  </g>
+</svg>

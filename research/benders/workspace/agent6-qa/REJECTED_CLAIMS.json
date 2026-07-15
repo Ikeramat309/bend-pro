@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditor": "agent6-qa",
+  "auditDate": "2026-07-14",
+  "verdict": "pass-with-caveats",
+  "note": "Claim IDs that must not be promoted to production charts. Includes pre-rejected corpus facts, open-conflict sides, secondary/missing stubs, and retailer-only identity claims treated as non-promotable.",
+  "rejectedClaimIds": [
+    "fact-gardner-b0040-rejected-radius-mislabeled",
+    "fact-23803-emt-1_2-clr-manual",
+    "fact-23803-emt-3_4-clr-manual",
+    "fact-23803-emt-1-clr-manual",
+    "fact-23803-emt-1-1_4-clr-manual",
+    "fact-23803-emt-1-1_2-clr-manual",
+    "fact-23803-emt-2-clr-manual",
+    "fact-23803-emt-1_2-clr-page",
+    "fact-23803-emt-3_4-clr-page",
+    "fact-23803-emt-1-clr-page",
+    "fact-23803-emt-1-1_4-clr-page",
+    "fact-23803-emt-1-1_2-clr-page",
+    "fact-23803-emt-2-clr-page",
+    "fact-ideal-74-034-stub-prod-mirror",
+    "fact-ideal-74-003-stub-prod-mirror",
+    "fact-ideal-74-006-stub-unknown"
+  ],
+  "rejectedModelIds": [
+    "model-ridgid-e666",
+    "model-nsi-placeholder",
+    "model-benfield-method-reference",
+    "model-chicago-ratchet-legacy"
+  ],
+  "reasons": {
+    "fact-gardner-b0040-rejected-radius-mislabeled": "Legacy B-0040 mislabels deduct (5) as radius; corpus already evidenceStatus=rejected. Keep visible in conflict group only.",
+    "fact-23803-emt-*-clr-manual": "Open conflict vs product page (conflict-23803-clr-*). Manual EMT column is plausible but must not win silently.",
+    "fact-23803-emt-*-clr-page": "Product page CLR matches REV02 Rigid/IMC column, not EMT column. Do not promote as EMT CLR.",
+    "fact-ideal-74-034-stub-prod-mirror": "secondary_only + open conflictGroupId conflict-ideal-114-sku. Live page (2026-07-14) shows Stub Up Height 11; re-status to official_exact and close conflict before promote.",
+    "fact-ideal-74-003-stub-prod-mirror": "secondary_only production-mirror label. Live page (2026-07-14) confirms Stub Up Height 8; re-status before promote — value OK, evidence tag not.",
+    "fact-ideal-74-006-stub-unknown": "missing/null stub; also incorrectly attached to modelId model-ideal-74-034. Live 74-006 page shows Stub Up Height 11 — capture new fact on correct modelId.",
+    "model-ridgid-e666": "Only retailer_listing source; researchClass blocked_source.",
+    "model-nsi-placeholder": "No sources/facts; blocked_source placeholder.",
+    "model-benfield-method-reference": "Instructional method literature, not OEM SKU chart.",
+    "model-chicago-ratchet-legacy": "Trade-name class without identifiable OEM chart."
+  },
+  "holdButNotRejected": [
+    {
+      "claimIds": [
+        "fact-23803-emt-1_2-deduct",
+        "fact-23803-emt-3_4-deduct",
+        "fact-23803-emt-1-deduct",
+        "fact-23803-emt-1-1_4-deduct",
+        "fact-23803-emt-1-1_2-deduct",
+        "fact-23803-emt-2-deduct"
+      ],
+      "note": "Official REV02 EMT deducts; validator lists as production candidates. Manual marks figures approximate and confidence=medium — promote only with approximate/source-note UX, not as hard verified_default."
+    },
+    {
+      "claimIds": [
+        "fact-ct254-2-1_2-deduct",
+        "fact-ct254-2-1_2-minstub",
+        "fact-ct254-2-1_2-clr",
+        "fact-ct254-3-deduct",
+        "fact-ct254-3-minstub",
+        "fact-ct254-3-clr",
+        "fact-ct254-3-1_2-deduct",
+        "fact-ct254-3-1_2-minstub",
+        "fact-ct254-3-1_2-clr",
+        "fact-ct254-4-deduct",
+        "fact-ct254-4-minstub",
+        "fact-ct254-4-clr"
+      ],
+      "note": "Spot-check confirmed vs Current Tools 254 manual; productionScope=out_of_production_scope (large hydraulic). Not rejected as false — exclude from EMT hand production patch by scope."
+    }
+  ]
+}

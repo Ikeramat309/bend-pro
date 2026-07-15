@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Iron hand bender: solid heavy handle + mass at shoe junction -->
+  <g stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.5v10.25"/>
+    <path d="M7 14.1c0 3.4 2.2 5.9 5 5.9s5-2.5 5-5.9"/>
+    <path d="M7 14.1c-1.15.25-2.25 1.05-2.55 2.2"/>
+    <path d="M8.85 16.55h6.3"/>
+    <path d="M15.35 18.95h3.4"/>
+  </g>
+  <rect x="10.85" y="5.1" width="2.3" height="7.6" rx="1.05" fill="currentColor"/>
+  <circle cx="12" cy="13.85" r="1.35" fill="currentColor"/>
+</svg>

@@ -1,0 +1,193 @@
+{
+  "retrievedDate": "2026-07-14",
+  "repaired": [
+    {
+      "id": "src-greenlee-844ah-product",
+      "why": "Added 844AH product page source for scope ambiguity"
+    },
+    {
+      "id": "model-greenlee-844a",
+      "why": "Linked 844AH product page source"
+    },
+    {
+      "id": "fact-844a-emt-1_2-deduct",
+      "why": "Preserved use-guide groove fact as direct official_corroborated"
+    },
+    {
+      "id": "fact-844a-emt-1_2-clr",
+      "why": "Preserved use-guide groove fact as direct official_corroborated"
+    },
+    {
+      "id": "fact-844a-emt-3_4-deduct",
+      "why": "Preserved use-guide groove fact as direct official_corroborated"
+    },
+    {
+      "id": "fact-844a-emt-3_4-clr",
+      "why": "Preserved use-guide groove fact as direct official_corroborated"
+    },
+    {
+      "id": "fact-844ah-product-page-clr-unqualified",
+      "why": "Canonicalized 844AH unqualified CLR as conflict evidence"
+    },
+    {
+      "id": "conflict-greenlee-844-clr-listing",
+      "why": "Merged held 844AH CLR scope conflict into canonical"
+    },
+    {
+      "id": "src-gardner-b0040-legacy-mislabeled",
+      "why": "Corrected B-0040 URL to ECM Industries archived PDF"
+    },
+    {
+      "id": "fact-gardner-b0040-960-rejected-radius",
+      "why": "Rejected B-0040 radius mislabel for 960 1/2"
+    },
+    {
+      "id": "fact-gardner-b0040-961-rejected-radius",
+      "why": "Rejected B-0040 radius mislabel for 961 3/4"
+    },
+    {
+      "id": "fact-gardner-b0040-962-rejected-radius",
+      "why": "Rejected B-0040 radius mislabel for 962 1"
+    },
+    {
+      "id": "src-ideal-74-003",
+      "why": "Dedicated official page for 74-003"
+    },
+    {
+      "id": "src-ideal-74-006",
+      "why": "Dedicated official page for 74-006 head"
+    },
+    {
+      "id": "src-ideal-74-034",
+      "why": "Corrected dedicated official page for 74-034 assembly"
+    },
+    {
+      "id": "model-ideal-74-006",
+      "why": "Linked dedicated source; chart_candidate"
+    },
+    {
+      "id": "model-ideal-74-034",
+      "why": "Separate assembly identity; dedicated source"
+    },
+    {
+      "id": "model-ideal-74-003",
+      "why": "Promoted to chart_candidate with dedicated source"
+    },
+    {
+      "id": "fact-ideal-74-003-stub",
+      "why": "Direct official stub-up 8"
+    },
+    {
+      "id": "fact-ideal-74-006-stub",
+      "why": "New model/source coverage of existing 11-inch Stub Up Height chart value — not new bending math"
+    },
+    {
+      "id": "fact-ideal-74-034-stub",
+      "why": "Direct official stub-up 11 on assembly"
+    },
+    {
+      "id": "conflict-ideal-114-sku",
+      "why": "Removed — 74-006 and 74-034 are separate identities with matching stub-up"
+    },
+    {
+      "id": "model-ideal-74-046",
+      "why": "Downgraded to reference_only pending dedicated source"
+    },
+    {
+      "id": "model-ideal-74-047",
+      "why": "Downgraded to reference_only pending dedicated source"
+    },
+    {
+      "id": "model-ideal-74-026",
+      "why": "Downgraded to reference_only pending dedicated source"
+    },
+    {
+      "id": "model-ideal-74-027",
+      "why": "Downgraded to reference_only pending dedicated source"
+    },
+    {
+      "id": "model-ideal-74-028",
+      "why": "Downgraded to reference_only pending dedicated source"
+    },
+    {
+      "id": "src-nsi-hand-benders-lead",
+      "why": "Reclassified homepage as discovery lead (sourceType other)"
+    },
+    {
+      "id": "model-nsi-cb50",
+      "why": "Confirmed reference_only pending dedicated pages"
+    },
+    {
+      "id": "model-nsi-cb75",
+      "why": "Confirmed reference_only pending dedicated pages"
+    },
+    {
+      "id": "model-nsi-cb100",
+      "why": "Confirmed reference_only pending dedicated pages"
+    },
+    {
+      "id": "model-greenlee-555c",
+      "why": "Narrowed to 555C only"
+    },
+    {
+      "id": "model-greenlee-555cx",
+      "why": "Split 555CX from 555C"
+    },
+    {
+      "id": "model-greenlee-555dx",
+      "why": "Split 555DX from 555C"
+    },
+    {
+      "id": "model-greenlee-881",
+      "why": "Narrowed to legacy 881; superseded by 881GX"
+    },
+    {
+      "id": "model-greenlee-881ct",
+      "why": "Split legacy 881CT"
+    },
+    {
+      "id": "model-greenlee-881gx",
+      "why": "Current 881GX without inherited CT charts"
+    },
+    {
+      "id": "model-gardner-bemt-52",
+      "why": "Reclassified powered shoe research-only"
+    },
+    {
+      "id": "model-gardner-b2555",
+      "why": "Powered frame research-only"
+    },
+    {
+      "id": "model-current-254",
+      "why": "Current Tools powered values held research-only"
+    },
+    {
+      "id": "fact-23803-emt-1_2-minstub",
+      "why": "Reclassified derived min-stub as field_reference_only"
+    },
+    {
+      "id": "fact-23803-emt-3_4-minstub",
+      "why": "Reclassified derived min-stub as field_reference_only"
+    },
+    {
+      "id": "fact-23803-emt-1-minstub",
+      "why": "Reclassified derived min-stub as field_reference_only"
+    },
+    {
+      "id": "fact-23803-emt-1-1_4-minstub",
+      "why": "Reclassified derived min-stub as field_reference_only"
+    },
+    {
+      "id": "fact-23803-emt-1-1_2-minstub",
+      "why": "Reclassified derived min-stub as field_reference_only"
+    },
+    {
+      "id": "fact-23803-emt-2-minstub",
+      "why": "Reclassified derived min-stub as field_reference_only"
+    },
+    {
+      "id": "src-ideal-74-006-related",
+      "why": "Removed obsolete related-nav source from canonical"
+    }
+  ]
+}

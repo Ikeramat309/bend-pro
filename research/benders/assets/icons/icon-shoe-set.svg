@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Multi-size shoe set — three nested arcs, bold for small sizes -->
+  <g stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.5 8c0 4.8 2.6 8.5 5.5 8.5"/>
+    <path d="M9.5 7c0 4.2 2.2 7.3 4.6 7.3"/>
+    <path d="M14.5 6.25c0 3.5 1.7 6 3.75 6"/>
+    <path d="M4.5 8c-.95.25-1.8 1-2 2"/>
+    <path d="M9.5 7c-.8.2-1.5.85-1.7 1.7"/>
+    <path d="M14.5 6.25c-.65.15-1.25.7-1.4 1.4"/>
+  </g>
+</svg>

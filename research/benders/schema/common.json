@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bendpro.local/research/benders/schema/common.json",
+  "title": "Bend Pro research common definitions",
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,127}$"
+    },
+    "positiveNumber": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "nullablePositiveNumber": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "number", "exclusiveMinimum": 0 }
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "hand",
+        "mechanical",
+        "electric",
+        "hydraulic",
+        "custom",
+        "accessory",
+        "shoe",
+        "unknown"
+      ]
+    },
+    "driveType": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "ratchet",
+        "mechanical",
+        "electric",
+        "hydraulic",
+        "battery",
+        "unknown",
+        "n/a"
+      ]
+    },
+    "marketStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "discontinued",
+        "superseded",
+        "legacy-common",
+        "unknown"
+      ]
+    },
+    "conduitType": {
+      "type": "string",
+      "enum": [
+        "EMT",
+        "IMC",
+        "RMC",
+        "rigid",
+        "aluminum_rigid",
+        "PVC",
+        "other",
+        "unknown"
+      ]
+    },
+    "measurementProperty": {
+      "type": "string",
+      "enum": [
+        "stub_take_up",
+        "stub_deduct",
+        "centerline_radius",
+        "inside_radius",
+        "minimum_stub",
+        "minimum_developed_length",
+        "gain",
+        "multiplier",
+        "shrink_factor",
+        "shoe_radius",
+        "maximum_bend_angle",
+        "supported_size",
+        "weight"
+      ]
+    },
+    "evidenceStatus": {
+      "type": "string",
+      "enum": [
+        "official_exact",
+        "official_corroborated",
+        "official_conflict",
+        "archived_official",
+        "secondary_only",
+        "field_reference_only",
+        "missing",
+        "rejected"
+      ]
+    },
+    "sourceType": {
+      "type": "string",
+      "enum": [
+        "official_pdf_manual",
+        "official_pdf_guide",
+        "official_pdf_product_sheet",
+        "official_product_page",
+        "official_catalog",
+        "official_bulletin",
+        "archived_official",
+        "authorized_distributor_doc",
+        "catalog_scan",
+        "retailer_listing",
+        "secondary_technical",
+        "forum_or_social_lead",
+        "other"
+      ]
+    },
+    "sourceCurrency": {
+      "type": "string",
+      "enum": ["current", "archived", "unknown"]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "none"]
+    },
+    "conflictType": {
+      "type": "string",
+      "enum": [
+        "value_mismatch",
+        "terminology_ambiguity",
+        "revision_change",
+        "regional_difference",
+        "model_generation_ambiguity",
+        "retailer_vs_manufacturer",
+        "family_vs_model_scope",
+        "other"
+      ]
+    },
+    "conflictStatus": {
+      "type": "string",
+      "enum": ["open", "needs_human_review", "resolved_documented", "wont_resolve"]
+    },
+    "unit": {
+      "type": "string",
+      "enum": [
+        "inch",
+        "inches",
+        "in",
+        "mm",
+        "cm",
+        "degree",
+        "degrees",
+        "lb",
+        "kg",
+        "ratio",
+        "none",
+        "unknown"
+      ]
+    }
+  }
+}

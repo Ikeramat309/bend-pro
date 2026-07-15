@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bendpro.local/research/benders/schema/measurements.json",
+  "title": "Measurement facts staging file",
+  "type": "object",
+  "required": ["schemaVersion", "retrievedDate", "measurements"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "retrievedDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "measurements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "modelId",
+          "conduitType",
+          "nominalSize",
+          "property",
+          "originalLabel",
+          "originalValue",
+          "originalUnit",
+          "normalizedValueInches",
+          "sourceId",
+          "evidenceStatus",
+          "confidence"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.json#/$defs/id" },
+          "modelId": { "$ref": "common.json#/$defs/id" },
+          "accessoryOrShoeId": {
+            "anyOf": [
+              { "type": "null" },
+              { "$ref": "common.json#/$defs/id" }
+            ]
+          },
+          "conduitType": { "$ref": "common.json#/$defs/conduitType" },
+          "nominalSize": { "type": "string" },
+          "operation": {
+            "anyOf": [
+              { "type": "null" },
+              { "type": "string" }
+            ]
+          },
+          "property": { "$ref": "common.json#/$defs/measurementProperty" },
+          "originalLabel": { "type": "string" },
+          "originalValue": {
+            "anyOf": [
+              { "type": "null" },
+              { "type": "number" },
+              { "type": "string" }
+            ]
+          },
+          "originalUnit": { "$ref": "common.json#/$defs/unit" },
+          "normalizedValueInches": { "$ref": "common.json#/$defs/nullablePositiveNumber" },
+          "sourceId": { "$ref": "common.json#/$defs/id" },
+          "page": {
+            "anyOf": [{ "type": "null" }, { "type": "string" }]
+          },
+          "section": {
+            "anyOf": [{ "type": "null" }, { "type": "string" }]
+          },
+          "table": {
+            "anyOf": [{ "type": "null" }, { "type": "string" }]
+          },
+          "excerpt": {
+            "anyOf": [
+              { "type": "null" },
+              { "type": "string", "maxLength": 200 }
+            ]
+          },
+          "evidenceStatus": { "$ref": "common.json#/$defs/evidenceStatus" },
+          "confidence": { "$ref": "common.json#/$defs/confidence" },
+          "conflictGroupId": {
+            "anyOf": [
+              { "type": "null" },
+              { "$ref": "common.json#/$defs/id" }
+            ]
+          },
+          "notes": { "type": "string" },
+          "productionScope": {
+            "type": "string",
+            "enum": ["emt_in_scope", "out_of_production_scope", "n/a"]
+          },
+          "derivation": {
+            "type": "string",
+            "enum": ["direct", "derived"]
+          },
+          "approximate": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

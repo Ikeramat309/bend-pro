@@ -64,4 +64,31 @@ describe('buildSaddle4DiagramGeometry', () => {
 
     expect(withWidth.halfTopPx).toBeGreaterThan(withoutWidth.halfTopPx);
   });
+
+  test.each([22.5, 30, 45])(
+    'keeps extreme width and height layouts separated at %s°',
+    (bendAngleDeg) => {
+      const geo = buildSaddle4DiagramGeometry({
+        obstructionHeightInches: 100_000,
+        betweenBendsInches: 100_000,
+        saddleWidthInches: 100_000,
+        bendAngleDeg,
+      });
+      const pipeBottom = geo.topY + SADDLE4_DIAGRAM_LAYOUT.pipeHalf;
+      const obstructionTop = SADDLE4_DIAGRAM_LAYOUT.baseY - geo.obsHeightPx;
+
+      expect(geo.pipePath).not.toContain('NaN');
+      expect(geo.pipePath).not.toContain('Infinity');
+      expect(geo.xOL - SADDLE4_DIAGRAM_LAYOUT.startX).toBeGreaterThanOrEqual(
+        SADDLE4_DIAGRAM_LAYOUT.minEndRun - 0.001,
+      );
+      expect(SADDLE4_DIAGRAM_LAYOUT.endX - geo.xOR).toBeGreaterThanOrEqual(
+        SADDLE4_DIAGRAM_LAYOUT.minEndRun - 0.001,
+      );
+      expect(obstructionTop - pipeBottom).toBeGreaterThanOrEqual(
+        SADDLE4_DIAGRAM_LAYOUT.clearance - 0.001,
+      );
+      expect(geo.topY - 47).toBeGreaterThanOrEqual(20);
+    },
+  );
 });

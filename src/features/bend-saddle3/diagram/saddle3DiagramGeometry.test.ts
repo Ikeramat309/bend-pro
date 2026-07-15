@@ -1,4 +1,5 @@
 import {
+  SADDLE3_DIAGRAM_LAYOUT,
   buildSaddle3DiagramGeometry,
   capSaddle3DiagramInputs,
 } from '../diagram/saddle3DiagramGeometry';
@@ -68,4 +69,26 @@ describe('buildSaddle3DiagramGeometry', () => {
     expect(geo.x1).toBeGreaterThanOrEqual(24);
     expect(geo.x2).toBeLessThanOrEqual(336);
   });
+
+  test.each([22.5, 30, 45])(
+    'preserves pipe clearance and finite geometry for extreme values at %s°',
+    (sideAngle) => {
+      const capped = capSaddle3DiagramInputs(100, 1_000);
+      const geo = buildSaddle3DiagramGeometry(
+        capped.visualObsIn,
+        capped.visualCenterToSide,
+        sideAngle,
+      );
+      const pipeBottomAtPeak = geo.peakY + SADDLE3_DIAGRAM_LAYOUT.pipeHalf;
+      const obstructionTop = SADDLE3_DIAGRAM_LAYOUT.baseY - geo.obsRadius * 2;
+
+      expect(geo.pipePath).not.toContain('NaN');
+      expect(geo.pipePath).not.toContain('Infinity');
+      expect(obstructionTop - pipeBottomAtPeak).toBeGreaterThanOrEqual(
+        SADDLE3_DIAGRAM_LAYOUT.clearancePx - 0.001,
+      );
+      expect(geo.x1).toBeGreaterThanOrEqual(SADDLE3_DIAGRAM_LAYOUT.startX);
+      expect(geo.x2).toBeLessThanOrEqual(SADDLE3_DIAGRAM_LAYOUT.endX);
+    },
+  );
 });

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0.0",
+  "retrievedDate": "2026-07-14",
+  "conflicts": [
+    {
+      "id": "conflict-gardner-bigben-1-2-clr",
+      "modelId": "gardner-bigben-960",
+      "property": "centerline_radius",
+      "nominalSize": "1/2",
+      "competingFactIds": [
+        "meas-041-gb-clr-howto",
+        "meas-042-gb-clr-npa",
+        "meas-043-gb-clr-b0040"
+      ],
+      "conflictType": "revision_change",
+      "analysis": "Current GAR_BRO_032_1220 and NPA-759 print BigBen 960 Radius/Bend Radius 3.69 in. Archived B-0040 prints Radius 5 in for 960 — equal to EMT Deduct. Production baseline documents B-0040 as deduct mislabeled as radius. Prefer current guide+NPA; keep B-0040 fact visible as official_conflict.",
+      "recommendedNextStep": "Human confirm current BigBen casting marks / NPA-759 as chart source; do not use B-0040 Radius for CLR.",
+      "status": "needs_human_review"
+    },
+    {
+      "id": "conflict-gardner-bigben-3-4-clr",
+      "modelId": "gardner-bigben-961",
+      "property": "centerline_radius",
+      "nominalSize": "3/4",
+      "competingFactIds": [
+        "meas-045-gb-clr-howto",
+        "meas-046-gb-clr-npa",
+        "meas-047-gb-clr-b0040"
+      ],
+      "conflictType": "revision_change",
+      "analysis": "Current sources print 4.74 in radius for 961; B-0040 Radius column prints 6 in (EMT deduct). Same mislabel pattern as 960.",
+      "recommendedNextStep": "Prefer current How To Guide + NPA-759; archive B-0040 Radius as rejected for CLR use.",
+      "status": "needs_human_review"
+    },
+    {
+      "id": "conflict-gardner-bigben-1-clr",
+      "modelId": "gardner-bigben-962",
+      "property": "centerline_radius",
+      "nominalSize": "1",
+      "competingFactIds": [
+        "meas-049-gb-clr-howto",
+        "meas-050-gb-clr-npa",
+        "meas-051-gb-clr-b0040",
+        "meas-052-gb-962h-clr-page"
+      ],
+      "conflictType": "revision_change",
+      "analysis": "Current How To, NPA-759, and 962H product page print 5.81 in bend radius. B-0040 prints Radius 8 in for 962 (EMT deduct).",
+      "recommendedNextStep": "Prefer current official documents; keep B-0040 conflict visible.",
+      "status": "needs_human_review"
+    },
+    {
+      "id": "conflict-greenlee-844-clr-listing",
+      "modelId": "greenlee-site-rite-844a-dual",
+      "property": "centerline_radius",
+      "nominalSize": "3/4",
+      "competingFactIds": [
+        "meas-018-gl-844-half-clr",
+        "meas-020-gl-844-34-clr",
+        "meas-021-gl-844-product-clr"
+      ],
+      "conflictType": "family_vs_model_scope",
+      "analysis": "Use guide prints dual-shoe groove radii 4-3/16 (1/2) and 5-1/8 (3/4). 844AH product page prints a single Centerline Bend Radius 4-3/16 in without groove qualification. Not a value disagreement for 1/2 groove; ambiguity for whether product-page CLR applies to 3/4 groove.",
+      "recommendedNextStep": "Prefer use-guide groove table for measurements; note product-page single CLR as incomplete for dual shoe.",
+      "status": "open"
+    }
+  ]
+}

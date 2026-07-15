@@ -1,0 +1,146 @@
+{
+  "schemaVersion": "1.0.0",
+  "retrievedDate": "2026-07-14",
+  "conflicts": [
+    {
+      "id": "conflict-23803-clr-1_2",
+      "modelId": "model-greenlee-shoe-23803",
+      "property": "centerline_radius",
+      "nominalSize": "1/2",
+      "competingFactIds": [
+        "fact-23803-emt-1_2-clr-manual",
+        "fact-23803-emt-1_2-clr-page"
+      ],
+      "conflictType": "value_mismatch",
+      "analysis": "Official product page CLR for EMT shoe 23803 matches the Rigid/IMC column of 52065584REV02, not the EMT column. Manual is preferred pending Greenlee confirmation.",
+      "recommendedNextStep": "Ask Greenlee which document is authoritative for 23803 EMT CLR; keep both facts.",
+      "status": "open"
+    },
+    {
+      "id": "conflict-23803-clr-3_4",
+      "modelId": "model-greenlee-shoe-23803",
+      "property": "centerline_radius",
+      "nominalSize": "3/4",
+      "competingFactIds": [
+        "fact-23803-emt-3_4-clr-manual",
+        "fact-23803-emt-3_4-clr-page"
+      ],
+      "conflictType": "value_mismatch",
+      "analysis": "Official product page CLR for EMT shoe 23803 matches the Rigid/IMC column of 52065584REV02, not the EMT column. Manual is preferred pending Greenlee confirmation.",
+      "recommendedNextStep": "Ask Greenlee which document is authoritative for 23803 EMT CLR; keep both facts.",
+      "status": "open"
+    },
+    {
+      "id": "conflict-23803-clr-1",
+      "modelId": "model-greenlee-shoe-23803",
+      "property": "centerline_radius",
+      "nominalSize": "1",
+      "competingFactIds": [
+        "fact-23803-emt-1-clr-manual",
+        "fact-23803-emt-1-clr-page"
+      ],
+      "conflictType": "value_mismatch",
+      "analysis": "Official product page CLR for EMT shoe 23803 matches the Rigid/IMC column of 52065584REV02, not the EMT column. Manual is preferred pending Greenlee confirmation.",
+      "recommendedNextStep": "Ask Greenlee which document is authoritative for 23803 EMT CLR; keep both facts.",
+      "status": "open"
+    },
+    {
+      "id": "conflict-23803-clr-1-1_4",
+      "modelId": "model-greenlee-shoe-23803",
+      "property": "centerline_radius",
+      "nominalSize": "1-1/4",
+      "competingFactIds": [
+        "fact-23803-emt-1-1_4-clr-manual",
+        "fact-23803-emt-1-1_4-clr-page"
+      ],
+      "conflictType": "value_mismatch",
+      "analysis": "Official product page CLR for EMT shoe 23803 matches the Rigid/IMC column of 52065584REV02, not the EMT column. Manual is preferred pending Greenlee confirmation.",
+      "recommendedNextStep": "Ask Greenlee which document is authoritative for 23803 EMT CLR; keep both facts.",
+      "status": "open"
+    },
+    {
+      "id": "conflict-23803-clr-1-1_2",
+      "modelId": "model-greenlee-shoe-23803",
+      "property": "centerline_radius",
+      "nominalSize": "1-1/2",
+      "competingFactIds": [
+        "fact-23803-emt-1-1_2-clr-manual",
+        "fact-23803-emt-1-1_2-clr-page"
+      ],
+      "conflictType": "value_mismatch",
+      "analysis": "Official product page CLR for EMT shoe 23803 matches the Rigid/IMC column of 52065584REV02, not the EMT column. Manual is preferred pending Greenlee confirmation.",
+      "recommendedNextStep": "Ask Greenlee which document is authoritative for 23803 EMT CLR; keep both facts.",
+      "status": "open"
+    },
+    {
+      "id": "conflict-23803-clr-2",
+      "modelId": "model-greenlee-shoe-23803",
+      "property": "centerline_radius",
+      "nominalSize": "2",
+      "competingFactIds": [
+        "fact-23803-emt-2-clr-manual",
+        "fact-23803-emt-2-clr-page"
+      ],
+      "conflictType": "value_mismatch",
+      "analysis": "Official product page CLR for EMT shoe 23803 matches the Rigid/IMC column of 52065584REV02, not the EMT column. Manual is preferred pending Greenlee confirmation.",
+      "recommendedNextStep": "Ask Greenlee which document is authoritative for 23803 EMT CLR; keep both facts.",
+      "status": "open"
+    },
+    {
+      "id": "conflict-greenlee-844-clr-listing",
+      "modelId": "model-greenlee-844a",
+      "property": "centerline_radius",
+      "nominalSize": "3/4",
+      "competingFactIds": [
+        "fact-844a-emt-3_4-clr",
+        "fact-844ah-product-page-clr-unqualified"
+      ],
+      "conflictType": "family_vs_model_scope",
+      "analysis": "Use guide prints dual-shoe groove radii 4-3/16 (1/2) and 5-1/8 (3/4). 844AH product page prints a single unqualified Centerline Bend Radius 4-3/16. That page value must not be applied to the 3/4 groove.",
+      "recommendedNextStep": "Prefer use-guide groove table for marking math. Keep product-page CLR visible as scope ambiguity only.",
+      "status": "open"
+    },
+    {
+      "id": "conflict-gardner-b0040-960",
+      "modelId": "model-gardner-960",
+      "property": "centerline_radius",
+      "nominalSize": "1/2",
+      "competingFactIds": [
+        "fact-gardner-960-clr",
+        "fact-gardner-b0040-960-rejected-radius"
+      ],
+      "conflictType": "revision_change",
+      "analysis": "Current How To Guide prints true radius for 960; B-0040 printed deduct 5 in the radius column.",
+      "recommendedNextStep": "Keep B-0040 rejected; prefer current How To Guide + NPA-759.",
+      "status": "needs_human_review"
+    },
+    {
+      "id": "conflict-gardner-b0040-961",
+      "modelId": "model-gardner-961",
+      "property": "centerline_radius",
+      "nominalSize": "3/4",
+      "competingFactIds": [
+        "fact-gardner-961-clr",
+        "fact-gardner-b0040-961-rejected-radius"
+      ],
+      "conflictType": "revision_change",
+      "analysis": "Current How To Guide prints true radius for 961; B-0040 printed deduct 6 in the radius column.",
+      "recommendedNextStep": "Keep B-0040 rejected; prefer current How To Guide + NPA-759.",
+      "status": "needs_human_review"
+    },
+    {
+      "id": "conflict-gardner-b0040-962",
+      "modelId": "model-gardner-962",
+      "property": "centerline_radius",
+      "nominalSize": "1",
+      "competingFactIds": [
+        "fact-gardner-962-clr",
+        "fact-gardner-b0040-962-rejected-radius"
+      ],
+      "conflictType": "revision_change",
+      "analysis": "Current How To Guide prints true radius for 962; B-0040 printed deduct 8 in the radius column.",
+      "recommendedNextStep": "Keep B-0040 rejected; prefer current How To Guide + NPA-759.",
+      "status": "needs_human_review"
+    }
+  ]
+}

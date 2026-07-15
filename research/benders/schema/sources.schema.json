@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bendpro.local/research/benders/schema/sources.json",
+  "title": "Sources staging file",
+  "type": "object",
+  "required": ["schemaVersion", "retrievedDate", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "retrievedDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "publisher",
+          "title",
+          "url",
+          "sourceType",
+          "retrievalDate",
+          "currency",
+          "modelsCovered",
+          "redistributionLicenseStatus"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.json#/$defs/id" },
+          "publisher": { "$ref": "common.json#/$defs/nonEmptyString" },
+          "manufacturerId": {
+            "anyOf": [
+              { "type": "null" },
+              { "$ref": "common.json#/$defs/id" }
+            ]
+          },
+          "title": { "$ref": "common.json#/$defs/nonEmptyString" },
+          "url": { "type": "string", "minLength": 1 },
+          "sourceType": { "$ref": "common.json#/$defs/sourceType" },
+          "retrievalDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+          "publicationOrRevisionDate": {
+            "anyOf": [{ "type": "null" }, { "type": "string" }]
+          },
+          "region": {
+            "anyOf": [{ "type": "null" }, { "type": "string" }]
+          },
+          "currency": { "$ref": "common.json#/$defs/sourceCurrency" },
+          "modelsCovered": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "pageTableOrSection": {
+            "anyOf": [{ "type": "null" }, { "type": "string" }]
+          },
+          "excerpt": {
+            "anyOf": [
+              { "type": "null" },
+              { "type": "string", "maxLength": 200 }
+            ]
+          },
+          "accessNotes": { "type": "string" },
+          "redistributionLicenseStatus": {
+            "type": "string",
+            "enum": [
+              "url_reference_only",
+              "unknown_do_not_redistribute",
+              "explicitly_permitted",
+              "public_domain",
+              "not_applicable"
+            ]
+          },
+          "contentChecksum": {
+            "anyOf": [{ "type": "null" }, { "type": "string" }]
+          }
+        }
+      }
+    }
+  }
+}

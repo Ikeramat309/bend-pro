@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bendpro.local/research/benders/schema/asset-manifest.json",
+  "title": "Asset manifest staging file",
+  "type": "object",
+  "required": ["schemaVersion", "createdDate", "licenseDefault", "assets"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "createdDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "licenseDefault": { "type": "string" },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "category",
+          "files",
+          "viewBox",
+          "themeBehavior",
+          "intendedSizes",
+          "accessibilityLabel",
+          "originalDesign",
+          "inspirationNotes",
+          "license",
+          "sourceReferences",
+          "reviewStatus"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.json#/$defs/id" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "files": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "viewBox": { "type": "string" },
+          "themeBehavior": {
+            "type": "string",
+            "enum": ["currentColor", "dual_theme_variants", "fixed_neutral"]
+          },
+          "intendedSizes": {
+            "type": "array",
+            "items": { "type": "integer" }
+          },
+          "accessibilityLabel": { "type": "string" },
+          "originalDesign": { "type": "boolean" },
+          "inspirationNotes": { "type": "string" },
+          "license": { "type": "string" },
+          "sourceReferences": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "reviewStatus": {
+            "type": "string",
+            "enum": ["draft", "approved_for_app_use", "needs_revision", "placeholder_only"]
+          }
+        }
+      }
+    }
+  }
+}

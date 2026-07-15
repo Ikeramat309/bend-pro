@@ -1,0 +1,98 @@
+[
+  {
+    "id": "mfr-greenlee",
+    "name": "Greenlee",
+    "aliases": ["Greenlee Tools", "Greenlee Textron", "Emerson Greenlee"],
+    "website": "https://www.greenlee.com/",
+    "regions": ["US", "CA", "global"],
+    "notes": "Emerson-owned. Production Bend Pro charts use Site-Rite hand benders. Also markets 555/854 electric, 1800/1801 mechanical (Chicago-style ratchet), 880/881 hydraulic."
+  },
+  {
+    "id": "mfr-klein",
+    "name": "Klein Tools",
+    "aliases": ["Klein"],
+    "website": "https://www.kleintools.com/",
+    "regions": ["US", "CA"],
+    "notes": "Angle Setter hand bender family 51603–51613. Official product pages publish centerline radius and stub take-up on specs."
+  },
+  {
+    "id": "mfr-gardner-bender",
+    "name": "Gardner Bender",
+    "aliases": ["GB", "Gardner Bender / GB", "ECM Industries Gardner Bender"],
+    "website": "https://www.gardnerbender.com/",
+    "regions": ["US", "CA"],
+    "notes": "ECM Industries brand. BigBen hand (960/961/962); Sidewinder mechanical/electric; Portable Cyclone B1000; Ultra Eegor / Eegor hydraulic; one-shot hydraulic lines."
+  },
+  {
+    "id": "mfr-ideal",
+    "name": "IDEAL",
+    "aliases": ["IDEAL Electrical", "IDEAL Industries"],
+    "website": "https://www.idealindustries.com/",
+    "regions": ["US", "CA", "EU"],
+    "notes": "Hand bender 74-xxx aluminum and ductile iron. Production URLs use idealelectricalinc.com; newer beta.idealindustries.com pages also exist for same SKUs. Benfield-system markings referenced on product copy."
+  },
+  {
+    "id": "mfr-milwaukee",
+    "name": "Milwaukee",
+    "aliases": ["Milwaukee Tool", "Milwaukee Electric Tool"],
+    "website": "https://www.milwaukeetool.com/",
+    "regions": ["US", "CA", "global"],
+    "notes": "Hand benders 48-22-407x aluminum and 48-22-408x iron. Official pages/manual confirm models and offset/saddle tables; no published stub take-up inches or centerline radius."
+  },
+  {
+    "id": "mfr-southwire",
+    "name": "Southwire",
+    "aliases": ["Southwire Tools", "Southwire Company"],
+    "website": "https://www.southwire.com/",
+    "regions": ["US", "CA"],
+    "notes": "MCB hand bender family MCB1/2, MCB3/4, MCB1. Cutsheet lists models/capacity only; no stub take-up or radius published."
+  },
+  {
+    "id": "mfr-current-tools",
+    "name": "Current Tools",
+    "aliases": ["Current Tools Inc"],
+    "website": "https://currenttools.com/",
+    "regions": ["US"],
+    "notes": "Electric 77 Series, 747 Omni, 797 IQ Bender; hydraulic 254 Series. Shoes marketed as compatible with Greenlee 555 Classic / 881CT in official catalog notes."
+  },
+  {
+    "id": "mfr-rack-a-tiers",
+    "name": "Rack-A-Tiers",
+    "aliases": ["Rack-A-Tiers Mfg", "RAT"],
+    "website": "https://rack-a-tiers.com/",
+    "regions": ["US", "CA"],
+    "notes": "Hoppy Bender precision hand system (57050/57075); Skybender lift-mounted EMT bender. Canadian store rack-a-tiers.ca mirrors catalog."
+  },
+  {
+    "id": "mfr-nsi",
+    "name": "NSI Industries",
+    "aliases": ["NSI", "NSI/Tork"],
+    "website": "https://nsiindustries.com/",
+    "regions": ["US"],
+    "notes": "Cast aluminum hand benders CB50/CB75/CB100. TORK is an NSI controls/timers brand — not conduit benders."
+  },
+  {
+    "id": "mfr-ridgid",
+    "name": "RIDGID",
+    "aliases": ["Ridgid Tools", "Emerson RIDGID"],
+    "website": "https://www.ridgid.com/",
+    "regions": ["US", "global"],
+    "notes": "Thin-wall (EMT) and heavy-wall cast iron hand bender heads exist on official site. Inside-radius specs published; handles sold separately. Limited shoe-chart detail vs Greenlee/Klein."
+  },
+  {
+    "id": "mfr-benfield-legacy",
+    "name": "Benfield (legacy)",
+    "aliases": ["Jack Benfield", "Benfield system", "Benfield Conduit Bending Manual"],
+    "website": null,
+    "regions": ["US"],
+    "notes": "Historical inventor/methodology and marking system, not a current bender OEM. Gates/manuals sold via trade publishers (EC&M). Many modern hand benders claim Benfield-style markings. Do not treat as active manufacturer SKU source."
+  },
+  {
+    "id": "mfr-emerson",
+    "name": "Emerson",
+    "aliases": ["Emerson Professional Tools", "Emerson Electric"],
+    "website": "https://www.emerson.com/",
+    "regions": ["global"],
+    "notes": "Corporate parent for Greenlee and RIDGID tool brands. Chicago-style ratchet benders persist as Greenlee 1800/1801 product pages, not a separate Emerson SKU line."
+  }
+]

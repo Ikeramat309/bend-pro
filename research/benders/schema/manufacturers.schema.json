@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bendpro.local/research/benders/schema/manufacturers.json",
+  "title": "Manufacturers staging file",
+  "type": "object",
+  "required": ["schemaVersion", "retrievedDate", "manufacturers"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "const": "1.0.0" },
+    "retrievedDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "manufacturers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "aliases", "website", "regions", "notes"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "common.json#/$defs/id" },
+          "name": { "$ref": "common.json#/$defs/nonEmptyString" },
+          "aliases": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "website": {
+            "anyOf": [
+              { "type": "null" },
+              { "type": "string", "format": "uri" }
+            ]
+          },
+          "regions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Aluminum hand bender: hollow tubular handle (open twin rails) -->
+  <g stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.75 3.75v9"/>
+    <path d="M13.25 3.75v9"/>
+    <path d="M10.75 3.75h2.5"/>
+    <path d="M10.75 8.25h2.5"/>
+    <path d="M7.25 14.25c0 3.2 2.1 5.5 4.75 5.5s4.75-2.3 4.75-5.5"/>
+    <path d="M7.25 14.25c-1 .2-1.95.95-2.25 2"/>
+    <path d="M9.1 16.6h5.8"/>
+    <path d="M15.6 18.9h2.9"/>
+  </g>
+</svg>

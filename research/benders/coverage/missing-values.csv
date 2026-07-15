@@ -1,0 +1,88 @@
+modelId,brand,nominalSize,property,reason
+model-greenlee-840a,"Greenlee",1/2,stub_take_up,no source-backed fact
+model-greenlee-841a,"Greenlee",3/4,stub_take_up,no source-backed fact
+model-greenlee-842a,"Greenlee",1,stub_take_up,no source-backed fact
+model-greenlee-843a,"Greenlee",1-1/4,stub_take_up,no source-backed fact
+model-greenlee-840f,"Greenlee",1/2,stub_take_up,no source-backed fact
+model-greenlee-841f,"Greenlee",3/4,stub_take_up,no source-backed fact
+model-greenlee-842f,"Greenlee",1,stub_take_up,no source-backed fact
+model-greenlee-843f,"Greenlee",1-1/4,stub_take_up,no source-backed fact
+model-greenlee-844a,"Greenlee",1/2,stub_take_up,no source-backed fact
+model-greenlee-844a,"Greenlee",3/4,stub_take_up,no source-backed fact
+model-klein-51608,"Klein Tools",1/2,stub_deduct,no source-backed fact
+model-klein-51609,"Klein Tools",3/4,stub_deduct,no source-backed fact
+model-klein-51610,"Klein Tools",1,stub_deduct,no source-backed fact
+model-klein-51606,"Klein Tools",1/2,stub_deduct,no source-backed fact
+model-klein-51607,"Klein Tools",3/4,stub_deduct,no source-backed fact
+model-gardner-960,"Gardner Bender",1/2,stub_take_up,no source-backed fact
+model-gardner-961,"Gardner Bender",3/4,stub_take_up,no source-backed fact
+model-gardner-962,"Gardner Bender",1,stub_take_up,no source-backed fact
+model-ideal-74-031,"IDEAL",1/2,stub_deduct,no source-backed fact
+model-ideal-74-031,"IDEAL",1/2,centerline_radius,no source-backed fact
+model-ideal-74-032,"IDEAL",3/4,stub_deduct,no source-backed fact
+model-ideal-74-032,"IDEAL",3/4,centerline_radius,no source-backed fact
+model-ideal-74-001,"IDEAL",1/2,stub_deduct,no source-backed fact
+model-ideal-74-001,"IDEAL",1/2,centerline_radius,no source-backed fact
+model-ideal-74-002,"IDEAL",3/4,stub_deduct,no source-backed fact
+model-ideal-74-002,"IDEAL",3/4,centerline_radius,no source-backed fact
+model-ideal-74-003,"IDEAL",1,stub_deduct,no source-backed fact
+model-ideal-74-003,"IDEAL",1,centerline_radius,no source-backed fact
+model-ideal-74-034,"IDEAL",1-1/4,stub_deduct,no source-backed fact
+model-ideal-74-034,"IDEAL",1-1/4,centerline_radius,no source-backed fact
+model-milwaukee-48-22-4070,"Milwaukee",1/2,stub_take_up,no source-backed fact
+model-milwaukee-48-22-4070,"Milwaukee",1/2,stub_deduct,no source-backed fact
+model-milwaukee-48-22-4070,"Milwaukee",1/2,centerline_radius,no source-backed fact
+model-milwaukee-48-22-4071,"Milwaukee",3/4,stub_take_up,no source-backed fact
+model-milwaukee-48-22-4071,"Milwaukee",3/4,stub_deduct,no source-backed fact
+model-milwaukee-48-22-4071,"Milwaukee",3/4,centerline_radius,no source-backed fact
+model-milwaukee-48-22-4072,"Milwaukee",1,stub_take_up,no source-backed fact
+model-milwaukee-48-22-4072,"Milwaukee",1,stub_deduct,no source-backed fact
+model-milwaukee-48-22-4072,"Milwaukee",1,centerline_radius,no source-backed fact
+model-milwaukee-48-22-4080,"Milwaukee",1/2,stub_take_up,no source-backed fact
+model-milwaukee-48-22-4080,"Milwaukee",1/2,stub_deduct,no source-backed fact
+model-milwaukee-48-22-4080,"Milwaukee",1/2,centerline_radius,no source-backed fact
+model-milwaukee-48-22-4081,"Milwaukee",3/4,stub_take_up,no source-backed fact
+model-milwaukee-48-22-4081,"Milwaukee",3/4,stub_deduct,no source-backed fact
+model-milwaukee-48-22-4081,"Milwaukee",3/4,centerline_radius,no source-backed fact
+model-milwaukee-48-22-4082,"Milwaukee",1,stub_take_up,no source-backed fact
+model-milwaukee-48-22-4082,"Milwaukee",1,stub_deduct,no source-backed fact
+model-milwaukee-48-22-4082,"Milwaukee",1,centerline_radius,no source-backed fact
+model-southwire-mcb1-2,"Southwire",1/2,stub_take_up,no source-backed fact
+model-southwire-mcb1-2,"Southwire",1/2,stub_deduct,no source-backed fact
+model-southwire-mcb1-2,"Southwire",1/2,centerline_radius,no source-backed fact
+model-southwire-mcb3-4,"Southwire",3/4,stub_take_up,no source-backed fact
+model-southwire-mcb3-4,"Southwire",3/4,stub_deduct,no source-backed fact
+model-southwire-mcb3-4,"Southwire",3/4,centerline_radius,no source-backed fact
+model-southwire-mcb1,"Southwire",1,stub_take_up,no source-backed fact
+model-southwire-mcb1,"Southwire",1,stub_deduct,no source-backed fact
+model-southwire-mcb1,"Southwire",1,centerline_radius,no source-backed fact
+model-rack-hoppy,"Rack-A-Tiers",1/2,stub_take_up,no source-backed fact
+model-rack-hoppy,"Rack-A-Tiers",1/2,stub_deduct,no source-backed fact
+model-rack-hoppy,"Rack-A-Tiers",1/2,centerline_radius,no source-backed fact
+model-rack-hoppy,"Rack-A-Tiers",3/4,stub_take_up,no source-backed fact
+model-rack-hoppy,"Rack-A-Tiers",3/4,stub_deduct,no source-backed fact
+model-rack-hoppy,"Rack-A-Tiers",3/4,centerline_radius,no source-backed fact
+model-ideal-74-006,"IDEAL",1-1/4,stub_take_up,no source-backed fact
+model-ideal-74-006,"IDEAL",1-1/4,stub_deduct,no source-backed fact
+model-ideal-74-006,"IDEAL",1-1/4,centerline_radius,no source-backed fact
+model-gardner-920,"Gardner Bender",1/2,stub_take_up,no source-backed fact
+model-gardner-920,"Gardner Bender",1/2,stub_deduct,no source-backed fact
+model-gardner-920,"Gardner Bender",1/2,centerline_radius,no source-backed fact
+model-gardner-921,"Gardner Bender",3/4,stub_take_up,no source-backed fact
+model-gardner-921,"Gardner Bender",3/4,stub_deduct,no source-backed fact
+model-gardner-921,"Gardner Bender",3/4,centerline_radius,no source-backed fact
+model-gardner-922,"Gardner Bender",1,stub_take_up,no source-backed fact
+model-gardner-922,"Gardner Bender",1,stub_deduct,no source-backed fact
+model-gardner-922,"Gardner Bender",1,centerline_radius,no source-backed fact
+model-gardner-923,"Gardner Bender",1-1/4,stub_take_up,no source-backed fact
+model-gardner-923,"Gardner Bender",1-1/4,stub_deduct,no source-backed fact
+model-gardner-923,"Gardner Bender",1-1/4,centerline_radius,no source-backed fact
+model-gardner-930b,"Gardner Bender",1/2,stub_take_up,no source-backed fact
+model-gardner-930b,"Gardner Bender",1/2,stub_deduct,no source-backed fact
+model-gardner-930b,"Gardner Bender",1/2,centerline_radius,no source-backed fact
+model-gardner-931b,"Gardner Bender",3/4,stub_take_up,no source-backed fact
+model-gardner-931b,"Gardner Bender",3/4,stub_deduct,no source-backed fact
+model-gardner-931b,"Gardner Bender",3/4,centerline_radius,no source-backed fact
+model-gardner-932,"Gardner Bender",1,stub_take_up,no source-backed fact
+model-gardner-932,"Gardner Bender",1,stub_deduct,no source-backed fact
+model-gardner-932,"Gardner Bender",1,centerline_radius,no source-backed fact

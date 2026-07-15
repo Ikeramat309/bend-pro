@@ -12,6 +12,9 @@ export type PipeSegmentProps = {
   strokeWidth?: number;
   opacity?: number;
   gradientId?: string;
+  /** Stub 90's restrained EMT finish: wide steel body with a narrow satin sheen. */
+  material?: 'default' | 'satin';
+  lineCap?: 'round' | 'butt';
 };
 
 /**
@@ -30,12 +33,17 @@ export function PipeSegment({
   strokeWidth,
   opacity,
   gradientId,
+  material = 'default',
+  lineCap = 'round',
 }: PipeSegmentProps) {
   const theme = useDiagramTheme();
 
   if (variant === 'pipe') {
     const fullWidth = strokeWidth ?? diagramMetrics.pipeStroke;
     const bodyStroke = gradientId ? `url(#${gradientId})` : theme.pipe;
+    const bodyRatio = material === 'satin' ? 0.86 : PIPE_BODY_RATIO;
+    const sheenRatio = material === 'satin' ? 0.13 : PIPE_SHEEN_RATIO;
+    const sheenOpacity = material === 'satin' ? 0.25 : PIPE_SHEEN_OPACITY;
 
     // Three concentric strokes on the same path: dark edge → metallic body →
     // light sheen core. Together they give the run rounded-tube depth.
@@ -46,7 +54,7 @@ export function PipeSegment({
           fill="none"
           stroke={theme.pipeCore}
           strokeWidth={fullWidth}
-          strokeLinecap="round"
+          strokeLinecap={lineCap}
           strokeLinejoin="round"
           opacity={opacity}
         />
@@ -54,8 +62,8 @@ export function PipeSegment({
           d={d}
           fill="none"
           stroke={bodyStroke}
-          strokeWidth={fullWidth * PIPE_BODY_RATIO}
-          strokeLinecap="round"
+          strokeWidth={fullWidth * bodyRatio}
+          strokeLinecap={lineCap}
           strokeLinejoin="round"
           opacity={opacity}
         />
@@ -63,10 +71,10 @@ export function PipeSegment({
           d={d}
           fill="none"
           stroke={theme.pipeSheen}
-          strokeWidth={fullWidth * PIPE_SHEEN_RATIO}
-          strokeLinecap="round"
+          strokeWidth={fullWidth * sheenRatio}
+          strokeLinecap={lineCap}
           strokeLinejoin="round"
-          opacity={(opacity ?? 1) * PIPE_SHEEN_OPACITY}
+          opacity={(opacity ?? 1) * sheenOpacity}
         />
       </Fragment>
     );

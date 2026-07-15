@@ -1,0 +1,161 @@
+{
+  "schemaVersion": "1.0.0",
+  "retrievedDate": "2026-07-14",
+  "manufacturers": [
+    {
+      "id": "mfr-greenlee",
+      "name": "Greenlee",
+      "aliases": [
+        "Greenlee Tools",
+        "Greenlee Textron"
+      ],
+      "website": "https://www.greenlee.com/",
+      "regions": [
+        "US",
+        "CA"
+      ],
+      "notes": "Primary official source for Site-Rite hand, 555 electric, 881 hydraulic families."
+    },
+    {
+      "id": "mfr-klein",
+      "name": "Klein Tools",
+      "aliases": [
+        "Klein"
+      ],
+      "website": "https://www.kleintools.com/",
+      "regions": [
+        "US",
+        "CA",
+        "UK"
+      ],
+      "notes": "Angle Setter hand-bender family with published stub-up and centerline radius on product pages."
+    },
+    {
+      "id": "mfr-gardner-bender",
+      "name": "Gardner Bender",
+      "aliases": [
+        "GB",
+        "Gardner Bender / ECM"
+      ],
+      "website": "https://www.gardnerbender.com/",
+      "regions": [
+        "US",
+        "CA"
+      ],
+      "notes": "BigBen aluminum hand benders; Sidewinder B2555 electric; legacy iron/Benfield-style lines."
+    },
+    {
+      "id": "mfr-ideal",
+      "name": "IDEAL",
+      "aliases": [
+        "IDEAL Electrical",
+        "Ideal Industries"
+      ],
+      "website": "https://idealelectricalinc.com/",
+      "regions": [
+        "US",
+        "CA"
+      ],
+      "notes": "Aluminum and ductile-iron hand heads publish stub-up; no official CLR found on product pages."
+    },
+    {
+      "id": "mfr-milwaukee",
+      "name": "Milwaukee",
+      "aliases": [
+        "Milwaukee Tool"
+      ],
+      "website": "https://www.milwaukeetool.com/",
+      "regions": [
+        "US",
+        "CA"
+      ],
+      "notes": "Hand benders identity/capacity confirmed; no published stub-up or radius on product pages."
+    },
+    {
+      "id": "mfr-southwire",
+      "name": "Southwire",
+      "aliases": [],
+      "website": "https://www.southwire.com/",
+      "regions": [
+        "US"
+      ],
+      "notes": "MCB hand bender cutsheet confirms models; no published take-up/radius in cutsheet research."
+    },
+    {
+      "id": "mfr-current-tools",
+      "name": "Current Tools",
+      "aliases": [
+        "Current Tools Inc"
+      ],
+      "website": "https://currenttools.com/",
+      "regions": [
+        "US"
+      ],
+      "notes": "Mechanical 750/753, electric 77 series, hydraulic 254 — official manuals with deduct charts."
+    },
+    {
+      "id": "mfr-ridgid",
+      "name": "RIDGID",
+      "aliases": [
+        "Ridge Tool",
+        "Emerson RIDGID"
+      ],
+      "website": "https://www.ridgid.com/",
+      "regions": [
+        "US",
+        "EU"
+      ],
+      "notes": "Hydraulic pipe benders are generally schedule pipe, not EMT conduit charts. E-666 electric conduit bender appears in distributor literature; treat as reference-only until RIDGID official chart verified."
+    },
+    {
+      "id": "mfr-rack-a-tiers",
+      "name": "Rack-A-Tiers",
+      "aliases": [],
+      "website": "https://rack-a-tiers.com/",
+      "regions": [
+        "US",
+        "CA"
+      ],
+      "notes": "Hoppy Bender and Skybender identity verified on official site; no stub-up/radius chart published on product pages reviewed."
+    },
+    {
+      "id": "mfr-benfield",
+      "name": "Benfield",
+      "aliases": [
+        "Jack Benfield",
+        "Benfield Manufacturing"
+      ],
+      "website": null,
+      "regions": [
+        "US"
+      ],
+      "notes": "Historic brand / method author. Benfield Conduit Bending Manual is instructional literature, not a current OEM shoe chart for a living SKU line. Reference-only."
+    },
+    {
+      "id": "mfr-nsi",
+      "name": "NSI Industries",
+      "aliases": [
+        "NSI",
+        "Tork"
+      ],
+      "website": "https://www.nsiindustries.com/",
+      "regions": [
+        "US"
+      ],
+      "notes": "Cast aluminum hand benders CB50/CB75/CB100 discovered on NSI site (Agent 1). TORK is controls/timers — not conduit benders. Chart values not yet extracted."
+    },
+    {
+      "id": "mfr-emerson-chicago",
+      "name": "Chicago / Emerson legacy",
+      "aliases": [
+        "Chicago Bender",
+        "Emerson Electric legacy ratchet"
+      ],
+      "website": null,
+      "regions": [
+        "US"
+      ],
+      "notes": "Legacy ratchet/\"Chicago\" style mechanical benders referenced in trade literature; exact current OEM ownership and charts blocked without identifiable official revision."
+    }
+  ]
+}

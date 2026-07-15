@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Custom measured profile: shoe + measurement tick ruler -->
+  <g stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Compact shoe -->
+    <path d="M5.5 8c0 4.6 2.55 8 5.5 8s5.5-3.4 5.5-8"/>
+    <path d="M5.5 8c-.95.2-1.85.9-2.15 1.85"/>
+    <path d="M7.5 9.75h6"/>
+    <!-- Vertical measuring rule beside shoe -->
+    <path d="M18.25 4.5v15"/>
+    <!-- Major ticks -->
+    <path d="M18.25 6.5h2"/>
+    <path d="M18.25 10h2"/>
+    <path d="M18.25 13.5h2"/>
+    <path d="M18.25 17h2"/>
+    <!-- Minor ticks -->
+    <path d="M18.25 8.25h1.15"/>
+    <path d="M18.25 11.75h1.15"/>
+    <path d="M18.25 15.25h1.15"/>
+    <!-- Deduct callout mark on shoe -->
+    <path d="M11 16v2.25"/>
+    <circle cx="11" cy="19" r="0.9" fill="currentColor" stroke="none"/>
+  </g>
+</svg>

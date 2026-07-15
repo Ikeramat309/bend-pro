@@ -1,0 +1,377 @@
+{
+  "schemaVersion": "1.0.0",
+  "createdDate": "2026-07-14",
+  "licenseDefault": "Original Bend Pro research silhouettes for internal/app use; draft pending human review — do not overstate exclusive legal ownership",
+  "assets": [
+    {
+      "id": "icon-hand-aluminum",
+      "name": "Hand bender — aluminum",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-hand-aluminum.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Aluminum hand bender",
+      "originalDesign": true,
+      "inspirationNotes": "Hollow twin-rail handle differentiates aluminum from iron; not traced from product photos",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-hand-iron",
+      "name": "Hand bender — iron",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-hand-iron.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Iron hand bender",
+      "originalDesign": true,
+      "inspirationNotes": "Solid filled handle + mass cue; heavier stroke; not traced from product photos",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-hand-dual-head",
+      "name": "Hand bender — dual head",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-hand-dual-head.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Dual-head hand bender",
+      "originalDesign": true,
+      "inspirationNotes": "Opposed shoe silhouettes on a short bar; generic dual-head class, not a branded model",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-hand-angle-setter",
+      "name": "Hand bender — angle setter",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-hand-angle-setter.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Hand bender with angle setter",
+      "originalDesign": true,
+      "inspirationNotes": "Hand shoe plus abstract angle arc/pointer; feature cue only, not a dial brand mark",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-mechanical-ratchet",
+      "name": "Mechanical ratchet bender",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-mechanical-ratchet.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Mechanical ratchet bender",
+      "originalDesign": true,
+      "inspirationNotes": "Frame, ratchet wheel, lever, and former; category silhouette only",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-electric",
+      "name": "Electric bender",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-electric.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Electric bender",
+      "originalDesign": true,
+      "inspirationNotes": "Compact drive body with power cue and shoe; not a manufacturer enclosure shape",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-hydraulic",
+      "name": "Hydraulic bender",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-hydraulic.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Hydraulic bender",
+      "originalDesign": true,
+      "inspirationNotes": "Ram cylinder, cross frame, and shoe; generic hydraulic class silhouette",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-bender-shoe",
+      "name": "Bender shoe",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-bender-shoe.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Bender shoe",
+      "originalDesign": true,
+      "inspirationNotes": "Isolated shoe/former hook; generic conduit channel, not a branded shoe casting",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-shoe-set",
+      "name": "Shoe set",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-shoe-set.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Bender shoe set",
+      "originalDesign": true,
+      "inspirationNotes": "Three graduated shoe outlines suggesting a multi-size set",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-custom-measured",
+      "name": "Custom measured profile",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-custom-measured.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Custom measured bender profile",
+      "originalDesign": true,
+      "inspirationNotes": "Shoe plus measurement rule ticks for user-measured deduct profiles",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-generic-field-reference",
+      "name": "Generic field reference",
+      "category": "bender-type",
+      "files": [
+        "icons/icon-generic-field-reference.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Generic field reference",
+      "originalDesign": true,
+      "inspirationNotes": "Clipboard with abstract bend mark; field-reference cue, not a chart scan",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-status-verified",
+      "name": "Status — verified",
+      "category": "status",
+      "files": [
+        "icons/icon-status-verified.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Verified",
+      "originalDesign": true,
+      "inspirationNotes": "Circle with check; trust-status glyph for verified chart values",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-status-reference-only",
+      "name": "Status — reference only",
+      "category": "status",
+      "files": [
+        "icons/icon-status-reference-only.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Reference only",
+      "originalDesign": true,
+      "inspirationNotes": "Dashed circle with info mark; indicates non-authoritative reference data",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "icon-status-conflict",
+      "name": "Status — conflict",
+      "category": "status",
+      "files": [
+        "icons/icon-status-conflict.svg"
+      ],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Conflicting sources",
+      "originalDesign": true,
+      "inspirationNotes": "Warning triangle; flags conflicting measurements or sources",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "preview-icon-family",
+      "name": "Icon family preview (light + dark panels)",
+      "category": "preview",
+      "files": [
+        "previews/icon-family-preview.svg"
+      ],
+      "viewBox": "0 0 980 1680",
+      "themeBehavior": "dual_theme_variants",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Preview sheet of all Bender icons at multiple sizes",
+      "originalDesign": true,
+      "inspirationNotes": "Generated from standalone icons via build-icon-preview.mjs to prevent drift. Preview is not a standalone icon.",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "draft"
+    },
+    {
+      "id": "placeholder-mfr-hand-brand-a",
+      "name": "Manufacturer hand bender imagery (placeholder)",
+      "category": "bender-type",
+      "files": [],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Manufacturer-specific hand bender imagery placeholder",
+      "originalDesign": false,
+      "inspirationNotes": "No artwork. Slot reserved for a future licensed or original manufacturer-specific illustration if product/legal approves.",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "placeholder_only"
+    },
+    {
+      "id": "placeholder-mfr-mechanical-brand-b",
+      "name": "Manufacturer mechanical bender imagery (placeholder)",
+      "category": "bender-type",
+      "files": [],
+      "viewBox": "0 0 24 24",
+      "themeBehavior": "currentColor",
+      "intendedSizes": [
+        24,
+        32,
+        48,
+        96
+      ],
+      "accessibilityLabel": "Manufacturer-specific mechanical bender imagery placeholder",
+      "originalDesign": false,
+      "inspirationNotes": "No artwork. Slot reserved for a future licensed or original manufacturer-specific illustration if product/legal approves.",
+      "license": "Original Bend Pro research silhouette (draft); internal app use pending human review",
+      "sourceReferences": [],
+      "reviewStatus": "placeholder_only"
+    }
+  ]
+}

@@ -43,4 +43,24 @@ describe('buildOffsetDiagramGeometry', () => {
 
     expect(withMark.x1).not.toBe(withoutMark.x1);
   });
+
+  test.each([10, 22.5, 30, 45, 60])(
+    'keeps extreme display values finite and on-canvas at %s°',
+    (bendAngleDeg) => {
+      const geo = buildOffsetDiagramGeometry({
+        bendAngleDeg,
+        distanceBetweenBendsInches: 100_000,
+        mark1Inches: 100_000,
+      });
+
+      expect(geo.pipePath).not.toContain('NaN');
+      expect(geo.pipePath).not.toContain('Infinity');
+      expect(geo.x1).toBeGreaterThanOrEqual(OFFSET_DIAGRAM_LAYOUT.startX);
+      expect(geo.x2 + OFFSET_DIAGRAM_LAYOUT.cornerR).toBeLessThanOrEqual(
+        OFFSET_DIAGRAM_LAYOUT.endX,
+      );
+      expect(geo.topY).toBeGreaterThan(0);
+      expect(geo.topY).toBeLessThan(OFFSET_DIAGRAM_LAYOUT.bottomY);
+    },
+  );
 });

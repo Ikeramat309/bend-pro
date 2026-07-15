@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Generic field reference: clipboard with simple bend mark -->
+  <g stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Clipboard body -->
+    <rect x="5.5" y="4.75" width="13" height="15.5" rx="1.5"/>
+    <!-- Clip -->
+    <path d="M9.25 4.75V3.75h5.5v1"/>
+    <!-- Bent pipe glyph -->
+    <path d="M8.5 11h4.25l2.75 4.5H18"/>
+    <!-- Mark tick on pipe -->
+    <path d="M12.75 11v-1.75"/>
+    <!-- Reference lines -->
+    <path d="M8.5 17.25h7"/>
+  </g>
+</svg>

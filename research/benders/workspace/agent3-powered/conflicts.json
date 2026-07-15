@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "retrievedDate": "2026-07-14",
+  "conflicts": [
+    {
+      "id": "conf-855gx-rigid-capacity-wording",
+      "modelId": "mdl-greenlee-855gx",
+      "property": "supported_size",
+      "nominalSize": "2",
+      "competingFactIds": [
+        "meas-855gx-rigid-upper-product",
+        "meas-855gx-rigid-upper-datasheet"
+      ],
+      "conflictType": "family_vs_model_scope",
+      "analysis": "855GX product Specifications state Rigid capacity through 2\". Datasheet MA-5561 ordering description states 3/4\" to 1\" Rigid (with 1\"–2\" EMT/IMC). Body copy also describes bending 1\"–2\" Rigid. Leave both facts visible.",
+      "recommendedNextStep": "Extract capacity tables from the official 855GX operator manual and reconcile Rigid upper limit.",
+      "status": "open"
+    },
+    {
+      "id": "conf-881ct-4in-clr",
+      "modelId": "mdl-greenlee-881ct",
+      "property": "centerline_radius",
+      "nominalSize": "4",
+      "competingFactIds": [
+        "meas-881ct-clr-400-a",
+        "meas-881ct-clr-400-b"
+      ],
+      "conflictType": "value_mismatch",
+      "analysis": "Same 881/881CT manual parts list publishes 50312740 4\" one-shot 90° shoe group at 20-7/8\" CLR and 50275577 4\" shoe group at 21\" CLR. Likely different shoe SKUs, but both official.",
+      "recommendedNextStep": "Map each part number to conduit type/operation; confirm whether 881GX 94814G matches either value.",
+      "status": "open"
+    },
+    {
+      "id": "conf-4in-clr-southwire-emt-vs-rigid",
+      "modelId": "mdl-southwire-mhb4000",
+      "property": "centerline_radius",
+      "nominalSize": "4",
+      "competingFactIds": [
+        "meas-sw-mhb4000-clr-400-emt",
+        "meas-sw-mhb4000-clr-400-rigid"
+      ],
+      "conflictType": "other",
+      "analysis": "Within MHB4000 Special Bending Tables, 4\" EMT Radius=20.88 while 4\" IMC/RIGID Radius=21.50 (both list Dia=4.5). Not an error to resolve by averaging — conduit-type specific.",
+      "recommendedNextStep": "Keep separate by conduitType; do not transfer to Greenlee 881 shoe CLR.",
+      "status": "resolved_documented"
+    },
+    {
+      "id": "conf-881-legacy-charts-vs-881gx",
+      "modelId": "mdl-greenlee-881gx",
+      "property": "centerline_radius",
+      "nominalSize": "2.5",
+      "competingFactIds": [
+        "meas-881ct-clr-250",
+        "meas-sw-mhb4000-clr-250-emt"
+      ],
+      "conflictType": "model_generation_ambiguity",
+      "analysis": "Legacy 881/881CT publishes 2-1/2\" shoe CLR 13-1/2\". Southwire MHB4000 publishes 2-1/2\" EMT Radius 13.9. Current 881GX uses new shoe SKUs 94811G–94814G with no CLR extracted from the GX manual in this pass. Values must not be assumed identical across generations/brands.",
+      "recommendedNextStep": "Extract 52093598 REV 0 881GX manual CLR/deduct tables before any GX production candidate mapping.",
+      "status": "open"
+    },
+    {
+      "id": "conf-13934-obsolete-status",
+      "modelId": "mdl-greenlee-13934",
+      "property": "supported_size",
+      "nominalSize": "2",
+      "competingFactIds": [
+        "meas-555c-deduct-200-emt",
+        "meas-sg4-clr-100-emt"
+      ],
+      "conflictType": "revision_change",
+      "analysis": "MA5956 lists 13934 EMT shoe for 555CX. Greenlee accessories category currently marks 555DX&CX EMT shoe group OBSOLETE. CompetingFactIds are EMT-related anchors on the 555 ecosystem, not alternate 13934 CLR values — status conflict, not a CLR duel.",
+      "recommendedNextStep": "Confirm replacement EMT shoe SKU for current 555CX/DX or document discontinuation.",
+      "status": "open"
+    },
+    {
+      "id": "conf-current-tools-555-fit-claim",
+      "modelId": "mdl-current-tools-700se",
+      "property": "supported_size",
+      "nominalSize": "2",
+      "competingFactIds": [
+        "meas-555c-deduct-200-emt",
+        "meas-sg4-clr-075-emt"
+      ],
+      "conflictType": "terminology_ambiguity",
+      "analysis": "Current Tools catalog claims shoes/rollers fit Greenlee 555 Classic. This is a Current Tools compatibility claim, not a Greenlee endorsement, and does not prove chart interchangeability. CompetingFactIds are Greenlee EMT facts that must not be merged into Current Tools rows.",
+      "recommendedNextStep": "Keep as compatibility note only; do not merge deduct/CLR tables across brands.",
+      "status": "needs_human_review"
+    }
+  ]
+}

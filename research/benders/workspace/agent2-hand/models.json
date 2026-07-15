@@ -1,0 +1,1823 @@
+{
+  "schemaVersion": "1.0.0",
+  "retrievedDate": "2026-07-14",
+  "models": [
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-840a",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite aluminum hand bender",
+      "modelNumbers": [
+        "840A",
+        "840AH"
+      ],
+      "skus": [
+        "840A",
+        "840AH"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3",
+        "src-greenlee-840ah-product"
+      ],
+      "notes": "Production baseline mirror: take-up 5 / CLR 4.1875. AH includes handle.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-841a",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite aluminum hand bender",
+      "modelNumbers": [
+        "841A",
+        "841AH"
+      ],
+      "skus": [
+        "841A",
+        "841AH"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "3/4",
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3",
+        "src-greenlee-841ah-product"
+      ],
+      "notes": "Capacity: 3/4 EMT, 1/2 Rigid/IMC. Production baseline: take-up 6 / CLR 5.125.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-842a",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite aluminum hand bender",
+      "modelNumbers": [
+        "842A",
+        "842AH"
+      ],
+      "skus": [
+        "842A",
+        "842AH"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3"
+      ],
+      "notes": "Production baseline: take-up 8 / CLR 6.5.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-843a",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite aluminum hand bender",
+      "modelNumbers": [
+        "843A",
+        "843AH"
+      ],
+      "skus": [
+        "843A",
+        "843AH"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1-1/4"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3"
+      ],
+      "notes": "Production baseline: take-up 11 / CLR 9.625.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-840f",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite iron hand bender",
+      "modelNumbers": [
+        "840F",
+        "840FH"
+      ],
+      "skus": [
+        "840F",
+        "840FH"
+      ],
+      "material": "iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3",
+        "src-greenlee-840fh-product"
+      ],
+      "notes": "Production baseline same numbers as aluminum 840A. Product page titles 1/2 EMT; use-guide OCR sometimes garbles capacity column.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-841f",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite iron hand bender",
+      "modelNumbers": [
+        "841F",
+        "841FH"
+      ],
+      "skus": [
+        "841F",
+        "841FH"
+      ],
+      "material": "iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3"
+      ],
+      "notes": "Production baseline: take-up 6 / CLR 5.125.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-842f",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite iron hand bender",
+      "modelNumbers": [
+        "842F",
+        "842FH"
+      ],
+      "skus": [
+        "842F",
+        "842FH"
+      ],
+      "material": "iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3"
+      ],
+      "notes": "Production baseline: take-up 8 / CLR 6.5.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-843f",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite iron hand bender",
+      "modelNumbers": [
+        "843F",
+        "843FH"
+      ],
+      "skus": [
+        "843F",
+        "843FH"
+      ],
+      "material": "iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1-1/4"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3"
+      ],
+      "notes": "Production baseline: take-up 11 / CLR 9.625.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "greenlee-site-rite-844a-dual",
+      "manufacturerId": "greenlee",
+      "brand": "Greenlee",
+      "family": "Site-Rite",
+      "series": "Site-Rite dual-shoe hand bender",
+      "modelNumbers": [
+        "844A",
+        "844AH"
+      ],
+      "skus": [
+        "844A",
+        "844AH"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "1/2",
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-greenlee-52087654-rev3",
+        "src-greenlee-844ah-product"
+      ],
+      "notes": "Dual shoe: 1/2 and 3/4 grooves. Production baseline mirrors 840/841 values per groove. Product page lists only one CLR (4-3/16).",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [
+        "51608 head",
+        "51603 full assembly"
+      ],
+      "id": "klein-angle-setter-51603-51608",
+      "manufacturerId": "klein-tools",
+      "brand": "Klein",
+      "family": "Angle Setter",
+      "series": "Angle Setter iron hand bender",
+      "modelNumbers": [
+        "51603",
+        "51608"
+      ],
+      "skus": [
+        "51603",
+        "51608"
+      ],
+      "material": "iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-klein-51603-product",
+        "src-klein-51608-product"
+      ],
+      "notes": "Production baseline: stub 5 / CLR 4.625. 51603 assembly page omits Stub-Up Height; stub from 51608 head page.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [
+        "51609 head",
+        "51604 full assembly"
+      ],
+      "id": "klein-angle-setter-51604-51609",
+      "manufacturerId": "klein-tools",
+      "brand": "Klein",
+      "family": "Angle Setter",
+      "series": "Angle Setter iron hand bender",
+      "modelNumbers": [
+        "51604",
+        "51609"
+      ],
+      "skus": [
+        "51604",
+        "51609"
+      ],
+      "material": "iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "3/4",
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-klein-51604-product",
+        "src-klein-51609-product"
+      ],
+      "notes": "Production baseline: stub 6 / CLR 5.5.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [
+        "51610 head",
+        "51605 full assembly"
+      ],
+      "id": "klein-angle-setter-51605-51610",
+      "manufacturerId": "klein-tools",
+      "brand": "Klein",
+      "family": "Angle Setter",
+      "series": "Angle Setter iron hand bender",
+      "modelNumbers": [
+        "51605",
+        "51610"
+      ],
+      "skus": [
+        "51605",
+        "51610"
+      ],
+      "material": "iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "1",
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-klein-51605-product",
+        "src-klein-51610-product"
+      ],
+      "notes": "Production baseline: stub 8 / CLR 7.375.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "klein-angle-setter-51606",
+      "manufacturerId": "klein-tools",
+      "brand": "Klein",
+      "family": "Angle Setter",
+      "series": "Angle Setter aluminum hand bender",
+      "modelNumbers": [
+        "51606"
+      ],
+      "skus": [
+        "51606"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-klein-51606-product"
+      ],
+      "notes": "Production baseline: stub 5 / CLR 4.625.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "klein-angle-setter-51607",
+      "manufacturerId": "klein-tools",
+      "brand": "Klein",
+      "family": "Angle Setter",
+      "series": "Angle Setter aluminum hand bender",
+      "modelNumbers": [
+        "51607"
+      ],
+      "skus": [
+        "51607"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "3/4",
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-klein-51607-product"
+      ],
+      "notes": "Production baseline: stub 6 / CLR 5.5.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [
+        "Benfield"
+      ],
+      "id": "gardner-bigben-960",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "BigBen",
+      "series": "BigBen aluminum hand bender",
+      "modelNumbers": [
+        "960",
+        "960H"
+      ],
+      "skus": [
+        "960",
+        "960H"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-gardner-howto-gar-bro-032-1220",
+        "src-gardner-npa-759",
+        "src-gardner-960-product",
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Production baseline: deduct 5 / CLR 3.69. Older B-0040 mislabels Radius as 5. Product pages label Model Benfield.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-bigben-961",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "BigBen",
+      "series": "BigBen aluminum hand bender",
+      "modelNumbers": [
+        "961",
+        "961H"
+      ],
+      "skus": [
+        "961",
+        "961H"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "3/4",
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-gardner-howto-gar-bro-032-1220",
+        "src-gardner-npa-759",
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Production baseline: deduct 6 / CLR 4.74. B-0040 Radius column prints 6.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-bigben-962",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "BigBen",
+      "series": "BigBen aluminum hand bender",
+      "modelNumbers": [
+        "962",
+        "962H"
+      ],
+      "skus": [
+        "962",
+        "962H"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "1",
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-gardner-howto-gar-bro-032-1220",
+        "src-gardner-npa-759",
+        "src-gardner-962h-product",
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Production baseline: deduct 8 / CLR 5.81. B-0040 Radius column prints 8.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-legacy-al-930b",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "Aluminum Gardner hand bender",
+      "series": "Legacy aluminum hand bender (930)",
+      "modelNumbers": [
+        "930B"
+      ],
+      "skus": [
+        "930B"
+      ],
+      "material": "aluminum",
+      "marketStatus": "legacy-common",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Identity from archived B-0040. Radius column prints 5 in — same mislabel pattern as BigBen; do not use as CLR without corroboration.",
+      "researchClass": "conflict_review"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-legacy-al-931b",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "Aluminum Gardner hand bender",
+      "series": "Legacy aluminum hand bender (930)",
+      "modelNumbers": [
+        "931B"
+      ],
+      "skus": [
+        "931B"
+      ],
+      "material": "aluminum",
+      "marketStatus": "legacy-common",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "3/4",
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Archived B-0040 identity. Radius column prints 6 in — treat as conflict_review.",
+      "researchClass": "conflict_review"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-legacy-al-932",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "Aluminum Gardner hand bender",
+      "series": "Legacy aluminum hand bender (930)",
+      "modelNumbers": [
+        "932"
+      ],
+      "skus": [
+        "932"
+      ],
+      "material": "aluminum",
+      "marketStatus": "legacy-common",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "1",
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Archived B-0040 identity. Radius column prints 8 in — treat as conflict_review.",
+      "researchClass": "conflict_review"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-legacy-al-933",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "Aluminum Gardner hand bender",
+      "series": "Legacy aluminum hand bender (930)",
+      "modelNumbers": [
+        "933"
+      ],
+      "skus": [
+        "933"
+      ],
+      "material": "aluminum",
+      "marketStatus": "legacy-common",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "1-1/4",
+        "1"
+      ],
+      "sourceIds": [
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Archived B-0040 identity. Radius column prints 12 in — likely deduct mislabel; conflict_review.",
+      "researchClass": "conflict_review"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-legacy-iron-920",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "Iron hand bender",
+      "series": "Legacy iron hand bender (920)",
+      "modelNumbers": [
+        "920"
+      ],
+      "skus": [
+        "920"
+      ],
+      "material": "iron",
+      "marketStatus": "legacy-common",
+      "supportedConduitTypes": [
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Archived B-0040 lists Radius 3-3/4 in for 920. Needs current corroboration before chart use.",
+      "researchClass": "conflict_review"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-legacy-iron-921",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "Iron hand bender",
+      "series": "Legacy iron hand bender (920)",
+      "modelNumbers": [
+        "921"
+      ],
+      "skus": [
+        "921"
+      ],
+      "material": "iron",
+      "marketStatus": "legacy-common",
+      "supportedConduitTypes": [
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Archived B-0040 lists Radius 7 in. Needs corroboration.",
+      "researchClass": "conflict_review"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-legacy-iron-922",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "Iron hand bender",
+      "series": "Legacy iron hand bender (920)",
+      "modelNumbers": [
+        "922"
+      ],
+      "skus": [
+        "922"
+      ],
+      "material": "iron",
+      "marketStatus": "legacy-common",
+      "supportedConduitTypes": [
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "1"
+      ],
+      "sourceIds": [
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Archived B-0040 lists Radius 8-1/2 in. Needs corroboration.",
+      "researchClass": "conflict_review"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "gardner-legacy-iron-923",
+      "manufacturerId": "gardner-bender",
+      "brand": "Gardner Bender",
+      "family": "Iron hand bender",
+      "series": "Legacy iron hand bender (920)",
+      "modelNumbers": [
+        "923"
+      ],
+      "skus": [
+        "923"
+      ],
+      "material": "iron",
+      "marketStatus": "legacy-common",
+      "supportedConduitTypes": [
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "1-1/4"
+      ],
+      "sourceIds": [
+        "src-gardner-b-0040-archived"
+      ],
+      "notes": "Archived B-0040 lists Radius 13 in. Needs corroboration.",
+      "researchClass": "conflict_review"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-al-74-031",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Aluminum hand bender",
+      "series": "Aluminum hand bender",
+      "modelNumbers": [
+        "74-031"
+      ],
+      "skus": [
+        "74-031"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-ideal-74-031-product"
+      ],
+      "notes": "Head only. Official Stub Up Height published; no CLR. Mentions Benfield system on some pages.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-al-74-032",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Aluminum hand bender",
+      "series": "Aluminum hand bender",
+      "modelNumbers": [
+        "74-032"
+      ],
+      "skus": [
+        "74-032"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "IMC",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-ideal-74-032-product"
+      ],
+      "notes": "Head only; Rigid/IMC 1/2. Official Stub Up Height published; no CLR. Mentions Benfield system on some pages.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-al-74-046",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Aluminum hand bender",
+      "series": "Aluminum hand bender",
+      "modelNumbers": [
+        "74-046"
+      ],
+      "skus": [
+        "74-046"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-ideal-74-046-product"
+      ],
+      "notes": "Head and handle. Official Stub Up Height published; no CLR. Mentions Benfield system on some pages.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-al-74-047",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Aluminum hand bender",
+      "series": "Aluminum hand bender",
+      "modelNumbers": [
+        "74-047"
+      ],
+      "skus": [
+        "74-047"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "IMC",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-ideal-74-047-product"
+      ],
+      "notes": "Head and handle. Official Stub Up Height published; no CLR. Mentions Benfield system on some pages.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-iron-74-001",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Ductile iron hand bender",
+      "series": "Ductile iron hand bender",
+      "modelNumbers": [
+        "74-001"
+      ],
+      "skus": [
+        "74-001"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-ideal-74-001-product"
+      ],
+      "notes": "Head only. Official Stub Up Height published; no CLR.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-iron-74-002",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Ductile iron hand bender",
+      "series": "Ductile iron hand bender",
+      "modelNumbers": [
+        "74-002"
+      ],
+      "skus": [
+        "74-002"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "IMC",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-ideal-74-002-product"
+      ],
+      "notes": "Head only. Official Stub Up Height published; no CLR.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-iron-74-003",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Ductile iron hand bender",
+      "series": "Ductile iron hand bender",
+      "modelNumbers": [
+        "74-003"
+      ],
+      "skus": [
+        "74-003"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "IMC",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "1"
+      ],
+      "sourceIds": [
+        "src-ideal-74-003-product"
+      ],
+      "notes": "Head only. Official Stub Up Height published; no CLR.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-iron-74-006",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Ductile iron hand bender",
+      "series": "Ductile iron hand bender",
+      "modelNumbers": [
+        "74-006"
+      ],
+      "skus": [
+        "74-006"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "IMC",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "1-1/4"
+      ],
+      "sourceIds": [
+        "src-ideal-74-006-product"
+      ],
+      "notes": "Head only; expansion SKU. Official Stub Up Height published; no CLR.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-iron-74-028",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Ductile iron hand bender",
+      "series": "Ductile iron hand bender",
+      "modelNumbers": [
+        "74-028"
+      ],
+      "skus": [
+        "74-028"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "IMC",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "1"
+      ],
+      "sourceIds": [
+        "src-ideal-74-028-product"
+      ],
+      "notes": "Head and handle. Official Stub Up Height published; no CLR.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-iron-74-034",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Ductile iron hand bender",
+      "series": "Ductile iron hand bender",
+      "modelNumbers": [
+        "74-034"
+      ],
+      "skus": [
+        "74-034"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "IMC",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "1-1/4"
+      ],
+      "sourceIds": [
+        "src-ideal-74-034-product"
+      ],
+      "notes": "Head and handle (74-006 + handle). Official Stub Up Height published; no CLR.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-iron-74-126",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Ductile iron hand bender",
+      "series": "Ductile iron hand bender",
+      "modelNumbers": [
+        "74-126"
+      ],
+      "skus": [
+        "74-126"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-ideal-74-126-product"
+      ],
+      "notes": "Head, handle, BenderBoot. Official Stub Up Height published; no CLR.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "ideal-iron-74-127",
+      "manufacturerId": "ideal",
+      "brand": "IDEAL",
+      "family": "Ductile iron hand bender",
+      "series": "Ductile iron hand bender",
+      "modelNumbers": [
+        "74-127"
+      ],
+      "skus": [
+        "74-127"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "IMC",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-ideal-74-127-product"
+      ],
+      "notes": "Head, handle, BenderBoot. Official Stub Up Height published; no CLR.",
+      "researchClass": "chart_candidate"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "milwaukee-al-48-22-4070",
+      "manufacturerId": "milwaukee-tool",
+      "brand": "Milwaukee",
+      "family": "Hand bender",
+      "series": "Hand bender",
+      "modelNumbers": [
+        "48-22-4070"
+      ],
+      "skus": [
+        "48-22-4070"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-milwaukee-48-22-4070-product"
+      ],
+      "notes": "Identity only — Milwaukee publishes no stub-up/take-up or centerline radius on product pages reviewed.",
+      "researchClass": "reference_only"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "milwaukee-al-48-22-4071",
+      "manufacturerId": "milwaukee-tool",
+      "brand": "Milwaukee",
+      "family": "Hand bender",
+      "series": "Hand bender",
+      "modelNumbers": [
+        "48-22-4071"
+      ],
+      "skus": [
+        "48-22-4071"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid",
+        "IMC"
+      ],
+      "supportedNominalSizes": [
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-milwaukee-48-22-4071-product"
+      ],
+      "notes": "Identity only — Milwaukee publishes no stub-up/take-up or centerline radius on product pages reviewed.",
+      "researchClass": "reference_only"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "milwaukee-al-48-22-4072",
+      "manufacturerId": "milwaukee-tool",
+      "brand": "Milwaukee",
+      "family": "Hand bender",
+      "series": "Hand bender",
+      "modelNumbers": [
+        "48-22-4072"
+      ],
+      "skus": [
+        "48-22-4072"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1"
+      ],
+      "sourceIds": [
+        "src-milwaukee-48-22-4072-product"
+      ],
+      "notes": "Identity only — Milwaukee publishes no stub-up/take-up or centerline radius on product pages reviewed.",
+      "researchClass": "reference_only"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "milwaukee-iron-48-22-4080",
+      "manufacturerId": "milwaukee-tool",
+      "brand": "Milwaukee",
+      "family": "Hand bender",
+      "series": "Hand bender",
+      "modelNumbers": [
+        "48-22-4080"
+      ],
+      "skus": [
+        "48-22-4080"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-milwaukee-48-22-4080-product"
+      ],
+      "notes": "Identity only — Milwaukee publishes no stub-up/take-up or centerline radius on product pages reviewed.",
+      "researchClass": "reference_only"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "milwaukee-iron-48-22-4081",
+      "manufacturerId": "milwaukee-tool",
+      "brand": "Milwaukee",
+      "family": "Hand bender",
+      "series": "Hand bender",
+      "modelNumbers": [
+        "48-22-4081"
+      ],
+      "skus": [
+        "48-22-4081"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-milwaukee-48-22-4081-product"
+      ],
+      "notes": "Identity only — Milwaukee publishes no stub-up/take-up or centerline radius on product pages reviewed.",
+      "researchClass": "reference_only"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "milwaukee-iron-48-22-4082",
+      "manufacturerId": "milwaukee-tool",
+      "brand": "Milwaukee",
+      "family": "Hand bender",
+      "series": "Hand bender",
+      "modelNumbers": [
+        "48-22-4082"
+      ],
+      "skus": [
+        "48-22-4082"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1"
+      ],
+      "sourceIds": [
+        "src-milwaukee-48-22-4082-product"
+      ],
+      "notes": "Identity only — Milwaukee publishes no stub-up/take-up or centerline radius on product pages reviewed.",
+      "researchClass": "reference_only"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "southwire-mcb-1-2",
+      "manufacturerId": "southwire",
+      "brand": "Southwire",
+      "family": "MCB",
+      "series": "Conduit hand bender",
+      "modelNumbers": [
+        "MCB1/2"
+      ],
+      "skus": [
+        "MCB1/2",
+        "58281340"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT"
+      ],
+      "supportedNominalSizes": [
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-southwire-2024-hand-benders-cutsheet"
+      ],
+      "notes": "Identity only — cutsheet lists model/stock/capacity; no take-up or radius.",
+      "researchClass": "reference_only"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "southwire-mcb-3-4",
+      "manufacturerId": "southwire",
+      "brand": "Southwire",
+      "family": "MCB",
+      "series": "Conduit hand bender",
+      "modelNumbers": [
+        "MCB3/4"
+      ],
+      "skus": [
+        "MCB3/4",
+        "58281240"
+      ],
+      "material": "aluminum",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "3/4",
+        "1/2"
+      ],
+      "sourceIds": [
+        "src-southwire-2024-hand-benders-cutsheet",
+        "src-southwire-mcb3-4-product"
+      ],
+      "notes": "Identity only — no take-up or radius on cutsheet or product page.",
+      "researchClass": "reference_only"
+    },
+    {
+      "introducedDate": null,
+      "discontinuedDate": null,
+      "replacementModelIds": [],
+      "parentFrameModelId": null,
+      "operationMode": "hand_continuous",
+      "category": "hand",
+      "driveType": "manual",
+      "regions": [
+        "US"
+      ],
+      "aliases": [],
+      "id": "southwire-mcb-1",
+      "manufacturerId": "southwire",
+      "brand": "Southwire",
+      "family": "MCB",
+      "series": "Conduit hand bender",
+      "modelNumbers": [
+        "MCB1"
+      ],
+      "skus": [
+        "MCB1",
+        "58281440"
+      ],
+      "material": "ductile iron",
+      "marketStatus": "active",
+      "supportedConduitTypes": [
+        "EMT",
+        "rigid"
+      ],
+      "supportedNominalSizes": [
+        "1",
+        "3/4"
+      ],
+      "sourceIds": [
+        "src-southwire-2024-hand-benders-cutsheet"
+      ],
+      "notes": "Identity only — ductile iron head per cutsheet; no take-up or radius.",
+      "researchClass": "reference_only"
+    }
+  ]
+}

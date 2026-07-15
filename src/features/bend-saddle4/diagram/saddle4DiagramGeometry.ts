@@ -6,9 +6,10 @@ export const SADDLE4_DIAGRAM_LAYOUT = {
   peakMinY: 70,
   cornerRadius: 10,
   pipeHalf: 9.5,
-  /** Space below the top tube for the obstruction and compact Top mark tags. */
+  /** Space below the top tube for the obstruction. */
   clearance: 15,
-  minEndRun: 12,
+  /** Keeps the outer mark collars visually distinct from the open end caps. */
+  minEndRun: 26,
   minHalfTop: 32,
   defaultHalfTop: 40,
 } as const;

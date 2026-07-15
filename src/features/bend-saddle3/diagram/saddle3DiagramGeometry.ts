@@ -4,10 +4,10 @@ export const SADDLE3_DIAGRAM_LAYOUT = {
   centerX: 180,
   baseY: 228,
   pxPerInch: 16,
-  obsHeightMin: 22,
+  obsHeightMin: 30,
   diagramObsMaxIn: 4,
   peakMinY: 72,
-  pipeHalf: 6,
+  pipeHalf: 9.5,
   clearancePx: 14,
   maxHalfSpan: 128,
   minFlat: 36,
@@ -78,7 +78,10 @@ export function buildSaddle3DiagramGeometry(
   const sinA = Math.sin(radians);
 
   const maxObsHeightPx = maxRise - clearancePx - pipeHalf - 10;
-  let obsHeightPx = clamp(visualObsIn * pxPerInch, obsHeightMin, maxObsHeightPx);
+  // The obstruction is explanatory, not a scale drawing. Give small field
+  // values enough visual mass to read as a round obstruction while retaining
+  // useful proportional growth for larger entries.
+  let obsHeightPx = clamp(18 + visualObsIn * 11, obsHeightMin, maxObsHeightPx);
   let obsRadius = obsHeightPx / 2;
   let minRise = obsHeightPx + clearancePx + pipeHalf;
 

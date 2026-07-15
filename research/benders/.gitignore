@@ -1,0 +1,4 @@
+# Temporary research downloads — never commit manufacturer PDFs/photos
+research/benders/workspace/**/_tmp/
+research/benders/workspace/**/*.pdf
+research/benders/workspace/**/*.PDF

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Hydraulic bender: ram cylinder, frame, shoe -->
+  <g stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Vertical ram cylinder -->
+    <rect x="9.5" y="3.5" width="5" height="8.25" rx="1"/>
+    <!-- Piston rod -->
+    <path d="M12 11.75v3"/>
+    <!-- Crosshead / frame arms -->
+    <path d="M6.5 14.75h11"/>
+    <path d="M6.5 14.75v3.5"/>
+    <path d="M17.5 14.75v3.5"/>
+    <!-- Base shoe / former -->
+    <path d="M6.5 18.25c1.6 1.35 3.4 2 5.5 2s3.9-.65 5.5-2"/>
+    <path d="M9.25 17.35h5.5"/>
+    <!-- Hose cue -->
+    <path d="M14.5 6.25c1.6 0 2.75 1.1 2.75 2.5"/>
+  </g>
+</svg>

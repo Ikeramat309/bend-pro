@@ -23,7 +23,7 @@ import { SADDLE4_CONFIG } from '../saddle4.config';
 import { saddle4Copy } from '../saddle4.copy';
 
 const LAYOUT = SADDLE4_DIAGRAM_LAYOUT;
-const VECTOR_OFFSET = 27;
+const VECTOR_OFFSET = 30;
 const VECTOR_TICK_HALF = 3.2;
 const TAG_WIDTH = 26;
 const TAG_HEIGHT = 13;
@@ -170,10 +170,21 @@ function SaddleObstruction({
         y={top}
         width={geo.obsWidthPx}
         height={geo.obsHeightPx}
-        rx={3}
+        rx={5}
         fill={fill}
         stroke={stroke}
-        strokeWidth={1.1}
+        strokeWidth={1.15}
+      />
+      <Rect
+        x={left + 3}
+        y={top + 3}
+        width={Math.max(0, geo.obsWidthPx - 6)}
+        height={Math.max(0, geo.obsHeightPx - 6)}
+        rx={3}
+        fill="none"
+        stroke={stroke}
+        strokeWidth={0.55}
+        opacity={ghost ? 0.12 : 0.24}
       />
       <Line
         x1={left}
@@ -225,7 +236,7 @@ function SaddleObstruction({
               fontSize={9.4}
               fontWeight="700"
               textAnchor="middle">
-              {`HEIGHT · ${heightLabel}`}
+              {`HEIGHT \u00B7 ${heightLabel}`}
             </SvgText>
           ) : (
             <>
@@ -436,12 +447,21 @@ function SaddleAngleCallout({ geo, angle }: { geo: Saddle4DiagramGeometry; angle
       />
       <SvgText
         x={label.x}
+        y={label.y - 13}
+        fill={theme.bendZone.stroke}
+        fontSize={7.5}
+        fontWeight="700"
+        textAnchor="middle">
+        BENDS
+      </SvgText>
+      <SvgText
+        x={label.x}
         y={label.y}
         fill={theme.bendZone.stroke}
         fontSize={11.5}
         fontWeight="700"
         textAnchor="middle">
-        {`${angle}\u00b0 ×4`}
+        {`${angle}\u00B0 \u00D7 4`}
       </SvgText>
     </G>
   );
@@ -449,8 +469,8 @@ function SaddleAngleCallout({ geo, angle }: { geo: Saddle4DiagramGeometry; angle
 
 function SaddleMarkLegend({ data }: { data: Saddle4DiagramData }) {
   const theme = useDiagramTheme();
-  const topText = `${saddle4Copy.diagram.top.toUpperCase()} MARKS  ·  ${data.display.innerMark1}  /  ${data.display.innerMark2}`;
-  const outerText = `${saddle4Copy.diagram.outer.toUpperCase()} MARKS  ·  ${data.display.outerMark1}  /  ${data.display.outerMark2}`;
+  const topText = `${saddle4Copy.diagram.top.toUpperCase()} MARKS  \u00B7  ${data.display.innerMark1}  /  ${data.display.innerMark2}`;
+  const outerText = `${saddle4Copy.diagram.outer.toUpperCase()} MARKS  \u00B7  ${data.display.outerMark1}  /  ${data.display.outerMark2}`;
 
   return (
     <G>
@@ -553,8 +573,14 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
       ) : null}
       <SaddleObstruction geo={geo} heightLabel={data.display.obstructionHeight} />
 
-      <PipeSegment d={geo.pipePath} variant="shadow" opacity={0.48} />
-      <PipeSegment d={geo.pipePath} variant="pipe" gradientId="saddle4PipeGradient" />
+      <PipeSegment d={geo.pipePath} variant="shadow" strokeWidth={23} opacity={0.24} />
+      <PipeSegment
+        d={geo.pipePath}
+        variant="pipe"
+        gradientId="saddle4PipeGradient"
+        material="satin"
+        lineCap="butt"
+      />
       <BendRadiusZone d={geo.bendOuterL} glowWidth={14} />
       <BendRadiusZone d={geo.bendInnerL} glowWidth={14} />
       <BendRadiusZone d={geo.bendInnerR} glowWidth={14} />
@@ -568,12 +594,12 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
 
       <SaddleBendTag
         point={marks.topLeft}
-        tag={{ x: geo.xIL + 17, y: geo.topY + 16 }}
+        tag={{ x: geo.xIL - 22, y: geo.topY - 11 }}
         label="T1"
       />
       <SaddleBendTag
         point={marks.topRight}
-        tag={{ x: geo.xIR - 17, y: geo.topY + 16 }}
+        tag={{ x: geo.xIR + 22, y: geo.topY - 11 }}
         label="T2"
       />
       <SaddleBendTag
@@ -589,7 +615,7 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
 
       <SaddleAngleCallout geo={geo} angle={data.bendAngle} />
       {hasMarkValues ? <SaddleMarkLegend data={data} /> : null}
-      <DiagramFieldCue text={saddle4Copy.diagram.fieldCue} y={296} />
+      <DiagramFieldCue text={saddle4Copy.diagram.fieldCue} y={294} />
     </DiagramSvg>
   );
 }

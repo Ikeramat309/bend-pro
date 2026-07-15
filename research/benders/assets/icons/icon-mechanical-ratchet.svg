@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+  <!-- Mechanical ratchet bender: frame, ratchet wheel, drive lever, shoe -->
+  <g stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Frame -->
+    <path d="M5.5 18.5V9.25h4.25"/>
+    <path d="M5.5 18.5h8.25"/>
+    <!-- Shoe / former -->
+    <path d="M13.75 18.5c1.85 0 3.35-1.35 3.35-3.1V12"/>
+    <path d="M13.25 15.85h3.85"/>
+    <!-- Ratchet wheel -->
+    <circle cx="11.5" cy="10.5" r="3.1"/>
+    <!-- Tooth cues -->
+    <path d="M11.5 7.4v1.15"/>
+    <path d="M14.3 9.15l.9-.7"/>
+    <path d="M14.3 11.85l.9.7"/>
+    <path d="M11.5 13.6v-1.15"/>
+    <!-- Drive lever -->
+    <path d="M11.5 10.5l4.75-4.75"/>
+    <path d="M15.4 6.55h2.35"/>
+  </g>
+</svg>

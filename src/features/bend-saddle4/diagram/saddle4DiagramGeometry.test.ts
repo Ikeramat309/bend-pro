@@ -32,7 +32,9 @@ describe('buildSaddle4DiagramGeometry', () => {
     expect(obstructionTop - pipeBottom).toBeGreaterThanOrEqual(
       SADDLE4_DIAGRAM_LAYOUT.clearance - 0.001,
     );
-    expect(obstructionTop - geo.topY).toBeGreaterThan(22.5);
+    expect(obstructionTop - geo.topY).toBeGreaterThanOrEqual(
+      SADDLE4_DIAGRAM_LAYOUT.pipeHalf + SADDLE4_DIAGRAM_LAYOUT.clearance - 0.001,
+    );
   });
 
   test('clamps large dimensions without pushing marks outside the canvas', () => {
@@ -82,6 +84,9 @@ describe('buildSaddle4DiagramGeometry', () => {
       expect(geo.xOL - SADDLE4_DIAGRAM_LAYOUT.startX).toBeGreaterThanOrEqual(
         SADDLE4_DIAGRAM_LAYOUT.minEndRun - 0.001,
       );
+      expect(
+        geo.xOL - SADDLE4_DIAGRAM_LAYOUT.cornerRadius - SADDLE4_DIAGRAM_LAYOUT.startX,
+      ).toBeGreaterThanOrEqual(20);
       expect(SADDLE4_DIAGRAM_LAYOUT.endX - geo.xOR).toBeGreaterThanOrEqual(
         SADDLE4_DIAGRAM_LAYOUT.minEndRun - 0.001,
       );

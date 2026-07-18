@@ -202,11 +202,14 @@ export default function Kick90Screen() {
   return (
     <BendCalculatorLayout
       title={kick90Copy.screenTitle}
-      subtitle={setupSummary}
+      subtitle=""
+      centerTitle
+      inputDensity="compact"
+      workspaceDensity="compact"
       onBackPress={handleBackPress}
       trust={{
         benderName: formatStandardOffsetTableTrustTitle(bendAngle),
-        meta: [setupSummary, setupSubtitle, setupOnlyMeta].filter(Boolean).join(' • '),
+        meta: [setupOnlyMeta, setupSummary, setupSubtitle].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[

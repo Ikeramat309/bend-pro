@@ -15,8 +15,8 @@ npm run check     # typecheck + lint + import-cycle scan + jest  → must be gre
 npm start         # Expo; open on a device/simulator to see the UI
 ```
 
-- **Establish the baseline before any change:** run `npm run check`, note the test
-  count (expected ~**556**, 48 suites), and keep it green after every change.
+- **Establish the baseline before any change:** run `npm run check`, record the
+  suite/test count, and keep it green after every change.
 - **Never change calculator math** in `src/features/*/engine/` unless a task
   explicitly says so and provides field evidence. Math is field-safety-critical.
 - Work in small, reviewable steps. One concern per change set.
@@ -27,8 +27,9 @@ npm start         # Expo; open on a device/simulator to see the UI
 
 A **mobile-first EMT conduit-bending field tool** for electricians (Expo + React
 Native + TypeScript). Diagram-first: the pipe diagram is the hero of every
-calculator screen. Seven calculators ship: **Offset, Stub 90, Rolling Offset,
-3-Point Saddle, 4-Point Saddle, Segment Bend, Kick 90.**
+calculator screen. Twelve workflows ship: **Offset, Matching Offset, Parallel
+Offsets, Rolling Offset, Stub 90, Back-to-Back 90, Kick 90, Compound 90,
+3-Point Saddle, 4-Point Saddle, Segment Bend, and Multiple Bends.**
 
 It is **not** a generic calculator. Wrong numbers waste real material on a job
 site, and wrong trade terminology confuses real users.
@@ -41,8 +42,8 @@ site, and wrong trade terminology confuses real users.
 - Target users: **journeymen by default** (fast pro screen), **apprentices via
   Guide mode** (same calculators, more explanation; "Open the calculator"
   graduates them to the pro screen).
-- Scope: **EMT only, hand benders only.** No RMC/IMC/PVC. No new calculators
-  before beta.
+- Scope: **EMT only, hand benders only.** No RMC/IMC/PVC. No additional
+  calculators before beta unless the founder explicitly expands scope.
 - **Supported sizes (v1): 1/2", 3/4", 1", 1-1/4" only** (`SUPPORTED_EMT_TRADE_SIZES`).
   1-1/2" and 2" are hidden from the picker. The full size type is retained for
   capability/old setups.
@@ -56,8 +57,8 @@ site, and wrong trade terminology confuses real users.
   zones with space and type hierarchy.
 - **Horizontal pipe, drawn naturally per calculator** (offset = run with a jog,
   stub 90 = L, saddles = up-and-over, segment = arc). **Single-plane calculators
-  stay 2D horizontal.** **Multi-plane calculators** (Kick 90 and Rolling Offset now;
-  parallel kicks, matching bends, multi-bend when built) use the shared fixed-view
+  stay 2D horizontal.** **Multi-plane calculators** (Kick 90, Rolling Offset,
+  Matching Offset, and Multiple Bends where applicable) use the shared fixed-view
   isometric 3D pipe (founder-approved revision 2026-07-04). *We tried vertical and
   reverted — do not flip pipes vertical.*
 - **Pipe = brushed steel tube** (thick, rounded, 3-concentric-stroke cylinder).
@@ -73,9 +74,10 @@ site, and wrong trade terminology confuses real users.
 ## 3. Current state (what's done & green)
 
 **Trust / correctness (beta-wrap, complete):**
-- All seven engines desk-validated against trade references; **no math bugs**
-  (offset multipliers/shrink textbook; saddle3 = csc(side angle), cross-checked
-  in tests; rolling = hypotenuse; segment = arc geometry). See `FIELD_VALIDATION.md`.
+- All twelve engines/workflows are covered by automated tests and desk review;
+  there are **no known math bugs**. The original formulas remain locked, and the
+  new workflows document their field method and trust boundary. See
+  `FIELD_VALIDATION.md`.
 - **Stub 90 silent-fallback bug fixed:** uncharted sizes return `missing-chart`
   → warning + no deduct mark + custom-deduct calibration path (no guessing).
 - **Manufacturer bender database (workbook v1.1, 11 profiles)** shipped with
@@ -90,20 +92,26 @@ site, and wrong trade terminology confuses real users.
 - **Continue Layout is real:** Home hydrates recent layouts on focus and opens
   the last calculation; screens restore inputs via `useRestoreRecentLayout`
   (`?layoutId=`). Recent layouts persist in AsyncStorage.
-- Guide mode complete for all seven (formula/steps/mistakes/example + "Open the
+- Guide mode complete for all twelve (formula/steps/mistakes/example + "Open the
   calculator" graduation affordance).
 
-**UI redesign (in progress — most landed):**
+**Calculator UI milestone (complete):**
 - Theme foundation: `src/theme/palette.ts` (dark+light), `ThemeContext.tsx`
   (`useTheme()`), persisted Appearance control. App shell + hubs themed.
 - Diagram system theme-aware: `getDiagramTheme(scheme)` + `useDiagramTheme()`;
-  all primitives + six feature diagrams consume it.
+  all primitives + twelve feature diagrams consume it.
 - Continuous-surface shell (cards/dividers/dock-bar dissolved).
-- **Hero centered result** in `BendPipeWorkspace` (all seven).
+- **Hero centered result** in `BendPipeWorkspace` (all twelve).
 - **Offset reverted to horizontal** (the one screen that was wrongly vertical).
-- Last run (verify on pickup): **brushed-steel tube pipe**, **label/overlap
-  fixes**, **lighter borderless input fields**. Confirm with `npm run check` +
-  screenshots.
+- All twelve calculator screens use the same compact centered header, honest
+  setup-first trust line, quiet input density, balanced action dock, and
+  brushed-steel tube language.
+- The saddle diagrams were rebuilt around physical obstructions, conduit-wrap
+  marks, attached measurements, and uncluttered bend callouts. Segment Bend now
+  uses the same satin EMT, bend-zone, open-end, and mark language.
+- Representative, optional-input, steep-angle, empty, extreme-geometry, dark,
+  and light states were reviewed. Last gate: `npm run check` green with **701
+  tests across 69 suites**.
 
 **Field-validation prep:** `FIELD_VALIDATION.md` (matrix + "field validated"
 definition + offline/persistence QA) and `FIELD_VALIDATION_TEST_SHEET.md`
@@ -135,12 +143,13 @@ photoreal) by design — flexible and animatable.
 
 ## 5. Remaining plan (priority order)
 
-### P1 — Finish the UI polish pass
-Goal: every screen matches §4, no overlaps, light mode fully continuous.
-- Confirm the last Composer run landed (tube pipe, overlap fixes, borderless
-  inputs) and `npm run check` is green; screenshot all seven (dark + one light).
-- Fix any remaining label/mark/dimension overlaps (saddle apex, offset Mark 2 vs
-  badge, offset-height label clipping the left edge, saddle4 top badges).
+### P1 — Finish the UI polish pass — complete
+Goal met: every current calculator matches §4, diagrams stay readable across
+supported inputs, and light mode remains continuous.
+- All twelve were reviewed in representative live and empty states; saddles,
+  Segment Bend, shared headers, input density, and action docks were unified.
+- Label/mark/dimension collisions were removed; conduit marks now wrap the pipe
+  at the actual tangent points rather than floating nearby.
 - ~~Theme + restyle the **sheets**~~ **Done:** sheets themed for light/dark and
   continuous surface (`Sheet`, `LengthInputSheet`, `FractionKeypad`,
   `EditSetupSheet`, `AngleSelector`, override sheets). Verify on device if
@@ -151,20 +160,22 @@ Goal: every screen matches §4, no overlaps, light mode fully continuous.
 - Keep `FIELD_VALIDATION.md` matrix in sync with any UI label changes.
 - No code blocks here — this is physical testing by the founder/electricians.
 
-### P3 — Definition of Done before beta (gate to §7)
-See §7 checklist. Do not start new calculators until it's all true.
+### P3 — Existing-calculator engineering gate — complete
+See §7. Physical field validation remains a separate founder-owned beta gate in
+§6 and can run alongside catalog expansion.
 
 ### Catalog expansion (QuickBend-parity)
 
-Authorized order after the original six (founder-locked):
+Authorized catalog status after the original six:
 
-1. **Kick 90** — shipped (engine, diagram, Mark 1, overrides, persistence)
-2. **Box Offset**
-3. **Back-to-Back 90**
-4. **Matching Centers / Matching Bends Offsets**
-5. **Simple Parallel / Parallel Offsets**
-6. **Compound 90s** (circle / rectangle / square obstruction)
-7. **Multiple Bends** — chained layout builder
+1. **Kick 90** — shipped
+2. **Box Offset** — intentionally deferred by founder; remains Coming Soon
+3. **Back-to-Back 90** — shipped
+4. **Matching Centers / Matching Bends Offsets** — shipped as one explicit two-mode workflow
+5. **Simple Parallel / Parallel Offsets** — shipped as one simple/full-layout workflow
+6. **Compound 90s** — shipped with explicit round-at-corner, box-flat-to-walls,
+   and square-on-point orientations plus per-side clearance
+7. **Multiple Bends** — shipped as a safe absolute-mark planner; it does not invent chained shoe/gain math
 
 **Deferred (trust):** Computed gain/setback from radius — deferred; QuickBend's published values don't match pure radius geometry; needs validated definition or sourced data.
 
@@ -173,9 +184,9 @@ Register each calculator in `src/core/calculators/` first; build engine + tests 
 ### Post-beta only (do NOT start without explicit scope)
 - **First sidekick tool (decided, not built):** Conduit Fill (NEC latest + CEC 2024)
   — after the bending core is done.
-- Remaining catalog expansion items (box offset, back-to-back 90, etc.) — see
-  **Catalog expansion** above; follow `FEATURE_TEMPLATE.md`; register first,
-  build engine+tests before UI.
+- **Box Offset** and **Hydraulic Layout** remain planned; do not start either
+  without explicit founder scope. Follow `FEATURE_TEMPLATE.md`, register first,
+  and build engine+tests before UI.
 - Manufacturer/verified bender charts (require cited `sourceNote`).
 - A "Why this number?" detail sheet (keep it out of the default flow).
 - Saved jobs/layouts UI (`SavedLayout` type exists; no service yet).
@@ -194,17 +205,19 @@ Register each calculator in `src/core/calculators/` first; build engine + tests 
 
 ---
 
-## 7. Definition of Done before adding new calculators
+## 7. Existing-calculator milestone before catalog expansion
 
-- [ ] `npm run check` green (typecheck + lint + 0 cycles + tests).
-- [ ] No overlapping labels/marks on any of the six diagrams; pipe reads as a
+- [x] `npm run check` green (typecheck + lint + 0 cycles + 701 tests / 69 suites).
+- [x] No overlapping labels/marks on any of the twelve diagrams; pipe reads as a
       steel tube; UI matches §4 in dark **and** light.
-- [ ] All sheets themed (light/dark) and continuous-surface styled.
-- [ ] No silent wrong numbers; trust strips honest (Stub 90 only consumes bender).
-- [ ] Continue Layout restores the last layout for all seven.
-- [ ] Picker shows only 1/2"–1-1/4"; uncharted sizes warn (no guess).
-- [ ] Docs truthful (this file + `CURRENT_STATE.md` + `KNOWN_ISSUES.md`).
-- [ ] 1-1/4" take-up field-verified; ≥1 physical bend per calculator passed.
+- [x] All sheets themed (light/dark) and continuous-surface styled.
+- [x] No silent wrong numbers; trust strips honest (Stub 90 only consumes bender).
+- [x] Continue Layout restores the last layout for all twelve.
+- [x] Picker shows only 1/2"–1-1/4"; uncharted sizes warn (no guess).
+- [x] Docs truthful (this file + `CURRENT_STATE.md` + `KNOWN_ISSUES.md`).
+
+Physical bend validation and the 1-1/4" take-up check remain required for public
+field beta (§6), but no longer block engineering work on the authorized catalog.
 
 ---
 

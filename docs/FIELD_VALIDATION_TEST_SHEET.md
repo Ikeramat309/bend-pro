@@ -37,6 +37,12 @@
 | SEG-REF | Segment | 1/2" | 90° total, **10°**/bend | Radius **30"**, start **12"** | Spacing **5 1/4"**, 9 bends | First ≈ **14 5/8"**, last ≈ **56 1/2"** | | | |
 | ROL-REF | Rolling | 1/2" | 30° | Height **6"**, roll **8"** | Between bends **20"** (true offset **10"**) | | | | |
 | ROL-REF-M | Rolling | 1/2" | 30° | Height **6"**, roll **8"**, Mark 1 **12"** | Between bends **20"** | Mark 2 **32"** | | | |
+| KIK-REF | Kick 90 | 1/2" | 30° | Rise **6"** | Between bends **12"**, shrink **1 1/2"** | — | | | |
+| B2B-REF | Back-to-Back | 1/2" | 90° | Finished distance **36"** | Second star mark **36"** from back of first 90 | — | | | |
+| MAT-C | Matching | 1/2" | Centers mode | Height **6"**, adjacent **12"** | Angle **26.6°**, center distance **13 7/16"** | — | | | |
+| PAR-F | Parallel | 1/2" | 30° | C-C **2"**, height **6"**, 4 conduits | Shift/pipe **9/16"**, DBB **12"** | Total shift **1 5/8"** | | | |
+| C90-R | Compound 90 | 1/2" | two 45° | Round obstruction **7"** | Between bends **16 7/16"** | Two bend-center marks | | | |
+| MUL-REF | Multiple | 1/2" | 30° up/down | Stick **120"**, marks **12"** and **24"** | Tail **96"**, total bend **60°** | Absolute marks remain 12" / 24" | | | |
 
 ---
 
@@ -84,7 +90,7 @@
 
 | Metric | Count |
 |--------|-------|
-| Reference cases passed | _____ / 10 |
+| Reference cases passed | _____ / 17 |
 | Angle sweep passed | _____ / 4 |
 | Persistence checks passed | _____ / 4 |
 | Blocked UX confirmed | _____ / 1 |

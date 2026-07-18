@@ -13,11 +13,17 @@ Expo Router files in `src/app/` — keep them thin (export screens only).
 | `/` | `index.tsx` | `HomeScreen` |
 | `/bends` | `bends.tsx` | `BendsScreen` |
 | `/offset` | `offset.tsx` | `OffsetScreen` |
+| `/matching-offset` | `matching-offset.tsx` | `MatchingOffsetScreen` |
+| `/parallel-offset` | `parallel-offset.tsx` | `ParallelOffsetScreen` |
+| `/rolling` | `rolling.tsx` | `RollingScreen` |
 | `/stub90` | `stub90.tsx` | `Stub90Screen` |
+| `/back-to-back` | `back-to-back.tsx` | `BackToBackScreen` |
+| `/kick90` | `kick90.tsx` | `Kick90Screen` |
+| `/compound90` | `compound90.tsx` | `Compound90Screen` |
 | `/saddle3` | `saddle3.tsx` | `Saddle3Screen` |
 | `/saddle4` | `saddle4.tsx` | `Saddle4Screen` |
 | `/segment` | `segment.tsx` | `SegmentScreen` |
-| `/rolling` | `rolling.tsx` | `RollingScreen` |
+| `/multiple-bends` | `multiple-bends.tsx` | `MultipleBendsScreen` |
 | `/settings` | `settings.tsx` | `SettingsScreen` |
 | `/bender-database` | `bender-database.tsx` | `BenderDatabaseScreen` |
 | `/guide` | `guide.tsx` | `GuideScreen` |
@@ -56,6 +62,18 @@ bend-rolling/
   rolling.config.ts, rolling.copy.ts
   engine/rolling.engine.ts, rolling.types.ts, rollingAngleData.ts
   ui/RollingScreen.tsx, RollingDiagram.tsx, MultiplierOverrideSheet.tsx, ShrinkOverrideSheet.tsx
+
+bend-kick90/, bend-back-to-back/, bend-compound90/
+  <feature>.config.ts, <feature>.copy.ts
+  engine/ (pure calculation, result adapter, input snapshot)
+  diagram/ (clamped presentation geometry)
+  ui/ (screen, satin EMT diagram, optional workflow sheets)
+
+bend-matching-offset/, bend-parallel-offset/, bend-multiple/
+  <feature>.config.ts, <feature>.copy.ts
+  engine/ (pure calculation/planning, result adapter, input snapshot)
+  diagram/ (paired/rack/stick presentation geometry)
+  ui/ (screen, diagram, mode/layout/editor sheets)
 ```
 
 ## Shared UI
@@ -72,7 +90,7 @@ bend-rolling/
 |------|------|
 | EMT sizes | `src/data/emt/` |
 | Conduit types (EMT only) | `src/data/conduit/` |
-| Bender profiles (3 generic + custom, persisted in setup) | `src/data/benders/`, `src/screens/BenderDatabaseScreen.tsx`, `src/screens/CustomBenderSheet.tsx` |
+| Bender profiles (generic, manufacturer, and custom; persisted in setup) | `src/data/benders/`, `src/screens/BenderDatabaseScreen.tsx`, `src/screens/CustomBenderSheet.tsx` |
 | Calculator registry (ids, routes, status, hub visibility) | `src/core/calculators/` |
 | Bend library nav (re-export) | `src/data/bendLibrary.ts` |
 

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 
-import { spacing, uiTheme, useTheme, type ThemePalette } from '@/theme';
+import { spacing, useTheme, type ThemePalette } from '@/theme';
 
 export type OptionalFieldButtonProps = {
   label: string;
@@ -27,17 +27,14 @@ export function OptionalFieldButton({ label, onPress }: OptionalFieldButtonProps
 function makeStyles(c: ThemePalette) {
   return StyleSheet.create({
     button: {
-      minHeight: 36,
+      minHeight: 32,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       gap: spacing.sm,
-      borderRadius: uiTheme.field.shell.borderRadius,
-      borderWidth: 1,
-      borderColor: c.primaryBorder,
-      backgroundColor: c.primaryMuted,
+      alignSelf: 'center',
       paddingHorizontal: spacing.md,
-      paddingVertical: spacing.sm,
+      paddingVertical: spacing.xs,
     },
     buttonPressed: {
       opacity: 0.88,

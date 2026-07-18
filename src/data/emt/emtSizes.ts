@@ -19,6 +19,23 @@ export const SUPPORTED_EMT_TRADE_SIZES = ['1/2', '3/4', '1', '1-1/4'] as const;
 
 export const DEFAULT_EMT_TRADE_SIZE: EmtTradeSize = '1/2';
 
+/**
+ * Nominal EMT outside diameters in inches.
+ * Source: Wheatland Tube, 20' EMT and Conduit product data sheet.
+ */
+export const EMT_OUTSIDE_DIAMETER_INCHES: Readonly<Record<EmtTradeSize, number>> = {
+  '1/2': 0.706,
+  '3/4': 0.922,
+  '1': 1.163,
+  '1-1/4': 1.51,
+  '1-1/2': 1.74,
+  '2': 2.197,
+};
+
+export function getEmtOutsideDiameterInches(size: string): number | undefined {
+  return isEmtTradeSize(size) ? EMT_OUTSIDE_DIAMETER_INCHES[size] : undefined;
+}
+
 export function isEmtTradeSize(value: string): value is EmtTradeSize {
   return (EMT_TRADE_SIZES as readonly string[]).includes(value);
 }

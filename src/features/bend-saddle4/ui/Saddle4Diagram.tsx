@@ -9,7 +9,6 @@ import {
   DiagramGhostMessage,
   DiagramSvg,
   PipeSegment,
-  diagramMetrics,
   useDiagramTheme,
 } from '@/shared/diagrams';
 
@@ -23,10 +22,8 @@ import { SADDLE4_CONFIG } from '../saddle4.config';
 import { saddle4Copy } from '../saddle4.copy';
 
 const LAYOUT = SADDLE4_DIAGRAM_LAYOUT;
-const VECTOR_OFFSET = 30;
+const VECTOR_OFFSET = 31;
 const VECTOR_TICK_HALF = 3.2;
-const TAG_WIDTH = 26;
-const TAG_HEIGHT = 13;
 
 type Point = { x: number; y: number };
 
@@ -34,8 +31,18 @@ function midpoint(a: Point, b: Point): Point {
   return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
 }
 
-function SaddleMarkCollar({ point, ghost = false }: { point: Point; ghost?: boolean }) {
+/** A field mark wraps the conduit and follows the local pipe direction. */
+function SaddleMarkCollar({
+  point,
+  rotation = 0,
+  ghost = false,
+}: {
+  point: Point;
+  rotation?: number;
+  ghost?: boolean;
+}) {
   const theme = useDiagramTheme();
+  const transform = rotation === 0 ? undefined : `rotate(${rotation} ${point.x} ${point.y})`;
 
   return (
     <G opacity={ghost ? 0.4 : 1}>
@@ -48,6 +55,7 @@ function SaddleMarkCollar({ point, ghost = false }: { point: Point; ghost?: bool
         stroke={theme.markGlow}
         strokeWidth={2.7}
         opacity={0.34}
+        transform={transform}
       />
       <Ellipse
         cx={point.x}
@@ -57,6 +65,7 @@ function SaddleMarkCollar({ point, ghost = false }: { point: Point; ghost?: bool
         fill="none"
         stroke={theme.mark}
         strokeWidth={1.4}
+        transform={transform}
       />
     </G>
   );
@@ -96,55 +105,11 @@ function SaddleEndCaps({ ghost = false }: { ghost?: boolean }) {
   );
 }
 
-function SaddleBendTag({ point, tag, label }: { point: Point; tag: Point; label: string }) {
-  const theme = useDiagramTheme();
-  const dx = tag.x - point.x;
-  const dy = tag.y - point.y;
-  const length = Math.hypot(dx, dy) || 1;
-  const direction = { x: dx / length, y: dy / length };
-  const pipeEdge = {
-    x: point.x + direction.x * (diagramMetrics.pipeStroke / 2 + 1.5),
-    y: point.y + direction.y * (diagramMetrics.pipeStroke / 2 + 1.5),
-  };
-  const tagEdge = {
-    x: tag.x - direction.x * (TAG_WIDTH / 2),
-    y: tag.y - direction.y * (TAG_HEIGHT / 2),
-  };
-
-  return (
-    <G>
-      <Line
-        x1={pipeEdge.x}
-        y1={pipeEdge.y}
-        x2={tagEdge.x}
-        y2={tagEdge.y}
-        stroke={theme.mark}
-        strokeWidth={0.75}
-        opacity={0.5}
-      />
-      <Rect
-        x={tag.x - TAG_WIDTH / 2}
-        y={tag.y - TAG_HEIGHT / 2}
-        width={TAG_WIDTH}
-        height={TAG_HEIGHT}
-        rx={3}
-        fill={theme.calloutFill}
-        stroke={theme.mark}
-        strokeWidth={0.85}
-      />
-      <SvgText
-        x={tag.x}
-        y={tag.y + 2.8}
-        fill={theme.mark}
-        fontSize={7.8}
-        fontWeight="700"
-        textAnchor="middle">
-        {label}
-      </SvgText>
-    </G>
-  );
-}
-
+/**
+ * A readable physical obstruction, not a detached technical callout. The
+ * entered height lives inside the object so the value-to-object relationship
+ * is immediate in both color schemes.
+ */
 function SaddleObstruction({
   geo,
   heightLabel,
@@ -159,120 +124,92 @@ function SaddleObstruction({
   const top = LAYOUT.baseY - geo.obsHeightPx;
   const fill = ghost ? theme.ghost.obstructionFill : theme.obstruction.fill;
   const stroke = ghost ? theme.ghost.obstructionStroke : theme.obstruction.stroke;
-  const vectorX = left + 9;
-  const vectorMidY = top + geo.obsHeightPx / 2;
-  const compact = geo.obsHeightPx < 34;
+  const labelY = top + Math.max(9, geo.obsHeightPx * 0.34);
+  const valueY = top + Math.min(22, geo.obsHeightPx * 0.76);
 
   return (
     <G>
+      <Ellipse
+        cx={LAYOUT.centerX}
+        cy={LAYOUT.baseY + 4}
+        rx={geo.obsWidthPx * 0.46}
+        ry={4.2}
+        fill={theme.floor.shadow}
+        opacity={ghost ? 0.05 : 0.13}
+      />
       <Rect
         x={left}
         y={top}
         width={geo.obsWidthPx}
         height={geo.obsHeightPx}
-        rx={5}
+        rx={4}
         fill={fill}
         stroke={stroke}
-        strokeWidth={1.15}
+        strokeWidth={1.25}
       />
       <Rect
         x={left + 3}
         y={top + 3}
         width={Math.max(0, geo.obsWidthPx - 6)}
         height={Math.max(0, geo.obsHeightPx - 6)}
-        rx={3}
+        rx={2.5}
         fill="none"
         stroke={stroke}
         strokeWidth={0.55}
-        opacity={ghost ? 0.12 : 0.24}
+        opacity={ghost ? 0.14 : 0.3}
       />
       <Line
-        x1={left}
-        y1={top}
-        x2={left + geo.obsWidthPx}
-        y2={top}
+        x1={left + 4}
+        y1={top + 3.5}
+        x2={left + geo.obsWidthPx - 4}
+        y2={top + 3.5}
         stroke={stroke}
-        strokeWidth={1.35}
-        opacity={0.8}
+        strokeWidth={1}
+        opacity={ghost ? 0.24 : 0.58}
       />
+      {[0.28, 0.5, 0.72].map((ratio) => {
+        const x = left + geo.obsWidthPx * ratio;
+
+        return (
+          <Line
+            key={`obstruction-rib-${ratio}`}
+            x1={x}
+            y1={top + 6}
+            x2={x}
+            y2={LAYOUT.baseY - 5}
+            stroke={stroke}
+            strokeWidth={0.55}
+            opacity={ghost ? 0.08 : 0.2}
+          />
+        );
+      })}
       {!ghost && heightLabel ? (
         <G>
-          <Line
-            x1={vectorX}
-            y1={top}
-            x2={vectorX}
-            y2={LAYOUT.baseY}
-            stroke={theme.dimensionStrong}
-            strokeWidth={0.9}
-            opacity={0.65}
-          />
-          {[top, LAYOUT.baseY].map((y, index) => (
-            <Line
-              key={`height-tick-${index}`}
-              x1={vectorX - VECTOR_TICK_HALF}
-              y1={y}
-              x2={vectorX + VECTOR_TICK_HALF}
-              y2={y}
-              stroke={theme.dimensionStrong}
-              strokeWidth={0.85}
-              opacity={0.72}
-            />
-          ))}
-          <Line
-            x1={vectorX + 3}
-            y1={vectorMidY}
-            x2={LAYOUT.centerX - 18}
-            y2={vectorMidY}
-            stroke={theme.dimensionStrong}
-            strokeWidth={0.6}
-            strokeDasharray="2 3"
-            opacity={0.45}
-          />
-          {compact ? (
-            <SvgText
-              x={LAYOUT.centerX + 8}
-              y={vectorMidY + 3}
-              fill={theme.dimensionStrong}
-              fontSize={9.4}
-              fontWeight="700"
-              textAnchor="middle">
-              {`HEIGHT \u00B7 ${heightLabel}`}
-            </SvgText>
-          ) : (
-            <>
-              <SvgText
-                x={LAYOUT.centerX + 8}
-                y={vectorMidY - 3}
-                fill={theme.mutedLabel}
-                fontSize={7.6}
-                fontWeight="600"
-                textAnchor="middle">
-                HEIGHT
-              </SvgText>
-              <SvgText
-                x={LAYOUT.centerX + 8}
-                y={vectorMidY + 10}
-                fill={theme.dimensionStrong}
-                fontSize={10.8}
-                fontWeight="700"
-                textAnchor="middle">
-                {heightLabel}
-              </SvgText>
-            </>
-          )}
+          <SvgText
+            x={LAYOUT.centerX}
+            y={labelY}
+            fill={theme.mutedLabel}
+            fontSize={6.6}
+            fontWeight="700"
+            textAnchor="middle">
+            HEIGHT
+          </SvgText>
+          <SvgText
+            x={LAYOUT.centerX}
+            y={valueY}
+            fill={theme.dimensionStrong}
+            fontSize={heightLabel.length > 8 ? 8.4 : 10}
+            fontWeight="700"
+            textAnchor="middle">
+            {heightLabel}
+          </SvgText>
         </G>
       ) : null}
     </G>
   );
 }
 
-function BetweenBendsVector({
-  geo,
-  value,
-}: {
-  geo: Saddle4DiagramGeometry;
-  value: string;
-}) {
+function BetweenBendsVector({ geo, value }: { geo: Saddle4DiagramGeometry; value: string }) {
   const theme = useDiagramTheme();
   const normal = { x: -geo.sinA, y: -geo.cosA };
   const start = {
@@ -284,15 +221,9 @@ function BetweenBendsVector({
     y: geo.topY + normal.y * VECTOR_OFFSET,
   };
   const mid = midpoint(start, end);
-  const title = {
-    x: mid.x + normal.x * 13,
-    y: mid.y + normal.y * 13,
-  };
-  const result = {
-    x: mid.x - normal.x * 2,
-    y: mid.y - normal.y * 2,
-  };
-  const rotation = -Math.atan2(geo.rise, geo.dxDiag) * (180 / Math.PI);
+  const titleY = 31;
+  const valueY = 49;
+  const labelTarget = { x: 111, y: valueY - 2 };
 
   return (
     <G>
@@ -332,24 +263,33 @@ function BetweenBendsVector({
           opacity={0.8}
         />
       ))}
+      <Line
+        x1={labelTarget.x}
+        y1={labelTarget.y}
+        x2={mid.x}
+        y2={mid.y}
+        stroke={theme.dimensionStrong}
+        strokeWidth={0.65}
+        strokeDasharray="2 3"
+        opacity={0.46}
+      />
+      <Ellipse cx={mid.x} cy={mid.y} rx={1.25} ry={1.25} fill={theme.dimensionStrong} />
       <SvgText
-        x={title.x}
-        y={title.y}
+        x={28}
+        y={titleY}
         fill={theme.mutedLabel}
         fontSize={8.3}
-        fontWeight="600"
-        textAnchor="middle"
-        transform={`rotate(${rotation} ${title.x} ${title.y})`}>
+        fontWeight="700"
+        textAnchor="start">
         {saddle4Copy.diagram.betweenBends.toUpperCase()}
       </SvgText>
       <SvgText
-        x={result.x}
-        y={result.y}
+        x={28}
+        y={valueY}
         fill={theme.dimensionStrong}
-        fontSize={12.2}
+        fontSize={12.4}
         fontWeight="700"
-        textAnchor="middle"
-        transform={`rotate(${rotation} ${result.x} ${result.y})`}>
+        textAnchor="start">
         {value}
       </SvgText>
     </G>
@@ -358,7 +298,9 @@ function BetweenBendsVector({
 
 function SaddleWidthVector({ geo, value }: { geo: Saddle4DiagramGeometry; value: string }) {
   const theme = useDiagramTheme();
-  const y = geo.topY - 24;
+  const y = geo.topY - 17;
+  const titleY = Math.max(22, y - 27);
+  const valueY = titleY + 15;
 
   return (
     <G>
@@ -375,7 +317,7 @@ function SaddleWidthVector({ geo, value }: { geo: Saddle4DiagramGeometry; value:
         <G key={`width-end-${index}`}>
           <Line
             x1={x}
-            y1={geo.topY - 9}
+            y1={geo.topY - 8}
             x2={x}
             y2={y + 4}
             stroke={theme.dimensionStrong}
@@ -395,18 +337,18 @@ function SaddleWidthVector({ geo, value }: { geo: Saddle4DiagramGeometry; value:
       ))}
       <SvgText
         x={LAYOUT.centerX}
-        y={geo.topY - 47}
+        y={titleY}
         fill={theme.mutedLabel}
-        fontSize={8.3}
-        fontWeight="600"
+        fontSize={8}
+        fontWeight="700"
         textAnchor="middle">
         {saddle4Copy.diagram.saddleWidth.toUpperCase()}
       </SvgText>
       <SvgText
         x={LAYOUT.centerX}
-        y={geo.topY - 33}
+        y={valueY}
         fill={theme.dimensionStrong}
-        fontSize={12.2}
+        fontSize={11.5}
         fontWeight="700"
         textAnchor="middle">
         {value}
@@ -417,50 +359,41 @@ function SaddleWidthVector({ geo, value }: { geo: Saddle4DiagramGeometry; value:
 
 function SaddleAngleCallout({ geo, angle }: { geo: Saddle4DiagramGeometry; angle: number }) {
   const theme = useDiagramTheme();
-  const bendTarget = {
-    x: geo.xOR - LAYOUT.cornerRadius * geo.cosA * 0.46,
-    y: LAYOUT.baseY - LAYOUT.cornerRadius * geo.sinA * 0.2,
+  const target = {
+    x: geo.xIR + LAYOUT.cornerRadius * geo.cosA * 0.72,
+    y: geo.topY + LAYOUT.cornerRadius * geo.sinA * 0.55,
   };
-  const label = {
-    x: Math.min(328, geo.xOR + 29),
-    y: LAYOUT.baseY - 31,
-  };
+  const label = { x: 331, titleY: 31, valueY: 49 };
 
   return (
     <G>
       <Line
-        x1={bendTarget.x}
-        y1={bendTarget.y}
-        x2={label.x - 16}
-        y2={label.y + 1}
+        x1={target.x}
+        y1={target.y}
+        x2={label.x - 23}
+        y2={label.valueY - 2}
         stroke={theme.bendZone.stroke}
         strokeWidth={0.7}
         strokeDasharray="2 3"
         opacity={0.54}
       />
-      <Ellipse
-        cx={bendTarget.x}
-        cy={bendTarget.y}
-        rx={1.25}
-        ry={1.25}
-        fill={theme.bendZone.stroke}
-      />
+      <Ellipse cx={target.x} cy={target.y} rx={1.25} ry={1.25} fill={theme.bendZone.stroke} />
       <SvgText
         x={label.x}
-        y={label.y - 13}
+        y={label.titleY}
         fill={theme.bendZone.stroke}
         fontSize={7.5}
         fontWeight="700"
-        textAnchor="middle">
+        textAnchor="end">
         BENDS
       </SvgText>
       <SvgText
         x={label.x}
-        y={label.y}
+        y={label.valueY}
         fill={theme.bendZone.stroke}
-        fontSize={11.5}
+        fontSize={11.8}
         fontWeight="700"
-        textAnchor="middle">
+        textAnchor="end">
         {`${angle}\u00B0 \u00D7 4`}
       </SvgText>
     </G>
@@ -469,8 +402,8 @@ function SaddleAngleCallout({ geo, angle }: { geo: Saddle4DiagramGeometry; angle
 
 function SaddleMarkLegend({ data }: { data: Saddle4DiagramData }) {
   const theme = useDiagramTheme();
-  const topText = `${saddle4Copy.diagram.top.toUpperCase()} MARKS  \u00B7  ${data.display.innerMark1}  /  ${data.display.innerMark2}`;
-  const outerText = `${saddle4Copy.diagram.outer.toUpperCase()} MARKS  \u00B7  ${data.display.outerMark1}  /  ${data.display.outerMark2}`;
+  const topText = `TOP MARKS  \u00B7  ${data.display.innerMark1}  /  ${data.display.innerMark2}`;
+  const outerText = `OUTER MARKS  \u00B7  ${data.display.outerMark1}  /  ${data.display.outerMark2}`;
 
   return (
     <G>
@@ -478,8 +411,8 @@ function SaddleMarkLegend({ data }: { data: Saddle4DiagramData }) {
         x={LAYOUT.centerX}
         y={264}
         fill={theme.mark}
-        fontSize={topText.length > 40 ? 8.2 : 8.8}
-        fontWeight="600"
+        fontSize={topText.length > 40 ? 8 : 8.6}
+        fontWeight="700"
         textAnchor="middle">
         {topText}
       </SvgText>
@@ -487,13 +420,26 @@ function SaddleMarkLegend({ data }: { data: Saddle4DiagramData }) {
         x={LAYOUT.centerX}
         y={279}
         fill={theme.mark}
-        fontSize={outerText.length > 40 ? 8.2 : 8.8}
-        fontWeight="600"
+        fontSize={outerText.length > 40 ? 8 : 8.6}
+        fontWeight="700"
         textAnchor="middle">
         {outerText}
       </SvgText>
     </G>
   );
+}
+
+function getSaddleMarks(geo: Saddle4DiagramGeometry, angle: number) {
+  const r = LAYOUT.cornerRadius;
+  const cx = r * geo.cosA;
+  const cy = r * geo.sinA;
+
+  return [
+    { point: { x: geo.xOL - r, y: LAYOUT.baseY }, rotation: 0 },
+    { point: { x: geo.xIL - cx, y: geo.topY + cy }, rotation: -angle },
+    { point: { x: geo.xIR - r, y: geo.topY }, rotation: 0 },
+    { point: { x: geo.xOR - cx, y: LAYOUT.baseY - cy }, rotation: angle },
+  ];
 }
 
 export type Saddle4DiagramProps = {
@@ -524,6 +470,7 @@ function Saddle4GhostDiagram({ message, invalid }: { message: string; invalid?: 
     saddleWidthInches: 4,
     bendAngleDeg: 22.5,
   });
+  const marks = getSaddleMarks(geo, 22.5);
 
   return (
     <DiagramSvg viewBox={SADDLE4_CONFIG.diagramViewBox}>
@@ -531,12 +478,11 @@ function Saddle4GhostDiagram({ message, invalid }: { message: string; invalid?: 
       <DiagramCanvas />
       <SaddleObstruction geo={geo} ghost />
       <PipeSegment d={geo.pipePath} variant="shadow" opacity={theme.ghost.pipeShadowOpacity} />
-      <PipeSegment d={geo.pipePath} variant="pipe" gradientId="saddle4GhostGradient" />
+      <PipeSegment d={geo.pipePath} variant="pipe" gradientId="saddle4GhostGradient" material="satin" lineCap="butt" />
       <SaddleEndCaps ghost />
-      <SaddleMarkCollar point={{ x: geo.xOL, y: LAYOUT.baseY }} ghost />
-      <SaddleMarkCollar point={{ x: geo.xIL, y: geo.topY }} ghost />
-      <SaddleMarkCollar point={{ x: geo.xIR, y: geo.topY }} ghost />
-      <SaddleMarkCollar point={{ x: geo.xOR, y: LAYOUT.baseY }} ghost />
+      {marks.map((mark, index) => (
+        <SaddleMarkCollar key={index} {...mark} ghost />
+      ))}
       <DiagramGhostMessage text={message} invalid={invalid} />
     </DiagramSvg>
   );
@@ -549,12 +495,7 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
     saddleWidthInches: data.saddleWidthInches,
     bendAngleDeg: data.bendAngle,
   });
-  const marks = {
-    outerLeft: { x: geo.xOL, y: LAYOUT.baseY },
-    topLeft: { x: geo.xIL, y: geo.topY },
-    topRight: { x: geo.xIR, y: geo.topY },
-    outerRight: { x: geo.xOR, y: LAYOUT.baseY },
-  };
+  const marks = getSaddleMarks(geo, data.bendAngle);
   const hasMarkValues = Boolean(
     data.display.outerMark1 &&
       data.display.innerMark1 &&
@@ -571,9 +512,10 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
       {geo.hasSaddleWidth && data.display.saddleWidth ? (
         <SaddleWidthVector geo={geo} value={data.display.saddleWidth} />
       ) : null}
+      <SaddleAngleCallout geo={geo} angle={data.bendAngle} />
       <SaddleObstruction geo={geo} heightLabel={data.display.obstructionHeight} />
 
-      <PipeSegment d={geo.pipePath} variant="shadow" strokeWidth={23} opacity={0.24} />
+      <PipeSegment d={geo.pipePath} variant="shadow" strokeWidth={23} opacity={0.22} />
       <PipeSegment
         d={geo.pipePath}
         variant="pipe"
@@ -581,39 +523,16 @@ function Saddle4LiveDiagram({ data }: { data: Saddle4DiagramData }) {
         material="satin"
         lineCap="butt"
       />
-      <BendRadiusZone d={geo.bendOuterL} glowWidth={14} />
-      <BendRadiusZone d={geo.bendInnerL} glowWidth={14} />
-      <BendRadiusZone d={geo.bendInnerR} glowWidth={14} />
-      <BendRadiusZone d={geo.bendOuterR} glowWidth={14} />
+      <BendRadiusZone d={geo.bendOuterL} glowWidth={15} />
+      <BendRadiusZone d={geo.bendInnerL} glowWidth={15} />
+      <BendRadiusZone d={geo.bendInnerR} glowWidth={15} />
+      <BendRadiusZone d={geo.bendOuterR} glowWidth={15} />
       <SaddleEndCaps />
 
-      <SaddleMarkCollar point={marks.outerLeft} />
-      <SaddleMarkCollar point={marks.topLeft} />
-      <SaddleMarkCollar point={marks.topRight} />
-      <SaddleMarkCollar point={marks.outerRight} />
+      {marks.map((mark, index) => (
+        <SaddleMarkCollar key={index} {...mark} />
+      ))}
 
-      <SaddleBendTag
-        point={marks.topLeft}
-        tag={{ x: geo.xIL - 22, y: geo.topY - 11 }}
-        label="T1"
-      />
-      <SaddleBendTag
-        point={marks.topRight}
-        tag={{ x: geo.xIR + 22, y: geo.topY - 11 }}
-        label="T2"
-      />
-      <SaddleBendTag
-        point={marks.outerLeft}
-        tag={{ x: geo.xOL + 20, y: LAYOUT.baseY + 27 }}
-        label="O1"
-      />
-      <SaddleBendTag
-        point={marks.outerRight}
-        tag={{ x: geo.xOR - 20, y: LAYOUT.baseY + 27 }}
-        label="O2"
-      />
-
-      <SaddleAngleCallout geo={geo} angle={data.bendAngle} />
       {hasMarkValues ? <SaddleMarkLegend data={data} /> : null}
       <DiagramFieldCue text={saddle4Copy.diagram.fieldCue} y={294} />
     </DiagramSvg>

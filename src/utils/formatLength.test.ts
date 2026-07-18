@@ -44,3 +44,13 @@ describe('formatLength (metric)', () => {
     expect(formatLength(1, 'metric', '10mm')).toBe('30 mm');
   });
 });
+
+describe('formatLength extreme values', () => {
+  test.each([Number.NaN, Number.POSITIVE_INFINITY, Number.MAX_VALUE])(
+    'returns a safe placeholder for %s',
+    (value) => {
+      expect(formatLength(value, 'imperial', '1/16')).toBe('—');
+      expect(formatLength(value, 'metric', '1mm')).toBe('—');
+    },
+  );
+});

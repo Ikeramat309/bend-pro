@@ -22,11 +22,17 @@ Route files in `src/app/` export screens only — no calculator math.
 | Route | Screen |
 |-------|--------|
 | `/offset` | `src/features/bend-offset/ui/OffsetScreen.tsx` |
+| `/matching-offset` | `src/features/bend-matching-offset/ui/MatchingOffsetScreen.tsx` |
+| `/parallel-offset` | `src/features/bend-parallel-offset/ui/ParallelOffsetScreen.tsx` |
+| `/rolling` | `src/features/bend-rolling/ui/RollingScreen.tsx` |
 | `/stub90` | `src/features/bend-stub90/ui/Stub90Screen.tsx` |
+| `/back-to-back` | `src/features/bend-back-to-back/ui/BackToBackScreen.tsx` |
+| `/kick90` | `src/features/bend-kick90/ui/Kick90Screen.tsx` |
+| `/compound90` | `src/features/bend-compound90/ui/Compound90Screen.tsx` |
 | `/saddle3` | `src/features/bend-saddle3/ui/Saddle3Screen.tsx` |
 | `/saddle4` | `src/features/bend-saddle4/ui/Saddle4Screen.tsx` |
 | `/segment` | `src/features/bend-segment/ui/SegmentScreen.tsx` |
-| `/rolling` | `src/features/bend-rolling/ui/RollingScreen.tsx` |
+| `/multiple-bends` | `src/features/bend-multiple/ui/MultipleBendsScreen.tsx` |
 | `/bends` | `src/screens/BendsScreen.tsx` |
 | `/settings` | Settings hub |
 | `/bender-database` | Bender profile management |
@@ -95,7 +101,7 @@ Trust strip on calculator screens reads active profile from setup; Edit Setup sh
 
 ## Guide content
 
-- **`src/data/guide/`** — static walkthroughs (formula, steps, mistakes, example) for all seven calculators
+- **`src/data/guide/`** — static walkthroughs (formula, steps, mistakes, example) for all twelve workflows
 - **`guideRoute(calculatorId)`** — calculator dock Guide opens contextual detail; bottom nav Guide opens index
 
 ## Calculator registry
@@ -121,9 +127,15 @@ Helpers: `getCalculatorRoute(id)`, `getBendsScreenFamilies()`. Route path string
 | Offset | `toOffsetCalculationResult()` |
 | Stub 90 | `toStub90CalculationResult()` |
 | Rolling Offset | `toRollingCalculationResult()` |
+| Kick 90 | `toKick90CalculationResult()` |
 | 3-Point Saddle | `toSaddle3CalculationResult()` |
 | 4-Point Saddle | `toSaddle4CalculationResult()` |
 | Segment Bend | `toSegmentCalculationResult()` |
+| Back-to-Back 90 | `toBackToBackCalculationResult()` |
+| Matching Offset | `toMatchingOffsetCalculationResult()` |
+| Parallel Offsets | `toParallelOffsetCalculationResult()` |
+| Compound 90 | `toCompound90CalculationResult()` |
+| Multiple Bends | `toMultipleBendsCalculationResult()` |
 
 All adapters live under `src/features/bend-*/engine/*CalculationResult.ts`. Calculator screens call adapters for recent-layout persistence; UI layout is unchanged.
 

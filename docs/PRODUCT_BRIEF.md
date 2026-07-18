@@ -21,13 +21,13 @@ Bend Pro is a mobile-first **EMT conduit bending app** for the field, built with
 
 ## What makes Bend Pro different from a generic calculator
 
-A generic calculator gives you a number. Bend Pro gives you a **layout**: a visual of the pipe showing where each mark goes, which direction to measure from, what the bender takes up, and what the finished bend looks like. It speaks the trade's language (deduct, shrink, take-up, stub) instead of abstract math labels, and it accounts for the actual bender being used via bender profiles.
+A generic calculator gives you a number. Bend Pro gives you a **layout**: a visual of the pipe showing where each mark goes, which direction to measure from, what the bender takes up, and what the finished bend looks like. It speaks the trade's language (deduct, shrink, take-up, stub) instead of abstract math labels, and uses bender-profile data only where that data honestly affects a mark.
 
 ## Current scope (this phase)
 
 - **EMT only.** No RMC, IMC, or PVC.
-- **Seven calculators:** Offset, Stub 90, 3-Point Saddle, 4-Point Saddle, Segment Bend, Rolling Offset, and Kick 90 — all live with engine tests and feature diagrams.
-- **Stabilization over expansion:** Kick 90 is the first catalog expansion; further calculators follow the locked order in [`HANDOFF.md`](HANDOFF.md) §5.
+- **Twelve workflows:** Offset, Matching Offset, Parallel Offsets, Rolling Offset, Stub 90, Back-to-Back 90, Kick 90, Compound 90, 3-Point Saddle, 4-Point Saddle, Segment Bend, and Multiple Bends — all live with engine tests and feature diagrams.
+- **Stabilization over expansion:** Box Offset and Hydraulic Layout remain planned; current work is beta hardening and field feedback.
 
 See [`HANDOFF.md`](HANDOFF.md) for current state and deferred items.
 
@@ -50,12 +50,18 @@ See [`HANDOFF.md`](HANDOFF.md) for current state and deferred items.
 | **Segment Bend** | `/segment` | Large-radius bend from equal shots: shot count, between-bends spacing, developed length, and marks |
 | **Rolling Offset** | `/rolling` | Two-direction offset: offset height + offset roll → distance between bends, shrink, optional marks |
 | **Kick 90** | `/kick90` | Small-angle kick beside a 90°: kick rise + bend angle → distance between bends, shrink, and an isometric multi-plane layout |
+| **Back-to-Back 90** | `/back-to-back` | Place two opposing 90s by the star-reference method; optionally calculate the first stub deduct mark |
+| **Matching Offset** | `/matching-offset` | Match an existing offset from bend-center measurements in Centers or Bends mode |
+| **Parallel Offsets** | `/parallel-offset` | Find per-conduit shift or generate a full parallel-rack layout and optional absolute marks |
+| **Compound 90** | `/compound90` | Clear round, square, or rectangular obstructions with two 45° bends and conduit-center marks |
+| **Multiple Bends** | `/multiple-bends` | Organize absolute bend/cut marks on one conduit stick without assumed shoe or gain math |
 
 ## Planned calculators (future, not built)
 
 These are **planned future work** — they do not exist yet and must not be documented or coded as if they do:
 
-- Parallel offset, box offset, back-to-back 90, matching centers, simple parallel, compound 90s, multiple-bends layout builder (see [`HANDOFF.md`](HANDOFF.md) §5 for order)
+- **Box Offset** — intentionally deferred by the founder
+- **Hydraulic Layout** — advanced future workflow
 
 Exact order and scope are decided in [`HANDOFF.md`](HANDOFF.md), not here.
 

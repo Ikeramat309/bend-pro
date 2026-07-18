@@ -31,7 +31,7 @@ Storage key: `bend-pro/recent-layouts/v1`.
 
 ## Wired
 
-All six active calculator screens call `usePersistRecentLayout` when the user has entered inputs and the result is **valid** or **warning**. Invalid runs are not saved. Writes are debounced (~600ms) and deduplicated by content signature.
+All twelve active workflow screens call `usePersistRecentLayout` when the user has entered inputs and the result is **valid** or **warning**. Invalid runs are not saved. Writes are debounced (~600ms) and deduplicated by content signature.
 
 **Home Continue Layout** hydrates recents on focus and navigates with `layoutId`. Calculator screens restore via `useRestoreRecentLayout` and per-calculator `restore*FromLayout` helpers in `*InputSnapshot.ts`.
 

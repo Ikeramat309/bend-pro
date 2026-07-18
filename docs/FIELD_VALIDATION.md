@@ -4,7 +4,7 @@ Part of the [documentation index](README.md). Entry point: [`AGENTS.md`](../AGEN
 
 Prepares Bend Pro for beta testing with real electricians. This doc defines **field validated**, lists the **validation matrix** (calculator × size × angle → expected marks), and links the [printable test sheet](FIELD_VALIDATION_TEST_SHEET.md).
 
-**Scope today:** seven active EMT calculators only. No new calculators. No debug/export screen — testers use the app and the sheet.
+**Scope today:** twelve active EMT workflows. Box Offset and Hydraulic Layout remain planned. No debug/export screen — testers use the app and the sheet.
 
 **Supported sizes (v1):** EMT **1/2", 3/4", 1", 1-1/4"** only. The setup picker hides 1-1/2" and 2" (out of honest hand-bender range / no generic chart). The 1-1/4" stub-90 take-up (11") is a **generic published value pending physical field verification** — see the math sign-off note. Any uncharted size still warns and offers a custom deduct (calibration path) rather than guessing.
 
@@ -47,6 +47,12 @@ change cannot pass silently.
 | 4-Point Saddle | two offsets; between = height × mult | Same as offset table (2.6/2.0/1.4) | Standard offset tables | ✅ matches |
 | Segment | spacing = R × α(rad); developed = R × Θ(rad) | π/180 arc geometry | Standard segment/large-radius layout | ✅ matches |
 | Rolling | trueOffset = √(height² + roll²), then offset | Offset table | Standard rolling-offset (hypotenuse) method | ✅ matches |
+| Kick 90 | spacing = rise × multiplier; shrink = rise × shrink/in | Offset angle table | Standard kick/offset field method | ✅ matches |
+| Back-to-Back 90 | second star mark = finished back-to-back distance; optional first mark = stub − deduct | Profile deduct only for optional first stub | IDEAL and Klein hand-bender guides | ✅ matches |
+| Matching Offset | Centers: `D=hypot(h,a)`; Bends: `a=√(D²−h²)`; shrink = D−a | Centerline right-triangle geometry | Trigonometry + QuickBend workflow semantics | ✅ exact centerline model |
+| Parallel Offsets | shift = C-C × tan(angle/2); full-layout DBB = height / sin(angle) | No shoe constants | Published parallel-offset field method | ✅ matches |
+| Compound 90 | published back/outside spacing minus half nominal EMT OD | Round ×2.4; square ×3; rectangle `(H+W)×1.414` | IBEW Local 903 bending book + Wheatland EMT OD table | ✅ matches documented center correction |
+| Multiple Bends | sort/check absolute marks; gaps/tail from stick positions | No bend-geometry constants | Planner contract | ✅ deterministic; no inferred shoe math |
 
 **Awareness note (not a bug):** the 3-point saddle 45° preset uses the
 trig-exact multiplier **2.613** (csc 22.5°). Some field charts round this to
@@ -147,13 +153,58 @@ does not confirm real-world fit (spring-back, shoe geometry, tape placement).
 
 **Formulas:** spacing = kick rise × multiplier; shrink = kick rise × shrink per inch; Mark 2 = Mark 1 + spacing.
 
+### Back-to-Back 90 (`backToBack`)
+
+| Case | Size | Back-to-back distance | First stub (opt.) | Expected second star mark | Expected first deduct mark |
+|------|------|-----------------------|-------------------|---------------------------|----------------------------|
+| B2B-REF | 1/2" | 36" | — | 36" from the back of the first 90 | — |
+| B2B-STUB | 1/2" | 36" | 12" | 36" | 7" with the generic 5" deduct |
+
+**Formula:** the second mark transfers the finished back-to-back distance directly to the star reference. The optional first stub uses the selected profile's deduct.
+
+### Matching Offset (`matchingOffset`)
+
+| Case | Mode | Height | Reference input | Expected angle | Expected center distance | Expected adjacent | Expected shrink |
+|------|------|--------|-----------------|----------------|--------------------------|-------------------|-----------------|
+| MAT-C | Centers | 6" | adjacent 12" | 26.6° | 13 7/16" | 12" | 1 7/16" |
+| MAT-B | Bends | 6" | center distance 12" | 30° | 12" | 10 3/8" | 1 5/8" |
+
+**Formulas:** Centers mode uses `atan(height / adjacent)` and `hypot(height, adjacent)`. Bends mode uses `asin(height / centerDistance)` and `√(centerDistance² − height²)`.
+
+### Parallel Offsets (`parallelOffset`)
+
+| Case | Mode | C-C spacing | Angle | Height | Conduits | Expected shift/pipe | Expected DBB | Expected total shift |
+|------|------|-------------|-------|--------|----------|---------------------|--------------|----------------------|
+| PAR-S | Simple | 2" | 30° | — | — | 9/16" | — | — |
+| PAR-F | Full | 2" | 30° | 6" | 4 | 9/16" | 12" | 1 5/8" |
+
+**Formulas:** shift per conduit = C-C spacing × `tan(angle / 2)`; full-layout distance between bends = height / `sin(angle)`; total shift = shift × `(count − 1)`.
+
+### Compound 90 (`compound90`)
+
+| Case | Size | Shape | Obstruction | Expected back/outside distance | Expected center-to-center |
+|------|------|-------|-------------|--------------------------------|---------------------------|
+| C90-R | 1/2" | Round | diameter 7" | 16.8" | 16 7/16" |
+| C90-S | 1/2" | Square | side 4" | 12" | 11 5/8" |
+| C90-RECT | 1/2" | Rectangle | 2" × 4" | 8.484" | 8 1/8" |
+
+**Formula:** published back/outside distance minus half the nominal EMT outside diameter gives bend-center spacing. Both bends are 45°.
+
+### Multiple Bends (`multipleBends`)
+
+| Case | Stick | Marks | Expected tail | Expected total bend |
+|------|-------|-------|---------------|---------------------|
+| MUL-REF | 120" | 12" bend 30° up; 24" bend 30° down | 96" | 60° |
+
+**Contract:** positions are absolute from one start end. The workflow sorts, checks, and displays marks; it does not derive take-up, gain, or shoe corrections.
+
 ---
 
 ## Priority for beta
 
 Minimum field-validation set before wider beta:
 
-1. **OFF-REF**, **STU-REF**, **S3-REF**, **S4-REF**, **SEG-REF**, **ROL-REF** — one reference per calculator
+1. **OFF-REF**, **STU-REF**, **S3-REF**, **S4-REF**, **SEG-REF**, **ROL-REF**, **KIK-REF**, **B2B-REF**, **MAT-C**, **PAR-F**, **C90-R**, **MUL-REF** — one reference per active workflow
 2. **STU-34**, **STU-1** — size sweep where deduct changes
 3. **OFF-A45**, **ROL-REF-M** — common field angles + optional Mark 1 path
 4. **STU-114** — confirm warning UX (blocked, not wrong math)
@@ -164,7 +215,7 @@ Minimum field-validation set before wider beta:
 
 Bend Pro is **offline-first** for calculator use:
 
-- All seven calculators, bender profiles, and guide content ship **on device**
+- All twelve workflows, bender profiles, and guide content ship **on device**
 - No network call is required to compute marks or show diagrams
 - AsyncStorage is local only — no cloud sync
 

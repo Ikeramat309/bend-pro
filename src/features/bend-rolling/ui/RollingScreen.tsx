@@ -214,11 +214,14 @@ export default function RollingScreen() {
   return (
     <BendCalculatorLayout
       title={rollingCopy.screenTitle}
-      subtitle={setupSummary}
+      subtitle=""
+      centerTitle
+      inputDensity="compact"
+      workspaceDensity="compact"
       onBackPress={handleBackPress}
       trust={{
         benderName: formatStandardOffsetTableTrustTitle(bendAngle),
-        meta: [setupSummary, setupSubtitle, setupOnlyMeta].filter(Boolean).join(' • '),
+        meta: [setupOnlyMeta, setupSummary, setupSubtitle].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[
@@ -313,14 +316,13 @@ export default function RollingScreen() {
           : undefined
       }
       dock={{
-        left: [
-          { key: 'reset', label: 'Reset', onPress: resetInputs },
-          {
-            key: 'set-mark',
-            label: rollingCopy.fields.mark1.addButton,
-            onPress: () => setMark1SheetVisible(true),
-          },
-        ],
+        left: [{ key: 'reset', label: 'Reset', onPress: resetInputs }],
+        center: {
+          key: 'set-mark',
+          label: rollingCopy.fields.mark1.addButton,
+          variant: 'pill',
+          onPress: () => setMark1SheetVisible(true),
+        },
         guide: { onPress: () => router.push(guideRoute('rolling')) },
       }}
       warnings={visibleWarnings}

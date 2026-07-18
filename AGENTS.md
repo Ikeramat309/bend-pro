@@ -16,7 +16,7 @@ It is **not** a generic calculator app. It is a field tool. People will mark and
 
 ## Current phase
 
-Six EMT calculators ship; math is desk-validated; the app is in a **UI redesign** (continuous-surface, light/dark, steel-tube horizontal diagrams) heading toward field beta. **No new calculators** until the [Definition of Done](docs/HANDOFF.md) is met.
+Twelve EMT workflows ship; math is desk-validated; the app uses the shared **continuous-surface UI** (light/dark, steel-tube diagrams) and is heading toward field beta. Box Offset and Hydraulic Layout remain planned. **No additional calculators** until the [Definition of Done](docs/HANDOFF.md) is met or the founder explicitly expands scope.
 
 See [`docs/HANDOFF.md`](docs/HANDOFF.md) (plan + design system), [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md), and [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md).
 

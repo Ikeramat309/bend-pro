@@ -74,7 +74,7 @@ Multi-plane calculators render a **true 3D centerline** in a **fixed isometric p
 
 **Limitation:** `IsoPipe` handles **single-run pipes** only. Self-crossing depth sorting is a known future need for complex multi-run layouts.
 
-Kick 90 and Rolling Offset are the live consumers; parallel kicks, matching bends, and multi-bend layouts will reuse this module when built.
+Kick 90, Rolling Offset, and Matching Offset are the live consumers. Parallel Offsets and Multiple Bends use dedicated multi-run presentation geometry because their diagrams show several pipes or a straight mark plan rather than one 3D centerline.
 
 ## Visual language
 
@@ -86,9 +86,9 @@ Follow [`HANDOFF.md`](HANDOFF.md) §4 and `diagramTheme` / `useDiagramTheme()`:
 - Neutral white/grey for labels and dimension lines
 - Avoid making every measurement a different bright color (pipe = steel, marks = orange, bend zones = green is the full palette)
 
-## Status (Phase 2 complete)
+## Status
 
-- **Live diagrams:** Stub 90 and Offset compute geometry from engine `diagramData` (semi-proportional, clamped for readability).
+- **Live diagrams:** all twelve workflows compute presentation geometry from engine `diagramData` and clamp extreme inputs for readability.
 - **Stub 90 semantics:** mark on the stub (measured from stub tip); leg dimension under the horizontal run; deduct callout with leader line.
 - **Offset semantics:** diagonal at real bend angle; distance-between-bends dimension along the pipe; mark values at the marks.
-- **Deferred polish:** `primitives/` subfolder organization, richer empty-preview states, additional callout patterns. Do not build these without an explicit task.
+- **Deferred polish:** `primitives/` subfolder organization and motion work. Do not build these without an explicit task.

@@ -2,25 +2,30 @@
 
 Part of the [documentation index](README.md). **For current work and the full plan, read [`HANDOFF.md`](HANDOFF.md) first.**
 
-Honest snapshot of where the app stands. Seven calculators ship on the shared workspace shell; the calculator math is desk-validated and the app is in a **UI redesign** (continuous-surface, light/dark, steel-tube diagrams) heading toward field beta. See [`HANDOFF.md`](HANDOFF.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), and [`TRUST_MODEL.md`](TRUST_MODEL.md).
+Honest snapshot of where the app stands. Twelve EMT workflows ship on the shared workspace shell; calculator math is desk-validated and the **calculator UI milestone is complete** (continuous-surface, light/dark, steel-tube diagrams). Physical field validation remains open before public beta. See [`HANDOFF.md`](HANDOFF.md), [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md), and [`TRUST_MODEL.md`](TRUST_MODEL.md).
 
 ## UI redesign status
 
-The app is mid-redesign toward the locked direction in [`HANDOFF.md` §4](HANDOFF.md): one continuous surface (no cards), horizontal steel-**tube** pipe drawn naturally per calculator, orange marks, green bend zones, one blue accent, a big centered hero result, quiet borderless inputs, and **dark + light** themes (Settings → Appearance). Theme foundation, hub theming, theme-aware diagrams, continuous-surface shell, and the hero result have landed; remaining work is the final polish pass (overlaps, sheet theming, light-mode contrast) — see [`HANDOFF.md` §5](HANDOFF.md).
+The twelve current workflows now follow the locked direction in [`HANDOFF.md` §4](HANDOFF.md): one continuous surface (no cards), steel-**tube** conduit drawn naturally per calculator, orange wrap marks, green bend zones, one blue accent, a big centered hero result, quiet borderless inputs, and **dark + light** themes (Settings → Appearance). Headers, trust lines, input density, diagrams, result hierarchy, action docks, and themed sheets form one calculator family.
 
 ## What currently exists
 
 ### Working calculators
 
-All seven use the **shared `BendCalculatorLayout`** shell (`src/shared/workspace/`). Math is unchanged in feature `engine/` folders.
+All twelve use the **shared `BendCalculatorLayout`** shell (`src/shared/workspace/`). Math stays isolated in feature `engine/` folders.
 
 - **Offset** (`/offset`) — offset height + bend angle → distance between bends, shrink, optional Mark 1 / Mark 2. Mark 1 opens from **Set First Mark** dock action (compact chip when set). Primary floating result: distance between bends. Secondary: shrink + multiplier (tappable overrides). Dock: Reset · Set First Mark · Guide.
 - **Stub 90** (`/stub90`) — stub length − deduct → deduct mark, optional leg. Primary: deduct mark. Secondary: deduct (tappable override). Dock: Reset · Set Mark · Guide.
-- **3-Point Saddle** (`/saddle3`) — obstruction height + angle preset → between-bends spacing, shrink, layout marks. Primary swaps to center mark when distance-to-center is entered. Dock: Reset · Set Center · Guide.
-- **4-Point Saddle** (`/saddle4`) — obstruction height (required), optional saddle width + distance to center, equal bend angle. Two-offset diagram. Dock: Reset · Set Center · Guide.
-- **Segment Bend** (`/segment`) — radius + total angle + degrees-per-bend → shot spacing, bend count (developed length on diagram). Dock: Reset · Set Arc / Next Segment · Guide.
+- **3-Point Saddle** (`/saddle3`) — obstruction height + angle preset → between-bends spacing, shrink, layout marks. Primary swaps to center mark when distance-to-center is entered. Dock: Reset · Add Distance to Center · Guide.
+- **4-Point Saddle** (`/saddle4`) — obstruction height (required), optional saddle width + distance to center, equal bend angle. Physical obstruction, four pipe-wrap marks, attached spacing vector, and bend-order cue. Dock: Reset · Add Distance to Center · Guide.
+- **Segment Bend** (`/segment`) — radius + total angle + degrees-per-bend → shot spacing, bend count (developed length on diagram). Optional start-of-bend input is added or removed from the center dock action. Dock: Reset · Add/Remove Start · Guide.
 - **Rolling Offset** (`/rolling`) — offset height + roll → distance between bends, shrink. Uses the shared fixed-view isometric 3D pipe so height and roll read directly from the centerline. Shares offset multiplier/shrink overrides. Dock: Reset · Set First Mark / Set Roll · Guide.
 - **Kick 90** (`/kick90`) — kick rise + bend angle → distance between bends, shrink. Shares offset multiplier/shrink overrides. Optional Mark 1 / Mark 2. **Isometric 3D diagram** (true multi-plane centerline). Dock: Reset · Set First Mark · Guide.
+- **Back-to-Back 90** (`/back-to-back`) — direct star-reference layout for two opposing 90s, with an optional first-stub deduct mark.
+- **Matching Offset** (`/matching-offset`) — explicit Match Centers and Match Bends modes derived from existing bend-center measurements, with exact-angle execution status and no silent snapping to a nearby common angle.
+- **Parallel Offsets** (`/parallel-offset`) — simple per-conduit shift plus a full rack layout with distance between bends and optional absolute marks.
+- **Compound 90** (`/compound90`) — two 45° bends around a round obstruction, wall-aligned box, or square set on point; includes per-side clearance and nominal-EMT-OD center correction.
+- **Multiple Bends** (`/multiple-bends`) — safe single-stick planner for absolute bend and cut marks; intentionally does not invent take-up, gain, or shoe math.
 
 Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). Semi-proportional diagrams use shared primitives in `src/shared/diagrams/`.
 
@@ -59,12 +64,12 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 
 - **`src/core/calculators/`** — single source of truth for calculator ids, routes, Bends hub grouping, and home metadata
 - **`getBendsScreenFamilies()`**, **`getCalculatorRoute()`**, **`getCalculatorById()`** — Bends hub and navigation consume registry helpers
-- Planned calculators (parallel offset, box offset, etc.) registered with `status: 'planned'`; they appear on Bends as Coming Soon but have no routes
+- **Box Offset** and **Hydraulic Layout** remain registered as `planned`; they appear on Bends as Coming Soon but have no routes
 
 ### Recent layouts
 
 - **`src/core/sessions/`** — AsyncStorage-backed recent-layout service with unit tests
-- **All seven calculator screens** persist via `usePersistRecentLayout` and restore via `useRestoreRecentLayout` when opened with `?layoutId=`
+- **All twelve calculator screens** persist via `usePersistRecentLayout` and restore via `useRestoreRecentLayout` when opened with `?layoutId=`
 - **Home Continue Layout** hydrates recents on focus (`loadRecentLayouts` + `resolveContinueLayoutCandidate`) and navigates to the stored calculator with layout id
 
 ### Bender profiles
@@ -77,11 +82,12 @@ Each feature: `*.config.ts`, `*.copy.ts`, `engine/`, `ui/` (screen + diagram). S
 
 ### Working app shell
 
-- Routes: `/`, `/bends`, `/offset`, `/stub90`, `/saddle3`, `/saddle4`, `/segment`, `/rolling`, `/kick90`, `/settings`, `/bender-database`, `/guide`
+- Calculator routes: `/offset`, `/matching-offset`, `/parallel-offset`, `/rolling`, `/stub90`, `/back-to-back`, `/kick90`, `/compound90`, `/saddle3`, `/saddle4`, `/segment`, `/multiple-bends`
+- App/support routes: `/`, `/bends`, `/settings`, `/bender-database`, `/guide`
 - Hub screens: `src/screens/` (Home, Bends, Settings)
 - Persisted setup: `src/core/settings/`
 - Theme: `src/theme/`
-- **`npm run check`** — typecheck + lint + import-cycle scan + tests; ~**401 tests** passing (38 suites) — verify on pickup
+- **`npm run check`** — typecheck + lint + import-cycle scan + **701 passing Jest tests across 69 suites**
 
 ### Field validation prep (Phase 6 docs)
 
@@ -100,12 +106,12 @@ See [`KNOWN_ISSUES.md`](KNOWN_ISSUES.md) for the full list. Summary:
 - **Bender charts** — generic field-reference values only; manufacturer shoe charts deferred until sourced data exists
 - **Fraction keypad** — no decimal point key; mixed-number and quick-fraction entry only; imperial editing uses a bottom sheet so the pipe workspace stays visible
 - **Home Continue Layout** — hidden until a recent layout exists; opens the last saved calculation with inputs restored
-- **Bender profile vs math** — profile selection changes Stub 90 deduct only; other calculators show the profile in the trust strip but use generic angle tables (see [`TRUST_MODEL.md`](TRUST_MODEL.md))
+- **Bender profile vs math** — profile selection drives Stub 90 deduct and the optional first-stub deduct in Back-to-Back 90; other workflows label the bender as setup-only and use their documented field method (see [`TRUST_MODEL.md`](TRUST_MODEL.md))
 
 ## Next development priorities
 
-1. **Field validation sessions** — use [`FIELD_VALIDATION.md`](FIELD_VALIDATION.md) and the [test sheet](FIELD_VALIDATION_TEST_SHEET.md); record pass/fail on reference cases
-2. **Catalog expansion** — Kick 90 shipped (first QuickBend-parity calculator); remaining items follow [`HANDOFF.md`](HANDOFF.md) §5 order
+1. **Field validation sessions** — use [`FIELD_VALIDATION.md`](FIELD_VALIDATION.md) and the [test sheet](FIELD_VALIDATION_TEST_SHEET.md); record pass/fail on reference cases before public beta
+2. **Beta hardening and product polish** — accessibility, on-device ergonomics, and feedback-driven corrections. Box Offset stays deferred until the founder reopens it.
 
 ## Known risk areas
 

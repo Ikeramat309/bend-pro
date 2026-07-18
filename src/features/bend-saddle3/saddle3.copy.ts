@@ -34,7 +34,7 @@ export const saddle3Copy = {
     centerMark: 'Center',
     sideMark1: 'Side',
     sideMark2: 'Side',
-    fieldCue: 'Bend center up first · then sides to level',
+    fieldCue: 'Center first · side bends to level',
     emptyMessage: 'Enter obstruction height to lay out the saddle.',
     invalidMessage: 'Obstruction height must be greater than 0.',
   },

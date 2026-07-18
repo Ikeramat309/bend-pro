@@ -9,6 +9,11 @@ export const CALCULATOR_ROUTE_PATHS = {
   segment: '/segment',
   rolling: '/rolling',
   kick90: '/kick90',
+  matchingOffset: '/matching-offset',
+  parallelOffset: '/parallel-offset',
+  backToBack: '/back-to-back',
+  compound90: '/compound90',
+  multipleBends: '/multiple-bends',
 } as const satisfies Record<string, Href>;
 
 export type CalculatorRouteKey = keyof typeof CALCULATOR_ROUTE_PATHS;

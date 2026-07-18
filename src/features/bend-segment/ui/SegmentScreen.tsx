@@ -166,14 +166,22 @@ export default function SegmentScreen() {
     setShowStartInput(false);
   }
 
+  function removeStartInput() {
+    setStartOffsetText('');
+    setShowStartInput(false);
+  }
+
   return (
     <BendCalculatorLayout
       title={segmentCopy.screenTitle}
-      subtitle={setupSummary}
+      subtitle=""
+      centerTitle
+      inputDensity="compact"
+      workspaceDensity="compact"
       onBackPress={handleBackPress}
       trust={{
         benderName: formatSegmentTrustTitle(),
-        meta: [setupSummary, setupSubtitle, formatSetupOnlyBenderMeta(benderProfile.name)].join(' • '),
+        meta: [formatSetupOnlyBenderMeta(benderProfile.name), setupSummary, setupSubtitle].join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={[
@@ -232,26 +240,23 @@ export default function SegmentScreen() {
                   ? segmentCopy.fields.degreesPerBend.errorRequired
                   : undefined,
             },
+            ...(showStartInput
+              ? [
+                  {
+                    type: 'field' as const,
+                    key: 'startField',
+                    label: segmentCopy.fields.startOffset.label,
+                    value: startOffsetText,
+                    onChangeText: setStartOffsetText,
+                    placeholder: segmentCopy.fields.startOffset.placeholder,
+                    unit: unitLabel,
+                    variant: 'compact' as const,
+                    lengthInput,
+                    error: startError,
+                  },
+                ]
+              : []),
           ],
-        },
-        {
-          type: 'optional',
-          key: 'start',
-          addLabel: segmentCopy.fields.startOffset.addButton,
-          onAdd: () => setShowStartInput(true),
-          visible: showStartInput,
-          field: {
-            type: 'field',
-            key: 'startField',
-            label: segmentCopy.fields.startOffset.label,
-            value: startOffsetText,
-            onChangeText: setStartOffsetText,
-            placeholder: segmentCopy.fields.startOffset.placeholder,
-            unit: unitLabel,
-            variant: 'compact',
-            lengthInput,
-            error: startError,
-          },
         },
       ]}
       workspace={
@@ -268,14 +273,20 @@ export default function SegmentScreen() {
       }
       secondaryResults={secondaryResults}
       dock={{
-        left: [
-          { key: 'reset', label: 'Reset', onPress: resetInputs },
-          {
-            key: 'set-arc',
-            label: segmentCopy.fields.startOffset.addButton,
-            onPress: () => setShowStartInput(true),
-          },
-        ],
+        left: [{ key: 'reset', label: 'Reset', onPress: resetInputs }],
+        center: showStartInput
+          ? {
+              key: 'remove-start',
+              label: 'Remove Start',
+              variant: 'pill',
+              onPress: removeStartInput,
+            }
+          : {
+              key: 'set-start',
+              label: segmentCopy.fields.startOffset.addButton,
+              variant: 'pill',
+              onPress: () => setShowStartInput(true),
+            },
         guide: { onPress: () => router.push(guideRoute('segment')) },
       }}
       warnings={visibleWarnings}

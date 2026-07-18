@@ -1,4 +1,4 @@
-import { Circle, Ellipse, G, Line, Path, Rect, Text as SvgText } from 'react-native-svg';
+import { Circle, Ellipse, G, Line, Path, Text as SvgText } from 'react-native-svg';
 
 import {
   BendRadiusZone,
@@ -10,7 +10,6 @@ import {
   DiagramLabel,
   DiagramSvg,
   PipeSegment,
-  diagramMetrics,
   useDiagramTheme,
 } from '@/shared/diagrams';
 import {
@@ -26,7 +25,6 @@ import { saddle3Copy } from '../saddle3.copy';
 const LAYOUT = SADDLE3_DIAGRAM_LAYOUT;
 const VECTOR_OFFSET = 30;
 const VECTOR_TICK_HALF = 3.2;
-const TAG_HEIGHT = 14;
 
 type Point = { x: number; y: number };
 
@@ -60,6 +58,9 @@ export function Saddle3Diagram({ data, isEmpty = false, isInvalid = false }: Sad
 function Saddle3GhostDiagram({ message, invalid }: { message: string; invalid?: boolean }) {
   const theme = useDiagramTheme();
   const geo = buildSaddle3DiagramGeometry(2, 5.23, 22.5);
+  const radians = (22.5 * Math.PI) / 180;
+  const cx = LAYOUT.cornerR * Math.cos(radians);
+  const cy = LAYOUT.cornerR * Math.sin(radians);
 
   return (
     <DiagramSvg viewBox={SADDLE3_CONFIG.diagramViewBox}>
@@ -67,11 +68,25 @@ function Saddle3GhostDiagram({ message, invalid }: { message: string; invalid?: 
       <DiagramCanvas />
       <RoundObstruction geo={geo} ghost />
       <PipeSegment d={geo.pipePath} variant="shadow" opacity={theme.ghost.pipeShadowOpacity} />
-      <PipeSegment d={geo.pipePath} variant="pipe" gradientId="saddle3GhostGradient" />
+      <PipeSegment
+        d={geo.pipePath}
+        variant="pipe"
+        gradientId="saddle3GhostGradient"
+        material="satin"
+        lineCap="butt"
+      />
       <Saddle3EndCaps ghost />
-      <Saddle3MarkCollar point={{ x: geo.x1, y: LAYOUT.baseY }} ghost />
-      <Saddle3MarkCollar point={{ x: LAYOUT.centerX, y: geo.peakY }} ghost />
-      <Saddle3MarkCollar point={{ x: geo.x2, y: LAYOUT.baseY }} ghost />
+      <Saddle3MarkCollar point={{ x: geo.x1 - LAYOUT.cornerR, y: LAYOUT.baseY }} ghost />
+      <Saddle3MarkCollar
+        point={{ x: LAYOUT.centerX - cx, y: geo.peakY + cy }}
+        rotation={-22.5}
+        ghost
+      />
+      <Saddle3MarkCollar
+        point={{ x: geo.x2 - cx, y: LAYOUT.baseY - cy }}
+        rotation={22.5}
+        ghost
+      />
       <DiagramGhostMessage text={message} invalid={invalid} />
     </DiagramSvg>
   );
@@ -174,8 +189,17 @@ function Saddle3EndCaps({ ghost = false }: { ghost?: boolean }) {
   );
 }
 
-function Saddle3MarkCollar({ point, ghost = false }: { point: Point; ghost?: boolean }) {
+function Saddle3MarkCollar({
+  point,
+  rotation = 0,
+  ghost = false,
+}: {
+  point: Point;
+  rotation?: number;
+  ghost?: boolean;
+}) {
   const theme = useDiagramTheme();
+  const transform = rotation === 0 ? undefined : `rotate(${rotation} ${point.x} ${point.y})`;
 
   return (
     <G opacity={ghost ? 0.4 : 1}>
@@ -188,6 +212,7 @@ function Saddle3MarkCollar({ point, ghost = false }: { point: Point; ghost?: boo
         stroke={theme.markGlow}
         strokeWidth={2.7}
         opacity={0.34}
+        transform={transform}
       />
       <Ellipse
         cx={point.x}
@@ -197,77 +222,99 @@ function Saddle3MarkCollar({ point, ghost = false }: { point: Point; ghost?: boo
         fill="none"
         stroke={theme.mark}
         strokeWidth={1.4}
+        transform={transform}
       />
     </G>
   );
 }
 
-function Saddle3BendTag({
-  point,
-  tag,
-  label,
-  primary = false,
+function Saddle3AngleCallouts({
+  geo,
+  sideAngle,
+  centerAngle,
 }: {
-  point: Point;
-  tag: Point;
-  label: string;
-  primary?: boolean;
+  geo: Saddle3DiagramGeometry;
+  sideAngle: number;
+  centerAngle: number;
 }) {
   const theme = useDiagramTheme();
-  const width = Math.min(82, Math.max(44, 20 + label.length * 5.2));
-  const dx = tag.x - point.x;
-  const dy = tag.y - point.y;
-  const length = Math.hypot(dx, dy) || 1;
-  const direction = { x: dx / length, y: dy / length };
-  const pipeEdge = {
-    x: point.x + direction.x * (diagramMetrics.pipeStroke / 2 + 2),
-    y: point.y + direction.y * (diagramMetrics.pipeStroke / 2 + 2),
-  };
-  const tagEdge = {
-    x: tag.x - direction.x * Math.min(width / 2, 13),
-    y: tag.y - direction.y * (TAG_HEIGHT / 2),
-  };
-  const badge = primary
-    ? {
-        fill: theme.bendBadge.primaryFill,
-        stroke: theme.bendBadge.primaryStroke,
-        text: theme.bendBadge.primaryText,
-      }
-    : {
-        fill: theme.calloutFill,
-        stroke: theme.mark,
-        text: theme.mark,
-      };
+  const centerTitleY = Math.max(76, geo.peakY - 39);
+  const centerValueY = centerTitleY + 15;
+  const centerTarget = { x: LAYOUT.centerX, y: geo.peakY + 1 };
+  const sideTarget = { x: geo.x2 + 4, y: LAYOUT.baseY - 5 };
 
   return (
     <G>
       <Line
-        x1={pipeEdge.x}
-        y1={pipeEdge.y}
-        x2={tagEdge.x}
-        y2={tagEdge.y}
-        stroke={badge.stroke}
-        strokeWidth={0.8}
-        opacity={0.58}
+        x1={centerTarget.x}
+        y1={centerTarget.y}
+        x2={214}
+        y2={centerValueY - 4}
+        stroke={theme.bendZone.stroke}
+        strokeWidth={0.7}
+        strokeDasharray="2 3"
+        opacity={0.54}
       />
-      <Rect
-        x={tag.x - width / 2}
-        y={tag.y - TAG_HEIGHT / 2}
-        width={width}
-        height={TAG_HEIGHT}
-        rx={4}
-        fill={badge.fill}
-        stroke={badge.stroke}
-        strokeWidth={0.9}
+      <Ellipse
+        cx={centerTarget.x}
+        cy={centerTarget.y}
+        rx={1.2}
+        ry={1.2}
+        fill={theme.bendZone.stroke}
       />
       <SvgText
-        x={tag.x}
-        y={tag.y + 3}
-        fill={badge.text}
-        fontSize={8.1}
+        x={226}
+        y={centerTitleY}
+        fill={theme.bendZone.stroke}
+        fontSize={7.4}
         fontWeight="700"
         textAnchor="middle">
-        {label}
+        CENTER BEND
+      </SvgText>
+      <SvgText
+        x={226}
+        y={centerValueY}
+        fill={theme.bendZone.stroke}
+        fontSize={11.5}
+        fontWeight="700"
+        textAnchor="middle">
+        {`${centerAngle}\u00B0`}
+      </SvgText>
+
+      <Line
+        x1={sideTarget.x}
+        y1={sideTarget.y}
+        x2={308}
+        y2={47}
+        stroke={theme.bendZone.stroke}
+        strokeWidth={0.7}
+        strokeDasharray="2 3"
+        opacity={0.5}
+      />
+      <Ellipse
+        cx={sideTarget.x}
+        cy={sideTarget.y}
+        rx={1.2}
+        ry={1.2}
+        fill={theme.bendZone.stroke}
+      />
+      <SvgText
+        x={332}
+        y={31}
+        fill={theme.bendZone.stroke}
+        fontSize={7.4}
+        fontWeight="700"
+        textAnchor="end">
+        SIDE BENDS
+      </SvgText>
+      <SvgText
+        x={332}
+        y={49}
+        fill={theme.bendZone.stroke}
+        fontSize={11.5}
+        fontWeight="700"
+        textAnchor="end">
+        {`${sideAngle}\u00B0 \u00D7 2`}
       </SvgText>
     </G>
   );
@@ -388,12 +435,17 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
   );
   const geo = buildSaddle3DiagramGeometry(visualObsIn, visualCenterToSide, data.sideAngle);
   const hasMarks = data.centerMarkInches !== undefined;
-  const centerTag =
-    geo.peakY < 108
-      ? { x: 238, y: Math.max(62, geo.peakY - 1) }
-      : { x: LAYOUT.centerX, y: Math.max(66, geo.peakY - 34) };
-  const leftTag = { x: Math.max(45, geo.x1 - 42), y: LAYOUT.baseY + 25 };
-  const rightTag = { x: Math.min(315, geo.x2 + 42), y: LAYOUT.baseY + 25 };
+  const sideRadians = (data.sideAngle * Math.PI) / 180;
+  const cx = LAYOUT.cornerR * Math.cos(sideRadians);
+  const cy = LAYOUT.cornerR * Math.sin(sideRadians);
+  const marks = [
+    { point: { x: geo.x1 - LAYOUT.cornerR, y: LAYOUT.baseY }, rotation: 0 },
+    {
+      point: { x: LAYOUT.centerX - cx, y: geo.peakY + cy },
+      rotation: -data.sideAngle,
+    },
+    { point: { x: geo.x2 - cx, y: LAYOUT.baseY - cy }, rotation: data.sideAngle },
+  ];
 
   return (
     <DiagramSvg viewBox={SADDLE3_CONFIG.diagramViewBox}>
@@ -401,9 +453,14 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
       <DiagramCanvas />
 
       <BetweenBendsVector geo={geo} value={data.display.centerToSide} />
+      <Saddle3AngleCallouts
+        geo={geo}
+        sideAngle={data.sideAngle}
+        centerAngle={data.centerAngle}
+      />
       <RoundObstruction geo={geo} heightLabel={data.display.obstructionHeight} />
 
-      <PipeSegment d={geo.pipePath} variant="shadow" strokeWidth={23} opacity={0.24} />
+      <PipeSegment d={geo.pipePath} variant="shadow" strokeWidth={23} opacity={0.22} />
       <PipeSegment
         d={geo.pipePath}
         variant="pipe"
@@ -416,40 +473,23 @@ function Saddle3LiveDiagram({ data }: { data: Saddle3DiagramData }) {
       <BendRadiusZone d={geo.bendRight} glowWidth={12} />
       <Saddle3EndCaps />
 
-      <Saddle3MarkCollar point={{ x: geo.x1, y: LAYOUT.baseY }} />
-      <Saddle3MarkCollar point={{ x: LAYOUT.centerX, y: geo.peakY }} />
-      <Saddle3MarkCollar point={{ x: geo.x2, y: LAYOUT.baseY }} />
+      {marks.map((mark, index) => (
+        <Saddle3MarkCollar key={index} {...mark} />
+      ))}
 
-      <Saddle3BendTag
-        point={{ x: LAYOUT.centerX, y: geo.peakY }}
-        tag={centerTag}
-        label={`B1  \u00B7  ${data.centerAngle}\u00B0`}
-        primary
-      />
-      <Saddle3BendTag
-        point={{ x: geo.x1, y: LAYOUT.baseY }}
-        tag={leftTag}
-        label={`B2  \u00B7  ${data.sideAngle}\u00B0`}
-      />
-      <Saddle3BendTag
-        point={{ x: geo.x2, y: LAYOUT.baseY }}
-        tag={rightTag}
-        label={`B3  \u00B7  ${data.sideAngle}\u00B0`}
-      />
-
-      <DiagramLabel
-        x={180}
-        y={31}
-        text={saddle3Copy.results.centerMark}
-        variant="muted"
-        fontSize={8.3}
-        fontWeight="700"
-      />
       {hasMarks && data.display.centerMark ? (
-        <DiagramLabel x={180} y={47} text={data.display.centerMark} variant="mark" fontSize={11} />
-      ) : (
-        <DiagramLabel x={180} y={47} text="OPTIONAL" variant="muted" fontSize={8} />
-      )}
+        <>
+          <DiagramLabel
+            x={180}
+            y={31}
+            text={saddle3Copy.results.centerMark.toUpperCase()}
+            variant="muted"
+            fontSize={8.3}
+            fontWeight="700"
+          />
+          <DiagramLabel x={180} y={48} text={data.display.centerMark} variant="mark" fontSize={11} />
+        </>
+      ) : null}
 
       {hasMarks && data.display.sideMark1 && data.display.sideMark2 ? (
         <Saddle3MarkLegend data={data} />

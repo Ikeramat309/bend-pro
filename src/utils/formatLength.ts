@@ -7,6 +7,9 @@
 import type { RoundingOption, UnitSystem } from '@/core/types';
 import { fromCanonicalInches } from '@/core/measurements';
 
+/** Keeps fraction rounding inside JavaScript's exact-integer range. */
+const MAX_FORMATTABLE_INCHES = Number.MAX_SAFE_INTEGER / 16;
+
 function roundToStep(value: number, step: number): number {
   return Math.round(value / step) * step;
 }
@@ -50,6 +53,10 @@ export function formatLength(
   unitSystem: UnitSystem,
   rounding: RoundingOption,
 ): string {
+  if (!Number.isFinite(valueInches) || Math.abs(valueInches) > MAX_FORMATTABLE_INCHES) {
+    return '—';
+  }
+
   if (unitSystem === 'metric') {
     const mmValue = fromCanonicalInches(valueInches, unitSystem);
     const step = getMetricStep(rounding);

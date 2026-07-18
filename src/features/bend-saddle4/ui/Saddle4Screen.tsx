@@ -273,11 +273,14 @@ export default function Saddle4Screen() {
   return (
     <BendCalculatorLayout
       title={saddle4Copy.screenTitle}
-      subtitle={setupSummary}
+      subtitle=""
+      centerTitle
+      inputDensity="compact"
+      workspaceDensity="compact"
       onBackPress={handleBackPress}
       trust={{
         benderName: formatStandardSaddleTableTrustTitle(angleData.label),
-        meta: [setupSummary, setupSubtitle, setupOnlyMeta].filter(Boolean).join(' • '),
+        meta: [setupOnlyMeta, setupSummary, setupSubtitle].filter(Boolean).join(' • '),
         onEdit: () => setSetupVisible(true),
       }}
       inputs={calculatorInputs}
@@ -293,10 +296,13 @@ export default function Saddle4Screen() {
       }
       secondaryResults={secondaryResults}
       dock={{
-        left: [
-          { key: 'reset', label: 'Reset', onPress: resetInputs },
-          { key: 'set-center', label: saddle4Copy.fields.distanceToCenter.addButton, onPress: () => setDistanceSheetVisible(true) },
-        ],
+        left: [{ key: 'reset', label: 'Reset', onPress: resetInputs }],
+        center: {
+          key: 'set-center',
+          label: saddle4Copy.fields.distanceToCenter.addButton,
+          variant: 'pill',
+          onPress: () => setDistanceSheetVisible(true),
+        },
         guide: { onPress: () => router.push(guideRoute('saddle4')) },
       }}
       warnings={visibleWarnings}

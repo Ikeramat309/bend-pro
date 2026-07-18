@@ -1,22 +1,22 @@
 export const SADDLE4_DIAGRAM_LAYOUT = {
-  startX: 18,
-  endX: 342,
+  startX: 8,
+  endX: 352,
   centerX: 180,
   baseY: 220,
   peakMinY: 70,
-  cornerRadius: 10,
+  cornerRadius: 12,
   pipeHalf: 9.5,
   /** Space below the top tube for the obstruction. */
-  clearance: 15,
+  clearance: 5,
   /** Keeps the outer mark collars visually distinct from the open end caps. */
-  minEndRun: 26,
+  minEndRun: 36,
   minHalfTop: 32,
   defaultHalfTop: 40,
 } as const;
 
 const VISUAL_OBSTRUCTION_MAX_INCHES = 4;
 const VISUAL_SADDLE_WIDTH_MAX_INCHES = 10;
-const OBSTRUCTION_MIN_PX = 18;
+const OBSTRUCTION_MIN_PX = 22;
 const DIAGONAL_PX_PER_INCH = 12;
 const DIAGONAL_MIN_PX = 44;
 const DIAGONAL_MAX_PX = 132;
@@ -71,15 +71,11 @@ export function buildSaddle4DiagramGeometry(
     input.obstructionHeightInches,
     VISUAL_OBSTRUCTION_MAX_INCHES,
   );
-  const requestedObsHeightPx = clamp(
-    14 + visualObstructionInches * 7,
-    22,
-    60,
-  );
-  const minimumReadableRise =
-    OBSTRUCTION_MIN_PX + layout.pipeHalf + layout.clearance;
-  const maxHalfTopForReadableRise =
-    maxHalfSpan - minimumReadableRise / tanA;
+  const requestedObsHeightPx = clamp(18 + visualObstructionInches * 8, 26, 58);
+  const requestedClearanceRise =
+    requestedObsHeightPx + layout.pipeHalf + layout.clearance;
+  const maxHalfTopForObstruction =
+    maxHalfSpan - Math.min(requestedClearanceRise, maxRise) / tanA;
 
   const requestedHalfTop =
     input.saddleWidthInches !== undefined
@@ -90,7 +86,7 @@ export function buildSaddle4DiagramGeometry(
   const halfTopPx = clamp(
     requestedHalfTop,
     layout.minHalfTop,
-    Math.max(layout.minHalfTop, maxHalfTopForReadableRise),
+    Math.max(layout.minHalfTop, maxHalfTopForObstruction),
   );
 
   const availableDx = maxHalfSpan - halfTopPx;

@@ -52,6 +52,34 @@ The shot spacing is shown as **Between Bends** (consistent with Offset and the s
 
 The horizontal roll component is shown as **Offset Roll** in the UI; the engine key stays `advance`. **True Offset** (`trueOffset`) is internal math only — do not show it in the UI. Manual multiplier/shrink overrides share the same setup keys as basic Offset.
 
+## Matching Offset Names
+
+**UI labels:** Match Centers, Match Bends, Offset Height, Centers Along Run,
+Centers Along Pipe, Bend Angle, Centers Apart, Set Angle With.
+
+**Engine keys:** `mode`, `offsetHeight`, `adjacent`,
+`referenceDistanceBetweenBends`, `bendAngleDegrees`, `distanceBetweenBends`,
+`angleExecution`, `shrink`.
+
+**Centers Along Run** is the straight projection between bend-center stations;
+**Centers Along Pipe** follows the existing conduit centerline. **Centers Apart**
+is the field-facing label for `distanceBetweenBends` in this matching workflow,
+chosen to emphasize that both marks reference bend centers. Never replace an
+exact calculated angle with a nearby common angle.
+
+## Compound 90 Names
+
+**UI labels:** Round, Box, On Point, Diameter, Height, Width, Side Length,
+Clearance / Side, Centers Apart, First Bend Mark, Second Bend Mark.
+
+**Engine keys:** `shape` (`circle`, `box`, `diamond`), `primaryDimension`,
+`secondaryDimension`, `clearance`, `distanceBetweenBends`, `firstMark`,
+`secondMark`.
+
+The obstruction control describes orientation, not merely shape. **Box** means
+its sides are flat to the walls; **On Point** means a square is rotated with a
+corner up. Clearance is always the requested free space on each side.
+
 ## General Rules
 
 Avoid using multiple names for the same field.

@@ -105,7 +105,11 @@ describe('calculatorRegistry', () => {
 
   test('isCalculatorId accepts registry ids and rejects unknown strings', () => {
     expect(isCalculatorId('offset')).toBe(true);
+    expect(isCalculatorId('matchingOffset')).toBe(true);
     expect(isCalculatorId('parallelOffset')).toBe(true);
+    expect(isCalculatorId('backToBack')).toBe(true);
+    expect(isCalculatorId('compound90')).toBe(true);
+    expect(isCalculatorId('multipleBends')).toBe(true);
     expect(isCalculatorId('not-a-calculator')).toBe(false);
   });
 });

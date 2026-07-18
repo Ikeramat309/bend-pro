@@ -318,6 +318,244 @@ export const CALCULATOR_GUIDES: CalculatorGuide[] = [
       ],
     },
   },
+  {
+    id: 'matchingOffset',
+    title: 'Matching Offset',
+    family: 'Offset',
+    summary:
+      'Copy an existing two-bend offset by measuring either its straight-run center projection or its center-to-center distance along the conduit.',
+    calculatorRoute: Routes.matchingOffset,
+    formula: {
+      title: 'Formula',
+      mono: true,
+      lines: [
+        'Match Centers: Bend Angle = atan(Offset Height ÷ Adjacent)',
+        'Match Bends: Bend Angle = asin(Offset Height ÷ Existing Center Distance)',
+        'Shrink = Distance Between Bends − Adjacent',
+        'Exact solved angle is never snapped to a nearby common angle',
+      ],
+    },
+    steps: {
+      title: 'Field steps',
+      ordered: true,
+      lines: [
+        'Choose Match Centers when you know the straight-run projection between bend centers.',
+        'Choose Match Bends when you can measure along the existing conduit from bend center to bend center.',
+        'Enter the perpendicular offset height and the selected reference measurement.',
+        'Transfer Centers Apart to the new conduit and mark both bend centers.',
+        'If Angle Tool is shown, set the exact angle with a digital level or protractor; do not round to the nearby common angle.',
+        'Use the nearby common-angle comparison in the result details only to understand how much the layout would change.',
+        'Make two equal bends in opposite directions using a calibrated bend-center reference.',
+      ],
+    },
+    mistakes: {
+      title: 'Common mistakes',
+      lines: [
+        'Measuring to the start of a bend instead of its center.',
+        'Entering the along-conduit distance in Match Centers — that mode expects the straight-run projection.',
+        'Switching methods and assuming the second field keeps the same meaning.',
+        'Rounding an exact angle to a familiar bender angle; that changes the run and no longer matches the reference.',
+        'Treating the selected bender as a shoe-radius correction; this calculator uses centerline geometry only.',
+      ],
+    },
+    example: {
+      title: 'Worked example',
+      lines: [
+        'Match Bends: 6" height and 12" existing center distance',
+        '→ Bend Angle: 30°',
+        '→ Adjacent: about 10.392"',
+        '→ Shrink: about 1.608" before display rounding',
+      ],
+    },
+  },
+  {
+    id: 'parallelOffset',
+    title: 'Parallel Offsets',
+    family: 'Offset',
+    summary:
+      'Keep a rack of equal offsets parallel by shifting both bend marks on each successive conduit by the same half-angle adjustment.',
+    calculatorRoute: Routes.parallelOffset,
+    formula: {
+      title: 'Formula',
+      mono: true,
+      lines: [
+        'Shift per Conduit = C-C Spacing × tan(Bend Angle ÷ 2)',
+        'Distance Between Bends = Offset Height ÷ sin(Bend Angle)',
+        'Pipe n Shift = Shift per Conduit × (n − 1)',
+      ],
+    },
+    steps: {
+      title: 'Field steps',
+      ordered: true,
+      lines: [
+        'Measure center-to-center spacing perpendicular to the straight runs.',
+        'Choose the same bend angle, conduit size, and shoe for the full rack.',
+        'Use Simple Shift when you only need the per-conduit adjustment.',
+        'Use Full Layout to add offset height, conduit count, direction, and an optional Pipe 1 Mark 1.',
+        'Move both marks on each later conduit by its signed cumulative shift.',
+      ],
+    },
+    mistakes: {
+      title: 'Common mistakes',
+      lines: [
+        'Using edge-to-edge spacing instead of conduit center-to-center spacing.',
+        'Moving only one mark — both marks shift together, so their spacing stays unchanged.',
+        'Guessing toward or away from the free end; choose the direction that matches where all marks are measured from.',
+        'Mixing conduit sizes, shoe radii, or bend angles in one calculated rack.',
+      ],
+    },
+    example: {
+      title: 'Worked example',
+      lines: [
+        '2" C-C spacing, 30°, four conduits, 6" offset height',
+        '→ Shift per Conduit: about 0.536"',
+        '→ Total Rack Shift: about 1.608"',
+        '→ Distance Between Bends: 12"',
+      ],
+    },
+  },
+  {
+    id: 'backToBack',
+    title: 'Back-to-Back 90',
+    family: '90s',
+    summary:
+      'Place two opposing 90° bends with a finished distance between their backs. An optional first stub adds its deduct mark.',
+    calculatorRoute: Routes.backToBack,
+    formula: {
+      title: 'Field layout',
+      mono: true,
+      lines: [
+        'Second 90 Mark = Back-to-Back Distance',
+        'Measure it from the back of the formed first 90',
+        'Optional First Deduct Mark = First Stub Length − Deduct',
+      ],
+    },
+    steps: {
+      title: 'Field steps',
+      ordered: true,
+      lines: [
+        'Make the first 90. If entering First Stub Length, use its deduct mark first.',
+        'Measure the finished back-to-back distance from the back of the formed first 90.',
+        'Put the second mark on the conduit at that distance.',
+        'Face the hook opposite the first bend and align the second mark with the bender star.',
+        'Bend to 90° and check the distance between the parallel surfaces.',
+      ],
+    },
+    mistakes: {
+      title: 'Common mistakes',
+      lines: [
+        'Measuring the second mark from the conduit end instead of from the back of the formed first 90.',
+        'Aligning the second mark with the arrow instead of the bender star.',
+        'Facing both 90s the same way instead of opposing them.',
+        'Using an unverified deduct for the optional first stub.',
+      ],
+    },
+    example: {
+      title: 'Worked example',
+      lines: [
+        '36" back-to-back distance, optional 12" first stub, 5" deduct',
+        '→ First Deduct Mark: 7" from the starting end',
+        '→ Second 90 Mark: 36" from the back of the formed first 90',
+      ],
+    },
+  },
+  {
+    id: 'compound90',
+    title: 'Compound 90',
+    family: '90s',
+    summary:
+      'Split a 90° turn into two 45° bends so the diagonal clears a round obstruction, wall-aligned box, or square set on a corner.',
+    calculatorRoute: Routes.compound90,
+    formula: {
+      title: 'Two-45 field table',
+      mono: true,
+      lines: [
+        'Round: Centers Apart = Diameter × 2.4 + 2 × Clearance − 1/2 EMT OD',
+        'Box flat to walls: Centers Apart = (Height + Width) × 1.414 + 2 × Clearance − 1/2 EMT OD',
+        'Square on point: Centers Apart = Side × 3 + 2 × Clearance − 1/2 EMT OD',
+        'Optional Second Mark = First Mark + Between Bends',
+      ],
+    },
+    steps: {
+      title: 'Field steps',
+      ordered: true,
+      lines: [
+        'Choose how the obstruction sits: round at the corner, box flat to the walls, or square on point.',
+        'Measure the requested outside dimension and enter any clearance needed on each side.',
+        'Mark the two bend centers at the calculated spacing.',
+        'Use the center-bend reference on the bender and make the first 45° bend.',
+        'Keep both bends in the same plane and make the second 45° bend to complete the turn.',
+        'Check the diagonal section clears the obstruction before installing the conduit.',
+      ],
+    },
+    mistakes: {
+      title: 'Common mistakes',
+      lines: [
+        'Measuring radius when the Round mode asks for diameter.',
+        'Entering only one side of a rectangular obstruction.',
+        'Using the square-on-point method for a box whose sides are flat to the walls.',
+        'Adding total clearance instead of the clearance required on each side.',
+        'Using arrow/start-of-bend marks when the layout is specified on bend centers.',
+        'Treating the table as a bender-specific radius or springback correction.',
+      ],
+    },
+    example: {
+      title: 'Worked example',
+      lines: [
+        '7" round obstruction, two 45° bends',
+        '1/2" EMT has a nominal 0.706" outside diameter',
+        '→ Between Bends: 16.447" before display rounding',
+        '→ With First Bend Mark at 20", Second Bend Mark is 36.447"',
+      ],
+    },
+  },
+  {
+    id: 'multipleBends',
+    title: 'Multiple Bends',
+    family: 'Large / Advanced',
+    summary:
+      'Plan and check an ordered set of bend and cut marks on one conduit stick. It organizes supplied marks; it does not invent bend math.',
+    calculatorRoute: Routes.multipleBends,
+    formula: {
+      title: 'Planner checks',
+      mono: true,
+      lines: [
+        'Every Mark = absolute distance from the same start end',
+        'Gap = Next Mark − Previous Mark',
+        'Tail = Stick Length − Last Mark',
+        'Total Bend = sum of supplied bend angles',
+      ],
+    },
+    steps: {
+      title: 'Field steps',
+      ordered: true,
+      lines: [
+        'Enter the full conduit stick length.',
+        'Add every bend or cut as an absolute mark from one chosen start end.',
+        'For bend marks, enter the angle, up/down direction, and whether to flip first.',
+        'Review the sorted field sequence, gaps, collisions, overflow, and total bend warning.',
+        'Transfer the marks from the same start end and follow the displayed order.',
+      ],
+    },
+    mistakes: {
+      title: 'Common mistakes',
+      lines: [
+        'Mixing measurements from opposite ends of the conduit.',
+        'Entering a relative gap as though it were an absolute mark.',
+        'Expecting the planner to add deduct, take-up, gain, shrink, or shoe clearance.',
+        'Ignoring the warning when total bend exceeds 360° between pull points.',
+      ],
+    },
+    example: {
+      title: 'Worked example',
+      lines: [
+        '120" stick with 30° bends at 24" and 36", then a cut at 96"',
+        '→ Gaps: 12" between bends and 60" to the cut',
+        '→ Tail after final mark: 24"',
+        '→ Total Bend: 60°',
+      ],
+    },
+  },
 ];
 
 export const GUIDE_INTRO = {

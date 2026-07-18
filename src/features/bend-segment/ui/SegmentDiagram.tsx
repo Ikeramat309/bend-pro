@@ -1,7 +1,7 @@
-import { Circle } from 'react-native-svg';
+import { Circle, Ellipse, G } from 'react-native-svg';
 
 import {
-  DiagramBendBadge,
+  BendRadiusZone,
   DiagramCallout,
   DiagramCanvas,
   DiagramDefs,
@@ -29,6 +29,56 @@ const TICK_HALF = 13;
 
 const GHOST_PIPE =
   'M 54 176 L 150 176 L 158 175 L 178 168 L 205 150 L 226 124 L 238 96 L 242 84 L 242 20';
+
+function SegmentEndCaps({
+  start,
+  end,
+  endRotation,
+  ghost = false,
+}: {
+  start: { x: number; y: number };
+  end: { x: number; y: number };
+  endRotation: number;
+  ghost?: boolean;
+}) {
+  const theme = useDiagramTheme();
+
+  return (
+    <G opacity={ghost ? 0.5 : 1}>
+      {[
+        { point: start, rotation: 0 },
+        { point: end, rotation: endRotation },
+      ].map(({ point, rotation }, index) => {
+        const transform = rotation === 0 ? undefined : `rotate(${rotation} ${point.x} ${point.y})`;
+
+        return (
+          <G key={`segment-end-${index}`}>
+            <Ellipse
+              cx={point.x}
+              cy={point.y}
+              rx={3.4}
+              ry={9.1}
+              fill={theme.pipe}
+              stroke={theme.pipeSheen}
+              strokeWidth={0.75}
+              transform={transform}
+            />
+            <Ellipse
+              cx={point.x}
+              cy={point.y}
+              rx={2.35}
+              ry={6.55}
+              fill={theme.endCap.fill}
+              stroke={theme.endCap.stroke}
+              strokeWidth={0.65}
+              transform={transform}
+            />
+          </G>
+        );
+      })}
+    </G>
+  );
+}
 
 /** Point on the bend arc at angle t (radians from the horizontal-tangent start). */
 function arcPoint(t: number): { x: number; y: number } {
@@ -64,7 +114,19 @@ function SegmentGhostDiagram({ message, invalid }: { message: string; invalid?: 
       <DiagramDefs gradientId="segmentGhostGradient" ghost />
       <DiagramCanvas />
       <PipeSegment d={GHOST_PIPE} variant="shadow" opacity={theme.ghost.pipeShadowOpacity} />
-      <PipeSegment d={GHOST_PIPE} variant="pipe" gradientId="segmentGhostGradient" />
+      <PipeSegment
+        d={GHOST_PIPE}
+        variant="pipe"
+        gradientId="segmentGhostGradient"
+        material="satin"
+        lineCap="butt"
+      />
+      <SegmentEndCaps
+        start={{ x: 54, y: 176 }}
+        end={{ x: 242, y: 20 }}
+        endRotation={90}
+        ghost
+      />
       <DiagramGhostMessage text={message} invalid={invalid} y={SEGMENT_CONFIG.diagramHeight - 14} />
     </DiagramSvg>
   );
@@ -83,9 +145,11 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
   const end = arcPoint(sweep);
   const steps = Math.max(8, Math.ceil((sweep * 180) / Math.PI / 3));
   let path = `M ${start.x - LEAD_IN} ${start.y} L ${start.x} ${start.y}`;
+  let arcPath = `M ${start.x} ${start.y}`;
   for (let i = 1; i <= steps; i += 1) {
     const p = arcPoint((sweep * i) / steps);
     path += ` L ${p.x} ${p.y}`;
+    arcPath += ` L ${p.x} ${p.y}`;
   }
   const tangentX = end.x + LEAD_OUT * Math.cos(sweep);
   const tangentY = end.y - LEAD_OUT * Math.sin(sweep);
@@ -119,8 +183,20 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
       <DiagramDefs gradientId="segmentPipeGradient" />
       <DiagramCanvas />
 
-      <PipeSegment d={path} variant="shadow" />
-      <PipeSegment d={path} variant="pipe" gradientId="segmentPipeGradient" />
+      <PipeSegment d={path} variant="shadow" strokeWidth={23} opacity={0.22} />
+      <PipeSegment
+        d={path}
+        variant="pipe"
+        gradientId="segmentPipeGradient"
+        material="satin"
+        lineCap="butt"
+      />
+      <BendRadiusZone d={arcPath} glowWidth={14} />
+      <SegmentEndCaps
+        start={{ x: start.x - LEAD_IN, y: start.y }}
+        end={{ x: tangentX, y: tangentY }}
+        endRotation={-(sweep * 180) / Math.PI}
+      />
 
       {/* Radius leader + center pivot. */}
       <Circle cx={CX} cy={CY} r={2.5} fill={theme.dimension} />
@@ -154,14 +230,15 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
       })}
       {ticks.length > 0 ? (
         <>
-          <DiagramBendBadge
+          <DiagramLabel
             x={arcPoint(ticks[0]).x + Math.sin(ticks[0]) * 18}
             y={arcPoint(ticks[0]).y + Math.cos(ticks[0]) * 18}
-            order={1}
-            primary
+            text="1"
+            variant="mark"
+            fontSize={9}
           />
           {data.numberOfBends > 1 ? (
-            <DiagramBendBadge
+            <DiagramLabel
               x={
                 arcPoint(ticks[ticks.length - 1]).x +
                 Math.sin(ticks[ticks.length - 1]) * 18
@@ -170,7 +247,9 @@ function SegmentLiveDiagram({ data }: { data: SegmentDiagramData }) {
                 arcPoint(ticks[ticks.length - 1]).y +
                 Math.cos(ticks[ticks.length - 1]) * 18
               }
-              order={data.numberOfBends}
+              text={String(data.numberOfBends)}
+              variant="mark"
+              fontSize={9}
             />
           ) : null}
         </>
